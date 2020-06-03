@@ -46,7 +46,7 @@ static inline ft_argb32_t ESD_ColorARGB_Combine(ft_rgb32_t rgb, uint8_t a)
 #define ESD_ARGB_BLACK 0xFF000000
 
 // Rectangular gradient with four colored corners
-ESD_RENDER(Esd_Render_MultiGradient, Type = void, DisplayName = "ESD Multi Gradient", Include = "ESD_Primitives.h", Category = EsdPrimitives)
+ESD_RENDER(Esd_Render_MultiGradient, Type = void, DisplayName = "ESD Multi Gradient", Include = "ESD_Render.h", Category = EsdPrimitives)
 ESD_PARAMETER(x, Type = int16_t, Default = 0)
 ESD_PARAMETER(y, Type = int16_t, Default = 0)
 ESD_PARAMETER(width, Type = int16_t, Default = 0)
@@ -58,7 +58,7 @@ ESD_PARAMETER(bottomRight, Type = ft_argb32_t, DisplayName = "Bottom Right", Def
 void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t width, int16_t height, ft_argb32_t topLeft, ft_argb32_t topRight, ft_argb32_t bottomLeft, ft_argb32_t bottomRight);
 
 // Rounded rectangular gradient with four colored corners
-ESD_RENDER(Esd_Render_MultiGradient_Rounded, Type = void, DisplayName = "ESD Multi Gradient (Rounded)", Include = "ESD_Primitives.h", Category = EsdPrimitives)
+ESD_RENDER(Esd_Render_MultiGradient_Rounded, Type = void, DisplayName = "ESD Multi Gradient (Rounded)", Include = "ESD_Render.h", Category = EsdPrimitives)
 ESD_PARAMETER(x, Type = int16_t, Default = 0)
 ESD_PARAMETER(y, Type = int16_t, Default = 0)
 ESD_PARAMETER(width, Type = int16_t, Default = 0)
@@ -85,7 +85,7 @@ void Esd_Render_Rect_Stroke(
     uint8_t stroke, ft_argb32_t color);
 
 // Basic bitmap rendering
-ESD_RENDER(ESD_Render_Bitmap, Type = void, DisplayName = "ESD Bitmap", Category = EsdPrimitives, Icon = ":/icons/image.png", Include = "ESD_Primitives.h")
+ESD_RENDER(ESD_Render_Bitmap, Type = void, DisplayName = "ESD Bitmap", Category = EsdPrimitives, Icon = ":/icons/image.png", Include = "ESD_Render.h")
 ESD_PARAMETER(x, Type = int16_t, Default = 0)
 ESD_PARAMETER(y, Type = int16_t, Default = 0)
 ESD_PARAMETER(bitmapCell, Type = ESD_BitmapCell, DisplayName = "Bitmap Cell")
@@ -94,7 +94,7 @@ ESD_PARAMETER(c, Type = ft_argb32_t, DisplayName = "Color", Default = #FFFFFFFF)
 void ESD_Render_Bitmap(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, ft_argb32_t c);
 
 // Scaled bitmap rendering
-ESD_RENDER(ESD_Render_BitmapScaled, Type = void, DisplayName = "ESD Bitmap Scaled", Category = EsdPrimitives, Icon = ":/icons/image.png", Include = "ESD_Primitives.h")
+ESD_RENDER(ESD_Render_BitmapScaled, Type = void, DisplayName = "ESD Bitmap Scaled", Category = EsdPrimitives, Icon = ":/icons/image.png", Include = "ESD_Render.h")
 ESD_PARAMETER(x, Type = int16_t, Default = 0)
 ESD_PARAMETER(y, Type = int16_t, Default = 0)
 ESD_PARAMETER(bitmapCell, Type = ESD_BitmapCell, DisplayName = "Bitmap Cell")
@@ -122,7 +122,7 @@ void ESD_Render_BitmapRotate_Scaled(ESD_BitmapCell bitmapCell, ft_argb32_t c, ES
 void ESD_Render_BitmapRotate(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_Rect16 globalRect, int32_t rotateAngle);
 
 // Basic rectangle Gradient rendering with fixed point precision
-ESD_RENDER(ESD_Render_RectangleF_Gradient, Type = void, DisplayName = "ESD Gradient Rectangle (Fixed Point)", Include = "ESD_Primitives.h", Category = EsdPrimitives)
+ESD_RENDER(ESD_Render_RectangleF_Gradient, Type = void, DisplayName = "ESD Gradient Rectangle (Fixed Point)", Include = "ESD_Render.h", Category = EsdPrimitives)
 ESD_PARAMETER(x, Type = int32_f4_t, Default = 0)
 ESD_PARAMETER(y, Type = int32_f4_t, Default = 0)
 ESD_PARAMETER(width, Type = int32_f4_t, Default = 60)
@@ -133,7 +133,7 @@ ESD_PARAMETER(direction, Type = int16_t, DisplayName = "direction", Default = 90
 void ESD_Render_RectangleF_Gradient(int32_f4_t x, int32_f4_t y, int32_f4_t w, int32_f4_t h, ft_argb32_t color1, ft_argb32_t color2, int16_t direction);
 
 // Basic rectangle Gradient rendering
-ESD_RENDER(ESD_Render_Rectangle_Gradient, Type = void, DisplayName = "ESD Gradient Rectangle (Integer)", Include = "ESD_Primitives.h", Category = EsdPrimitives, Inline)
+ESD_RENDER(ESD_Render_Rectangle_Gradient, Type = void, DisplayName = "ESD Gradient Rectangle (Integer)", Include = "ESD_Render.h", Category = EsdPrimitives, Inline)
 ESD_PARAMETER(x, Type = int32_t, Default = 0)
 ESD_PARAMETER(y, Type = int32_t, Default = 0)
 ESD_PARAMETER(width, Type = int32_t, Default = 60)
@@ -147,7 +147,7 @@ static inline void ESD_Render_Rectangle_Gradient(int32_t x, int32_t y, int32_f4_
 }
 
 // Basic rectangle rendering with fixed point precision
-ESD_RENDER(ESD_Render_RectangleF, Type = void, DisplayName = "ESD Rectangle (Fixed Point)", Include = "ESD_Primitives.h", Category = EsdPrimitives)
+ESD_RENDER(ESD_Render_RectangleF, Type = void, DisplayName = "ESD Rectangle (Fixed Point)", Include = "ESD_Render.h", Category = EsdPrimitives)
 ESD_PARAMETER(x, Type = int32_f4_t, Default = 0)
 ESD_PARAMETER(y, Type = int32_f4_t, Default = 0)
 ESD_PARAMETER(width, Type = int32_f4_t, Default = 60)
@@ -157,7 +157,7 @@ ESD_PARAMETER(color, Type = ft_argb32_t, DisplayName = "Color", Default = #FFFFF
 void ESD_Render_RectangleF(int32_f4_t x, int32_f4_t y, int32_f4_t w, int32_f4_t h, int32_f4_t radius, ft_argb32_t color);
 
 // Basic rectangle rendering
-ESD_RENDER(ESD_Render_Rectangle, Type = void, DisplayName = "ESD Rectangle (Integer)", Include = "ESD_Primitives.h", Category = EsdPrimitives, Inline)
+ESD_RENDER(ESD_Render_Rectangle, Type = void, DisplayName = "ESD Rectangle (Integer)", Include = "ESD_Render.h", Category = EsdPrimitives, Inline)
 ESD_PARAMETER(x, Type = int32_t, Default = 0)
 ESD_PARAMETER(y, Type = int32_t, Default = 0)
 ESD_PARAMETER(width, Type = int32_t, Default = 60)
@@ -170,7 +170,7 @@ static inline void ESD_Render_Rectangle(int32_t x, int32_t y, int32_t w, int32_t
 }
 
 // Basic line rendering with fixed point precision
-ESD_RENDER(ESD_Render_LineF, Type = void, DisplayName = "ESD Line (Fixed Point)", Include = "ESD_Primitives.h", Category = EsdPrimitives)
+ESD_RENDER(ESD_Render_LineF, Type = void, DisplayName = "ESD Line (Fixed Point)", Include = "ESD_Render.h", Category = EsdPrimitives)
 ESD_PARAMETER(x0, Type = int32_f4_t, Default = 0)
 ESD_PARAMETER(y0, Type = int32_f4_t, Default = 0)
 ESD_PARAMETER(x1, Type = int32_f4_t, Default = 60)
@@ -180,7 +180,7 @@ ESD_PARAMETER(color, Type = ft_argb32_t, DisplayName = "Color", Default = #FFFFF
 void ESD_Render_LineF(int32_f4_t x0, int32_f4_t y0, int32_f4_t x1, int32_f4_t y1, int32_f3_t width, ft_argb32_t color);
 
 // Basic line rendering
-ESD_RENDER(ESD_Render_Line, Type = void, DisplayName = "ESD Line (Integer)", Include = "ESD_Primitives.h", Category = EsdPrimitives, Inline)
+ESD_RENDER(ESD_Render_Line, Type = void, DisplayName = "ESD Line (Integer)", Include = "ESD_Render.h", Category = EsdPrimitives, Inline)
 ESD_PARAMETER(x0, Type = int32_t, Default = 0)
 ESD_PARAMETER(y0, Type = int32_t, Default = 0)
 ESD_PARAMETER(x1, Type = int32_t, Default = 60)

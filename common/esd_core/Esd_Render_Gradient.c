@@ -1,6 +1,6 @@
 
 #include "ESD_Core.h"
-#include "ESD_Primitives.h"
+#include "ESD_Render.h"
 #include "ESD_GpuAlloc.h"
 #include "ESD_BitmapHandle.h"
 
@@ -94,23 +94,23 @@ void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t width, int16_t heigh
 #else
 	if (EVE_CHIPID >= EVE_BT815)
 	{
-	EVE_CoCmd_dl(ESD_Host, BITMAP_TRANSFORM_A_EXT(1, 0x8000 / width));
-	EVE_CoCmd_dl(ESD_Host, BITMAP_TRANSFORM_E_EXT(1, 0x8000 / height));
+		EVE_CoCmd_dl(ESD_Host, BITMAP_TRANSFORM_A_EXT(1, 0x8000 / width));
+		EVE_CoCmd_dl(ESD_Host, BITMAP_TRANSFORM_E_EXT(1, 0x8000 / height));
 	}
 	else
 	{
-	EVE_CoCmd_dl(ESD_Host, BITMAP_TRANSFORM_A(0x0100 / width));
-	EVE_CoCmd_dl(ESD_Host, BITMAP_TRANSFORM_E(0x0100 / height));
+		EVE_CoCmd_dl(ESD_Host, BITMAP_TRANSFORM_A(0x0100 / width));
+		EVE_CoCmd_dl(ESD_Host, BITMAP_TRANSFORM_E(0x0100 / height));
 	}
 #endif
 
 	if (EVE_CHIPID >= EVE_BT815)
 	{
-	EVE_CoCmd_dl(ESD_Host, VERTEX2F(x, y));
+		EVE_CoCmd_dl(ESD_Host, VERTEX2F(x, y));
 	}
 	else
 	{
-	EVE_CoCmd_dl(ESD_Host, VERTEX2II(x, y, ESD_CO_SCRATCH_HANDLE, 0));
+		EVE_CoCmd_dl(ESD_Host, VERTEX2II(x, y, ESD_CO_SCRATCH_HANDLE, 0));
 	}
 
 	// Restore rendering context, ESD display list optimizations functions should be used again after this.
