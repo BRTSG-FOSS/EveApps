@@ -55,18 +55,18 @@ typedef struct
 {
 	// Keep to a minimum
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
-	ft_uint32_t PaletteSource;
+	uint32_t PaletteSource;
 #endif
-	ft_int16_f4_t LineWidth;
-	ft_int16_f4_t PointSize;
+	int16_f4_t LineWidth;
+	int16_f4_t PointSize;
 	ft_rgb32_t ColorRGB;
-	ft_uint8_t ColorA;
-	ft_uint8_t Handle; // Current handle
-	ft_uint8_t Cell; // Current cell
+	uint8_t ColorA;
+	uint8_t Handle; // Current handle
+	uint8_t Cell; // Current cell
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
-	ft_uint8_t VertexFormat; // Current vertex format
+	uint8_t VertexFormat; // Current vertex format
 #endif
-	ft_bool_t BitmapTransform; // BitmapTransform other than default is set
+	bool BitmapTransform; // BitmapTransform other than default is set
 } ESD_GpuState_T;
 #endif
 
@@ -76,10 +76,10 @@ typedef struct
 extern ESD_EXTERN_LIBARY EVE_HalContext *ESD_Host;
 #if ESD_DL_OPTIMIZE
 extern ESD_EXTERN_LIBARY ESD_GpuState_T ESD_GpuState[ESD_DL_STATE_STACK_SIZE];
-extern ESD_EXTERN_LIBARY ft_uint8_t ESD_GpuState_I;
-extern ESD_EXTERN_LIBARY ft_uint8_t ESD_Primitive;
-// extern ft_uint32_t Esd_CurrentContext->CoFgColor;
-// extern ft_uint32_t Esd_CurrentContext->CoBgColor;
+extern ESD_EXTERN_LIBARY uint8_t ESD_GpuState_I;
+extern ESD_EXTERN_LIBARY uint8_t ESD_Primitive;
+// extern uint32_t Esd_CurrentContext->CoFgColor;
+// extern uint32_t Esd_CurrentContext->CoBgColor;
 #endif
 extern ESD_EXTERN_LIBARY ESD_Rect16 ESD_ScissorRect;
 
@@ -108,17 +108,17 @@ ESD_PARAMETER(state, Type = ESD_Rect16)
 void ESD_Dl_Scissor_Reset(ESD_Rect16 state);
 
 // Set current tag. Must be returned to 255 after usage, to ensure next widgets don't draw with invalid tag
-ESD_FUNCTION(ESD_Dl_TAG, Type = ft_void_t, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(s, Type = ft_uint8_t, DisplayName = "Tag", Default = 255, Min = 0, Max = 255)
-inline static ft_void_t ESD_Dl_TAG(ft_uint8_t s)
+ESD_FUNCTION(ESD_Dl_TAG, Type = void, Category = EveRenderFunctions, Inline)
+ESD_PARAMETER(s, Type = uint8_t, DisplayName = "Tag", Default = 255, Min = 0, Max = 255)
+inline static void ESD_Dl_TAG(uint8_t s)
 {
 	Eve_CoCmd_SendCmd(ESD_Host, TAG(s));
 }
 
 // Specify color RGB
-ESD_FUNCTION(ESD_Dl_COLOR_RGB, Type = ft_void_t, Category = EveRenderFunctions, Inline)
+ESD_FUNCTION(ESD_Dl_COLOR_RGB, Type = void, Category = EveRenderFunctions, Inline)
 ESD_PARAMETER(c, Type = ft_rgb32_t, DisplayName = "Color")
-inline static ft_void_t ESD_Dl_COLOR_RGB(ft_rgb32_t c)
+inline static void ESD_Dl_COLOR_RGB(ft_rgb32_t c)
 {
 	ft_rgb32_t rgb = c & 0xFFFFFF;
 #if ESD_DL_OPTIMIZE
@@ -133,9 +133,9 @@ inline static ft_void_t ESD_Dl_COLOR_RGB(ft_rgb32_t c)
 }
 
 // Specify alpha channel
-ESD_FUNCTION(ESD_Dl_COLOR_A, Type = ft_void_t, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(alpha, Type = ft_uint8_t, Default = 255, Min = 0, Max = 255)
-inline static ft_void_t ESD_Dl_COLOR_A(ft_uint8_t alpha)
+ESD_FUNCTION(ESD_Dl_COLOR_A, Type = void, Category = EveRenderFunctions, Inline)
+ESD_PARAMETER(alpha, Type = uint8_t, Default = 255, Min = 0, Max = 255)
+inline static void ESD_Dl_COLOR_A(uint8_t alpha)
 {
 #if ESD_DL_OPTIMIZE
 	if (alpha != ESD_STATE.ColorA)
@@ -149,18 +149,18 @@ inline static ft_void_t ESD_Dl_COLOR_A(ft_uint8_t alpha)
 }
 
 // Specify color: Alpha(31~24 bit) + RGB(23~0 bit)
-ESD_FUNCTION(ESD_Dl_COLOR_ARGB, Type = ft_void_t, Category = EveRenderFunctions, Inline)
+ESD_FUNCTION(ESD_Dl_COLOR_ARGB, Type = void, Category = EveRenderFunctions, Inline)
 ESD_PARAMETER(c, Type = ft_argb32_t, DisplayName = "Color")
-inline static ft_void_t ESD_Dl_COLOR_ARGB(ft_argb32_t c)
+inline static void ESD_Dl_COLOR_ARGB(ft_argb32_t c)
 {
 	ESD_Dl_COLOR_RGB(c);
 	ESD_Dl_COLOR_A(c >> 24);
 }
 
 // Specify bitmap handle, see BITMAP_HANDLE
-ESD_FUNCTION(ESD_Dl_BITMAP_HANDLE, Type = ft_void_t, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(handle, Type = ft_uint8_t, Min = 0, Max = 31)
-inline static ft_void_t ESD_Dl_BITMAP_HANDLE(ft_uint8_t handle)
+ESD_FUNCTION(ESD_Dl_BITMAP_HANDLE, Type = void, Category = EveRenderFunctions, Inline)
+ESD_PARAMETER(handle, Type = uint8_t, Min = 0, Max = 31)
+inline static void ESD_Dl_BITMAP_HANDLE(uint8_t handle)
 {
 #if ESD_DL_OPTIMIZE
 	if (handle != ESD_STATE.Handle)
@@ -174,9 +174,9 @@ inline static ft_void_t ESD_Dl_BITMAP_HANDLE(ft_uint8_t handle)
 }
 
 // Specify cell number for bitmap, see CELL
-ESD_FUNCTION(ESD_Dl_CELL, Type = ft_void_t, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(cell, Type = ft_uint8_t, Min = 0, Max = 255)
-inline static ft_void_t ESD_Dl_CELL(ft_uint8_t cell)
+ESD_FUNCTION(ESD_Dl_CELL, Type = void, Category = EveRenderFunctions, Inline)
+ESD_PARAMETER(cell, Type = uint8_t, Min = 0, Max = 255)
+inline static void ESD_Dl_CELL(uint8_t cell)
 {
 #if ESD_DL_OPTIMIZE
 	if (cell != ESD_STATE.Cell)
@@ -190,20 +190,20 @@ inline static ft_void_t ESD_Dl_CELL(ft_uint8_t cell)
 }
 
 // Set Alpha_Func
-ESD_FUNCTION(ESD_Dl_Alpha_Func, Type = ft_void_t, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(func, Type = ft_uint8_t, Min = 0, Max = 7)
-ESD_PARAMETER(ref, Type = ft_uint8_t, Min = 0, Max = 255)
-inline static ft_void_t ESD_Dl_Alpha_Func(ft_uint8_t func, ft_uint8_t ref)
+ESD_FUNCTION(ESD_Dl_Alpha_Func, Type = void, Category = EveRenderFunctions, Inline)
+ESD_PARAMETER(func, Type = uint8_t, Min = 0, Max = 7)
+ESD_PARAMETER(ref, Type = uint8_t, Min = 0, Max = 255)
+inline static void ESD_Dl_Alpha_Func(uint8_t func, uint8_t ref)
 {
 	Eve_CoCmd_SendCmd(ESD_Host, ALPHA_FUNC(func, ref));
 }
 
 // Save EVE context, see SAVE_CONTEXT
-ESD_FUNCTION(ESD_Dl_SAVE_CONTEXT, Type = ft_void_t, Category = EveRenderFunctions, Inline)
-inline static ft_void_t ESD_Dl_SAVE_CONTEXT()
+ESD_FUNCTION(ESD_Dl_SAVE_CONTEXT, Type = void, Category = EveRenderFunctions, Inline)
+inline static void ESD_Dl_SAVE_CONTEXT()
 {
 #if ESD_DL_OPTIMIZE
-	ft_uint8_t nextState;
+	uint8_t nextState;
 #endif
 	Eve_CoCmd_SendCmd(ESD_Host, SAVE_CONTEXT());
 #if ESD_DL_OPTIMIZE
@@ -217,8 +217,8 @@ inline static ft_void_t ESD_Dl_SAVE_CONTEXT()
 }
 
 // Restore EVE context, see RESTORE_CONTEXT
-ESD_FUNCTION(ESD_Dl_RESTORE_CONTEXT, Type = ft_void_t, Category = EveRenderFunctions, Inline)
-inline static ft_void_t ESD_Dl_RESTORE_CONTEXT()
+ESD_FUNCTION(ESD_Dl_RESTORE_CONTEXT, Type = void, Category = EveRenderFunctions, Inline)
+inline static void ESD_Dl_RESTORE_CONTEXT()
 {
 	Eve_CoCmd_SendCmd(ESD_Host, RESTORE_CONTEXT());
 #if ESD_DL_OPTIMIZE
@@ -229,9 +229,9 @@ inline static ft_void_t ESD_Dl_RESTORE_CONTEXT()
 
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 // Specify vertex format , see VERTEX_FORMAT command
-ESD_FUNCTION(ESD_Dl_VERTEX_FORMAT, Type = ft_void_t, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(frac, Type = ft_uint8_t, Min = 0, Max = 4)
-inline static ft_void_t ESD_Dl_VERTEX_FORMAT(ft_uint8_t frac)
+ESD_FUNCTION(ESD_Dl_VERTEX_FORMAT, Type = void, Category = EveRenderFunctions, Inline)
+ESD_PARAMETER(frac, Type = uint8_t, Min = 0, Max = 4)
+inline static void ESD_Dl_VERTEX_FORMAT(uint8_t frac)
 {
 #if ESD_DL_OPTIMIZE
 	if (frac != ESD_STATE.VertexFormat)
@@ -249,9 +249,9 @@ inline static ft_void_t ESD_Dl_VERTEX_FORMAT(ft_uint8_t frac)
 
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 // Set palette source, see PALETTE_SOURCE command
-ESD_FUNCTION(ESD_Dl_PALETTE_SOURCE, Type = ft_void_t, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(addr, Type = ft_uint32_t, Min = 0)
-inline static ft_void_t ESD_Dl_PALETTE_SOURCE(ft_uint32_t addr)
+ESD_FUNCTION(ESD_Dl_PALETTE_SOURCE, Type = void, Category = EveRenderFunctions, Inline)
+ESD_PARAMETER(addr, Type = uint32_t, Min = 0)
+inline static void ESD_Dl_PALETTE_SOURCE(uint32_t addr)
 {
 #if ESD_DL_OPTIMIZE
 	if (addr != ESD_STATE.PaletteSource)
@@ -267,9 +267,9 @@ inline static ft_void_t ESD_Dl_PALETTE_SOURCE(ft_uint32_t addr)
 #define ESD_Dl_PALETTE_SOURCE(addr) eve_assert(false)
 #endif
 
-ESD_FUNCTION(ESD_Dl_LINE_WIDTH, Type = ft_void_t, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(width, Type = ft_int16_f4_t)
-inline static ft_void_t ESD_Dl_LINE_WIDTH(ft_int16_f4_t width)
+ESD_FUNCTION(ESD_Dl_LINE_WIDTH, Type = void, Category = EveRenderFunctions, Inline)
+ESD_PARAMETER(width, Type = int16_f4_t)
+inline static void ESD_Dl_LINE_WIDTH(int16_f4_t width)
 {
 #if ESD_DL_OPTIMIZE
 	if (width != ESD_STATE.LineWidth)
@@ -282,9 +282,9 @@ inline static ft_void_t ESD_Dl_LINE_WIDTH(ft_int16_f4_t width)
 #endif
 }
 
-ESD_FUNCTION(ESD_Dl_POINT_SIZE, Type = ft_void_t, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(size, Type = ft_int16_f4_t)
-inline static ft_void_t ESD_Dl_POINT_SIZE(ft_int16_f4_t size)
+ESD_FUNCTION(ESD_Dl_POINT_SIZE, Type = void, Category = EveRenderFunctions, Inline)
+ESD_PARAMETER(size, Type = int16_f4_t)
+inline static void ESD_Dl_POINT_SIZE(int16_f4_t size)
 {
 #if ESD_DL_OPTIMIZE
 	if (size != ESD_STATE.PointSize)
@@ -297,9 +297,9 @@ inline static ft_void_t ESD_Dl_POINT_SIZE(ft_int16_f4_t size)
 #endif
 }
 
-ESD_FUNCTION(ESD_Dl_BEGIN, Type = ft_void_t, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(primitive, Type = ft_uint8_t)
-inline static ft_void_t ESD_Dl_BEGIN(ft_uint8_t primitive)
+ESD_FUNCTION(ESD_Dl_BEGIN, Type = void, Category = EveRenderFunctions, Inline)
+ESD_PARAMETER(primitive, Type = uint8_t)
+inline static void ESD_Dl_BEGIN(uint8_t primitive)
 {
 #if ESD_DL_OPTIMIZE
 	if (primitive != ESD_Primitive)
@@ -312,8 +312,8 @@ inline static ft_void_t ESD_Dl_BEGIN(ft_uint8_t primitive)
 #endif
 }
 
-ESD_FUNCTION(ESD_Dl_END, Type = ft_void_t, Category = EveRenderFunctions, Inline)
-inline static ft_void_t ESD_Dl_END()
+ESD_FUNCTION(ESD_Dl_END, Type = void, Category = EveRenderFunctions, Inline)
+inline static void ESD_Dl_END()
 {
 #if ESD_DL_END_PRIMITIVE || !ESD_DL_OPTIMIZE
 #if ESD_DL_OPTIMIZE
@@ -345,19 +345,19 @@ inline static ft_void_t ESD_Dl_END()
 /* Display list calls without state caching */
 
 // Fixed point vertex with subprecision depending on current vertex format
-ESD_FUNCTION(Esd_Dl_VERTEX2F, Type = ft_void_t, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(x, Type = ft_uint16_t)
-ESD_PARAMETER(y, Type = ft_uint16_t)
-inline static ft_void_t Esd_Dl_VERTEX2F(ft_uint16_t x, ft_uint16_t y)
+ESD_FUNCTION(Esd_Dl_VERTEX2F, Type = void, Category = EveRenderFunctions, Inline)
+ESD_PARAMETER(x, Type = uint16_t)
+ESD_PARAMETER(y, Type = uint16_t)
+inline static void Esd_Dl_VERTEX2F(uint16_t x, uint16_t y)
 {
 	Eve_CoCmd_SendCmd(ESD_Host, VERTEX2F(x, y));
 }
 
 // Fixed point vertex using 4 bits subprecision
-ESD_FUNCTION(Esd_Dl_VERTEX2F_4, Type = ft_void_t, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(x, Type = ft_int16_f4_t)
-ESD_PARAMETER(y, Type = ft_int16_f4_t)
-inline static ft_void_t Esd_Dl_VERTEX2F_4(ft_int16_f4_t x, ft_int16_f4_t y)
+ESD_FUNCTION(Esd_Dl_VERTEX2F_4, Type = void, Category = EveRenderFunctions, Inline)
+ESD_PARAMETER(x, Type = int16_f4_t)
+ESD_PARAMETER(y, Type = int16_f4_t)
+inline static void Esd_Dl_VERTEX2F_4(int16_f4_t x, int16_f4_t y)
 {
 	EVE_HalContext *phost = ESD_Host;
 	(void)phost;
@@ -367,10 +367,10 @@ inline static ft_void_t Esd_Dl_VERTEX2F_4(ft_int16_f4_t x, ft_int16_f4_t y)
 }
 
 // Fixed point vertex using 2 bits subprecision
-ESD_FUNCTION(Esd_Dl_VERTEX2F_2, Type = ft_void_t, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(x, Type = ft_int16_f2_t)
-ESD_PARAMETER(y, Type = ft_int16_f2_t)
-inline static ft_void_t Esd_Dl_VERTEX2F_2(ft_int16_f2_t x, ft_int16_f2_t y)
+ESD_FUNCTION(Esd_Dl_VERTEX2F_2, Type = void, Category = EveRenderFunctions, Inline)
+ESD_PARAMETER(x, Type = int16_f2_t)
+ESD_PARAMETER(y, Type = int16_f2_t)
+inline static void Esd_Dl_VERTEX2F_2(int16_f2_t x, int16_f2_t y)
 {
 	EVE_HalContext *phost = ESD_Host;
 	(void)phost;
@@ -387,10 +387,10 @@ inline static ft_void_t Esd_Dl_VERTEX2F_2(ft_int16_f2_t x, ft_int16_f2_t y)
 }
 
 // Fixed point vertex using 0 bits subprecision, or integer point vertex
-ESD_FUNCTION(Esd_Dl_VERTEX2F_0, Type = ft_void_t, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(x, Type = ft_uint16_t)
-ESD_PARAMETER(y, Type = ft_uint16_t)
-inline static ft_void_t Esd_Dl_VERTEX2F_0(ft_uint16_t x, ft_uint16_t y)
+ESD_FUNCTION(Esd_Dl_VERTEX2F_0, Type = void, Category = EveRenderFunctions, Inline)
+ESD_PARAMETER(x, Type = uint16_t)
+ESD_PARAMETER(y, Type = uint16_t)
+inline static void Esd_Dl_VERTEX2F_0(uint16_t x, uint16_t y)
 {
 	EVE_HalContext *phost = ESD_Host;
 	(void)phost;
@@ -406,37 +406,37 @@ inline static ft_void_t Esd_Dl_VERTEX2F_0(ft_uint16_t x, ft_uint16_t y)
 }
 
 // Display list calls without state caching
-ESD_FUNCTION(Esd_Dl_VERTEX2II, Type = ft_void_t, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(x, Type = ft_uint16_t)
-ESD_PARAMETER(y, Type = ft_uint16_t)
-ESD_PARAMETER(handle, Type = ft_uint8_t)
-ESD_PARAMETER(cell, Type = ft_uint8_t)
-inline static ft_void_t Esd_Dl_VERTEX2II(ft_uint16_t x, ft_uint16_t y, ft_uint8_t handle, ft_uint8_t cell)
+ESD_FUNCTION(Esd_Dl_VERTEX2II, Type = void, Category = EveRenderFunctions, Inline)
+ESD_PARAMETER(x, Type = uint16_t)
+ESD_PARAMETER(y, Type = uint16_t)
+ESD_PARAMETER(handle, Type = uint8_t)
+ESD_PARAMETER(cell, Type = uint8_t)
+inline static void Esd_Dl_VERTEX2II(uint16_t x, uint16_t y, uint8_t handle, uint8_t cell)
 {
 	Eve_CoCmd_SendCmd(ESD_Host, VERTEX2II(x, y, handle, cell));
 }
 
 // Specify clear color RGB
-ESD_FUNCTION(Esd_Dl_CLEAR_COLOR_RGB, Type = ft_void_t, Category = EveRenderFunctions, Inline)
+ESD_FUNCTION(Esd_Dl_CLEAR_COLOR_RGB, Type = void, Category = EveRenderFunctions, Inline)
 ESD_PARAMETER(c, Type = ft_rgb32_t, DisplayName = "Color")
-inline static ft_void_t Esd_Dl_CLEAR_COLOR_RGB(ft_rgb32_t c)
+inline static void Esd_Dl_CLEAR_COLOR_RGB(ft_rgb32_t c)
 {
 	ft_rgb32_t rgb = c & 0xFFFFFF;
 	Eve_CoCmd_SendCmd(ESD_Host, CLEAR_COLOR_RGB(0, 0, 0) | (rgb));
 }
 
 // Specify clear color alpha channel
-ESD_FUNCTION(Esd_Dl_CLEAR_COLOR_A, Type = ft_void_t, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(alpha, Type = ft_uint8_t, Default = 255, Min = 0, Max = 255)
-inline static ft_void_t Esd_Dl_CLEAR_COLOR_A(ft_uint8_t alpha)
+ESD_FUNCTION(Esd_Dl_CLEAR_COLOR_A, Type = void, Category = EveRenderFunctions, Inline)
+ESD_PARAMETER(alpha, Type = uint8_t, Default = 255, Min = 0, Max = 255)
+inline static void Esd_Dl_CLEAR_COLOR_A(uint8_t alpha)
 {
 	Eve_CoCmd_SendCmd(ESD_Host, CLEAR_COLOR_A(alpha));
 }
 
 // Specify clear color: Alpha(31~24 bit) + RGB(23~0 bit)
-ESD_FUNCTION(Esd_Dl_CLEAR_COLOR_ARGB, Type = ft_void_t, Category = EveRenderFunctions, Inline)
+ESD_FUNCTION(Esd_Dl_CLEAR_COLOR_ARGB, Type = void, Category = EveRenderFunctions, Inline)
 ESD_PARAMETER(c, Type = ft_argb32_t, DisplayName = "Color")
-inline static ft_void_t Esd_Dl_CLEAR_COLOR_ARGB(ft_argb32_t c)
+inline static void Esd_Dl_CLEAR_COLOR_ARGB(ft_argb32_t c)
 {
 	Esd_Dl_CLEAR_COLOR_RGB(c);
 	Esd_Dl_CLEAR_COLOR_A(c >> 24);
@@ -445,16 +445,16 @@ inline static ft_void_t Esd_Dl_CLEAR_COLOR_ARGB(ft_argb32_t c)
 /* end of supported functions */
 
 // Get the height of builtin font
-ESD_FUNCTION(ESD_GetFontHeight, Type = ft_uint16_t, DisplayName = "Get Font Height", Category = _GroupHidden, Macro)
+ESD_FUNCTION(ESD_GetFontHeight, Type = uint16_t, DisplayName = "Get Font Height", Category = _GroupHidden, Macro)
 ESD_PARAMETER(i, Type = int, DisplayName = "Bitmap Handle", Default = 0, Min = 0, Max = 31)
-// inline static ft_uint16_t ESD_GetFontHeight(int i) { return ESD_FontHeight[i]; }
+// inline static uint16_t ESD_GetFontHeight(int i) { return ESD_FontHeight[i]; }
 #define ESD_GetFontHeight(i) (Esd_GetFontHeight(Esd_GetRomFont(i)));
 
-ESD_FUNCTION(Esd_Dl_CLEAR, Type = ft_void_t, Category = EveRenderFunctions, Inline)
-ESD_PARAMETER(c, Type = ft_uint8_t, DisplayName = "Clear Color")
-ESD_PARAMETER(s, Type = ft_uint8_t, DisplayName = "Clear Stencil")
-ESD_PARAMETER(t, Type = ft_uint8_t, DisplayName = "Clear Tag")
-inline static ft_void_t Esd_Dl_CLEAR(ft_uint8_t c, ft_uint8_t s, ft_uint8_t t)
+ESD_FUNCTION(Esd_Dl_CLEAR, Type = void, Category = EveRenderFunctions, Inline)
+ESD_PARAMETER(c, Type = uint8_t, DisplayName = "Clear Color")
+ESD_PARAMETER(s, Type = uint8_t, DisplayName = "Clear Stencil")
+ESD_PARAMETER(t, Type = uint8_t, DisplayName = "Clear Tag")
+inline static void Esd_Dl_CLEAR(uint8_t c, uint8_t s, uint8_t t)
 {
 	Eve_CoCmd_SendCmd(ESD_Host, CLEAR(c, s, t));
 }
@@ -506,41 +506,41 @@ inline static ft_void_t Esd_Dl_CLEAR(ft_uint8_t c, ft_uint8_t s, ft_uint8_t t)
 
 /*
 
-ft_void_t Esd_Dl_BITMAP_SOURCE(ft_uint32_t addr);
+void Esd_Dl_BITMAP_SOURCE(uint32_t addr);
 
-ESD_FUNCTION(FT_Esd_Dl_CLEAR_COLOR_RGB, Type = ft_void_t, Include = "ESD_Dl.h")
-ESD_PARAMETER(c, Type = ft_uint32_t, EditType = Color)
-ft_void_t FT_Esd_Dl_CLEAR_COLOR_RGB(ft_uint32_t c);
+ESD_FUNCTION(FT_Esd_Dl_CLEAR_COLOR_RGB, Type = void, Include = "ESD_Dl.h")
+ESD_PARAMETER(c, Type = uint32_t, EditType = Color)
+void FT_Esd_Dl_CLEAR_COLOR_RGB(uint32_t c);
 
-// ft_void_t Esd_Dl_BITMAP_LAYOUT(ft_uint16_t format, ft_uint16_t linestride, ft_uint16_t height);
-// ft_void_t Esd_Dl_BITMAP_SIZE(ft_uint16_t filter, ft_uint16_t wrapx, ft_uint16_t wrapy, ft_uint16_t width, ft_uint16_t height);
+// void Esd_Dl_BITMAP_LAYOUT(uint16_t format, uint16_t linestride, uint16_t height);
+// void Esd_Dl_BITMAP_SIZE(uint16_t filter, uint16_t wrapx, uint16_t wrapy, uint16_t width, uint16_t height);
 
-ft_void_t Esd_Dl_ALPHA_FUNC(ft_uint16_t func, ft_uint16_t ref);
-ft_void_t Esd_Dl_STENCIL_FUNC(ft_uint16_t func, ft_uint16_t ref, ft_uint16_t mask);
-ft_void_t Esd_Dl_BLEND_FUNC(ft_uint16_t src, ft_uint16_t dst);
-ft_void_t Esd_Dl_STENCIL_OP(ft_uint16_t sfail, ft_uint16_t spass);
+void Esd_Dl_ALPHA_FUNC(uint16_t func, uint16_t ref);
+void Esd_Dl_STENCIL_FUNC(uint16_t func, uint16_t ref, uint16_t mask);
+void Esd_Dl_BLEND_FUNC(uint16_t src, uint16_t dst);
+void Esd_Dl_STENCIL_OP(uint16_t sfail, uint16_t spass);
 
-ft_void_t Esd_Dl_CLEAR_STENCIL(ft_uint8_t s);
-ft_void_t Esd_Dl_CLEAR_TAG(ft_uint8_t s);
-ft_void_t Esd_Dl_STENCIL_MASK(ft_uint32_t mask);
-ft_void_t Esd_Dl_TAG_MASK(ft_uint32_t mask);
+void Esd_Dl_CLEAR_STENCIL(uint8_t s);
+void Esd_Dl_CLEAR_TAG(uint8_t s);
+void Esd_Dl_STENCIL_MASK(uint32_t mask);
+void Esd_Dl_TAG_MASK(uint32_t mask);
 
-ft_void_t Esd_Dl_BITMAP_TRANSFORM_A(ft_uint32_t a);
-ft_void_t Esd_Dl_BITMAP_TRANSFORM_B(ft_uint32_t b);
-ft_void_t Esd_Dl_BITMAP_TRANSFORM_C(ft_uint32_t c);
-ft_void_t Esd_Dl_BITMAP_TRANSFORM_D(ft_uint32_t d);
-ft_void_t Esd_Dl_BITMAP_TRANSFORM_E(ft_uint32_t e);
-ft_void_t Esd_Dl_BITMAP_TRANSFORM_F(ft_uint32_t f);
+void Esd_Dl_BITMAP_TRANSFORM_A(uint32_t a);
+void Esd_Dl_BITMAP_TRANSFORM_B(uint32_t b);
+void Esd_Dl_BITMAP_TRANSFORM_C(uint32_t c);
+void Esd_Dl_BITMAP_TRANSFORM_D(uint32_t d);
+void Esd_Dl_BITMAP_TRANSFORM_E(uint32_t e);
+void Esd_Dl_BITMAP_TRANSFORM_F(uint32_t f);
 
-// ft_void_t Esd_Dl_CALL(ft_uint16_t dest);
-// ft_void_t Esd_Dl_JUMP(ft_uint16_t dest);
-// ft_void_t Esd_Dl_RETURN();
+// void Esd_Dl_CALL(uint16_t dest);
+// void Esd_Dl_JUMP(uint16_t dest);
+// void Esd_Dl_RETURN();
 
-// ft_void_t Esd_Dl_MACRO(ft_uint8_t m);
+// void Esd_Dl_MACRO(uint8_t m);
 
-// ft_void_t Esd_Dl_DISPLAY();
+// void Esd_Dl_DISPLAY();
 
-ft_void_t Esd_Dl_COLOR_MASK(ft_uint8_t r, ft_uint8_t g, ft_uint8_t b, ft_uint8_t a);
+void Esd_Dl_COLOR_MASK(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 
 */
 
@@ -551,47 +551,47 @@ ESD_CATEGORY(EveRenderCoprocessorProto, DisplayName = "Coprocessor", Category = 
 ESD_CATEGORY(EsdWidgetsProto, DisplayName = "ESD Widgets (Prototype)", Category = _GroupHidden)
 
 ESD_FUNCTION(FT_Esd_Render_Rect_Grad, DisplayName = "Render GRAD RECT ", Include = "ESD_Dl.h", Category = EveRenderDisplayListProto)
-ESD_PARAMETER(x, Type = ft_int16_t, Default = 0)
-ESD_PARAMETER(y, Type = ft_int16_t, Default = 0)
-ESD_PARAMETER(w, Type = ft_int16_t, Default = 60)
-ESD_PARAMETER(h, Type = ft_int16_t, Default = 20)
-ESD_PARAMETER(color1, Type = ft_uint32_t, Default = #FFFFFFFF)
-ESD_PARAMETER(color2, Type = ft_uint32_t, Default = #FFFFFFFF)
-ESD_PARAMETER(direction, Type = ft_int16_t, Default = 90)
-void FT_Esd_Render_Rect_Grad(ft_int16_t x, ft_int16_t y, ft_int16_t w, ft_int16_t h, ft_uint32_t color1, ft_uint32_t color2, ft_int16_t direction);
+ESD_PARAMETER(x, Type = int16_t, Default = 0)
+ESD_PARAMETER(y, Type = int16_t, Default = 0)
+ESD_PARAMETER(w, Type = int16_t, Default = 60)
+ESD_PARAMETER(h, Type = int16_t, Default = 20)
+ESD_PARAMETER(color1, Type = uint32_t, Default = #FFFFFFFF)
+ESD_PARAMETER(color2, Type = uint32_t, Default = #FFFFFFFF)
+ESD_PARAMETER(direction, Type = int16_t, Default = 90)
+void FT_Esd_Render_Rect_Grad(int16_t x, int16_t y, int16_t w, int16_t h, uint32_t color1, uint32_t color2, int16_t direction);
 
 ESD_FUNCTION(FT_Esd_Render_Rect, DisplayName = "Render RECT", Include = "ESD_Dl.h", Category = EveRenderDisplayListProto)
-ESD_PARAMETER(x, Type = ft_int16_t, Default = 0)
-ESD_PARAMETER(y, Type = ft_int16_t, Default = 0)
-ESD_PARAMETER(w, Type = ft_int16_t, Default = 60)
-ESD_PARAMETER(h, Type = ft_int16_t, Default = 20)
-void FT_Esd_Render_Rect(ft_int16_t x, ft_int16_t y, ft_int16_t w, ft_int16_t h);
+ESD_PARAMETER(x, Type = int16_t, Default = 0)
+ESD_PARAMETER(y, Type = int16_t, Default = 0)
+ESD_PARAMETER(w, Type = int16_t, Default = 60)
+ESD_PARAMETER(h, Type = int16_t, Default = 20)
+void FT_Esd_Render_Rect(int16_t x, int16_t y, int16_t w, int16_t h);
 
 ESD_FUNCTION(ESD_Cmd_Button, DisplayName = "cmd_button", Include = "ESD_Dl.h", Category = EveRenderCoprocessorProto)
-ESD_PARAMETER(x, Type = ft_int16_t, Default = 0)
-ESD_PARAMETER(y, Type = ft_int16_t, Default = 0)
-ESD_PARAMETER(w, Type = ft_int16_t, Default = 60)
-ESD_PARAMETER(h, Type = ft_int16_t, Default = 20)
-ESD_PARAMETER(font, Type = ft_int16_t, Default = 21)
+ESD_PARAMETER(x, Type = int16_t, Default = 0)
+ESD_PARAMETER(y, Type = int16_t, Default = 0)
+ESD_PARAMETER(w, Type = int16_t, Default = 60)
+ESD_PARAMETER(h, Type = int16_t, Default = 20)
+ESD_PARAMETER(font, Type = int16_t, Default = 21)
 ESD_PARAMETER(options, Type = Ft_CoPro_Opt)
-ESD_PARAMETER(s, Type = const ft_char8_t *, Default = "Button")
-ft_void_t ESD_Cmd_Button(ft_int16_t x, ft_int16_t y, ft_int16_t w, ft_int16_t h, ft_int16_t font, ft_uint16_t options, const ft_char8_t *s);
+ESD_PARAMETER(s, Type = const char *, Default = "Button")
+void ESD_Cmd_Button(int16_t x, int16_t y, int16_t w, int16_t h, int16_t font, uint16_t options, const char *s);
 
 ESD_FUNCTION(ESD_Cmd_Number, DisplayName = "cmd_number", Include = "ESD_Dl.h", Category = EveRenderCoprocessorProto)
-ESD_PARAMETER(x, Type = ft_int16_t, Default = 0)
-ESD_PARAMETER(y, Type = ft_int16_t, Default = 0)
-ESD_PARAMETER(font, Type = ft_int16_t, Default = 21)
+ESD_PARAMETER(x, Type = int16_t, Default = 0)
+ESD_PARAMETER(y, Type = int16_t, Default = 0)
+ESD_PARAMETER(font, Type = int16_t, Default = 21)
 ESD_PARAMETER(options, Type = Ft_CoPro_Opt)
-ESD_PARAMETER(n, Type = ft_int32_t, Default = 0)
-ft_void_t ESD_Cmd_Number(ft_int16_t x, ft_int16_t y, ft_int16_t font, ft_uint16_t options, ft_int32_t n);
+ESD_PARAMETER(n, Type = int32_t, Default = 0)
+void ESD_Cmd_Number(int16_t x, int16_t y, int16_t font, uint16_t options, int32_t n);
 
-ESD_FUNCTION(Ft_Gpu_Hal_Rd32, Type = ft_uint32_t, Buffered, Include = "Ft_Gpu_Hal.h", Category = _GroupHidden)
+ESD_FUNCTION(Ft_Gpu_Hal_Rd32, Type = uint32_t, Buffered, Include = "Ft_Gpu_Hal.h", Category = _GroupHidden)
 ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = ESD_GetHost, Hidden, Internal, Static)
-ESD_PARAMETER(addr, Type = ft_uint32_t, DisplayName = "Address")
+ESD_PARAMETER(addr, Type = uint32_t, DisplayName = "Address")
 
 ESD_FUNCTION(Eve_CoCmd_SendCmd, Include = "Ft_Gpu_Hal.h", Category = _GroupHidden)
 ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = ESD_GetHost, Hidden, Internal, Static)
-ESD_PARAMETER(cmd, Type = ft_uint32_t)
+ESD_PARAMETER(cmd, Type = uint32_t)
 
 #endif /* #ifndef ESD_DL_H */
 

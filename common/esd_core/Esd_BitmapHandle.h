@@ -18,7 +18,7 @@ typedef struct
 	ESD_GpuHandle GpuHandle[ESD_BITMAPHANDLE_CAP];
 	uint8_t Use[ESD_BITMAPHANDLE_CAP];
 
-	ft_bool_t Resized[ESD_BITMAPHANDLE_CAP];
+	bool Resized[ESD_BITMAPHANDLE_CAP];
 	uint8_t Page[ESD_BITMAPHANDLE_CAP];
 
 } Esd_HandleState;

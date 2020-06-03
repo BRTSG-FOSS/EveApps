@@ -8,30 +8,30 @@ extern void ESD_Noop(void *context);
 
 extern EVE_HalContext *ESD_Host;
 
-static ft_uint32_t s_LastTagFrame = ~0;
+static uint32_t s_LastTagFrame = ~0;
 static ESD_TouchTag s_NullTag = {
 	.Down = ESD_Noop,
 	.Up = ESD_Noop,
 	.Tap = ESD_Noop,
 	.Tag = 0,
-	.Set = FT_FALSE
+	.Set = false
 };
-static ft_bool_t s_SuppressCurrentTags = 0;
-static ft_uint8_t s_GpuRegTouchTag = 0;
-static ft_uint8_t s_TagDown = 0;
-static ft_uint8_t s_TagUp = 0;
+static bool s_SuppressCurrentTags = 0;
+static uint8_t s_GpuRegTouchTag = 0;
+static uint8_t s_TagDown = 0;
+static uint8_t s_TagUp = 0;
 typedef union
 {
-	ft_uint32_t XY;
+	uint32_t XY;
 	struct
 	{
-		ft_int16_t Y;
-		ft_int16_t X;
+		int16_t Y;
+		int16_t X;
 	};
 } ESD_TouchPos_t;
 static ESD_TouchPos_t s_TouchPos = { 0 };
-ft_int16_t s_TouchPosXDelta = 0;
-ft_int16_t s_TouchPosYDelta = 0;
+int16_t s_TouchPosXDelta = 0;
+int16_t s_TouchPosYDelta = 0;
 
 static ESD_TouchTag *s_TagHandlers[256] = {
 	[0] = &s_NullTag,
@@ -88,8 +88,8 @@ void ESD_TouchTag_Update(ESD_TouchTag *context)
 	(void)phost;
 	if (s_LastTagFrame != Esd_CurrentContext->Frame)
 	{
-		ft_uint32_t regTouchXY;
-		ft_uint8_t regTouchTag;
+		uint32_t regTouchXY;
+		uint8_t regTouchTag;
 
 		// Global tag update
 		s_LastTagFrame = Esd_CurrentContext->Frame;
@@ -162,7 +162,7 @@ void ESD_TouchTag_Update(ESD_TouchTag *context)
 		// Tag unset
 		if (s_TagDown != context->Tag)
 		{
-			context->Set = FT_FALSE;
+			context->Set = false;
 			context->Up(context->Owner);
 			if (s_TagUp == context->Tag)
 			{
@@ -176,7 +176,7 @@ void ESD_TouchTag_Update(ESD_TouchTag *context)
 		// Tag set
 		if (s_TagDown == context->Tag)
 		{
-			context->Set = FT_TRUE;
+			context->Set = true;
 			context->Down(context->Owner);
 		}
 	}
@@ -186,7 +186,7 @@ void ESD_TouchTag_End(ESD_TouchTag *context)
 {
 	if (context->Set)
 	{
-		context->Set = FT_FALSE;
+		context->Set = false;
 		// NOTE: Not necessarily a safe thing to call Up from End, but necessary when tags change
 		context->Up(context->Owner);
 	}
@@ -201,22 +201,22 @@ void ESD_TouchTag_End(ESD_TouchTag *context)
 	}
 }
 
-ft_bool_t ESD_TouchTag_Touching(ESD_TouchTag *context)
+bool ESD_TouchTag_Touching(ESD_TouchTag *context)
 {
 	return context->Tag && (s_TagDown == context->Tag);
 }
 
-ft_bool_t ESD_TouchTag_Inside(ESD_TouchTag *context)
+bool ESD_TouchTag_Inside(ESD_TouchTag *context)
 {
 	return context->Tag && (s_TagDown == context->Tag) && (s_GpuRegTouchTag == context->Tag);
 }
 
-ft_bool_t ESD_TouchTag_Hover(ESD_TouchTag *context)
+bool ESD_TouchTag_Hover(ESD_TouchTag *context)
 {
 	return context->Tag && (s_GpuRegTouchTag == context->Tag);
 }
 
-ft_uint8_t ESD_TouchTag_Tag(ESD_TouchTag *context)
+uint8_t ESD_TouchTag_Tag(ESD_TouchTag *context)
 {
 	if (context->Tag)
 		return context->Tag;
@@ -224,27 +224,27 @@ ft_uint8_t ESD_TouchTag_Tag(ESD_TouchTag *context)
 		return 255; // Always return non-tag value if no tag
 }
 
-ft_uint8_t ESD_TouchTag_CurrentTag(ESD_TouchTag *context)
+uint8_t ESD_TouchTag_CurrentTag(ESD_TouchTag *context)
 {
 	return s_GpuRegTouchTag;
 }
 
-ft_int16_t ESD_TouchTag_TouchX(ESD_TouchTag *context)
+int16_t ESD_TouchTag_TouchX(ESD_TouchTag *context)
 {
 	return s_TouchPos.X;
 }
 
-ft_int16_t ESD_TouchTag_TouchY(ESD_TouchTag *context)
+int16_t ESD_TouchTag_TouchY(ESD_TouchTag *context)
 {
 	return s_TouchPos.Y;
 }
 
-ft_int16_t ESD_TouchTag_TouchXDelta(ESD_TouchTag *context)
+int16_t ESD_TouchTag_TouchXDelta(ESD_TouchTag *context)
 {
 	return s_TouchPosXDelta;
 }
 
-ft_int16_t ESD_TouchTag_TouchYDelta(ESD_TouchTag *context)
+int16_t ESD_TouchTag_TouchYDelta(ESD_TouchTag *context)
 {
 	return s_TouchPosYDelta;
 }

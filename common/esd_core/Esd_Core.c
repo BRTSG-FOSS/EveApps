@@ -44,7 +44,7 @@
 Esd_Context *Esd_CurrentContext = NULL;
 EVE_HalContext *ESD_Host = NULL; // Pointer to current s_Host
 ESD_GpuAlloc *ESD_GAlloc = NULL; // Pointer to current s_GAlloc
-ft_int16_t ESD_DispWidth, ESD_DispHeight;
+int16_t ESD_DispWidth, ESD_DispHeight;
 
 //
 // External definitions
@@ -54,7 +54,7 @@ ft_int16_t ESD_DispWidth, ESD_DispHeight;
 void Esd_CheckTypeSizes();
 #endif
 // FT_Mcu_Hal.c
-// ft_void_t Eve_BootupConfig(EVE_HalContext *s_Host);
+// void Eve_BootupConfig(EVE_HalContext *s_Host);
 #define Eve_BootupConfig EVE_Util_bootupConfig
 
 // When not in the simulation, use the Ft_Main__Start etc symbols
@@ -258,7 +258,7 @@ void Esd_Update(Esd_Context *ec)
 
 	// Update GUI state before render
 	ec->LoopState = ESD_LOOPSTATE_UPDATE;
-	ft_uint32_t ms = ft_millis(); // Calculate frame time delta
+	uint32_t ms = ft_millis(); // Calculate frame time delta
 	ec->DeltaMs = ms - ec->Millis;
 	ec->Millis = ms;
 	ESD_GpuAlloc_Update(ESD_GAlloc); // Run GC
@@ -278,15 +278,15 @@ void Esd_Render(Esd_Context *ec)
 
 	if (ec->ShowLogo)
 	{
-		ec->ShowLogo = FT_FALSE;
-		ec->ShowingLogo = FT_TRUE;
+		ec->ShowLogo = false;
+		ec->ShowingLogo = true;
 		Esd_BeginLogo();
 		return;
 	}
 
 	if (ec->ShowingLogo)
 	{
-		ec->ShowingLogo = FT_FALSE;
+		ec->ShowingLogo = false;
 		Esd_EndLogo();
 	}
 
@@ -307,13 +307,13 @@ void Esd_Render(Esd_Context *ec)
 		// Spinner used for switching longer loading pages with bitmaps etc
 		ESD_Dl_COLOR_RGB(~(ec->ClearColor));
 		ESD_CoCmd_Spinner(Esd_Update, ESD_DispWidth >> 1, ESD_DispHeight >> 1, 0, 0);
-		ec->SpinnerPopup = FT_FALSE;
-		ec->SpinnerPopped = FT_TRUE;
+		ec->SpinnerPopup = false;
+		ec->SpinnerPopped = true;
 	}
 	else if (ec->SpinnerPopped)
 	{
 		ESD_CoCmd_Stop(Esd_Update);
-		ec->SpinnerPopped = FT_FALSE;
+		ec->SpinnerPopped = false;
 	}
 
 	Ft_Gpu_CoCmd_SendCmd(phost, DISPLAY());
@@ -334,7 +334,7 @@ bool Esd_WaitSwap(Esd_Context *ec)
 	EVE_HalContext *phost = &ec->HalContext;
 	(void)phost;
 
-	ec->SwapIdled = FT_FALSE;
+	ec->SwapIdled = false;
 	EVE_Cmd_waitFlush(&ec->HalContext);
 
 	/* Reset the coprocessor in case of fault */

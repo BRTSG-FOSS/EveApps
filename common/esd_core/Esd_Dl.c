@@ -15,10 +15,10 @@ extern int16_t ESD_DispWidth, ESD_DispHeight;
 // GPU state for the current display list
 #if ESD_DL_OPTIMIZE
 ESD_GpuState_T ESD_GpuState[ESD_DL_STATE_STACK_SIZE];
-ft_uint8_t ESD_GpuState_I;
-ft_uint8_t ESD_Primitive;
-// ft_uint32_t Esd_CurrentContext->CoFgColor;
-// ft_uint32_t Esd_CurrentContext->CoBgColor;
+uint8_t ESD_GpuState_I;
+uint8_t ESD_Primitive;
+// uint32_t Esd_CurrentContext->CoFgColor;
+// uint32_t Esd_CurrentContext->CoBgColor;
 #endif
 ESD_Rect16 ESD_ScissorRect;
 
@@ -77,10 +77,10 @@ void ESD_Dl_Scissor_Adjust(ESD_Rect16 rect, ESD_Rect16 state)
 	EVE_HalContext *phost = ESD_Host;
 	(void)phost;
 
-	ft_int16_t x1diff;
-	ft_int16_t y1diff;
-	ft_int16_t x2diff;
-	ft_int16_t y2diff;
+	int16_t x1diff;
+	int16_t y1diff;
+	int16_t x2diff;
+	int16_t y2diff;
 
 	x1diff = (state.X - rect.X); // old x1 - new x1
 	if (x1diff > 0) // old x1 > new x1
@@ -129,7 +129,7 @@ void ESD_Dl_Scissor_Reset(ESD_Rect16 state)
 /* end of supported functions */
 
 // Deprecated
-void FT_Esd_Render_Rect_Grad(ft_int16_t x, ft_int16_t y, ft_int16_t w, ft_int16_t h, ft_argb32_t color1, ft_argb32_t color2, ft_int16_t direction)
+void FT_Esd_Render_Rect_Grad(int16_t x, int16_t y, int16_t w, int16_t h, ft_argb32_t color1, ft_argb32_t color2, int16_t direction)
 {
 	EVE_HalContext *phost = ESD_Host;
 	(void)phost;
@@ -162,12 +162,12 @@ void FT_Esd_Render_Rect_Grad(ft_int16_t x, ft_int16_t y, ft_int16_t w, ft_int16_
 	{
 		double radius = direction * M_PI / 180.0f;
 		double sine = sin(radius), cosine = cos(radius);
-		ft_int16_t x0 = x + (w >> 1);
-		ft_int16_t y0 = y + (h >> 1);
-		ft_int16_t l = (ft_int16_t)(sqrt(w * w + h * h) * 0.8); // use 80% to apply gradient effect
-		ft_int16_t half = l >> 1;
-		ft_int16_t dy = (ft_int16_t)(half * sine);
-		ft_int16_t dx = (ft_int16_t)(half * cosine);
+		int16_t x0 = x + (w >> 1);
+		int16_t y0 = y + (h >> 1);
+		int16_t l = (int16_t)(sqrt(w * w + h * h) * 0.8); // use 80% to apply gradient effect
+		int16_t half = l >> 1;
+		int16_t dy = (int16_t)(half * sine);
+		int16_t dx = (int16_t)(half * cosine);
 
 		ESD_Rect16 s = ESD_Dl_Scissor_Set(rect);
 		Ft_Gpu_CoCmd_Gradient(ESD_Host, x0 - dx, y0 - dy, color1, x0 + dx, y0 + dy, color2);
@@ -176,7 +176,7 @@ void FT_Esd_Render_Rect_Grad(ft_int16_t x, ft_int16_t y, ft_int16_t w, ft_int16_
 }
 
 // Deprecated
-void FT_Esd_Render_Rect(ft_int16_t x, ft_int16_t y, ft_int16_t w, ft_int16_t h)
+void FT_Esd_Render_Rect(int16_t x, int16_t y, int16_t w, int16_t h)
 {
 	ESD_Dl_BEGIN(RECTS);
 	Ft_Gpu_CoCmd_SendCmd(ESD_Host, VERTEX2II(x, y, 0, 0));
@@ -185,13 +185,13 @@ void FT_Esd_Render_Rect(ft_int16_t x, ft_int16_t y, ft_int16_t w, ft_int16_t h)
 }
 
 // Deprecated
-ft_void_t ESD_Cmd_Button(ft_int16_t x, ft_int16_t y, ft_int16_t w, ft_int16_t h, ft_int16_t font, ft_uint16_t options, const ft_char8_t *s)
+void ESD_Cmd_Button(int16_t x, int16_t y, int16_t w, int16_t h, int16_t font, uint16_t options, const char *s)
 {
 	Ft_Gpu_CoCmd_Button(ESD_Host, x, y, w, h, font, options, s);
 }
 
 // Deprecated
-ft_void_t ESD_Cmd_Number(ft_int16_t x, ft_int16_t y, ft_int16_t font, ft_uint16_t options, ft_int32_t n)
+void ESD_Cmd_Number(int16_t x, int16_t y, int16_t font, uint16_t options, int32_t n)
 {
 	Ft_Gpu_CoCmd_Number(ESD_Host, x, y, font, options, n);
 }

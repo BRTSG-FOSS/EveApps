@@ -11,16 +11,16 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 // List which bitmap info is using a handle
 // void *ESD_BitmapHandleInfo[ESD_BITMAPHANDLE_NB] = { 0 };
 // ESD_GpuHandle ESD_BitmapHandleGpuHandle[ESD_BITMAPHANDLE_NB] = { 0 };
-// ft_uint8_t ESD_BitmapHandleUse[ESD_BITMAPHANDLE_NB] = { 0 };
-// ft_uint8_t ESD_ScratchHandle = 15;
+// uint8_t ESD_BitmapHandleUse[ESD_BITMAPHANDLE_NB] = { 0 };
+// uint8_t ESD_ScratchHandle = 15;
 #define ESD_SCRATCHHANDLE ESD_CO_SCRATCH_HANDLE
 
-// ft_bool_t ESD_BitmapHandleResized[ESD_BITMAPHANDLE_NB] = { 0 };
-// ft_uint8_t ESD_BitmapHandlePage[ESD_BITMAPHANDLE_NB] = { 0 };
+// bool ESD_BitmapHandleResized[ESD_BITMAPHANDLE_NB] = { 0 };
+// uint8_t ESD_BitmapHandlePage[ESD_BITMAPHANDLE_NB] = { 0 };
 
 // #define ESD_FONTHANDLE_NB 16UL // First font handle
 // #define ESD_ROMFONT_NB 35UL
-// ft_uint8_t ESD_RomFontHandles[ESD_ROMFONT_NB - ESD_FONTHANDLE_NB] = { 0 };
+// uint8_t ESD_RomFontHandles[ESD_ROMFONT_NB - ESD_FONTHANDLE_NB] = { 0 };
 
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 #define ESD_ROMFONT_CAP 35UL // Max, rom font handle, exclusive

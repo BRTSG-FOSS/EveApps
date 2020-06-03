@@ -46,28 +46,28 @@ typedef struct
 {
 	EVE_HalContext HalContext; //< Pointer to current s_Host
 	ESD_GpuAlloc GpuAlloc; //< Pointer to current s_GAlloc
-	ft_uint32_t Millis; //< Time in milliseconds for current frame
-	ft_uint32_t DeltaMs; //< Delta time in milliseconds between frames
-	ft_uint32_t Frame; //< Number of times Render has been called
+	uint32_t Millis; //< Time in milliseconds for current frame
+	uint32_t DeltaMs; //< Delta time in milliseconds between frames
+	uint32_t Frame; //< Number of times Render has been called
 	ft_rgb32_t ClearColor; //< Screen clear color (default is 0x212121)
-	ft_uint8_t LoopState; //< Current state of loop
+	uint8_t LoopState; //< Current state of loop
 
-	ft_bool_t RequestStop; //< Flag to stop the loop
+	bool RequestStop; //< Flag to stop the loop
 
-	ft_bool_t ShowLogo; //< True to pop up logo during next render
-	ft_bool_t SpinnerPopup;
+	bool ShowLogo; //< True to pop up logo during next render
+	bool SpinnerPopup;
 
-	ft_bool_t SwapIdled; //< True if idled during swap
-	ft_bool_t SpinnerPopped; //< Spinner is currently visible
-	ft_bool_t ShowingLogo; //< Logo is currently showing (animation already finished)
+	bool SwapIdled; //< True if idled during swap
+	bool SpinnerPopped; //< Spinner is currently visible
+	bool ShowingLogo; //< Logo is currently showing (animation already finished)
 	void *CmdOwner; //< Owner of currently long-running coprocessor function (sketch, spinner, etc.)
 
 #if ESD_DL_OPTIMIZE
-	ft_uint32_t CoFgColor; //< Current coprocessor foreground color
-	ft_uint32_t CoBgColor; //< Current coprocessor background color
+	uint32_t CoFgColor; //< Current coprocessor foreground color
+	uint32_t CoBgColor; //< Current coprocessor background color
 #endif
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
-	ft_uint8_t CoScratchHandle; //< Current coprocessor scratch handle (reset 15)
+	uint8_t CoScratchHandle; //< Current coprocessor scratch handle (reset 15)
 #endif
 
 	Esd_HandleState HandleState;

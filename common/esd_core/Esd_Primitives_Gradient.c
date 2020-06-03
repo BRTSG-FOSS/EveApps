@@ -6,7 +6,7 @@
 
 // Multi gradient rendering state
 ESD_GpuHandle s_MultiGradient_GpuHandle;
-ft_uint32_t s_MultiGradient_Cell;
+uint32_t s_MultiGradient_Cell;
 
 // Switch to use coprocessor for scaling matrix. Uses more bitmap matrix entries in the display list
 #define ESD_MULTIGRADIENT_CO_SCALE 0
@@ -14,7 +14,7 @@ ft_uint32_t s_MultiGradient_Cell;
 // The maximum number of multi gradients that can be on screen at once, multiplied by two
 #define ESD_MULTIGRADIENT_MAX_NB (1 << 6)
 
-ft_void_t Esd_Render_MultiGradient(ft_int16_t x, ft_int16_t y, ft_int16_t width, ft_int16_t height, ft_argb32_t topLeft, ft_argb32_t topRight, ft_argb32_t bottomLeft, ft_argb32_t bottomRight)
+void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t width, int16_t height, ft_argb32_t topLeft, ft_argb32_t topRight, ft_argb32_t bottomLeft, ft_argb32_t bottomRight)
 {
 	EVE_HalContext *phost = ESD_Host;
 	(void)phost;
@@ -23,7 +23,7 @@ ft_void_t Esd_Render_MultiGradient(ft_int16_t x, ft_int16_t y, ft_int16_t width,
 		return;
 
 	// Get address of RAM_G used for gradient palette
-	ft_uint32_t addr = ESD_GpuAlloc_Get(ESD_GAlloc, s_MultiGradient_GpuHandle);
+	uint32_t addr = ESD_GpuAlloc_Get(ESD_GAlloc, s_MultiGradient_GpuHandle);
 	if (addr == GA_INVALID)
 	{
 		// Allocate enough memory for 32 gradients.
@@ -41,8 +41,8 @@ ft_void_t Esd_Render_MultiGradient(ft_int16_t x, ft_int16_t y, ft_int16_t width,
 	addr += (s_MultiGradient_Cell * 8);
 
 	// Check if the colors have alpha, if so we'll use ARGB4, otherwise RGB565
-	ft_bool_t alpha = topLeft < 0xFF000000 || topRight < 0xFF000000 || bottomLeft < 0xFF000000 || bottomRight < 0xFF000000;
-	ft_uint16_t colors[4];
+	bool alpha = topLeft < 0xFF000000 || topRight < 0xFF000000 || bottomLeft < 0xFF000000 || bottomRight < 0xFF000000;
+	uint16_t colors[4];
 	if (alpha)
 	{
 		colors[0] = ESD_COLOR_ARGB4(topLeft);
@@ -60,7 +60,7 @@ ft_void_t Esd_Render_MultiGradient(ft_int16_t x, ft_int16_t y, ft_int16_t width,
 
 	// Write gradient palette to RAM_G
 	Ft_Gpu_CoCmd_MemWrite(ESD_Host, addr, 8);
-	Eve_CoCmd_SendCmdArr(ESD_Host, (ft_uint32_t *)colors, 2);
+	Eve_CoCmd_SendCmdArr(ESD_Host, (uint32_t *)colors, 2);
 
 	// Set required state
 	Esd_Dl_COLOR_ARGB(ESD_ARGB_WHITE);
@@ -89,7 +89,7 @@ ft_void_t Esd_Render_MultiGradient(ft_int16_t x, ft_int16_t y, ft_int16_t width,
 	// Set the scaling matrix
 #if ESD_MULTIGRADIENT_CO_SCALE
 	Ft_Gpu_CoCmd_LoadIdentity(ESD_Host);
-	Ft_Gpu_CoCmd_Scale(ESD_Host, (ft_int32_t)width << 16, (ft_int32_t)height << 16);
+	Ft_Gpu_CoCmd_Scale(ESD_Host, (int32_t)width << 16, (int32_t)height << 16);
 	Ft_Gpu_CoCmd_SetMatrix(ESD_Host);
 #else
 	if (EVE_CHIPID >= EVE_BT815)
@@ -125,7 +125,7 @@ ft_void_t Esd_Render_MultiGradient(ft_int16_t x, ft_int16_t y, ft_int16_t width,
 	s_MultiGradient_Cell &= (ESD_MULTIGRADIENT_MAX_NB - 1);
 }
 
-ft_void_t Esd_Render_MultiGradient_Rounded(ft_int16_t x, ft_int16_t y, ft_int16_t width, ft_int16_t height, ft_int32_f4_t radius, ft_uint8_t alpha, ft_argb32_t topLeft, ft_argb32_t topRight, ft_argb32_t bottomLeft, ft_argb32_t bottomRight)
+void Esd_Render_MultiGradient_Rounded(int16_t x, int16_t y, int16_t width, int16_t height, int32_f4_t radius, uint8_t alpha, ft_argb32_t topLeft, ft_argb32_t topRight, ft_argb32_t bottomLeft, ft_argb32_t bottomRight)
 {
 	// Esd_Dl_SAVE_CONTEXT();
 

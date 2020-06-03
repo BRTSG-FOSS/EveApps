@@ -8,29 +8,29 @@
 extern EVE_HalContext *ESD_Host;
 
 // Rectangle Gradient drawing with some logic to convert from radius to line width and width height to positions to simplify usage
-ft_void_t ESD_Render_RectangleF_Gradient(
-    ft_int32_f4_t x, ft_int32_f4_t y,
-    ft_int32_f4_t w, ft_int32_f4_t h,
+void ESD_Render_RectangleF_Gradient(
+    int32_f4_t x, int32_f4_t y,
+    int32_f4_t w, int32_f4_t h,
     ft_argb32_t color1, ft_argb32_t color2,
-    ft_int16_t direction)
+    int16_t direction)
 {
-	ft_int16_t x0 = x >> 4;
-	ft_int16_t y0 = y >> 4;
-	ft_int16_t w1 = w >> 4;
-	ft_int16_t h1 = h >> 4;
+	int16_t x0 = x >> 4;
+	int16_t y0 = y >> 4;
+	int16_t w1 = w >> 4;
+	int16_t h1 = h >> 4;
 
 	FT_Esd_Render_Rect_Grad(x0, y0, w1, h1, color1, color2, direction);
 }
 
 // Rectangle drawing with some logic to convert from radius to line width and width height to positions to simplify usage
-ft_void_t ESD_Render_RectangleF(ft_int32_f4_t x, ft_int32_f4_t y, ft_int32_f4_t w, ft_int32_f4_t h, ft_int32_f4_t radius, ft_argb32_t color)
+void ESD_Render_RectangleF(int32_f4_t x, int32_f4_t y, int32_f4_t w, int32_f4_t h, int32_f4_t radius, ft_argb32_t color)
 {
 	EVE_HalContext *phost = ESD_Host;
-	ft_int32_t width = radius + 8;
-	ft_int32_t x0 = x + radius;
-	ft_int32_t y0 = y + radius;
-	ft_int32_t x1 = x + w - 16 - radius;
-	ft_int32_t y1 = y + h - 16 - radius;
+	int32_t width = radius + 8;
+	int32_t x0 = x + radius;
+	int32_t y0 = y + radius;
+	int32_t x1 = x + w - 16 - radius;
+	int32_t y1 = y + h - 16 - radius;
 	ESD_Dl_COLOR_ARGB(color);
 	ESD_Dl_LINE_WIDTH(width);
 	ESD_Dl_BEGIN(RECTS);
@@ -41,7 +41,7 @@ ft_void_t ESD_Render_RectangleF(ft_int32_f4_t x, ft_int32_f4_t y, ft_int32_f4_t 
 	ESD_Dl_END();
 }
 
-ft_void_t ESD_Render_LineF(ft_int32_f4_t x0, ft_int32_f4_t y0, ft_int32_f4_t x1, ft_int32_f4_t y1, ft_int32_f3_t width, ft_argb32_t color)
+void ESD_Render_LineF(int32_f4_t x0, int32_f4_t y0, int32_f4_t x1, int32_f4_t y1, int32_f3_t width, ft_argb32_t color)
 {
 	EVE_HalContext *phost = ESD_Host;
 	ESD_Dl_COLOR_ARGB(color);
@@ -54,7 +54,7 @@ ft_void_t ESD_Render_LineF(ft_int32_f4_t x0, ft_int32_f4_t y0, ft_int32_f4_t x1,
 	ESD_Dl_END();
 }
 
-void ESD_Dl_Bitmap_Vertex(ft_int16_t x, ft_int16_t y, ft_uint8_t handle, ft_uint16_t cell)
+void ESD_Dl_Bitmap_Vertex(int16_t x, int16_t y, uint8_t handle, uint16_t cell)
 {
 	EVE_HalContext *phost = ESD_Host;
 	if ((EVE_CHIPID >= EVE_FT810) && (x < 0 || y < 0 || x >= 512 || y >= 512))
@@ -74,7 +74,7 @@ void ESD_Dl_Bitmap_Vertex(ft_int16_t x, ft_int16_t y, ft_uint8_t handle, ft_uint
 
 // NOTE: This function may only be used within a ESD_Dl_SAVE_CONTEXT block, because it does not clean up state
 // Also Ft_Gpu_CoCmd_LoadIdentity must be called afterwards to fully restore the context
-void ESD_Dl_Bitmap_Vertex_DXT1(ft_int16_t x, ft_int16_t y, ft_uint8_t handle, ft_uint8_t additional, ft_uint16_t cell, ft_uint16_t cells)
+void ESD_Dl_Bitmap_Vertex_DXT1(int16_t x, int16_t y, uint8_t handle, uint8_t additional, uint16_t cell, uint16_t cells)
 {
 	EVE_HalContext *phost = ESD_Host;
 	Ft_Gpu_CoCmd_SendCmd(phost, BLEND_FUNC(ONE, ZERO));
@@ -94,7 +94,7 @@ void ESD_Dl_Bitmap_Vertex_DXT1(ft_int16_t x, ft_int16_t y, ft_uint8_t handle, ft
 
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 // NOTE: This function may only be used within a ESD_Dl_SAVE_CONTEXT block, because it does not clean up state
-void ESD_Dl_Bitmap_Vertex_PALETTED8(ft_int16_t x, ft_int16_t y, ft_uint8_t handle, ft_uint16_t cell, ft_uint32_t paletteAddr)
+void ESD_Dl_Bitmap_Vertex_PALETTED8(int16_t x, int16_t y, uint8_t handle, uint16_t cell, uint32_t paletteAddr)
 {
 	EVE_HalContext *phost = ESD_Host;
 	ESD_Dl_Alpha_Func(ALWAYS, 0);
@@ -117,12 +117,12 @@ void ESD_Dl_Bitmap_Vertex_PALETTED8(ft_int16_t x, ft_int16_t y, ft_uint8_t handl
 #define ESD_Dl_Bitmap_Vertex_PALETTED8(x, y, handle, cell, paletteAddr) eve_assert(false)
 #endif
 
-void ESD_Render_Bitmap(ft_int16_t x, ft_int16_t y, ESD_BitmapCell bitmapCell, ft_argb32_t c)
+void ESD_Render_Bitmap(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, ft_argb32_t c)
 {
 	ESD_BitmapInfo *bitmapInfo;
-	ft_uint16_t cell;
+	uint16_t cell;
 	EVE_HalContext *phost;
-	ft_uint8_t handle;
+	uint8_t handle;
 	(void)phost;
 
 	if (!bitmapCell.Info)
@@ -135,7 +135,7 @@ void ESD_Render_Bitmap(ft_int16_t x, ft_int16_t y, ESD_BitmapCell bitmapCell, ft
 
 	if (ESD_BITMAPHANDLE_VALID(handle))
 	{
-		ft_uint8_t additional = bitmapInfo->AdditionalInfo
+		uint8_t additional = bitmapInfo->AdditionalInfo
 		    ? ESD_Dl_Bitmap_Setup(bitmapInfo->AdditionalInfo)
 		    : ESD_BITMAPHANDLE_INVALID;
 
@@ -144,7 +144,7 @@ void ESD_Render_Bitmap(ft_int16_t x, ft_int16_t y, ESD_BitmapCell bitmapCell, ft
 		ESD_Dl_BEGIN(BITMAPS);
 		if (EVE_CHIPID >= EVE_FT810 && bitmapInfo->Format == PALETTED8)
 		{
-			ft_uint32_t paletteAddr;
+			uint32_t paletteAddr;
 			ESD_Dl_SAVE_CONTEXT();
 			paletteAddr = ESD_LoadPalette(bitmapInfo);
 			ESD_Dl_Bitmap_Vertex_PALETTED8(x, y, handle, cell, paletteAddr);
@@ -170,12 +170,12 @@ void ESD_Render_Bitmap(ft_int16_t x, ft_int16_t y, ESD_BitmapCell bitmapCell, ft
 	}
 }
 
-ft_void_t ESD_Render_BitmapScaled(ft_int16_t x, ft_int16_t y, ESD_BitmapCell bitmapCell, ft_argb32_t c, ft_int32_f16_t xscale, ft_int32_f16_t yscale, ft_int32_f16_t xoffset, ft_int32_f16_t yoffset, ft_int16_t width, ft_int16_t height)
+void ESD_Render_BitmapScaled(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, ft_argb32_t c, int32_f16_t xscale, int32_f16_t yscale, int32_f16_t xoffset, int32_f16_t yoffset, int16_t width, int16_t height)
 {
 	ESD_BitmapInfo *bitmapInfo;
-	ft_uint16_t cell;
+	uint16_t cell;
 	EVE_HalContext *phost;
-	ft_uint8_t handle;
+	uint8_t handle;
 	(void)phost;
 
 	if (!bitmapCell.Info)
@@ -188,7 +188,7 @@ ft_void_t ESD_Render_BitmapScaled(ft_int16_t x, ft_int16_t y, ESD_BitmapCell bit
 
 	if (ESD_BITMAPHANDLE_VALID(handle))
 	{
-		ft_uint8_t additional = bitmapInfo->AdditionalInfo
+		uint8_t additional = bitmapInfo->AdditionalInfo
 		    ? ESD_Dl_Bitmap_Setup(bitmapInfo->AdditionalInfo)
 		    : ESD_BITMAPHANDLE_INVALID;
 
@@ -204,7 +204,7 @@ ft_void_t ESD_Render_BitmapScaled(ft_int16_t x, ft_int16_t y, ESD_BitmapCell bit
 		ESD_Dl_BEGIN(BITMAPS);
 		if ((EVE_CHIPID >= EVE_FT810) && (bitmapInfo->Format == PALETTED8))
 		{
-			ft_uint32_t paletteAddr = ESD_LoadPalette(bitmapInfo);
+			uint32_t paletteAddr = ESD_LoadPalette(bitmapInfo);
 			ESD_Dl_Bitmap_Vertex_PALETTED8(x, y, handle, cell, paletteAddr);
 			if (ESD_BITMAPHANDLE_VALID(additional))
 				ESD_Dl_Bitmap_Vertex_PALETTED8(x, y, additional, cell, paletteAddr);
@@ -227,7 +227,7 @@ ft_void_t ESD_Render_BitmapScaled(ft_int16_t x, ft_int16_t y, ESD_BitmapCell bit
 }
 
 // Render bitmap using freeform rectangle within a specified global screen rectangle, freeform is relative to global
-ft_void_t ESD_Render_BitmapFreeform(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_Rect16 globalRect, ESD_Rect16 freeformRect, ft_uint8_t minAlpha)
+void ESD_Render_BitmapFreeform(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_Rect16 globalRect, ESD_Rect16 freeformRect, uint8_t minAlpha)
 {
 	if (!bitmapCell.Info)
 		return;
@@ -252,23 +252,23 @@ ft_void_t ESD_Render_BitmapFreeform(ESD_BitmapCell bitmapCell, ft_argb32_t c, ES
 	}
 	else
 	{
-		ft_int32_f16_t xscale = (((ft_int32_f16_t)freeformRect.Width) << 16) / ((ft_int32_f16_t)bitmapCell.Info->Width);
-		ft_int32_f16_t yscale = (((ft_int32_f16_t)freeformRect.Height) << 16) / ((ft_int32_f16_t)bitmapCell.Info->Height);
+		int32_f16_t xscale = (((int32_f16_t)freeformRect.Width) << 16) / ((int32_f16_t)bitmapCell.Info->Width);
+		int32_f16_t yscale = (((int32_f16_t)freeformRect.Height) << 16) / ((int32_f16_t)bitmapCell.Info->Height);
 		// eve_printf_debug("scale: %i, %i\n", xscale, yscale);
 		ESD_Render_BitmapScaled(globalRect.X, globalRect.Y, bitmapCell, c, xscale, yscale,
-		    (((ft_int32_f16_t)freeformRect.X) << 16), (((ft_int32_f16_t)freeformRect.Y) << 16),
+		    (((int32_f16_t)freeformRect.X) << 16), (((int32_f16_t)freeformRect.Y) << 16),
 		    globalRect.Width, globalRect.Height);
 	}
 
 	ESD_Dl_Alpha_Func(ALWAYS, 0);
 }
 
-ft_void_t ESD_Render_BitmapRotate_Scaled(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_Rect16 globalRect, ft_int32_t rotateAngle, ft_int32_f16_t xscale, ft_int32_f16_t yscale)
+void ESD_Render_BitmapRotate_Scaled(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_Rect16 globalRect, int32_t rotateAngle, int32_f16_t xscale, int32_f16_t yscale)
 {
 	EVE_HalContext *phost = ESD_Host;
 	ESD_BitmapInfo *bitmapInfo;
-	ft_uint16_t cell;
-	ft_uint8_t handle;
+	uint16_t cell;
+	uint8_t handle;
 	(void)phost;
 
 	if (!bitmapCell.Info)
@@ -280,10 +280,10 @@ ft_void_t ESD_Render_BitmapRotate_Scaled(ESD_BitmapCell bitmapCell, ft_argb32_t 
 
 	if (ESD_BITMAPHANDLE_VALID(handle))
 	{
-		ft_int16_t x_center = bitmapInfo->Width / 2;
-		ft_int16_t y_center = bitmapInfo->Height / 2;
-		ft_int16_t x = globalRect.X; // + x_center;
-		ft_int16_t y = globalRect.Y; // + y_center;
+		int16_t x_center = bitmapInfo->Width / 2;
+		int16_t y_center = bitmapInfo->Height / 2;
+		int16_t x = globalRect.X; // + x_center;
+		int16_t y = globalRect.Y; // + y_center;
 
 		ESD_Dl_COLOR_ARGB(c);
 
@@ -309,12 +309,12 @@ ft_void_t ESD_Render_BitmapRotate_Scaled(ESD_BitmapCell bitmapCell, ft_argb32_t 
 	}
 }
 
-ft_void_t ESD_Render_BitmapRotate(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_Rect16 globalRect, ft_int32_t rotateAngle)
+void ESD_Render_BitmapRotate(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_Rect16 globalRect, int32_t rotateAngle)
 {
 	EVE_HalContext *phost = ESD_Host;
 	ESD_BitmapInfo *bitmapInfo;
-	ft_uint16_t cell;
-	ft_uint8_t handle;
+	uint16_t cell;
+	uint8_t handle;
 	(void)phost;
 
 	if (!bitmapCell.Info)
@@ -326,12 +326,12 @@ ft_void_t ESD_Render_BitmapRotate(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_
 
 	if (ESD_BITMAPHANDLE_VALID(handle))
 	{
-		ft_int16_t x_center = bitmapInfo->Width / 2;
-		ft_int16_t y_center = bitmapInfo->Height / 2;
-		ft_int16_t x = globalRect.X + x_center;
-		ft_int16_t y = globalRect.Y + y_center;
+		int16_t x_center = bitmapInfo->Width / 2;
+		int16_t y_center = bitmapInfo->Height / 2;
+		int16_t x = globalRect.X + x_center;
+		int16_t y = globalRect.Y + y_center;
 
-		ft_int16_t radius = bitmapInfo->Width / 2;
+		int16_t radius = bitmapInfo->Width / 2;
 		
 		//eve_printf_debug("x=%d,y=%d,x_center_x=%d,certer_y = %d, radius = %d\n",x,y,x_center,y_center,radius);
 
@@ -375,7 +375,7 @@ ft_void_t ESD_Render_BitmapRotate(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_
 }
 
 // Get scaled size
-ESD_Size16 ESD_Primitive_GetScaledSize(ESD_Size16 boundary, ESD_Size16 original, ft_uint8_t scaling)
+ESD_Size16 ESD_Primitive_GetScaledSize(ESD_Size16 boundary, ESD_Size16 original, uint8_t scaling)
 {
 	switch (scaling)
 	{
@@ -383,10 +383,10 @@ ESD_Size16 ESD_Primitive_GetScaledSize(ESD_Size16 boundary, ESD_Size16 original,
 	case ESD_SCALING_FIT: // Keep Aspect ratio, stay inside rect
 	{
 		// There are two real options: scale original to boundary width or scale original to boundary height
-		ft_int32_f16_t boundaryRatio = (((ft_int32_f16_t)boundary.Width) << 16) / ((ft_int32_f16_t)boundary.Height);
-		ft_int32_f16_t originalRatio = (((ft_int32_f16_t)original.Width) << 16) / ((ft_int32_f16_t)original.Height);
-		ft_bool_t originalWider;
-		ft_bool_t wantFit;
+		int32_f16_t boundaryRatio = (((int32_f16_t)boundary.Width) << 16) / ((int32_f16_t)boundary.Height);
+		int32_f16_t originalRatio = (((int32_f16_t)original.Width) << 16) / ((int32_f16_t)original.Height);
+		bool originalWider;
+		bool wantFit;
 		ESD_Size16 res;
 		if (boundaryRatio == originalRatio)
 			return boundary;
@@ -396,18 +396,18 @@ ESD_Size16 ESD_Primitive_GetScaledSize(ESD_Size16 boundary, ESD_Size16 original,
 		    //                          (original wider && want fill)  || (boundary wider && want fit)
 		{
 			// Scale to height
-			ft_int32_f16_t scale;
+			int32_f16_t scale;
 			res.Height = boundary.Height;
-			scale = (((ft_int32_f16_t)boundary.Height) << 16) / ((ft_int32_f16_t)original.Height);
-			res.Width = (((ft_int32_f16_t)original.Width) * scale) >> 16;
+			scale = (((int32_f16_t)boundary.Height) << 16) / ((int32_f16_t)original.Height);
+			res.Width = (((int32_f16_t)original.Width) * scale) >> 16;
 		}
 		else
 		{
 			// Scale to width
-			ft_int32_f16_t scale;
+			int32_f16_t scale;
 			res.Width = boundary.Width;
-			scale = (((ft_int32_f16_t)boundary.Width) << 16) / ((ft_int32_f16_t)original.Width);
-			res.Height = (((ft_int32_f16_t)original.Height) * scale) >> 16;
+			scale = (((int32_f16_t)boundary.Width) << 16) / ((int32_f16_t)original.Width);
+			res.Height = (((int32_f16_t)original.Height) * scale) >> 16;
 		}
 		return res;
 	}
@@ -419,11 +419,11 @@ ESD_Size16 ESD_Primitive_GetScaledSize(ESD_Size16 boundary, ESD_Size16 original,
 }
 
 // Get alignment position
-ESD_Rect16 ESD_Primitive_GetAlignedRect(ESD_Size16 boundary, ESD_Size16 size, ft_uint8_t align)
+ESD_Rect16 ESD_Primitive_GetAlignedRect(ESD_Size16 boundary, ESD_Size16 size, uint8_t align)
 {
 	ESD_Rect16 res;
-	ft_uint8_t halign;
-	ft_uint8_t valign;
+	uint8_t halign;
+	uint8_t valign;
 
 	res.Size = size;
 	halign = ESD_ALIGN_HORIZONTAL(align);

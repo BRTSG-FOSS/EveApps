@@ -16,7 +16,7 @@ extern ESD_GpuAlloc *ESD_GAlloc;
 
 #if defined(EVE_FLASH_AVAILABLE)
 #ifndef NDEBUG
-static ft_uint32_t s_FlashErrorLast = ~0;
+static uint32_t s_FlashErrorLast = ~0;
 #endif
 #endif
 
@@ -24,7 +24,7 @@ static ft_uint32_t s_FlashErrorLast = ~0;
 ESD_FUNCTION(ESD_Spinner_Popup, DisplayName = "Pop-up Spinner", Category = EsdUtilities)
 void ESD_Spinner_Popup()
 {
-	Esd_CurrentContext->SpinnerPopup = FT_TRUE;
+	Esd_CurrentContext->SpinnerPopup = true;
 }
 
 #if defined(EVE_FLASH_AVAILABLE)
@@ -57,7 +57,7 @@ void Esd_AttachFlashFast()
 	// No need to continue if flash is okay
 	if (flashStatus < FLASH_STATUS_FULL)
 	{
-		ft_uint32_t error;
+		uint32_t error;
 
 		Esd_SetFlashStatus__ESD(flashStatus);
 
@@ -148,15 +148,15 @@ void Esd_EndLogo()
 
 void Esd_ShowLogo()
 {
-	Esd_CurrentContext->ShowLogo = FT_TRUE;
+	Esd_CurrentContext->ShowLogo = true;
 }
 
 /// Run calibrate procedure
-ft_bool_t Esd_Calibrate()
+bool Esd_Calibrate()
 {
 	EVE_HalContext *phost = ESD_Host;
-	ft_uint32_t result;
-	ft_uint32_t transMatrix[6];
+	uint32_t result;
+	uint32_t transMatrix[6];
 
 #if defined(EVE_SCREEN_CAPACITIVE)
 	Ft_Gpu_Hal_Wr8(phost, REG_CTOUCH_EXTENDED, CTOUCH_MODE_COMPATIBILITY);
@@ -178,7 +178,7 @@ ft_bool_t Esd_Calibrate()
 	Ft_Gpu_CoCmd_EndFrame(phost);
 
 	// Print the configured values
-	Ft_Gpu_Hal_RdMem(phost, REG_TOUCH_TRANSFORM_A, (ft_uint8_t *)transMatrix, 4 * 6); //read all the 6 coefficients
+	Ft_Gpu_Hal_RdMem(phost, REG_TOUCH_TRANSFORM_A, (uint8_t *)transMatrix, 4 * 6); //read all the 6 coefficients
 	eve_printf_debug("Touch screen transform values are A 0x%lx,B 0x%lx,C 0x%lx,D 0x%lx,E 0x%lx, F 0x%lx\n",
 	    transMatrix[0], transMatrix[1], transMatrix[2], transMatrix[3], transMatrix[4], transMatrix[5]);
 

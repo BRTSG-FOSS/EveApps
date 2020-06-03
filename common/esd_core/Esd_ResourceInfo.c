@@ -24,10 +24,10 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 extern EVE_HalContext *ESD_Host;
 extern ESD_GpuAlloc *ESD_GAlloc;
 
-uint32_t Esd_LoadResource(Esd_ResourceInfo *resourceInfo, ft_uint32_t *imageFormat)
+uint32_t Esd_LoadResource(Esd_ResourceInfo *resourceInfo, uint32_t *imageFormat)
 {
 	EVE_HalContext *phost = ESD_Host;
-	ft_uint32_t addr;
+	uint32_t addr;
 	bool loaded;
 	(void)phost;
 
@@ -42,7 +42,7 @@ uint32_t Esd_LoadResource(Esd_ResourceInfo *resourceInfo, ft_uint32_t *imageForm
 #ifdef EVE_FLASH_AVAILABLE
 		// Just get the flash address if that's what we want
 		// Calling function may need to ensure that it's not getting a flash address when it's not supported by the resource
-		ft_uint32_t addr = resourceInfo->FlashAddress;
+		uint32_t addr = resourceInfo->FlashAddress;
 		if (addr != FA_INVALID)
 			return ESD_DL_FLASH_ADDRESS(addr);
 		return GA_INVALID;
@@ -173,7 +173,7 @@ uint32_t Esd_LoadResource(Esd_ResourceInfo *resourceInfo, ft_uint32_t *imageForm
 	// If flash source, we can use directly from flash (if supported)
 	if (supportDirectFlash && resourceInfo->Type == ESD_RESOURCE_FLASH)
 	{
-		ft_uint32_t addr = resourceInfo->FlashAddress;
+		uint32_t addr = resourceInfo->FlashAddress;
 		if (addr != FA_INVALID)
 			return ESD_DL_FLASH_ADDRESS(addr);
 	}

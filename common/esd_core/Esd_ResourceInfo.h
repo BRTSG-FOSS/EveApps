@@ -38,7 +38,7 @@ typedef struct Esd_ResourceInfo // (16 bytes) (24 bytes on 64 bit)
 	union
 	{
 		const char *File;
-		ft_int32_t FlashAddress;
+		int32_t FlashAddress;
 		ft_prog_uchar8_t *ProgMem;
 	};
 
@@ -83,7 +83,7 @@ ESD_TYPE(Esd_ResourceInfo *, Native = Pointer, Edit = Library)
 /// A function to load resource data into RAM_G (or to use the resource from flash directly)
 /// Returns address in the format as specified by the BITMAP_SOURCE command (see ESD_DL_FLASH_ADDRESS and ESD_DL_RAM_G_ADDRESS macros)
 /// Returns the output image format if the resource is an image loaded through the coprocessor
-uint32_t Esd_LoadResource(Esd_ResourceInfo *resourceInfo, ft_uint32_t *imageFormat);
+uint32_t Esd_LoadResource(Esd_ResourceInfo *resourceInfo, uint32_t *imageFormat);
 
 /// Free a currently loaded resource from RAM_G. Can be used to enforce reloading a resource.
 void Esd_FreeResource(Esd_ResourceInfo *resourceInfo);

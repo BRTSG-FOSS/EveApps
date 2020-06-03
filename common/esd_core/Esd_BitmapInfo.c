@@ -15,7 +15,7 @@ extern ESD_GpuAlloc *ESD_GAlloc;
 #define ESD_BITMAPINFO_SUPPORT_DIRECT_FLASH(bitmapInfo) (bitmapInfo->Flash && ESD_IS_FORMAT_ASTC(bitmapInfo->Format))
 #endif
 
-static ft_bool_t ESD_LoadFromFile(ft_uint32_t *imageFormat, ft_bool_t deflate, ft_uint32_t dst, const char *file)
+static bool ESD_LoadFromFile(uint32_t *imageFormat, bool deflate, uint32_t dst, const char *file)
 {
 	return imageFormat
 	    ? Ft_Hal_LoadImageFile(ESD_Host, dst, file, imageFormat)
@@ -26,7 +26,7 @@ static ft_bool_t ESD_LoadFromFile(ft_uint32_t *imageFormat, ft_bool_t deflate, f
 
 #ifdef EVE_FLASH_AVAILABLE
 
-static ft_bool_t ESD_LoadFromFlash(ft_uint32_t *imageFormat, ft_bool_t deflate, ft_uint32_t dst, ft_uint32_t src, ft_uint32_t size)
+static bool ESD_LoadFromFlash(uint32_t *imageFormat, bool deflate, uint32_t dst, uint32_t src, uint32_t size)
 {
 	return imageFormat
 	    ? Ft_Gpu_CoCmd_LoadImage_Flash(ESD_Host, dst, src, imageFormat)
@@ -37,10 +37,10 @@ static ft_bool_t ESD_LoadFromFlash(ft_uint32_t *imageFormat, ft_bool_t deflate, 
 
 #endif
 
-ft_uint32_t ESD_LoadBitmap(ESD_BitmapInfo *bitmapInfo)
+uint32_t ESD_LoadBitmap(ESD_BitmapInfo *bitmapInfo)
 {
 	EVE_HalContext *phost = ESD_Host;
-	ft_uint32_t addr;
+	uint32_t addr;
 	(void)phost;
 
 	if (!bitmapInfo)
@@ -56,7 +56,7 @@ ft_uint32_t ESD_LoadBitmap(ESD_BitmapInfo *bitmapInfo)
 	if (!bitmapInfo->PreferRam && ESD_BITMAPINFO_SUPPORT_DIRECT_FLASH(bitmapInfo))
 	{
 		// Just get the flash address if that's what we want
-		ft_uint32_t addr = bitmapInfo->FlashAddress;
+		uint32_t addr = bitmapInfo->FlashAddress;
 		if (addr != FA_INVALID)
 			return ESD_DL_FLASH_ADDRESS(addr);
 		return GA_INVALID;
@@ -90,7 +90,7 @@ ft_uint32_t ESD_LoadBitmap(ESD_BitmapInfo *bitmapInfo)
 		addr = ESD_GpuAlloc_Get(ESD_GAlloc, bitmapInfo->GpuHandle);
 		if (addr != GA_INVALID)
 		{
-			ft_bool_t coLoad = bitmapInfo->CoLoad || bitmapInfo->Format == JPEG || bitmapInfo->Format == PNG;
+			bool coLoad = bitmapInfo->CoLoad || bitmapInfo->Format == JPEG || bitmapInfo->Format == PNG;
 			bitmapInfo->CoLoad = coLoad;
 
 #ifdef ESD_BITMAPINFO_DEBUG
@@ -157,10 +157,10 @@ ft_uint32_t ESD_LoadBitmap(ESD_BitmapInfo *bitmapInfo)
 	return addr;
 }
 
-ft_uint32_t ESD_LoadPalette(ESD_BitmapInfo *bitmapInfo)
+uint32_t ESD_LoadPalette(ESD_BitmapInfo *bitmapInfo)
 {
 	EVE_HalContext *phost = ESD_Host;
-	ft_uint32_t addr;
+	uint32_t addr;
 	(void)phost;
 
 	if (!bitmapInfo)
@@ -187,7 +187,7 @@ ft_uint32_t ESD_LoadPalette(ESD_BitmapInfo *bitmapInfo)
 		addr = ESD_GpuAlloc_Get(ESD_GAlloc, bitmapInfo->PaletteGpuHandle);
 		if (addr == GA_INVALID)
 		{
-			ft_uint32_t size;
+			uint32_t size;
 
 			if (bitmapInfo->Flash ? (bitmapInfo->PaletteFlashAddress == FA_INVALID) : (!bitmapInfo->PaletteFile))
 			{
@@ -258,7 +258,7 @@ ft_uint32_t ESD_LoadPalette(ESD_BitmapInfo *bitmapInfo)
 	return addr;
 }
 
-ESD_BitmapCell ESD_SwitchBitmapCell(ESD_BitmapCell bitmapCell, ft_uint16_t cell)
+ESD_BitmapCell ESD_SwitchBitmapCell(ESD_BitmapCell bitmapCell, uint16_t cell)
 {
 	bitmapCell.Cell = cell;
 	return bitmapCell;

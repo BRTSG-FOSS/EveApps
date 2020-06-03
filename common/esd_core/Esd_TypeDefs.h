@@ -35,14 +35,14 @@
 /*
 Type definition
 
-ESD_TYPE(ft_uint32_t, Native = UInt32, Edit = Int)
+ESD_TYPE(uint32_t, Native = UInt32, Edit = Int)
 
 ESD_TYPE(char *, Native = Latin1, Edit = String)
 
 ESD_TYPE(Esd_BitmapCell *, Native = Pointer, Edit = Library)
 
-typedef ft_int32_t ft_int32_f4_t;
-ESD_TYPE(ft_int32_f4_t, Native = Int32, Edit = Fixed4)
+typedef int32_t int32_f4_t;
+ESD_TYPE(int32_f4_t, Native = Int32, Edit = Fixed4)
 
 */
 
@@ -55,7 +55,7 @@ Parses the enum identifiers, does not care about the integer or any other type o
 
 Usage examples:
 
-ESD_ENUM(BitmapFormat, Type = ft_uint32_t)
+ESD_ENUM(BitmapFormat, Type = uint32_t)
 #define RGB 1
 #define ARGB 2
 ESD_END()
@@ -84,7 +84,7 @@ void testPrint(char *message);
 
 ESD_FUNCTION(Ft_Gpu_Copro_SendCmd, Include = "Ft_Gpu_Hal.h")
 ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = "Ft_App_Get_Host()", Hidden, Internal)
-ESD_PARAMETER(cmd, Type = ft_uint32_t)
+ESD_PARAMETER(cmd, Type = uint32_t)
 
 */
 
@@ -144,54 +144,54 @@ ESD_TYPE(uint64_t, Native = UInt64, Edit = Integer)
 // ESD_TYPE(ssize_t, Native = IntPtr, Edit = Integer)
 ESD_TYPE(size_t, Native = UIntPtr, Edit = Integer)
 
-ESD_TYPE(ft_char8_t, Native = Char, Edit = String)
+ESD_TYPE(char, Native = Char, Edit = String)
 ESD_TYPE(ft_schar8_t, Native = Char, Edit = Integer)
 ESD_TYPE(ft_uchar8_t, Native = Char, Edit = Integer)
-ESD_TYPE(ft_uint8_t, Native = UInt8, Edit = Integer)
-ESD_TYPE(ft_int16_t, Native = Int16, Edit = Integer)
-ESD_TYPE(ft_uint16_t, Native = UInt16, Edit = Integer)
-ESD_TYPE(ft_uint32_t, Native = UInt32, Edit = Integer)
-ESD_TYPE(ft_int32_t, Native = Int32, Edit = Integer)
-ESD_TYPE(ft_void_t, Native = Void)
-ESD_TYPE(ft_int64_t, Native = Int64, Edit = Integer)
-ESD_TYPE(ft_uint64_t, Native = UInt64, Edit = Integer)
+ESD_TYPE(uint8_t, Native = UInt8, Edit = Integer)
+ESD_TYPE(int16_t, Native = Int16, Edit = Integer)
+ESD_TYPE(uint16_t, Native = UInt16, Edit = Integer)
+ESD_TYPE(uint32_t, Native = UInt32, Edit = Integer)
+ESD_TYPE(int32_t, Native = Int32, Edit = Integer)
+ESD_TYPE(void, Native = Void)
+ESD_TYPE(int64_t, Native = Int64, Edit = Integer)
+ESD_TYPE(uint64_t, Native = UInt64, Edit = Integer)
 ESD_TYPE(ft_float_t, Native = Float, Edit = Integer)
 ESD_TYPE(ft_double_t, Native = Double, Edit = Real)
-ESD_TYPE(ft_bool_t, Native = Int8, Edit = Boolean)
-ESD_TYPE(ft_char8_t *, Native = Utf8, Edit = String)
-ESD_TYPE(const ft_char8_t *, Native = Utf8, Edit = String)
+ESD_TYPE(bool, Native = Int8, Edit = Boolean)
+ESD_TYPE(char *, Native = Utf8, Edit = String)
+ESD_TYPE(const char *, Native = Utf8, Edit = String)
 
-typedef ft_int32_t ft_int32_f16_t;
-ESD_TYPE(ft_int32_f16_t, Native = Int32, Edit = Fixed16)
+typedef int32_t int32_f16_t;
+ESD_TYPE(int32_f16_t, Native = Int32, Edit = Fixed16)
 
-typedef ft_int32_t ft_int32_f8_t;
-ESD_TYPE(ft_int32_f8_t, Native = Int16, Edit = Fixed8)
+typedef int32_t int32_f8_t;
+ESD_TYPE(int32_f8_t, Native = Int16, Edit = Fixed8)
 
-typedef ft_int32_t ft_int32_f4_t;
-ESD_TYPE(ft_int32_f4_t, Native = Int16, Edit = Fixed4)
+typedef int32_t int32_f4_t;
+ESD_TYPE(int32_f4_t, Native = Int16, Edit = Fixed4)
 
-typedef ft_int32_t ft_int32_f3_t;
-ESD_TYPE(ft_int32_f3_t, Native = Int16, Edit = Fixed3)
+typedef int32_t int32_f3_t;
+ESD_TYPE(int32_f3_t, Native = Int16, Edit = Fixed3)
 
-typedef ft_int32_t ft_int32_f2_t;
-ESD_TYPE(ft_int32_f2_t, Native = Int16, Edit = Fixed2)
+typedef int32_t int32_f2_t;
+ESD_TYPE(int32_f2_t, Native = Int16, Edit = Fixed2)
 
-typedef ft_int16_t ft_int16_f8_t;
-ESD_TYPE(ft_int16_f8_t, Native = Int16, Edit = Fixed8)
+typedef int16_t int16_f8_t;
+ESD_TYPE(int16_f8_t, Native = Int16, Edit = Fixed8)
 
-typedef ft_int16_t ft_int16_f4_t;
-ESD_TYPE(ft_int16_f4_t, Native = Int16, Edit = Fixed4)
+typedef int16_t int16_f4_t;
+ESD_TYPE(int16_f4_t, Native = Int16, Edit = Fixed4)
 
-typedef ft_int16_t ft_int16_f2_t;
-ESD_TYPE(ft_int16_f2_t, Native = Int16, Edit = Fixed2)
+typedef int16_t int16_f2_t;
+ESD_TYPE(int16_f2_t, Native = Int16, Edit = Fixed2)
 
-typedef ft_uint32_t ft_argb32_t;
+typedef uint32_t ft_argb32_t;
 ESD_TYPE(ft_argb32_t, Native = UInt32, Edit = ColorARGB)
 
-typedef ft_uint32_t ft_rgb32_t;
+typedef uint32_t ft_rgb32_t;
 ESD_TYPE(ft_rgb32_t, Native = UInt32, Edit = ColorRGB)
 
-typedef ft_uint32_t esd_classid_t;
+typedef uint32_t esd_classid_t;
 ESD_TYPE(esd_classid_t, Native = UInt32, Edit = Library)
 
 ESD_FUNCTION(ESD_Noop, Category = _GroupHidden)
@@ -204,12 +204,12 @@ void ESD_Noop(void *context);
 #define ESD_LOOPSTATE_RENDER 3
 
 // TODO: This probably belongs in widgets framework, Ft_Esd.h is for core framework functionality only ->
-ESD_ENUM(Ft_AlignX_Opt, Type = ft_uint16_t)
+ESD_ENUM(Ft_AlignX_Opt, Type = uint16_t)
 #define OPT_ALIGN_LEFT 0UL
 #define OPT_ALIGN_CENTER 1UL
 #define OPT_ALIGN_RIGHT 2UL
 ESD_END()
-ESD_ENUM(Ft_AlignY_Opt, Type = ft_uint16_t)
+ESD_ENUM(Ft_AlignY_Opt, Type = uint16_t)
 #define OPT_ALIGN_TOP 0UL
 #define OPT_ALIGN_CENTER 1UL
 #define OPT_ALIGN_BOTTOM 2UL

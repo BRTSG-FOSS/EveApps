@@ -2,21 +2,21 @@
 #include "ESD_Core.h"
 #include "ESD_Primitives.h"
 
-ft_void_t Esd_Render_Rect_Stroke(
-    ft_int32_f4_t x, ft_int32_f4_t y,
-    ft_int32_f4_t width, ft_int32_f4_t height,
-    ft_int32_f4_t radius, ft_int32_f4_t border,
+void Esd_Render_Rect_Stroke(
+    int32_f4_t x, int32_f4_t y,
+    int32_f4_t width, int32_f4_t height,
+    int32_f4_t radius, int32_f4_t border,
     uint8_t stroke, ft_argb32_t color)
 {
 	EVE_HalContext *phost = ESD_Host;
-	ft_int32_f4_t r = radius;
-	ft_int32_f4_t x0 = x + radius;
-	ft_int32_f4_t y0 = y + radius;
-	ft_int32_f4_t x1 = x + width - 16 - radius;
-	ft_int32_f4_t y1 = y + height - 16 - radius;
+	int32_f4_t r = radius;
+	int32_f4_t x0 = x + radius;
+	int32_f4_t y0 = y + radius;
+	int32_f4_t x1 = x + width - 16 - radius;
+	int32_f4_t y1 = y + height - 16 - radius;
 
-	ft_int32_f4_t innerRadius; // = r - (border >> 1);
-	ft_int32_f4_t outerRadius; // = innerRadius + border;
+	int32_f4_t innerRadius; // = r - (border >> 1);
+	int32_f4_t outerRadius; // = innerRadius + border;
 
 	if (border <= 0)
 	{
@@ -44,9 +44,9 @@ ft_void_t Esd_Render_Rect_Stroke(
 	if (border < 16)
 	{
 		// Expand border centrally to 16 subpixels
-		ft_int32_f4_t adjust = (16 - border);
-		ft_int32_f4_t innerAdjust = adjust >> 1;
-		ft_int32_f4_t outerAdjust = adjust - innerAdjust;
+		int32_f4_t adjust = (16 - border);
+		int32_f4_t innerAdjust = adjust >> 1;
+		int32_f4_t outerAdjust = adjust - innerAdjust;
 		innerRadius -= innerAdjust;
 		outerRadius += outerAdjust;
 
@@ -60,7 +60,7 @@ ft_void_t Esd_Render_Rect_Stroke(
 	if (innerRadius < 16)
 	{
 		// TODO: Use separate inner and outer XY for hard corners
-		ft_int32_f4_t adjust = 16 - innerRadius;
+		int32_f4_t adjust = 16 - innerRadius;
 		innerRadius += adjust;
 		outerRadius += adjust;
 		x0 += adjust;

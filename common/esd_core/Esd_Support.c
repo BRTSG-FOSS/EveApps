@@ -32,12 +32,12 @@
 #include "ESD_Core.h"
 
 /// A function to get milliseconds for current frame
-ESD_FUNCTION(ESD_GetMillis, Type = ft_uint32_t, DisplayName = "Get Milliseconds", Category = EsdUtilities)
-ft_uint32_t ESD_GetMillis() { return Esd_CurrentContext->Millis; }
+ESD_FUNCTION(ESD_GetMillis, Type = uint32_t, DisplayName = "Get Milliseconds", Category = EsdUtilities)
+uint32_t ESD_GetMillis() { return Esd_CurrentContext->Millis; }
 
 /// A function to get the difference in milliseconds since last frame Update call
-ESD_FUNCTION(ESD_GetDeltaMs, Type = ft_uint32_t, DisplayName = "Get Delta Ms", Category = EsdUtilities)
-ft_uint32_t ESD_GetDeltaMs() { return Esd_CurrentContext->DeltaMs; }
+ESD_FUNCTION(ESD_GetDeltaMs, Type = uint32_t, DisplayName = "Get Delta Ms", Category = EsdUtilities)
+uint32_t ESD_GetDeltaMs() { return Esd_CurrentContext->DeltaMs; }
 
 /// A function to get the current HAL context data structure
 ESD_FUNCTION(ESD_GetHost, Type = EVE_HalContext *, DisplayName = "Get EVE Host", Category = EsdUtilities)
@@ -47,14 +47,14 @@ EVE_HalContext *ESD_GetHost() { return ESD_Host; }
 
 int ESD_DesignerMode = 0;
 
-ft_uint32_t ESD_GAlloc_GetTotalUsed(ESD_GpuAlloc *ga)
+uint32_t ESD_GAlloc_GetTotalUsed(ESD_GpuAlloc *ga)
 {
 	if (!ESD_GAlloc)
 		return 0;
 	return ESD_GpuAlloc_GetTotalUsed(ESD_GAlloc);
 }
 
-ft_uint32_t ESD_GAlloc_GetTotal(ESD_GpuAlloc *ga)
+uint32_t ESD_GAlloc_GetTotal(ESD_GpuAlloc *ga)
 {
 	if (!ESD_GAlloc)
 		return 0;
@@ -75,11 +75,11 @@ ft_uint32_t ESD_GAlloc_GetTotal(ESD_GpuAlloc *ga)
 #define Ft_Main__End__ESD Ft_Main__End
 #endif
 
-ft_void_t Ft_Main__Start__ESD();
-ft_void_t Ft_Main__Update__ESD();
-ft_void_t Ft_Main__Render__ESD();
-ft_void_t Ft_Main__Idle__ESD();
-ft_void_t Ft_Main__End__ESD();
+void Ft_Main__Start__ESD();
+void Ft_Main__Update__ESD();
+void Ft_Main__Render__ESD();
+void Ft_Main__Idle__ESD();
+void Ft_Main__End__ESD();
 
 static void Main_Start(void *context) { Ft_Main__Start__ESD(); }
 static void Main_Update(void *context) { Ft_Main__Update__ESD(); }
@@ -87,7 +87,7 @@ static void Main_Render(void *context) { Ft_Main__Render__ESD(); }
 static void Main_Idle(void *context) { Ft_Main__Idle__ESD(); }
 static void Main_End(void *context) { Ft_Main__End__ESD(); }
 /* Main entry point */
-ft_int32_t main(ft_int32_t argc, ft_char8_t *argv[])
+int32_t main(int32_t argc, char *argv[])
 {
 	Esd_Parameters ep;
 	Esd_Defaults(&ep);

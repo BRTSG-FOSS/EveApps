@@ -41,7 +41,7 @@ void Esd_ShowLogo();
 void Esd_BeginLogo();
 void Esd_EndLogo();
 
-ft_bool_t Esd_Calibrate();
+bool Esd_Calibrate();
 
 #endif /* #ifndef ESD_UTILITY_H */
 
