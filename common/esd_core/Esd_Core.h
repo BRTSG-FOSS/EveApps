@@ -61,14 +61,6 @@ typedef struct
 	bool ShowingLogo; //< Logo is currently showing (animation already finished)
 	void *CmdOwner; //< Owner of currently long-running coprocessor function (sketch, spinner, etc.)
 
-#if ESD_DL_OPTIMIZE
-	uint32_t CoFgColor; //< Current coprocessor foreground color
-	uint32_t CoBgColor; //< Current coprocessor background color
-#endif
-#if (EVE_SUPPORT_CHIPID >= EVE_FT810)
-	uint8_t CoScratchHandle; //< Current coprocessor scratch handle (reset 15)
-#endif
-
 	Esd_HandleState HandleState;
 
 	/// Callbacks called by ESD_loop
@@ -102,7 +94,7 @@ extern ESD_EXTERN_LIBARY EVE_HalContext *ESD_Host; //< Pointer to current EVE ha
 extern ESD_EXTERN_LIBARY ESD_GpuAlloc *ESD_GAlloc; //< Pointer to current allocator
 
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
-#define ESD_CO_SCRATCH_HANDLE (EVE_CHIPID >= EVE_FT810 ? Esd_CurrentContext->CoScratchHandle : 15)
+#define ESD_CO_SCRATCH_HANDLE (EVE_CHIPID >= EVE_FT810 ? ESD_Host->ScratchHandle : 15)
 #else
 #define ESD_CO_SCRATCH_HANDLE (15)
 #endif

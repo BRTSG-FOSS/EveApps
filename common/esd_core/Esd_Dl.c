@@ -12,35 +12,11 @@ extern EVE_HalContext *ESD_Host;
 /* extern ESD_GpuAlloc *ESD_GAlloc; */
 
 // GPU state for the current display list
-#if ESD_DL_OPTIMIZE
-ESD_GpuState_T ESD_GpuState[ESD_DL_STATE_STACK_SIZE];
-uint8_t ESD_GpuState_I;
-uint8_t ESD_Primitive;
-// uint32_t Esd_CurrentContext->CoFgColor;
-// uint32_t Esd_CurrentContext->CoBgColor;
-#endif
 ESD_Rect16 ESD_ScissorRect;
 
 void Esd_ResetGpuState() // Begin of frame
 {
 	EVE_HalContext *phost = ESD_Host;
-
-#if ESD_DL_OPTIMIZE
-	ESD_GpuState_I = 0;
-	ESD_GpuState[0] = (ESD_GpuState_T)
-	{
-		.LineWidth = 16,
-		.PointSize = 16,
-		.ColorRGB = 0xFFFFFF,
-		.ColorA = 0xFF,
-		.Handle = ESD_BITMAPHANDLE_INVALID,
-#if (EVE_SUPPORT_CHIPID >= EVE_FT810)
-		.VertexFormat = 4,
-#endif
-	};
-
-	ESD_Primitive = 0;
-#endif
 
 	// Reset scissor state to display size
 	ESD_ScissorRect.X = 0;
@@ -51,14 +27,7 @@ void Esd_ResetGpuState() // Begin of frame
 
 void Esd_ResetCoState()
 {
-#if ESD_DL_OPTIMIZE
-	Esd_CurrentContext->CoFgColor = 0x003870;
-	Esd_CurrentContext->CoBgColor = 0x002040;
-#endif
 
-#if (EVE_SUPPORT_CHIPID >= EVE_FT810)
-	Esd_CurrentContext->CoScratchHandle = 15;
-#endif
 }
 
 ESD_Rect16 ESD_Dl_Scissor_Get()
