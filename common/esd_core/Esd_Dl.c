@@ -1,6 +1,6 @@
 
-#include "Ft_Platform.h"
 #include "ESD_Dl.h"
+#include <EVE_Hal.h>
 
 #include "ESD_Core.h"
 
@@ -106,9 +106,9 @@ void ESD_Dl_Scissor_Adjust(ESD_Rect16 rect, ESD_Rect16 state)
 	}
 	// Ft_Gpu_CoCmd_StartFunc(ESD_Host, FT_CMD_SIZE * 2);
 	if (ESD_ScissorRect.X != rect.X || ESD_ScissorRect.Y != rect.Y)
-		Ft_Gpu_CoCmd_SendCmd(ESD_Host, SCISSOR_XY(rect.X, rect.Y));
+		EVE_CoCmd_dl(ESD_Host, SCISSOR_XY(rect.X, rect.Y));
 	if (ESD_ScissorRect.Width != rect.Width || ESD_ScissorRect.Height != rect.Height)
-		Ft_Gpu_CoCmd_SendCmd(ESD_Host, SCISSOR_SIZE(rect.Width, rect.Height));
+		EVE_CoCmd_dl(ESD_Host, SCISSOR_SIZE(rect.Width, rect.Height));
 	// Ft_Gpu_CoCmd_EndFunc(ESD_Host);
 	ESD_ScissorRect = rect;
 }
@@ -119,9 +119,9 @@ void ESD_Dl_Scissor_Reset(ESD_Rect16 state)
 	EVE_HalContext *phost = ESD_Host;
 	(void)phost;
 	if (ESD_ScissorRect.X != state.X || ESD_ScissorRect.Y != state.Y)
-		Ft_Gpu_CoCmd_SendCmd(ESD_Host, SCISSOR_XY(state.X, state.Y));
+		EVE_CoCmd_dl(ESD_Host, SCISSOR_XY(state.X, state.Y));
 	if (ESD_ScissorRect.Width != state.Width || ESD_ScissorRect.Height != state.Height)
-		Ft_Gpu_CoCmd_SendCmd(ESD_Host, SCISSOR_SIZE(state.Width, state.Height));
+		EVE_CoCmd_dl(ESD_Host, SCISSOR_SIZE(state.Width, state.Height));
 	// Ft_Gpu_CoCmd_EndFunc(ESD_Host);
 	ESD_ScissorRect = state;
 }
@@ -147,13 +147,13 @@ void FT_Esd_Render_Rect_Grad(int16_t x, int16_t y, int16_t w, int16_t h, ft_argb
 		// Not a gradient
 		ESD_Rect16 scissor;
 		// Ft_Gpu_CoCmd_StartFunc(ESD_Host, FT_CMD_SIZE * 4);
-		Ft_Gpu_CoCmd_SendCmd(ESD_Host, SAVE_CONTEXT());
+		EVE_CoCmd_dl(ESD_Host, SAVE_CONTEXT());
 		scissor = ESD_Rect16_Crop(rect, ESD_Dl_Scissor_Get());
-		Ft_Gpu_CoCmd_SendCmd(ESD_Host, SCISSOR_XY(scissor.X, scissor.Y));
-		Ft_Gpu_CoCmd_SendCmd(ESD_Host, SCISSOR_SIZE(scissor.Width, scissor.Height));
+		EVE_CoCmd_dl(ESD_Host, SCISSOR_XY(scissor.X, scissor.Y));
+		EVE_CoCmd_dl(ESD_Host, SCISSOR_SIZE(scissor.Width, scissor.Height));
 		ESD_Dl_COLOR_ARGB(color1);
 		FT_Esd_Render_Rect(x, y, w, h);
-		Ft_Gpu_CoCmd_SendCmd(ESD_Host, RESTORE_CONTEXT());
+		EVE_CoCmd_dl(ESD_Host, RESTORE_CONTEXT());
 		// Ft_Gpu_CoCmd_EndFunc(ESD_Host);
 		return;
 	}
@@ -179,8 +179,8 @@ void FT_Esd_Render_Rect_Grad(int16_t x, int16_t y, int16_t w, int16_t h, ft_argb
 void FT_Esd_Render_Rect(int16_t x, int16_t y, int16_t w, int16_t h)
 {
 	ESD_Dl_BEGIN(RECTS);
-	Ft_Gpu_CoCmd_SendCmd(ESD_Host, VERTEX2II(x, y, 0, 0));
-	Ft_Gpu_CoCmd_SendCmd(ESD_Host, VERTEX2II(x + w, y + h, 0, 0));
+	EVE_CoCmd_dl(ESD_Host, VERTEX2II(x, y, 0, 0));
+	EVE_CoCmd_dl(ESD_Host, VERTEX2II(x + w, y + h, 0, 0));
 	ESD_Dl_END();
 }
 

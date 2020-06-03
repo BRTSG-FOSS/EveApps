@@ -11,7 +11,7 @@ Resource info structure
 #ifndef ESD_RESOURCEINFO__H
 #define ESD_RESOURCEINFO__H
 
-#include "Ft_Esd.h"
+#include "ESD_TypeDefs.h"
 #include "ESD_GpuAlloc.h"
 
 // Resource loading mechanisms
@@ -39,7 +39,7 @@ typedef struct Esd_ResourceInfo // (16 bytes) (24 bytes on 64 bit)
 	{
 		const char *File;
 		int32_t FlashAddress;
-		ft_prog_uchar8_t *ProgMem;
+		eve_progmem_const uint8_t *ProgMem;
 	};
 
 	// (Runtime) Handle pointing to the address in RAM_G if it is allocated

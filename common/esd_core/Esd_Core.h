@@ -32,12 +32,11 @@
 #ifndef ESD_CORE___H
 #define ESD_CORE___H
 
-#include <Ft_Platform.h>
+#include <EVE_Hal.h>
 
-#include "Ft_Esd.h"
+#include "ESD_TypeDefs.h"
 #include "ESD_GpuAlloc.h"
 #include "ESD_Dl.h"
-#include "ESD_CoCmd.h"
 #include "ESD_BitmapHandle.h"
 #include "ESD_TouchTag.h"
 

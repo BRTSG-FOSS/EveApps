@@ -1,6 +1,6 @@
 
 #include "ESD_TouchTag.h"
-#include "Ft_Gpu_Hal.h"
+#include <EVE_Hal.h>
 
 #include "ESD_Core.h"
 
@@ -95,7 +95,7 @@ void ESD_TouchTag_Update(ESD_TouchTag *context)
 		s_LastTagFrame = Esd_CurrentContext->Frame;
 
 		// Read registers
-		regTouchXY = Ft_Gpu_Hal_Rd32(ESD_Host, REG_TOUCH_TAG_XY);
+		regTouchXY = EVE_Hal_rd32(ESD_Host, REG_TOUCH_TAG_XY);
 		if (regTouchXY & 0x80008000)
 		{
 			// No touch
@@ -106,7 +106,7 @@ void ESD_TouchTag_Update(ESD_TouchTag *context)
 		else
 		{
 			ESD_TouchPos_t prevPos;
-			regTouchTag = Ft_Gpu_Hal_Rd8(ESD_Host, REG_TOUCH_TAG);
+			regTouchTag = EVE_Hal_rd8(ESD_Host, REG_TOUCH_TAG);
 			if (!regTouchTag)
 			{
 				// Fallback when touching but touch tag 0 reported, stick to the last recorded tag

@@ -4,11 +4,10 @@ Allocation mechanism for RAM_G.
 
 */
 
-#include "Ft_Esd.h"
+#include "ESD_TypeDefs.h"
 #include "ESD_GpuAlloc.h"
 
-#include "Ft_Platform.h"
-#include "Ft_Gpu.h"
+#include <EVE_Hal.h>
 
 #ifdef ESD_SIMULATION
 static int s_ErrorGpuAllocFailed = 0;

@@ -5,9 +5,8 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 */
 
 #include "ESD_ResourceInfo.h"
-#include "Ft_LoadFile.h"
+#include <EVE_Hal.h>
 
-#include "ESD_CoCmd.h"
 #ifndef NDEBUG
 #define ESD_RESOURCEINFO_DEBUG
 #endif
@@ -121,7 +120,7 @@ uint32_t Esd_LoadResource(Esd_ResourceInfo *resourceInfo, uint32_t *imageFormat)
 		switch (resourceInfo->Compressed)
 		{
 		case ESD_RESOURCE_RAW:
-			Ft_Gpu_Hal_WrMem_ProgMem(ESD_Host, addr, resourceInfo->ProgMem, resourceInfo->StorageSize << 2);
+			EVE_Hal_wrMem_ProgMem(ESD_Host, addr, resourceInfo->ProgMem, resourceInfo->StorageSize << 2);
 			loaded = true;
 			break;
 		case ESD_RESOURCE_DEFLATE:

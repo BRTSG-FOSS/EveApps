@@ -1,14 +1,11 @@
 
-#include <Ft_Platform.h>
 #include "ESD_Utility.h"
+#include <EVE_Hal.h>
 
-#include "Ft_Gpu_Hal.h"
-#include "Ft_Gpu.h"
-#include "Ft_Esd.h"
+#include "ESD_TypeDefs.h"
 #include "ESD_Dl.h"
 #include "ESD_GpuAlloc.h"
 #include "ESD_TouchTag.h"
-#include "ESD_CoCmd.h"
 #include "ESD_Core.h"
 
 extern EVE_HalContext *ESD_Host;
@@ -47,7 +44,7 @@ void Esd_AttachFlashFast()
 	// Wait for flash status to move on from FLASH_STATUS_INIT
 	EVE_HalContext *phost = ESD_Host;
 	uint32_t flashStatus;
-	while (!(flashStatus = Ft_Gpu_Hal_Rd32(phost, REG_FLASH_STATUS)))
+	while (!(flashStatus = EVE_Hal_rd32(phost, REG_FLASH_STATUS)))
 	{
 #ifndef NDEBUG
 		eve_printf_debug("Waiting for REG_FLASH_STATUS (%u)\n", flashStatus);
@@ -63,7 +60,7 @@ void Esd_AttachFlashFast()
 
 		flashStatus = Ft_Gpu_CoCmd_FlashAttach(phost);
 		Esd_SetFlashStatus__ESD(flashStatus);
-		Esd_SetFlashSize__ESD(Ft_Gpu_Hal_Rd32(phost, REG_FLASH_SIZE));
+		Esd_SetFlashSize__ESD(EVE_Hal_rd32(phost, REG_FLASH_SIZE));
 
 		flashStatus = Ft_Gpu_CoCmd_FlashFast(phost, &error);
 		Esd_SetFlashStatus__ESD(flashStatus);
@@ -159,7 +156,7 @@ bool Esd_Calibrate()
 	uint32_t transMatrix[6];
 
 #if defined(EVE_SCREEN_CAPACITIVE)
-	Ft_Gpu_Hal_Wr8(phost, REG_CTOUCH_EXTENDED, CTOUCH_MODE_COMPATIBILITY);
+	EVE_Hal_wr8(phost, REG_CTOUCH_EXTENDED, CTOUCH_MODE_COMPATIBILITY);
 #endif
 
 	eve_printf_debug("App_CoPro_Widget_Calibrate: Start Frame\n");
@@ -178,7 +175,7 @@ bool Esd_Calibrate()
 	Ft_Gpu_CoCmd_EndFrame(phost);
 
 	// Print the configured values
-	Ft_Gpu_Hal_RdMem(phost, REG_TOUCH_TRANSFORM_A, (uint8_t *)transMatrix, 4 * 6); //read all the 6 coefficients
+	EVE_Hal_rdMem(phost, REG_TOUCH_TRANSFORM_A, (uint8_t *)transMatrix, 4 * 6); //read all the 6 coefficients
 	eve_printf_debug("Touch screen transform values are A 0x%lx,B 0x%lx,C 0x%lx,D 0x%lx,E 0x%lx, F 0x%lx\n",
 	    transMatrix[0], transMatrix[1], transMatrix[2], transMatrix[3], transMatrix[4], transMatrix[5]);
 

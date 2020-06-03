@@ -2,7 +2,7 @@
 #ifndef ESD_TOUCHTAG__H
 #define ESD_TOUCHTAG__H
 
-#include "Ft_Esd.h"
+#include "ESD_TypeDefs.h"
 
 // Utility for managing touch tag identifiers. Create one instance for each tag you need to handle
 ESD_ACTOR(ESD_TouchTag, Callback, Include = "ESD_TouchTag.h", DisplayName = "Touch Tag", Category = EsdUtilities, Icon = ":/icons/hand-point-090.png")

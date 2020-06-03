@@ -32,8 +32,8 @@
 #ifndef ESD_UTILITY__H
 #define ESD_UTILITY__H
 
-#include <Ft_Platform.h>
-#include "Ft_Esd.h"
+#include <EVE_Hal.h>
+#include "ESD_TypeDefs.h"
 
 void Esd_AttachFlashFast();
 

@@ -58,13 +58,13 @@ void Esd_InitRomFontHeight()
 {
 	int i;
 	EVE_HalContext *phost = ESD_Host;
-	uint32_t ft = Ft_Gpu_Hal_Rd32(ESD_Host, ROMFONT_TABLEADDRESS);
+	uint32_t ft = EVE_Hal_rd32(ESD_Host, ROMFONT_TABLEADDRESS);
 	(void)phost;
 
 	for (i = 0; i < ESD_ROMFONT_NB; ++i)
 	{
-		uint32_t addr = ft + (FT_GPU_FONT_TABLE_SIZE * i) + (uint32_t)(uintptr_t)(&(((FT_Gpu_Fonts_t *)(void *)0)->FontHeightInPixels));
-		Esd_RomFonts[i].FontHeight = Ft_Gpu_Hal_Rd16(ESD_Host, addr);
+		uint32_t addr = ft + (EVE_GPU_FONT_TABLE_SIZE * i) + (uint32_t)(uintptr_t)(&(((EVE_Gpu_Fonts *)(void *)0)->FontHeightInPixels));
+		Esd_RomFonts[i].FontHeight = EVE_Hal_rd16(ESD_Host, addr);
 		Esd_RomFonts[i].BaseLine = Esd_RomFonts[i].FontHeight;
 		Esd_RomFonts[i].CapsHeight = Esd_RomFonts[i].FontHeight;
 	}
@@ -152,7 +152,7 @@ Esd_FontInfo *Esd_GetRomFont(uint8_t font)
 	return NULL;
 }
 
-static uint8_t FT_PROGMEM_CONST c_AstcBlockHeight[] = {
+static eve_progmem_const uint8_t c_AstcBlockHeight[] = {
 	4, 4, 5, 5, 6, 5, 6, 8, 5, 6, 8, 10, 10, 12
 };
 
@@ -168,7 +168,7 @@ void ESD_Dl_Bitmap_Page(uint8_t handle, uint8_t page)
 		if (EVE_CHIPID >= EVE_BT815 && ESD_IS_FORMAT_ASTC(info->Format))
 			pageOffset /= c_AstcBlockHeight[info->Format & 0xF]; // Stride under ASTC is by block row
 		uint32_t pageAddr = addr + pageOffset;
-		Ft_Gpu_CoCmd_SendCmd(phost, BITMAP_SOURCE(pageAddr));
+		EVE_CoCmd_dl(phost, BITMAP_SOURCE(pageAddr));
 		Esd_CurrentContext->HandleState.Page[handle] = page;
 	}
 }
@@ -236,7 +236,7 @@ uint8_t ESD_Dl_Bitmap_Setup(ESD_BitmapInfo *bitmapInfo)
 			format = RGB565; // TODO: Support for other PNG formats
 
 		if (EVE_CHIPID >= EVE_FT810)
-			Ft_Gpu_CoCmd_SetBitmap(ESD_Host, addr, format, bitmapInfo->Width, bitmapInfo->Height); // TODO: What with stride?
+			EVE_CoCmd_setBitmap(ESD_Host, addr, format, bitmapInfo->Width, bitmapInfo->Height); // TODO: What with stride?
 		else
 			eve_assert_ex(false, "No support yet in ESD for bitmaps for FT800 target");
 
@@ -245,9 +245,9 @@ uint8_t ESD_Dl_Bitmap_Setup(ESD_BitmapInfo *bitmapInfo)
 		{
 			// Important. Bitmap swizzle not reset by SETBITMAP
 			if (bitmapInfo->Swizzle)
-				Ft_Gpu_CoCmd_SendCmd(ESD_Host, BITMAP_SWIZZLE(bitmapInfo->SwizzleR, bitmapInfo->SwizzleG, bitmapInfo->SwizzleB, bitmapInfo->SwizzleA));
+				EVE_CoCmd_dl(ESD_Host, BITMAP_SWIZZLE(bitmapInfo->SwizzleR, bitmapInfo->SwizzleG, bitmapInfo->SwizzleB, bitmapInfo->SwizzleA));
 			else
-				Ft_Gpu_CoCmd_SendCmd(ESD_Host, BITMAP_SWIZZLE(RED, GREEN, BLUE, ALPHA));
+				EVE_CoCmd_dl(ESD_Host, BITMAP_SWIZZLE(RED, GREEN, BLUE, ALPHA));
 		}
 #endif
 
@@ -337,7 +337,7 @@ uint8_t ESD_Dl_Font_Setup(Esd_FontInfo *fontInfo)
 
 				// Set the font
 				romFontInfo->BitmapHandle = handle;
-				Ft_Gpu_CoCmd_RomFont(ESD_Host, handle, font);
+				EVE_CoCmd_romFont(ESD_Host, handle, font);
 #if ESD_DL_OPTIMIZE
 				ESD_STATE.Handle = handle;
 #endif
@@ -398,7 +398,7 @@ uint8_t ESD_Dl_Font_Setup(Esd_FontInfo *fontInfo)
 			// Set the font
 			fontInfo->BitmapHandle = handle;
 			if (EVE_CHIPID >= EVE_FT810)
-				Ft_Gpu_CoCmd_SetFont2(ESD_Host, handle, addr, fontInfo->FirstChar);
+				EVE_CoCmd_setFont2(ESD_Host, handle, addr, fontInfo->FirstChar);
 			else
 				eve_assert_ex(false, "No support yet in ESD for custom fonts");
 #if ESD_DL_OPTIMIZE
@@ -421,9 +421,9 @@ void ESD_Dl_Bitmap_WidthHeight(uint8_t handle, uint16_t width, uint16_t height)
 {
 	EVE_HalContext *phost = ESD_Host;
 	ESD_Dl_BITMAP_HANDLE(handle);
-	Ft_Gpu_CoCmd_SendCmd(phost, BITMAP_SIZE(NEAREST, BORDER, BORDER, width & 0x1ff, height & 0x1ff));
+	EVE_CoCmd_dl(phost, BITMAP_SIZE(NEAREST, BORDER, BORDER, width & 0x1ff, height & 0x1ff));
 	if (EVE_CHIPID >= EVE_FT810)
-		Ft_Gpu_CoCmd_SendCmd(phost, BITMAP_SIZE_H(width >> 9, height >> 9));
+		EVE_CoCmd_dl(phost, BITMAP_SIZE_H(width >> 9, height >> 9));
 	Esd_CurrentContext->HandleState.Resized[handle] = 1;
 }
 
@@ -431,9 +431,9 @@ void ESD_Dl_Bitmap_WidthHeight_BILINEAR(uint8_t handle, uint16_t width, uint16_t
 {
 	EVE_HalContext *phost = ESD_Host;
 	ESD_Dl_BITMAP_HANDLE(handle);
-	Ft_Gpu_CoCmd_SendCmd(phost, BITMAP_SIZE(BILINEAR, BORDER, BORDER, width & 0x1ff, height & 0x1ff));
+	EVE_CoCmd_dl(phost, BITMAP_SIZE(BILINEAR, BORDER, BORDER, width & 0x1ff, height & 0x1ff));
 	if (EVE_CHIPID >= EVE_FT810)
-		Ft_Gpu_CoCmd_SendCmd(phost, BITMAP_SIZE_H(width >> 9, height >> 9));
+		EVE_CoCmd_dl(phost, BITMAP_SIZE_H(width >> 9, height >> 9));
 	Esd_CurrentContext->HandleState.Resized[handle] = 1;
 }
 

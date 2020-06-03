@@ -11,7 +11,7 @@ Font info structure
 #ifndef ESD_FONTINFO__H
 #define ESD_FONTINFO__H
 
-#include "Ft_Esd.h"
+#include "ESD_TypeDefs.h"
 #include "ESD_GpuAlloc.h"
 #include "ESD_ResourceInfo.h"
 

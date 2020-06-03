@@ -5,7 +5,7 @@ Bitmap info structure
 #ifndef ESD_BITMAPINFO__H
 #define ESD_BITMAPINFO__H
 
-#include "Ft_Esd.h"
+#include "ESD_TypeDefs.h"
 #include "ESD_GpuAlloc.h"
 #include "ESD_ResourceInfo.h"
 

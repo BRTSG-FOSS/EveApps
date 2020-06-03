@@ -34,7 +34,6 @@
 
 #include "ESD_GpuAlloc.h"
 #include "ESD_Dl.h"
-#include "ESD_CoCmd.h"
 #include "ESD_BitmapHandle.h"
 #include "ESD_TouchTag.h"
 

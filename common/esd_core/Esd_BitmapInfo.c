@@ -1,8 +1,8 @@
 
-#include "Ft_LoadFile.h"
 #include "ESD_BitmapInfo.h"
+#include <EVE_Hal.h>
+
 #include "ESD_GpuAlloc.h"
-#include "ESD_CoCmd.h"
 
 #ifndef NDEBUG
 #define ESD_BITMAPINFO_DEBUG
@@ -18,10 +18,10 @@ extern ESD_GpuAlloc *ESD_GAlloc;
 static bool ESD_LoadFromFile(uint32_t *imageFormat, bool deflate, uint32_t dst, const char *file)
 {
 	return imageFormat
-	    ? Ft_Hal_LoadImageFile(ESD_Host, dst, file, imageFormat)
+	    ? EVE_Util_loadImageFile(ESD_Host, dst, file, imageFormat)
 	    : (deflate
-	              ? Ft_Hal_LoadInflateFile(ESD_Host, dst, file)
-	              : Ft_Hal_LoadRawFile(ESD_Host, dst, file));
+	              ? EVE_Util_loadInflateFile(ESD_Host, dst, file)
+	              : EVE_Util_loadRawFile(ESD_Host, dst, file));
 }
 
 #ifdef EVE_FLASH_AVAILABLE
@@ -29,10 +29,10 @@ static bool ESD_LoadFromFile(uint32_t *imageFormat, bool deflate, uint32_t dst, 
 static bool ESD_LoadFromFlash(uint32_t *imageFormat, bool deflate, uint32_t dst, uint32_t src, uint32_t size)
 {
 	return imageFormat
-	    ? Ft_Gpu_CoCmd_LoadImage_Flash(ESD_Host, dst, src, imageFormat)
+	    ? EVE_CoCmd_loadImage_flash(ESD_Host, dst, src, imageFormat)
 	    : (deflate
-	              ? Ft_Gpu_CoCmd_Inflate_Flash(ESD_Host, dst, src)
-	              : Ft_Gpu_CoCmd_FlashRead(ESD_Host, dst, src, size));
+	              ? EVE_CoCmd_inflate_flash(ESD_Host, dst, src)
+	              : EVE_CoCmd_flashRead_flush(ESD_Host, dst, src, size));
 }
 
 #endif
@@ -224,9 +224,9 @@ uint32_t ESD_LoadPalette(ESD_BitmapInfo *bitmapInfo)
 				// Allocation space OK
 				if (
 #ifdef EVE_FLASH_AVAILABLE
-				    bitmapInfo->Flash ? !Ft_Gpu_CoCmd_FlashRead(ESD_Host, addr, bitmapInfo->PaletteFlashAddress, size) :
+				    bitmapInfo->Flash ? !EVE_CoCmd_flashRead_flush(ESD_Host, addr, bitmapInfo->PaletteFlashAddress, size) :
 #endif
-				                      !Ft_Hal_LoadRawFile(ESD_Host, addr, bitmapInfo->PaletteFile))
+				                      !EVE_Util_loadRawFile(ESD_Host, addr, bitmapInfo->PaletteFile))
 				{
 #ifdef ESD_BITMAPINFO_DEBUG
 					eve_printf_debug(bitmapInfo->Flash ? "Failed to load palette from flash\n" : "Failed to load palette from file\n");

@@ -82,9 +82,9 @@ ESD_FUNCTION(testPrint, DisplayName = "Test Print", Icon = ":/icons/card-address
 ESD_PARAMETER(message, Type = char *)
 void testPrint(char *message);
 
-ESD_FUNCTION(Ft_Gpu_Copro_SendCmd, Include = "Ft_Gpu_Hal.h")
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = "Ft_App_Get_Host()", Hidden, Internal)
-ESD_PARAMETER(cmd, Type = uint32_t)
+ESD_FUNCTION(EVE_CoCmd_dl, Include = "EVE_Hal.h")
+ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = "ESD_currentHost()", Hidden, Internal)
+ESD_PARAMETER(dl, Type = uint32_t)
 
 */
 
@@ -112,7 +112,7 @@ ESD_PARAMETER(cmd, Type = uint32_t)
 
 #define ESD_CATEGORY(name, ...)
 
-#include "Ft_Platform.h"
+#include "EVE_Hal.h"
 
 ESD_TYPE(void, Native = Void)
 ESD_TYPE(char, Native = Char, Edit = String)
@@ -157,7 +157,7 @@ ESD_TYPE(int64_t, Native = Int64, Edit = Integer)
 ESD_TYPE(uint64_t, Native = UInt64, Edit = Integer)
 ESD_TYPE(ft_float_t, Native = Float, Edit = Integer)
 ESD_TYPE(ft_double_t, Native = Double, Edit = Real)
-ESD_TYPE(bool, Native = Int8, Edit = Boolean)
+ESD_TYPE(bool, Native = Bool, Edit = Boolean)
 ESD_TYPE(char *, Native = Utf8, Edit = String)
 ESD_TYPE(const char *, Native = Utf8, Edit = String)
 

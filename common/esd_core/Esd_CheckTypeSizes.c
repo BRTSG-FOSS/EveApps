@@ -30,8 +30,8 @@
 */
 
 #if _DEBUG
-#include "Ft_Platform.h"
-#include "Ft_Esd.h"
+#include <EVE_Hal.h>
+#include "ESD_TypeDefs.h"
 #include "ESD_GpuAlloc.h"
 
 #include "ESD_FontInfo.h"

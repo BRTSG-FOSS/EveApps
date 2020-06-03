@@ -1,7 +1,7 @@
 
-#include "Ft_Platform.h"
-#include "Ft_Gpu_Hal.h"
 #include "ESD_Primitives.h"
+#include <EVE_Hal.h>
+
 #include "ESD_Dl.h"
 #include "ESD_BitmapHandle.h"
 

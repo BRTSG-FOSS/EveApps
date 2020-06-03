@@ -68,19 +68,19 @@ uint32_t Esd_LoadFont(Esd_FontInfo *fontInfo)
 			{
 			case ESD_FONT_LEGACY:
 			{
-				format = Ft_Gpu_Hal_Rd32(ESD_Host, fontAddr + 128);
-				fontInfo->FontHeight = Ft_Gpu_Hal_Rd32(ESD_Host, fontAddr + 140);
+				format = EVE_Hal_rd32(ESD_Host, fontAddr + 128);
+				fontInfo->FontHeight = EVE_Hal_rd32(ESD_Host, fontAddr + 140);
 				esd_resourceinfo_printf("Set legacy glyph address to %i\n", (int)glyphAddr);
-				Ft_Gpu_Hal_Wr32(ESD_Host, fontAddr + 144, glyphAddr);
+				EVE_Hal_wr32(ESD_Host, fontAddr + 144, glyphAddr);
 				fontInfo->BitmapHandle = ESD_BITMAPHANDLE_INVALID;
 				break;
 			}
 			case ESD_FONT_EXTENDED:
 			{
-				format = Ft_Gpu_Hal_Rd32(ESD_Host, fontAddr + 8);
-				fontInfo->FontHeight = Ft_Gpu_Hal_Rd32(ESD_Host, fontAddr + 28);
+				format = EVE_Hal_rd32(ESD_Host, fontAddr + 8);
+				fontInfo->FontHeight = EVE_Hal_rd32(ESD_Host, fontAddr + 28);
 				esd_resourceinfo_printf("Set extended glyph address to %i\n", (int)glyphAddr);
-				Ft_Gpu_Hal_Wr32(ESD_Host, fontAddr + 32, glyphAddr);
+				EVE_Hal_wr32(ESD_Host, fontAddr + 32, glyphAddr);
 				fontInfo->BitmapHandle = ESD_BITMAPHANDLE_INVALID;
 				break;
 			}

@@ -7,7 +7,7 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 #ifndef ESD_BITMAPHANDLE__H
 #define ESD_BITMAPHANDLE__H
 
-#include "Ft_Esd.h"
+#include "ESD_TypeDefs.h"
 #include "ESD_BitmapInfo.h"
 #include "ESD_FontInfo.h"
 

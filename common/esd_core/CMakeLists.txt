@@ -1,0 +1,13 @@
+
+FILE(GLOB SRCS *.c)
+FILE(GLOB HDRS *.h)
+SOURCE_GROUP("" FILES ${SRCS} ${HDRS})
+
+ADD_LIBRARY(esd_core SHARED
+  ${SRCS}
+  ${HDRS}
+)
+
+TARGET_LINK_LIBRARIES(esd_core
+  eve_hal
+)
