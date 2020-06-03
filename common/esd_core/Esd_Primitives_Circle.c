@@ -1,6 +1,7 @@
 
 #include "ESD_Core.h"
 #include "ESD_Primitives.h"
+#include "ESD_Dl.h"
 
 void Esd_Render_Circle_Stroke(
     int32_f4_t x, int32_f4_t y,
@@ -57,49 +58,49 @@ void Esd_Render_Circle_Stroke(
 	}
 
 	// Use local rendering context, bypass ESD display list functions.
-	Esd_Dl_BEGIN(POINTS);
-	Esd_Dl_COLOR_ARGB(color);
+	EVE_CoCmd_dl(phost, BEGIN(POINTS));
+	ESD_Dl_colorArgb(color);
 	if (EVE_CHIPID >= EVE_FT810)
-		Esd_Dl_VERTEX_FORMAT(4);
-	Eve_CoCmd_SendCmd(phost, SAVE_CONTEXT());
+		EVE_CoCmd_dl(phost, VERTEX_FORMAT(4));
+	EVE_CoCmd_dl(phost, SAVE_CONTEXT());
 
 	// Outer reset
-	Eve_CoCmd_SendCmd(phost, COLOR_MASK(0, 0, 0, 1));
-	Eve_CoCmd_SendCmd(phost, STENCIL_FUNC(ALWAYS, 0, 1));
-	Eve_CoCmd_SendCmd(phost, STENCIL_OP(REPLACE, REPLACE));
-	Eve_CoCmd_SendCmd(phost, LINE_WIDTH(outerRadius));
-	Eve_CoCmd_SendCmd(phost, VERTEX2F(x, y));
+	EVE_CoCmd_dl(phost, COLOR_MASK(0, 0, 0, 1));
+	EVE_CoCmd_dl(phost, STENCIL_FUNC(ALWAYS, 0, 1));
+	EVE_CoCmd_dl(phost, STENCIL_OP(REPLACE, REPLACE));
+	EVE_CoCmd_dl(phost, LINE_WIDTH(outerRadius));
+	EVE_CoCmd_dl(phost, VERTEX2F(x, y));
 
 	// Inner alpha quantity
-	Eve_CoCmd_SendCmd(phost, COLOR_MASK(0, 0, 0, 1));
-	Eve_CoCmd_SendCmd(phost, BLEND_FUNC(ONE, ZERO));
-	Eve_CoCmd_SendCmd(phost, POINT_SIZE(innerRadius + 32));
-	Eve_CoCmd_SendCmd(phost, VERTEX2F(x, y));
+	EVE_CoCmd_dl(phost, COLOR_MASK(0, 0, 0, 1));
+	EVE_CoCmd_dl(phost, BLEND_FUNC(ONE, ZERO));
+	EVE_CoCmd_dl(phost, POINT_SIZE(innerRadius + 32));
+	EVE_CoCmd_dl(phost, VERTEX2F(x, y));
 
 	// Inner alpha edge mask
-	Eve_CoCmd_SendCmd(phost, STENCIL_FUNC(ALWAYS, 1, 1));
-	Eve_CoCmd_SendCmd(phost, STENCIL_OP(REPLACE, REPLACE));
-	Eve_CoCmd_SendCmd(phost, BLEND_FUNC(ZERO, ONE_MINUS_SRC_ALPHA));
-	Eve_CoCmd_SendCmd(phost, COLOR_A(255));
-	Eve_CoCmd_SendCmd(phost, POINT_SIZE(innerRadius));
-	Eve_CoCmd_SendCmd(phost, VERTEX2F(x, y));
+	EVE_CoCmd_dl(phost, STENCIL_FUNC(ALWAYS, 1, 1));
+	EVE_CoCmd_dl(phost, STENCIL_OP(REPLACE, REPLACE));
+	EVE_CoCmd_dl(phost, BLEND_FUNC(ZERO, ONE_MINUS_SRC_ALPHA));
+	EVE_CoCmd_dl(phost, COLOR_A(255));
+	EVE_CoCmd_dl(phost, POINT_SIZE(innerRadius));
+	EVE_CoCmd_dl(phost, VERTEX2F(x, y));
 
 	// Inner color, outer circle stencil mask
-	Eve_CoCmd_SendCmd(phost, COLOR_MASK(1, 1, 1, 1));
-	Eve_CoCmd_SendCmd(phost, BLEND_FUNC(DST_ALPHA, ONE_MINUS_DST_ALPHA));
-	// Eve_CoCmd_SendCmd(phost, POINT_SIZE(innerRadius));
-	Eve_CoCmd_SendCmd(phost, VERTEX2F(x, y));
+	EVE_CoCmd_dl(phost, COLOR_MASK(1, 1, 1, 1));
+	EVE_CoCmd_dl(phost, BLEND_FUNC(DST_ALPHA, ONE_MINUS_DST_ALPHA));
+	// EVE_CoCmd_dl(phost, POINT_SIZE(innerRadius));
+	EVE_CoCmd_dl(phost, VERTEX2F(x, y));
 
 	// Outer circle
-	Eve_CoCmd_SendCmd(phost, STENCIL_FUNC(NOTEQUAL, 1, 255));
-	Eve_CoCmd_SendCmd(phost, BLEND_FUNC(SRC_ALPHA, ONE_MINUS_SRC_ALPHA));
-	Eve_CoCmd_SendCmd(phost, COLOR_A(ESD_DECOMPOSE_ALPHA(color)));
-	Eve_CoCmd_SendCmd(phost, POINT_SIZE(outerRadius));
-	Eve_CoCmd_SendCmd(phost, VERTEX2F(x, y));
+	EVE_CoCmd_dl(phost, STENCIL_FUNC(NOTEQUAL, 1, 255));
+	EVE_CoCmd_dl(phost, BLEND_FUNC(SRC_ALPHA, ONE_MINUS_SRC_ALPHA));
+	EVE_CoCmd_dl(phost, COLOR_A(ESD_DECOMPOSE_ALPHA(color)));
+	EVE_CoCmd_dl(phost, POINT_SIZE(outerRadius));
+	EVE_CoCmd_dl(phost, VERTEX2F(x, y));
 
 	// Restore rendering context, ESD display list optimizations functions should be used again after this.
-	Eve_CoCmd_SendCmd(phost, RESTORE_CONTEXT());
-	Esd_Dl_END();
+	EVE_CoCmd_dl(phost, RESTORE_CONTEXT());
+	EVE_CoCmd_dl(phost, END());
 }
 
 /* end of file */

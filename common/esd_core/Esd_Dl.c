@@ -105,96 +105,34 @@ void ESD_Dl_Scissor_Adjust(ESD_Rect16 rect, ESD_Rect16 state)
 	{
 		rect.Height += y2diff;
 	}
-	// Ft_Gpu_CoCmd_StartFunc(ESD_Host, FT_CMD_SIZE * 2);
+	// EVE_CoCmd_startFunc(ESD_Host, FT_CMD_SIZE * 2);
 	if (ESD_ScissorRect.X != rect.X || ESD_ScissorRect.Y != rect.Y)
 		EVE_CoCmd_dl(ESD_Host, SCISSOR_XY(rect.X, rect.Y));
 	if (ESD_ScissorRect.Width != rect.Width || ESD_ScissorRect.Height != rect.Height)
 		EVE_CoCmd_dl(ESD_Host, SCISSOR_SIZE(rect.Width, rect.Height));
-	// Ft_Gpu_CoCmd_EndFunc(ESD_Host);
+	// EVE_CoCmd_endFunc(ESD_Host);
 	ESD_ScissorRect = rect;
 }
 
 void ESD_Dl_Scissor_Reset(ESD_Rect16 state)
 {
-	// Ft_Gpu_CoCmd_StartFunc(ESD_Host, FT_CMD_SIZE * 2);
+	// EVE_CoCmd_startFunc(ESD_Host, FT_CMD_SIZE * 2);
 	EVE_HalContext *phost = ESD_Host;
 	(void)phost;
 	if (ESD_ScissorRect.X != state.X || ESD_ScissorRect.Y != state.Y)
 		EVE_CoCmd_dl(ESD_Host, SCISSOR_XY(state.X, state.Y));
 	if (ESD_ScissorRect.Width != state.Width || ESD_ScissorRect.Height != state.Height)
 		EVE_CoCmd_dl(ESD_Host, SCISSOR_SIZE(state.Width, state.Height));
-	// Ft_Gpu_CoCmd_EndFunc(ESD_Host);
+	// EVE_CoCmd_endFunc(ESD_Host);
 	ESD_ScissorRect = state;
 }
 
 /* end of supported functions */
 
 // Deprecated
-void FT_Esd_Render_Rect_Grad(int16_t x, int16_t y, int16_t w, int16_t h, ft_argb32_t color1, ft_argb32_t color2, int16_t direction)
-{
-	EVE_HalContext *phost = ESD_Host;
-	(void)phost;
-
-	// FIXME: Use rect for parameters
-	ESD_Rect16 rect = {
-		.X = x,
-		.Y = y,
-		.Width = w,
-		.Height = h,
-	};
-
-	if (color1 == color2)
-	{
-		// Not a gradient
-		ESD_Rect16 scissor;
-		// Ft_Gpu_CoCmd_StartFunc(ESD_Host, FT_CMD_SIZE * 4);
-		EVE_CoCmd_dl(phost, SAVE_CONTEXT());
-		scissor = ESD_Rect16_Crop(rect, ESD_Dl_Scissor_Get());
-		EVE_CoCmd_dl(phost, SCISSOR_XY(scissor.X, scissor.Y));
-		EVE_CoCmd_dl(phost, SCISSOR_SIZE(scissor.Width, scissor.Height));
-		ESD_Dl_COLOR_ARGB(color1);
-		FT_Esd_Render_Rect(x, y, w, h);
-		EVE_CoCmd_dl(phost, RESTORE_CONTEXT());
-		// Ft_Gpu_CoCmd_EndFunc(ESD_Host);
-		return;
-	}
-
-	scope
-	{
-		double radius = direction * M_PI / 180.0f;
-		double sine = sin(radius), cosine = cos(radius);
-		int16_t x0 = x + (w >> 1);
-		int16_t y0 = y + (h >> 1);
-		int16_t l = (int16_t)(sqrt(w * w + h * h) * 0.8); // use 80% to apply gradient effect
-		int16_t half = l >> 1;
-		int16_t dy = (int16_t)(half * sine);
-		int16_t dx = (int16_t)(half * cosine);
-
-		ESD_Rect16 s = ESD_Dl_Scissor_Set(rect);
-		EVE_CoCmd_gradient(phost, x0 - dx, y0 - dy, color1, x0 + dx, y0 + dy, color2);
-		ESD_Dl_Scissor_Reset(s);
-	}
-}
-
-// Deprecated
-void FT_Esd_Render_Rect(int16_t x, int16_t y, int16_t w, int16_t h)
-{
-	ESD_Dl_BEGIN(RECTS);
-	EVE_CoCmd_dl(ESD_Host, VERTEX2II(x, y, 0, 0));
-	EVE_CoCmd_dl(ESD_Host, VERTEX2II(x + w, y + h, 0, 0));
-	ESD_Dl_END();
-}
-
-// Deprecated
-void ESD_Cmd_Button(int16_t x, int16_t y, int16_t w, int16_t h, int16_t font, uint16_t options, const char *s)
-{
-	EVE_CoCmd_button(ESD_Host, x, y, w, h, font, options, s);
-}
-
-// Deprecated
-void ESD_Cmd_Number(int16_t x, int16_t y, int16_t font, uint16_t options, int32_t n)
-{
-	EVE_CoCmd_number(ESD_Host, x, y, font, options, n);
-}
+// ESD_Render_Rect_Grad
+// ESD_Render_Rect
+// ESD_Cmd_Button
+// ESD_Cmd_Number
 
 /* end of file */

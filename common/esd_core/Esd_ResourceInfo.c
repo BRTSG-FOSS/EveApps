@@ -124,10 +124,10 @@ uint32_t Esd_LoadResource(Esd_ResourceInfo *resourceInfo, uint32_t *imageFormat)
 			loaded = true;
 			break;
 		case ESD_RESOURCE_DEFLATE:
-			loaded = Ft_Gpu_CoCmd_Inflate_ProgMem(ESD_Host, addr, resourceInfo->ProgMem, resourceInfo->StorageSize << 2);
+			loaded = EVE_CoCmd_inflate_ProgMem(ESD_Host, addr, resourceInfo->ProgMem, resourceInfo->StorageSize << 2);
 			break;
 		case ESD_RESOURCE_IMAGE:
-			loaded = Ft_Gpu_CoCmd_LoadImage_ProgMem(ESD_Host, addr, resourceInfo->ProgMem, resourceInfo->StorageSize << 2, imageFormat);
+			loaded = EVE_CoCmd_loadImage_ProgMem(ESD_Host, addr, resourceInfo->ProgMem, resourceInfo->StorageSize << 2, imageFormat);
 			break;
 		}
 		break;
@@ -139,13 +139,13 @@ uint32_t Esd_LoadResource(Esd_ResourceInfo *resourceInfo, uint32_t *imageFormat)
 		switch (resourceInfo->Compressed)
 		{
 		case ESD_RESOURCE_RAW:
-			loaded = Ft_Gpu_CoCmd_FlashRead(ESD_Host, addr, resourceInfo->FlashAddress, resourceInfo->StorageSize << 2);
+			loaded = EVE_CoCmd_flashRead(ESD_Host, addr, resourceInfo->FlashAddress, resourceInfo->StorageSize << 2);
 			break;
 		case ESD_RESOURCE_DEFLATE:
-			loaded = Ft_Gpu_CoCmd_Inflate_Flash(ESD_Host, addr, resourceInfo->FlashAddress);
+			loaded = EVE_CoCmd_inflate_Flash(ESD_Host, addr, resourceInfo->FlashAddress);
 			break;
 		case ESD_RESOURCE_IMAGE:
-			loaded = Ft_Gpu_CoCmd_LoadImage_Flash(ESD_Host, addr, resourceInfo->FlashAddress, imageFormat);
+			loaded = EVE_CoCmd_loadImage_Flash(ESD_Host, addr, resourceInfo->FlashAddress, imageFormat);
 			break;
 		}
 		break;

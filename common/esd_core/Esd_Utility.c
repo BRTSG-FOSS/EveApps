@@ -58,11 +58,11 @@ void Esd_AttachFlashFast()
 
 		Esd_SetFlashStatus__ESD(flashStatus);
 
-		flashStatus = Ft_Gpu_CoCmd_FlashAttach(phost);
+		flashStatus = EVE_CoCmd_flashAttach(phost);
 		Esd_SetFlashStatus__ESD(flashStatus);
 		Esd_SetFlashSize__ESD(EVE_Hal_rd32(phost, REG_FLASH_SIZE));
 
-		flashStatus = Ft_Gpu_CoCmd_FlashFast(phost, &error);
+		flashStatus = EVE_CoCmd_flashFast(phost, &error);
 		Esd_SetFlashStatus__ESD(flashStatus);
 
 #ifndef NDEBUG
@@ -105,40 +105,40 @@ void Esd_BeginLogo()
 	EVE_HalContext *phost = ESD_Host;
 	ESD_GpuAlloc_Reset(ESD_GAlloc);
 	ESD_GpuAlloc_Alloc(ESD_GAlloc, RAM_G_SIZE, 0); // Block allocation
-	Ft_Gpu_CoCmd_StartFrame(phost);
-	Ft_Gpu_CoCmd_DlStart(phost);
-	Ft_Gpu_CoCmd_SendCmd(phost, CLEAR_COLOR_RGB(255, 255, 255));
-	Ft_Gpu_CoCmd_SendCmd(phost, CLEAR(1, 0, 0));
-	Ft_Gpu_CoCmd_SendCmd(phost, DISPLAY());
-	Ft_Gpu_CoCmd_Swap(phost);
-	Ft_Gpu_CoCmd_DlStart(phost);
-	Ft_Gpu_CoCmd_SendCmd(phost, CLEAR_COLOR_RGB(255, 255, 255));
-	Ft_Gpu_CoCmd_SendCmd(phost, CLEAR(1, 0, 0));
-	Ft_Gpu_CoCmd_SendCmd(phost, DISPLAY());
-	Ft_Gpu_CoCmd_Swap(phost);
-	Ft_Gpu_CoCmd_DlStart(phost);
-	Ft_Gpu_CoCmd_SendCmd(phost, CLEAR_COLOR_RGB(255, 255, 255));
-	Ft_Gpu_CoCmd_SendCmd(phost, CLEAR(1, 0, 0));
-	Ft_Gpu_CoCmd_SendCmd(phost, DISPLAY());
-	// Ft_Gpu_CoCmd_MemSet(ESD_Host, 0, 0xFF, RAM_G_SIZE);
-	Ft_Gpu_CoCmd_EndFrame(phost);
+	EVE_CoCmd_startFrame(phost);
+	EVE_CoCmd_dlStart(phost);
+	EVE_CoCmd_dl(phost, CLEAR_COLOR_RGB(255, 255, 255));
+	EVE_CoCmd_dl(phost, CLEAR(1, 0, 0));
+	EVE_CoCmd_dl(phost, DISPLAY());
+	EVE_CoCmd_swap(phost);
+	EVE_CoCmd_dlStart(phost);
+	EVE_CoCmd_dl(phost, CLEAR_COLOR_RGB(255, 255, 255));
+	EVE_CoCmd_dl(phost, CLEAR(1, 0, 0));
+	EVE_CoCmd_dl(phost, DISPLAY());
+	EVE_CoCmd_swap(phost);
+	EVE_CoCmd_dlStart(phost);
+	EVE_CoCmd_dl(phost, CLEAR_COLOR_RGB(255, 255, 255));
+	EVE_CoCmd_dl(phost, CLEAR(1, 0, 0));
+	EVE_CoCmd_dl(phost, DISPLAY());
+	// EVE_CoCmd_memSet(ESD_Host, 0, 0xFF, RAM_G_SIZE);
+	EVE_CoCmd_endFrame(phost);
 	Ft_Gpu_Hal_WaitCmdFifoEmpty(phost);
-	Ft_Gpu_CoCmd_StartFrame(phost);
-	Ft_Gpu_CoCmd_Logo(phost);
-	Ft_Gpu_CoCmd_EndFrame(phost);
+	EVE_CoCmd_startFrame(phost);
+	EVE_CoCmd_logo(phost);
+	EVE_CoCmd_endFrame(phost);
 	Ft_Gpu_Hal_WaitLogo_Finish(phost);
 	EVE_sleep(3000);
 }
 
 void Esd_EndLogo()
 {
-	Ft_Gpu_CoCmd_StartFrame(ESD_Host);
-	Ft_Gpu_CoCmd_DlStart(ESD_Host);
-	Ft_Gpu_CoCmd_SendCmd(ESD_Host, CLEAR_COLOR_RGB(255, 255, 255));
-	Ft_Gpu_CoCmd_SendCmd(ESD_Host, CLEAR(1, 0, 0));
-	Ft_Gpu_CoCmd_SendCmd(ESD_Host, DISPLAY());
-	Ft_Gpu_CoCmd_Swap(ESD_Host);
-	Ft_Gpu_CoCmd_EndFrame(ESD_Host);
+	EVE_CoCmd_startFrame(ESD_Host);
+	EVE_CoCmd_dlStart(ESD_Host);
+	EVE_CoCmd_dl(ESD_Host, CLEAR_COLOR_RGB(255, 255, 255));
+	EVE_CoCmd_dl(ESD_Host, CLEAR(1, 0, 0));
+	EVE_CoCmd_dl(ESD_Host, DISPLAY());
+	EVE_CoCmd_swap(ESD_Host);
+	EVE_CoCmd_endFrame(ESD_Host);
 	Ft_Gpu_Hal_WaitCmdFifoEmpty(ESD_Host);
 	ESD_GpuAlloc_Reset(ESD_GAlloc);
 }
@@ -160,19 +160,19 @@ bool Esd_Calibrate()
 #endif
 
 	eve_printf_debug("App_CoPro_Widget_Calibrate: Start Frame\n");
-	Ft_Gpu_CoCmd_StartFrame(phost);
+	EVE_CoCmd_startFrame(phost);
 
-	Ft_Gpu_CoCmd_DlStart(phost);
-	Ft_Gpu_CoCmd_SendCmd(phost, CLEAR_COLOR_RGB(64, 64, 64));
-	Ft_Gpu_CoCmd_SendCmd(phost, CLEAR(1, 1, 1));
-	Ft_Gpu_CoCmd_SendCmd(phost, COLOR_RGB(0xff, 0xff, 0xff));
+	EVE_CoCmd_dlStart(phost);
+	EVE_CoCmd_dl(phost, CLEAR_COLOR_RGB(64, 64, 64));
+	EVE_CoCmd_dl(phost, CLEAR(1, 1, 1));
+	EVE_CoCmd_dl(phost, COLOR_RGB(0xff, 0xff, 0xff));
 
-	// Ft_Gpu_CoCmd_Text(phost, (ESD_Host->Parameters.Display.Width / 2), (ESD_Host->Parameters.Display.Height / 2), 27, OPT_CENTER, "Please Tap on the dot");
+	// EVE_CoCmd_text(phost, (ESD_Host->Parameters.Display.Width / 2), (ESD_Host->Parameters.Display.Height / 2), 27, OPT_CENTER, "Please Tap on the dot");
 
-	result = Ft_Gpu_CoCmd_Calibrate(phost);
+	result = EVE_CoCmd_calibrate(phost);
 
 	eve_printf_debug("App_CoPro_Widget_Calibrate: End Frame\n");
-	Ft_Gpu_CoCmd_EndFrame(phost);
+	EVE_CoCmd_endFrame(phost);
 
 	// Print the configured values
 	EVE_Hal_rdMem(phost, REG_TOUCH_TRANSFORM_A, (uint8_t *)transMatrix, 4 * 6); //read all the 6 coefficients

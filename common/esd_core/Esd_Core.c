@@ -231,7 +231,7 @@ void ESD_update(ESD_Context *ec)
 	EVE_HalContext *phost = &ec->HalContext;
 
 	// Restore initial frame values
-	// Ft_Gpu_CoCmd_LoadIdentity(phost); // ?
+	// EVE_CoCmd_loadIdentity(phost); // ?
 	Esd_ResetGpuState();
 	// ESD_Widget_ProcessFree(); // TODO: Link this back up!!!
 	Esd_BitmapHandle_FrameStart(&ec->HandleState);

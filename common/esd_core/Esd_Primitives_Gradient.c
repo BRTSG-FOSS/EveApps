@@ -59,66 +59,66 @@ void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t width, int16_t heigh
 	}
 
 	// Write gradient palette to RAM_G
-	Ft_Gpu_CoCmd_MemWrite(ESD_Host, addr, 8);
-	Eve_CoCmd_SendCmdArr(ESD_Host, (uint32_t *)colors, 2);
+	EVE_CoCmd_memWrite(phost, addr, 8);
+	EVE_Cmd_wrMem(phost, (void *)colors, 8);
 
 	// Set required state
-	Esd_Dl_COLOR_ARGB(ESD_ARGB_WHITE);
+	ESD_Dl_colorArgb(ESD_ARGB_WHITE);
 
 	// Use the scratch handle
-	Esd_Dl_BITMAP_HANDLE(ESD_CO_SCRATCH_HANDLE);
+	ESD_Dl_BITMAP_HANDLE(ESD_CO_SCRATCH_HANDLE);
 	if (EVE_CHIPID >= EVE_FT810)
-		Esd_Dl_VERTEX_FORMAT(0);
-	Esd_Dl_BEGIN(BITMAPS);
+		ESD_Dl_VERTEX_FORMAT(0);
+	ESD_Dl_BEGIN(BITMAPS);
 
 	// Use local rendering context, bypass ESD display list functions.
 	// This is useful here, since we're changing bitmap transform matrices, which may use a lot of display list entries.
-	Eve_CoCmd_SendCmd(ESD_Host, SAVE_CONTEXT());
+	EVE_CoCmd_dl(ESD_Host, SAVE_CONTEXT());
 
 	// Initialize the bitmap options
 	if (EVE_CHIPID >= EVE_FT810)
 	{
-		Eve_CoCmd_SendCmd(ESD_Host, BITMAP_LAYOUT_H(0, 0));
-		Eve_CoCmd_SendCmd(ESD_Host, BITMAP_SIZE_H(width >> 9, height >> 9));
+		EVE_CoCmd_dl(ESD_Host, BITMAP_LAYOUT_H(0, 0));
+		EVE_CoCmd_dl(ESD_Host, BITMAP_SIZE_H(width >> 9, height >> 9));
 	}
-	Eve_CoCmd_SendCmd(ESD_Host, BITMAP_LAYOUT(alpha ? ARGB4 : RGB565, 4, 2));
-	Eve_CoCmd_SendCmd(ESD_Host, BITMAP_SIZE(BILINEAR, REPEAT, REPEAT, width, height));
+	EVE_CoCmd_dl(ESD_Host, BITMAP_LAYOUT(alpha ? ARGB4 : RGB565, 4, 2));
+	EVE_CoCmd_dl(ESD_Host, BITMAP_SIZE(BILINEAR, REPEAT, REPEAT, width, height));
 
-	Eve_CoCmd_SendCmd(ESD_Host, BITMAP_SOURCE(addr));
+	EVE_CoCmd_dl(ESD_Host, BITMAP_SOURCE(addr));
 
 	// Set the scaling matrix
 #if ESD_MULTIGRADIENT_CO_SCALE
-	Ft_Gpu_CoCmd_LoadIdentity(ESD_Host);
-	Ft_Gpu_CoCmd_Scale(ESD_Host, (int32_t)width << 16, (int32_t)height << 16);
-	Ft_Gpu_CoCmd_SetMatrix(ESD_Host);
+	EVE_CoCmd_loadIdentity(ESD_Host);
+	EVE_CoCmd_scale(ESD_Host, (int32_t)width << 16, (int32_t)height << 16);
+	EVE_CoCmd_setMatrix(ESD_Host);
 #else
 	if (EVE_CHIPID >= EVE_BT815)
 	{
-	Eve_CoCmd_SendCmd(ESD_Host, BITMAP_TRANSFORM_A_EXT(1, 0x8000 / width));
-	Eve_CoCmd_SendCmd(ESD_Host, BITMAP_TRANSFORM_E_EXT(1, 0x8000 / height));
+	EVE_CoCmd_dl(ESD_Host, BITMAP_TRANSFORM_A_EXT(1, 0x8000 / width));
+	EVE_CoCmd_dl(ESD_Host, BITMAP_TRANSFORM_E_EXT(1, 0x8000 / height));
 	}
 	else
 	{
-	Eve_CoCmd_SendCmd(ESD_Host, BITMAP_TRANSFORM_A(0x0100 / width));
-	Eve_CoCmd_SendCmd(ESD_Host, BITMAP_TRANSFORM_E(0x0100 / height));
+	EVE_CoCmd_dl(ESD_Host, BITMAP_TRANSFORM_A(0x0100 / width));
+	EVE_CoCmd_dl(ESD_Host, BITMAP_TRANSFORM_E(0x0100 / height));
 	}
 #endif
 
 	if (EVE_CHIPID >= EVE_BT815)
 	{
-	Eve_CoCmd_SendCmd(ESD_Host, VERTEX2F(x, y));
+	EVE_CoCmd_dl(ESD_Host, VERTEX2F(x, y));
 	}
 	else
 	{
-	Eve_CoCmd_SendCmd(ESD_Host, VERTEX2II(x, y, ESD_CO_SCRATCH_HANDLE, 0));
+	EVE_CoCmd_dl(ESD_Host, VERTEX2II(x, y, ESD_CO_SCRATCH_HANDLE, 0));
 	}
 
 	// Restore rendering context, ESD display list optimizations functions should be used again after this.
 #if ESD_MULTIGRADIENT_CO_SCALE
-	Ft_Gpu_CoCmd_LoadIdentity(ESD_Host);
+	EVE_CoCmd_loadIdentity(ESD_Host);
 #endif
-	Eve_CoCmd_SendCmd(ESD_Host, RESTORE_CONTEXT());
-	Esd_Dl_END();
+	EVE_CoCmd_dl(ESD_Host, RESTORE_CONTEXT());
+	ESD_Dl_END();
 
 	// Move to the next cell in the bitmap for next gradient
 	++s_MultiGradient_Cell;
@@ -127,33 +127,33 @@ void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t width, int16_t heigh
 
 void Esd_Render_MultiGradient_Rounded(int16_t x, int16_t y, int16_t width, int16_t height, int32_f4_t radius, uint8_t alpha, ft_argb32_t topLeft, ft_argb32_t topRight, ft_argb32_t bottomLeft, ft_argb32_t bottomRight)
 {
-	// Esd_Dl_SAVE_CONTEXT();
+	// ESD_Dl_SAVE_CONTEXT();
 
 	// Set alpha of the target rendering area to 255
-	// Esd_Dl_CLEAR_COLOR_A(255);
-	// ESD_Rect16 scissor = Esd_Dl_Scissor_Set(globalRect);
-	// Esd_Dl_CLEAR(1, 0, 0);
-	// Esd_Dl_Scissor_Reset(scissor);
-	Esd_Dl_COLOR_ARGB(ESD_ARGB_WHITE);
-	Eve_CoCmd_SendCmd(ESD_Host, COLOR_MASK(0, 0, 0, 1));
-	Esd_Dl_LINE_WIDTH(16);
-	Esd_Dl_BEGIN(RECTS);
-	Esd_Dl_VERTEX2F_0(x, y);
-	Esd_Dl_VERTEX2F_0(x + width, y + height);
-	Esd_Dl_END();
-	Eve_CoCmd_SendCmd(ESD_Host, COLOR_MASK(1, 1, 1, 1));
+	// ESD_Dl_CLEAR_COLOR_A(255);
+	// ESD_Rect16 scissor = ESD_Dl_Scissor_Set(globalRect);
+	// ESD_Dl_CLEAR(1, 0, 0);
+	// ESD_Dl_Scissor_Reset(scissor);
+	ESD_Dl_colorArgb(ESD_ARGB_WHITE);
+	EVE_CoCmd_dl(ESD_Host, COLOR_MASK(0, 0, 0, 1));
+	ESD_Dl_LINE_WIDTH(16);
+	ESD_Dl_BEGIN(RECTS);
+	ESD_Dl_VERTEX2F_0(x, y);
+	ESD_Dl_VERTEX2F_0(x + width, y + height);
+	ESD_Dl_END();
+	EVE_CoCmd_dl(ESD_Host, COLOR_MASK(1, 1, 1, 1));
 
 	// Draw rounded rectangle as masking shape
-	Eve_CoCmd_SendCmd(ESD_Host, BLEND_FUNC(ZERO, ONE_MINUS_SRC_ALPHA));
+	EVE_CoCmd_dl(ESD_Host, BLEND_FUNC(ZERO, ONE_MINUS_SRC_ALPHA));
 	ESD_Render_RectangleF(x << 4, y << 4, width << 4, height << 4, radius, ESD_ColorARGB_Combine(0xFFFFFF, alpha));
 
 	// Draw color using mask alpha
-	Eve_CoCmd_SendCmd(ESD_Host, BLEND_FUNC(ONE_MINUS_DST_ALPHA, ONE));
+	EVE_CoCmd_dl(ESD_Host, BLEND_FUNC(ONE_MINUS_DST_ALPHA, ONE));
 	Esd_Render_MultiGradient(x, y, width, height, topLeft | 0xFF000000, topRight | 0xFF000000, bottomLeft | 0xFF000000, bottomRight | 0xFF000000);
 
 	// Restore context
-	// Esd_Dl_RESTORE_CONTEXT();
-	Eve_CoCmd_SendCmd(ESD_Host, BLEND_FUNC(SRC_ALPHA, ONE_MINUS_SRC_ALPHA));
+	// ESD_Dl_RESTORE_CONTEXT();
+	EVE_CoCmd_dl(ESD_Host, BLEND_FUNC(SRC_ALPHA, ONE_MINUS_SRC_ALPHA));
 }
 
 /* end of file */

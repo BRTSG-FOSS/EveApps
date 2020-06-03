@@ -261,7 +261,7 @@ uint8_t ESD_Dl_Bitmap_Setup(ESD_BitmapInfo *bitmapInfo)
 	// if (format == DXT1) format = L1;
 	// else if (format == JPEG) format = RGB565; // TODO: Support for grayscale
 	// else if (format == PNG) format = RGB565; // TODO: Support for other PNG formats
-	// Ft_Gpu_CoCmd_SetBitmap(ESD_Host, addr, format, bitmapInfo->Width, bitmapInfo->Height); // TODO: What with stride?
+	// EVE_CoCmd_setBitmap(ESD_Host, addr, format, bitmapInfo->Width, bitmapInfo->Height); // TODO: What with stride?
 	// ESD_BitmapHandleResized[handle] = 0;
 
 	if (ESD_BITMAPHANDLE_VALID(handle) && (handle != ESD_SCRATCHHANDLE)) // When valid and not using scratch handle
