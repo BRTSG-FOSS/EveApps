@@ -8,12 +8,12 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 Font info structure
 */
 
-#ifndef ESD_FONTINFO_H
-#define ESD_FONTINFO_H
+#ifndef ESD_FONTINFO__H
+#define ESD_FONTINFO__H
 
 #include "Ft_Esd.h"
-#include "Ft_Esd_GpuAlloc.h"
-#include "Ft_Esd_ResourceInfo.h"
+#include "ESD_GpuAlloc.h"
+#include "ESD_ResourceInfo.h"
 
 ESD_ENUM(Esd_FontType, DisplayName = "Bitmap Format")
 #define ESD_FONT_ROM 0

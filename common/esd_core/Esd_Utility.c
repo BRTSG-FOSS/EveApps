@@ -1,18 +1,18 @@
 
 #include <Ft_Platform.h>
-#include "Ft_Esd_Utility.h"
+#include "ESD_Utility.h"
 
 #include "Ft_Gpu_Hal.h"
 #include "Ft_Gpu.h"
 #include "Ft_Esd.h"
-#include "Ft_Esd_Dl.h"
-#include "Ft_Esd_GpuAlloc.h"
-#include "Ft_Esd_TouchTag.h"
-#include "Ft_Esd_CoCmd.h"
-#include "Ft_Esd_Core.h"
+#include "ESD_Dl.h"
+#include "ESD_GpuAlloc.h"
+#include "ESD_TouchTag.h"
+#include "ESD_CoCmd.h"
+#include "ESD_Core.h"
 
-extern EVE_HalContext *Ft_Esd_Host;
-extern Ft_Esd_GpuAlloc *Ft_Esd_GAlloc;
+extern EVE_HalContext *ESD_Host;
+extern ESD_GpuAlloc *ESD_GAlloc;
 
 #if defined(EVE_FLASH_AVAILABLE)
 #ifndef NDEBUG
@@ -21,8 +21,8 @@ static ft_uint32_t s_FlashErrorLast = ~0;
 #endif
 
 //A function to enable spinner when frame is rendered.
-ESD_FUNCTION(Ft_Esd_Spinner_Popup, DisplayName = "Pop-up Spinner", Category = EsdUtilities)
-void Ft_Esd_Spinner_Popup()
+ESD_FUNCTION(ESD_Spinner_Popup, DisplayName = "Pop-up Spinner", Category = EsdUtilities)
+void ESD_Spinner_Popup()
 {
 	Esd_CurrentContext->SpinnerPopup = FT_TRUE;
 }
@@ -45,7 +45,7 @@ extern void Esd_SetFlashSize__ESD(int size);
 void Esd_AttachFlashFast()
 {
 	// Wait for flash status to move on from FLASH_STATUS_INIT
-	EVE_HalContext *phost = Ft_Esd_Host;
+	EVE_HalContext *phost = ESD_Host;
 	uint32_t flashStatus;
 	while (!(flashStatus = Ft_Gpu_Hal_Rd32(phost, REG_FLASH_STATUS)))
 	{
@@ -105,9 +105,9 @@ void Esd_AttachFlashFast()
 
 void Esd_BeginLogo()
 {
-	EVE_HalContext *phost = Ft_Esd_Host;
-	Ft_Esd_GpuAlloc_Reset(Ft_Esd_GAlloc);
-	Ft_Esd_GpuAlloc_Alloc(Ft_Esd_GAlloc, RAM_G_SIZE, 0); // Block allocation
+	EVE_HalContext *phost = ESD_Host;
+	ESD_GpuAlloc_Reset(ESD_GAlloc);
+	ESD_GpuAlloc_Alloc(ESD_GAlloc, RAM_G_SIZE, 0); // Block allocation
 	Ft_Gpu_CoCmd_StartFrame(phost);
 	Ft_Gpu_CoCmd_DlStart(phost);
 	Ft_Gpu_CoCmd_SendCmd(phost, CLEAR_COLOR_RGB(255, 255, 255));
@@ -123,7 +123,7 @@ void Esd_BeginLogo()
 	Ft_Gpu_CoCmd_SendCmd(phost, CLEAR_COLOR_RGB(255, 255, 255));
 	Ft_Gpu_CoCmd_SendCmd(phost, CLEAR(1, 0, 0));
 	Ft_Gpu_CoCmd_SendCmd(phost, DISPLAY());
-	// Ft_Gpu_CoCmd_MemSet(Ft_Esd_Host, 0, 0xFF, RAM_G_SIZE);
+	// Ft_Gpu_CoCmd_MemSet(ESD_Host, 0, 0xFF, RAM_G_SIZE);
 	Ft_Gpu_CoCmd_EndFrame(phost);
 	Ft_Gpu_Hal_WaitCmdFifoEmpty(phost);
 	Ft_Gpu_CoCmd_StartFrame(phost);
@@ -135,15 +135,15 @@ void Esd_BeginLogo()
 
 void Esd_EndLogo()
 {
-	Ft_Gpu_CoCmd_StartFrame(Ft_Esd_Host);
-	Ft_Gpu_CoCmd_DlStart(Ft_Esd_Host);
-	Ft_Gpu_CoCmd_SendCmd(Ft_Esd_Host, CLEAR_COLOR_RGB(255, 255, 255));
-	Ft_Gpu_CoCmd_SendCmd(Ft_Esd_Host, CLEAR(1, 0, 0));
-	Ft_Gpu_CoCmd_SendCmd(Ft_Esd_Host, DISPLAY());
-	Ft_Gpu_CoCmd_Swap(Ft_Esd_Host);
-	Ft_Gpu_CoCmd_EndFrame(Ft_Esd_Host);
-	Ft_Gpu_Hal_WaitCmdFifoEmpty(Ft_Esd_Host);
-	Ft_Esd_GpuAlloc_Reset(Ft_Esd_GAlloc);
+	Ft_Gpu_CoCmd_StartFrame(ESD_Host);
+	Ft_Gpu_CoCmd_DlStart(ESD_Host);
+	Ft_Gpu_CoCmd_SendCmd(ESD_Host, CLEAR_COLOR_RGB(255, 255, 255));
+	Ft_Gpu_CoCmd_SendCmd(ESD_Host, CLEAR(1, 0, 0));
+	Ft_Gpu_CoCmd_SendCmd(ESD_Host, DISPLAY());
+	Ft_Gpu_CoCmd_Swap(ESD_Host);
+	Ft_Gpu_CoCmd_EndFrame(ESD_Host);
+	Ft_Gpu_Hal_WaitCmdFifoEmpty(ESD_Host);
+	ESD_GpuAlloc_Reset(ESD_GAlloc);
 }
 
 void Esd_ShowLogo()
@@ -154,7 +154,7 @@ void Esd_ShowLogo()
 /// Run calibrate procedure
 ft_bool_t Esd_Calibrate()
 {
-	EVE_HalContext *phost = Ft_Esd_Host;
+	EVE_HalContext *phost = ESD_Host;
 	ft_uint32_t result;
 	ft_uint32_t transMatrix[6];
 
@@ -170,7 +170,7 @@ ft_bool_t Esd_Calibrate()
 	Ft_Gpu_CoCmd_SendCmd(phost, CLEAR(1, 1, 1));
 	Ft_Gpu_CoCmd_SendCmd(phost, COLOR_RGB(0xff, 0xff, 0xff));
 
-	// Ft_Gpu_CoCmd_Text(phost, (Ft_Esd_Host->Parameters.Display.Width / 2), (Ft_Esd_Host->Parameters.Display.Height / 2), 27, OPT_CENTER, "Please Tap on the dot");
+	// Ft_Gpu_CoCmd_Text(phost, (ESD_Host->Parameters.Display.Width / 2), (ESD_Host->Parameters.Display.Height / 2), 27, OPT_CENTER, "Please Tap on the dot");
 
 	result = Ft_Gpu_CoCmd_Calibrate(phost);
 

@@ -29,21 +29,21 @@
 * has no liability in relation to those amendments.
 */
 
-#include "Ft_Esd_Core.h"
-#include "Ft_Esd_Utility.h"
+#include "ESD_Core.h"
+#include "ESD_Utility.h"
 
-#include "Ft_Esd_GpuAlloc.h"
-#include "Ft_Esd_Dl.h"
-#include "Ft_Esd_CoCmd.h"
-#include "Ft_Esd_BitmapHandle.h"
-#include "Ft_Esd_TouchTag.h"
+#include "ESD_GpuAlloc.h"
+#include "ESD_Dl.h"
+#include "ESD_CoCmd.h"
+#include "ESD_BitmapHandle.h"
+#include "ESD_TouchTag.h"
 
 //
 // Globals
 //
 Esd_Context *Esd_CurrentContext = NULL;
-EVE_HalContext *Ft_Esd_Host = NULL; // Pointer to current s_Host
-Ft_Esd_GpuAlloc *Ft_Esd_GAlloc = NULL; // Pointer to current s_GAlloc
+EVE_HalContext *ESD_Host = NULL; // Pointer to current s_Host
+ESD_GpuAlloc *ESD_GAlloc = NULL; // Pointer to current s_GAlloc
 ft_int16_t ESD_DispWidth, ESD_DispHeight;
 
 //
@@ -61,7 +61,7 @@ void Esd_CheckTypeSizes();
 // as exported by the single Application logic document included
 #ifndef ESD_SIMULATION
 #ifdef BT8XXEMU_PLATFORM
-#define Ft_Main__Running__ESD() BT8XXEMU_isRunning(Ft_Esd_Host->Emulator)
+#define Ft_Main__Running__ESD() BT8XXEMU_isRunning(ESD_Host->Emulator)
 #else
 #define Ft_Main__Running__ESD() (1)
 #endif
@@ -72,10 +72,10 @@ int Ft_Main__Running__ESD();
 void Esd_ResetGpuState();
 void Esd_ResetCoState(); // TODO: Call after coprocessor reset procedure
 
-// extern void Ft_Esd_Widget_ProcessFree(); // TODO: Bind from widgets
+// extern void ESD_Widget_ProcessFree(); // TODO: Bind from widgets
 
-// extern void Ft_Esd_Timer_CancelGlobal(); // TODO: Bind from widgets
-// extern void Ft_Esd_Timer_UpdateGlobal(); // TODO: Bind from widgets
+// extern void ESD_Timer_CancelGlobal(); // TODO: Bind from widgets
+// extern void ESD_Timer_UpdateGlobal(); // TODO: Bind from widgets
 
 //
 // Constants
@@ -85,8 +85,8 @@ void Esd_ResetCoState(); // TODO: Call after coprocessor reset procedure
 void Esd_SetCurrent(Esd_Context *ec)
 {
 	Esd_CurrentContext = ec;
-	Ft_Esd_Host = &ec->HalContext;
-	Ft_Esd_GAlloc = &ec->GpuAlloc;
+	ESD_Host = &ec->HalContext;
+	ESD_GAlloc = &ec->GpuAlloc;
 }
 
 void Esd_Defaults(Esd_Parameters *ep)
@@ -161,7 +161,7 @@ void Esd_Initialize(Esd_Context *ec, Esd_Parameters *ep)
 #endif
 
 	ec->GpuAlloc.RamGSize = RAM_G_SIZE;
-	Ft_Esd_GpuAlloc_Reset(&ec->GpuAlloc);
+	ESD_GpuAlloc_Reset(&ec->GpuAlloc);
 
 	Esd_BitmapHandle_Initialize();
 	Esd_ResetCoState();
@@ -169,13 +169,13 @@ void Esd_Initialize(Esd_Context *ec, Esd_Parameters *ep)
 
 void Esd_Release(Esd_Context *ec)
 {
-	// Ft_Esd_Widget_ProcessFree(); // TODO: Link this back up!!!
+	// ESD_Widget_ProcessFree(); // TODO: Link this back up!!!
 	Ft_Gpu_Hal_Close(&ec->HalContext);
 	memset(ec, 0, sizeof(Esd_Context));
 
 	Esd_CurrentContext = NULL;
-	Ft_Esd_Host = NULL;
-	Ft_Esd_GAlloc = NULL;
+	ESD_Host = NULL;
+	ESD_GAlloc = NULL;
 }
 
 void Esd_Shutdown()
@@ -212,7 +212,7 @@ void Esd_Start(Esd_Context *ec)
 	Esd_ResetGpuState();
 	ec->Frame = 0;
 	ec->Millis = EVE_millis();
-	// Ft_Esd_Timer_CancelGlobal(); // TODO
+	// ESD_Timer_CancelGlobal(); // TODO
 
 	// Initialize storage
 	EVE_Util_loadSdCard(&ec->HalContext);
@@ -233,7 +233,7 @@ void Esd_Update(Esd_Context *ec)
 	// Restore initial frame values
 	// Ft_Gpu_CoCmd_LoadIdentity(phost); // ?
 	Esd_ResetGpuState();
-	// Ft_Esd_Widget_ProcessFree(); // TODO: Link this back up!!!
+	// ESD_Widget_ProcessFree(); // TODO: Link this back up!!!
 	Esd_BitmapHandle_FrameStart(&ec->HandleState);
 
 	if (ec->ShowLogo)
@@ -261,11 +261,11 @@ void Esd_Update(Esd_Context *ec)
 	ft_uint32_t ms = ft_millis(); // Calculate frame time delta
 	ec->DeltaMs = ms - ec->Millis;
 	ec->Millis = ms;
-	Ft_Esd_GpuAlloc_Update(Ft_Esd_GAlloc); // Run GC
-	Ft_Esd_TouchTag_Update(NULL); // Update touch
+	ESD_GpuAlloc_Update(ESD_GAlloc); // Run GC
+	ESD_TouchTag_Update(NULL); // Update touch
 	if (ec->Update)
 		ec->Update(ec->UserContext);
-	// Ft_Esd_Timer_UpdateGlobal(); // TODO
+	// ESD_Timer_UpdateGlobal(); // TODO
 
 	// Return to idle state inbetween
 	ec->LoopState = ESD_LOOPSTATE_IDLE;
@@ -305,14 +305,14 @@ void Esd_Render(Esd_Context *ec)
 	if (ec->SpinnerPopup)
 	{
 		// Spinner used for switching longer loading pages with bitmaps etc
-		Ft_Esd_Dl_COLOR_RGB(~(ec->ClearColor));
-		Ft_Esd_CoCmd_Spinner(Esd_Update, ESD_DispWidth >> 1, ESD_DispHeight >> 1, 0, 0);
+		ESD_Dl_COLOR_RGB(~(ec->ClearColor));
+		ESD_CoCmd_Spinner(Esd_Update, ESD_DispWidth >> 1, ESD_DispHeight >> 1, 0, 0);
 		ec->SpinnerPopup = FT_FALSE;
 		ec->SpinnerPopped = FT_TRUE;
 	}
 	else if (ec->SpinnerPopped)
 	{
-		Ft_Esd_CoCmd_Stop(Esd_Update);
+		ESD_CoCmd_Stop(Esd_Update);
 		ec->SpinnerPopped = FT_FALSE;
 	}
 
@@ -362,7 +362,7 @@ void Esd_Stop(Esd_Context *ec)
 
 	// Cleanup application (generally unreachable)
 	ec->LoopState = ESD_LOOPSTATE_NONE;
-	// Ft_Esd_Timer_CancelGlobal(); // TODO
+	// ESD_Timer_CancelGlobal(); // TODO
 	if (ec->End)
 		ec->End(ec->UserContext);
 }

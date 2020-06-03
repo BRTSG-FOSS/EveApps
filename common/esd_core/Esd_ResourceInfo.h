@@ -8,11 +8,11 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 Resource info structure
 */
 
-#ifndef ESD_RESOURCEINFO_H
-#define ESD_RESOURCEINFO_H
+#ifndef ESD_RESOURCEINFO__H
+#define ESD_RESOURCEINFO__H
 
 #include "Ft_Esd.h"
-#include "Ft_Esd_GpuAlloc.h"
+#include "ESD_GpuAlloc.h"
 
 // Resource loading mechanisms
 ESD_ENUM(Esd_ResourceType, DisplayName = "Resource Type")
@@ -43,7 +43,7 @@ typedef struct Esd_ResourceInfo // (16 bytes) (24 bytes on 64 bit)
 	};
 
 	// (Runtime) Handle pointing to the address in RAM_G if it is allocated
-	Ft_Esd_GpuHandle GpuHandle;
+	ESD_GpuHandle GpuHandle;
 
 	// Size of data in storage, divided by 4, rounded up ((size + 3) >> 2) (size in int32)
 	uint32_t StorageSize : 27;
@@ -55,7 +55,7 @@ typedef struct Esd_ResourceInfo // (16 bytes) (24 bytes on 64 bit)
 	uint32_t Compressed : 2;
 
 	// When this is set, the allocated ram is not free'd automatically
-	// Use Ft_Esd_GpuAlloc_Free(GpuAlloc, GpuHandle) or Esd_FreeResource to free the GPU ram manually
+	// Use ESD_GpuAlloc_Free(GpuAlloc, GpuHandle) or Esd_FreeResource to free the GPU ram manually
 	uint32_t Persistent : 1;
 
 	// Size of data when decompressed into RAM_G
@@ -94,16 +94,16 @@ ESD_PARAMETER(resourceInfo, Type = Esd_ResourceInfo *)
 void Esd_ResourcePersist(Esd_ResourceInfo *resourceInfo);
 
 // Number of available bitmap handles
-#define FT_ESD_BITMAPHANDLE_NB (EVE_CHIPID >= EVE_FT810 ? 32UL : 16UL)
+#define ESD_BITMAPHANDLE_NB (EVE_CHIPID >= EVE_FT810 ? 32UL : 16UL)
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
-#define FT_ESD_BITMAPHANDLE_CAP (32UL)
+#define ESD_BITMAPHANDLE_CAP (32UL)
 #else
-#define FT_ESD_BITMAPHANDLE_CAP (16UL)
+#define ESD_BITMAPHANDLE_CAP (16UL)
 #endif
 
 // An invalid bitmap handle
-#define FT_ESD_BITMAPHANDLE_INVALID 0x3F
-#define FT_ESD_BITMAPHANDLE_VALID(bitmapHandle) (bitmapHandle < FT_ESD_BITMAPHANDLE_NB)
+#define ESD_BITMAPHANDLE_INVALID 0x3F
+#define ESD_BITMAPHANDLE_VALID(bitmapHandle) (bitmapHandle < ESD_BITMAPHANDLE_NB)
 
 /// Check if a format is an ASTC format
 #define ESD_IS_FORMAT_ASTC(format) ((format & 0xFFF0) == 0x93B0)

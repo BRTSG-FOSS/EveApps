@@ -1,13 +1,13 @@
 
-#include "Ft_Esd_Core.h"
-#include "Ft_Esd_Primitives.h"
+#include "ESD_Core.h"
+#include "ESD_Primitives.h"
 
 ft_void_t Esd_Render_Circle_Stroke(
     ft_int32_f4_t x, ft_int32_f4_t y,
     ft_int32_f4_t radius, ft_int32_f4_t border,
     uint8_t stroke, ft_argb32_t color)
 {
-	EVE_HalContext *phost = Ft_Esd_Host;
+	EVE_HalContext *phost = ESD_Host;
 	ft_int32_f4_t r = radius;
 	ft_int32_f4_t innerRadius;
 	ft_int32_f4_t outerRadius;

@@ -29,23 +29,23 @@
 * has no liability in relation to those amendments.
 */
 
-#ifndef ESD_CORE__H
-#define ESD_CORE__H
+#ifndef ESD_CORE___H
+#define ESD_CORE___H
 
 #include <Ft_Platform.h>
 
 #include "Ft_Esd.h"
-#include "Ft_Esd_GpuAlloc.h"
-#include "Ft_Esd_Dl.h"
-#include "Ft_Esd_CoCmd.h"
-#include "Ft_Esd_BitmapHandle.h"
-#include "Ft_Esd_TouchTag.h"
+#include "ESD_GpuAlloc.h"
+#include "ESD_Dl.h"
+#include "ESD_CoCmd.h"
+#include "ESD_BitmapHandle.h"
+#include "ESD_TouchTag.h"
 
 /// Runtime context of ESD
 typedef struct
 {
 	EVE_HalContext HalContext; //< Pointer to current s_Host
-	Ft_Esd_GpuAlloc GpuAlloc; //< Pointer to current s_GAlloc
+	ESD_GpuAlloc GpuAlloc; //< Pointer to current s_GAlloc
 	ft_uint32_t Millis; //< Time in milliseconds for current frame
 	ft_uint32_t DeltaMs; //< Delta time in milliseconds between frames
 	ft_uint32_t Frame; //< Number of times Render has been called
@@ -99,8 +99,8 @@ typedef struct
 #define ESD_EXTERN_LIBARY
 #endif
 extern ESD_EXTERN_LIBARY Esd_Context *Esd_CurrentContext; //< Pointer to current ESD context
-extern ESD_EXTERN_LIBARY EVE_HalContext *Ft_Esd_Host; //< Pointer to current EVE hal context
-extern ESD_EXTERN_LIBARY Ft_Esd_GpuAlloc *Ft_Esd_GAlloc; //< Pointer to current allocator
+extern ESD_EXTERN_LIBARY EVE_HalContext *ESD_Host; //< Pointer to current EVE hal context
+extern ESD_EXTERN_LIBARY ESD_GpuAlloc *ESD_GAlloc; //< Pointer to current allocator
 
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 #define ESD_CO_SCRATCH_HANDLE (EVE_CHIPID >= EVE_FT810 ? Esd_CurrentContext->CoScratchHandle : 15)

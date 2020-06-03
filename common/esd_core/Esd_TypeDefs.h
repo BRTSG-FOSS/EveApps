@@ -29,8 +29,8 @@
 * has no liability in relation to those amendments.
 */
 
-#ifndef FT_ESD_H
-#define FT_ESD_H
+#ifndef ESD__H
+#define ESD__H
 
 /*
 Type definition
@@ -194,9 +194,9 @@ ESD_TYPE(ft_rgb32_t, Native = UInt32, Edit = ColorRGB)
 typedef ft_uint32_t esd_classid_t;
 ESD_TYPE(esd_classid_t, Native = UInt32, Edit = Library)
 
-ESD_FUNCTION(Ft_Esd_Noop, Category = _GroupHidden)
+ESD_FUNCTION(ESD_Noop, Category = _GroupHidden)
 ESD_PARAMETER(context, Type = void *)
-void Ft_Esd_Noop(void *context);
+void ESD_Noop(void *context);
 
 #define ESD_LOOPSTATE_NONE 0
 #define ESD_LOOPSTATE_IDLE 1
@@ -221,19 +221,19 @@ ESD_END()
 void LogMessage__ESD(const char *str);
 void LogWarning__ESD(const char *str);
 void LogError__ESD(const char *str);
-#define Ft_Esd_LogMessage(s) LogMessage__ESD(s)
-#define Ft_Esd_LogWarning(s) LogWarning__ESD(s)
-#define Ft_Esd_LogError(s) LogError__ESD(s)
+#define ESD_LogMessage(s) LogMessage__ESD(s)
+#define ESD_LogWarning(s) LogWarning__ESD(s)
+#define ESD_LogError(s) LogError__ESD(s)
 #else
-#define Ft_Esd_LogMessage(s) \
+#define ESD_LogMessage(s) \
 	do                       \
 	{                        \
 	} while (0)
-#define Ft_Esd_LogWarning(s) \
+#define ESD_LogWarning(s) \
 	do                       \
 	{                        \
 	} while (0)
-#define Ft_Esd_LogError(s) \
+#define ESD_LogError(s) \
 	do                     \
 	{                      \
 	} while (0)
@@ -255,6 +255,6 @@ void LogError__ESD(const char *str);
 #define FT_DispWidth ESD_DispWidth
 #define FT_DispHeight ESD_DispHeight
 
-#endif /* #ifndef FT_ESD_H */
+#endif /* #ifndef ESD_H */
 
 /* end of file */

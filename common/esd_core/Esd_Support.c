@@ -29,36 +29,36 @@
 * has no liability in relation to those amendments.
 */
 
-#include "Ft_Esd_Core.h"
+#include "ESD_Core.h"
 
 /// A function to get milliseconds for current frame
-ESD_FUNCTION(Ft_Esd_GetMillis, Type = ft_uint32_t, DisplayName = "Get Milliseconds", Category = EsdUtilities)
-ft_uint32_t Ft_Esd_GetMillis() { return Esd_CurrentContext->Millis; }
+ESD_FUNCTION(ESD_GetMillis, Type = ft_uint32_t, DisplayName = "Get Milliseconds", Category = EsdUtilities)
+ft_uint32_t ESD_GetMillis() { return Esd_CurrentContext->Millis; }
 
 /// A function to get the difference in milliseconds since last frame Update call
-ESD_FUNCTION(Ft_Esd_GetDeltaMs, Type = ft_uint32_t, DisplayName = "Get Delta Ms", Category = EsdUtilities)
-ft_uint32_t Ft_Esd_GetDeltaMs() { return Esd_CurrentContext->DeltaMs; }
+ESD_FUNCTION(ESD_GetDeltaMs, Type = ft_uint32_t, DisplayName = "Get Delta Ms", Category = EsdUtilities)
+ft_uint32_t ESD_GetDeltaMs() { return Esd_CurrentContext->DeltaMs; }
 
 /// A function to get the current HAL context data structure
-ESD_FUNCTION(Ft_Esd_GetHost, Type = EVE_HalContext *, DisplayName = "Get EVE Host", Category = EsdUtilities)
-EVE_HalContext *Ft_Esd_GetHost() { return Ft_Esd_Host; }
+ESD_FUNCTION(ESD_GetHost, Type = EVE_HalContext *, DisplayName = "Get EVE Host", Category = EsdUtilities)
+EVE_HalContext *ESD_GetHost() { return ESD_Host; }
 
 #ifdef ESD_SIMULATION
 
-int Ft_Esd_DesignerMode = 0;
+int ESD_DesignerMode = 0;
 
-ft_uint32_t Ft_Esd_GAlloc_GetTotalUsed(Ft_Esd_GpuAlloc *ga)
+ft_uint32_t ESD_GAlloc_GetTotalUsed(ESD_GpuAlloc *ga)
 {
-	if (!Ft_Esd_GAlloc)
+	if (!ESD_GAlloc)
 		return 0;
-	return Ft_Esd_GpuAlloc_GetTotalUsed(Ft_Esd_GAlloc);
+	return ESD_GpuAlloc_GetTotalUsed(ESD_GAlloc);
 }
 
-ft_uint32_t Ft_Esd_GAlloc_GetTotal(Ft_Esd_GpuAlloc *ga)
+ft_uint32_t ESD_GAlloc_GetTotal(ESD_GpuAlloc *ga)
 {
-	if (!Ft_Esd_GAlloc)
+	if (!ESD_GAlloc)
 		return 0;
-	return Ft_Esd_GpuAlloc_GetTotal(Ft_Esd_GAlloc);
+	return ESD_GpuAlloc_GetTotal(ESD_GAlloc);
 }
 
 #endif

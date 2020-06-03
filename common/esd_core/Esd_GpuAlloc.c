@@ -5,7 +5,7 @@ Allocation mechanism for RAM_G.
 */
 
 #include "Ft_Esd.h"
-#include "Ft_Esd_GpuAlloc.h"
+#include "ESD_GpuAlloc.h"
 
 #include "Ft_Platform.h"
 #include "Ft_Gpu.h"
@@ -14,7 +14,7 @@ Allocation mechanism for RAM_G.
 static int s_ErrorGpuAllocFailed = 0;
 #endif
 
-void Ft_Esd_GpuAlloc_Reset(Ft_Esd_GpuAlloc *ga)
+void ESD_GpuAlloc_Reset(ESD_GpuAlloc *ga)
 {
 	int id, idx;
 
@@ -46,7 +46,7 @@ void Ft_Esd_GpuAlloc_Reset(Ft_Esd_GpuAlloc *ga)
 	ga->NbAllocEntries = 1;
 }
 
-void Ft_Esd_GpuAlloc_InsertFree(Ft_Esd_GpuAlloc *ga, uint32_t atidx, uint32_t size)
+void ESD_GpuAlloc_InsertFree(ESD_GpuAlloc *ga, uint32_t atidx, uint32_t size)
 {
 	uint32_t idx;
 
@@ -72,10 +72,10 @@ void Ft_Esd_GpuAlloc_InsertFree(Ft_Esd_GpuAlloc *ga, uint32_t atidx, uint32_t si
 	++ga->NbAllocEntries;
 }
 
-Ft_Esd_GpuHandle Ft_Esd_GpuAlloc_Alloc(Ft_Esd_GpuAlloc *ga, uint32_t size, uint16_t flags)
+ESD_GpuHandle ESD_GpuAlloc_Alloc(ESD_GpuAlloc *ga, uint32_t size, uint16_t flags)
 {
 	uint32_t idx;
-	Ft_Esd_GpuHandle ret;
+	ESD_GpuHandle ret;
 
 	if (ga->NbAllocEntries >= MAX_NUM_ALLOCATIONS)
 	{
@@ -114,7 +114,7 @@ Ft_Esd_GpuHandle Ft_Esd_GpuAlloc_Alloc(Ft_Esd_GpuAlloc *ga, uint32_t size, uint1
 					// Insert free space entry after
 					if (remaining)
 					{
-						Ft_Esd_GpuAlloc_InsertFree(ga, idx + 1, remaining);
+						ESD_GpuAlloc_InsertFree(ga, idx + 1, remaining);
 					}
 
 #ifdef ESD_SIMULATION
@@ -141,7 +141,7 @@ ReturnInvalidHandle:
 #ifdef ESD_SIMULATION
 	if (!s_ErrorGpuAllocFailed)
 	{
-		Ft_Esd_LogError("Unable to allocate RAM_G space");
+		ESD_LogError("Unable to allocate RAM_G space");
 		s_ErrorGpuAllocFailed = 1;
 	}
 #endif
@@ -151,7 +151,7 @@ ReturnInvalidHandle:
 	return ret;
 }
 
-uint32_t Ft_Esd_GpuAlloc_Get(Ft_Esd_GpuAlloc *ga, Ft_Esd_GpuHandle handle)
+uint32_t ESD_GpuAlloc_Get(ESD_GpuAlloc *ga, ESD_GpuHandle handle)
 {
 	if (handle.Id < MAX_NUM_ALLOCATIONS)
 	{
@@ -167,7 +167,7 @@ uint32_t Ft_Esd_GpuAlloc_Get(Ft_Esd_GpuAlloc *ga, Ft_Esd_GpuHandle handle)
 	return ~0;
 }
 
-void Ft_Esd_GpuAlloc_CollapseFree(Ft_Esd_GpuAlloc *ga, uint32_t idxat)
+void ESD_GpuAlloc_CollapseFree(ESD_GpuAlloc *ga, uint32_t idxat)
 {
 	int shift = 0;
 	if (idxat + 1 < ga->NbAllocEntries && ga->AllocEntries[idxat + 1].Id == MAX_NUM_ALLOCATIONS)
@@ -201,7 +201,7 @@ void Ft_Esd_GpuAlloc_CollapseFree(Ft_Esd_GpuAlloc *ga, uint32_t idxat)
 	}
 }
 
-void Ft_Esd_GpuAlloc_FreeId(Ft_Esd_GpuAlloc *ga, int id)
+void ESD_GpuAlloc_FreeId(ESD_GpuAlloc *ga, int id)
 {
 	// eve_printf_debug("Free id %i\n", id);
 
@@ -224,20 +224,20 @@ void Ft_Esd_GpuAlloc_FreeId(Ft_Esd_GpuAlloc *ga, int id)
 	ga->AllocEntries[idx].Flags = 0;
 
 	// Collapse neighbouring entries
-	Ft_Esd_GpuAlloc_CollapseFree(ga, idx);
+	ESD_GpuAlloc_CollapseFree(ga, idx);
 }
 
-void Ft_Esd_GpuAlloc_Free(Ft_Esd_GpuAlloc *ga, Ft_Esd_GpuHandle handle)
+void ESD_GpuAlloc_Free(ESD_GpuAlloc *ga, ESD_GpuHandle handle)
 {
 	int id = handle.Id;
 	if (id < MAX_NUM_ALLOCATIONS
 	    && ga->AllocRefs[id].Seq == handle.Seq)
 	{
-		Ft_Esd_GpuAlloc_FreeId(ga, id);
+		ESD_GpuAlloc_FreeId(ga, id);
 	}
 }
 
-void Ft_Esd_GpuAlloc_Update(Ft_Esd_GpuAlloc *ga)
+void ESD_GpuAlloc_Update(ESD_GpuAlloc *ga)
 {
 	uint32_t idx;
 	for (idx = 0; idx < ga->NbAllocEntries; ++idx)
@@ -250,7 +250,7 @@ void Ft_Esd_GpuAlloc_Update(Ft_Esd_GpuAlloc *ga)
 			{
 				if (!(ga->AllocEntries[idx].Flags & GA_USED_FLAG))
 				{
-					Ft_Esd_GpuAlloc_FreeId(ga, ga->AllocEntries[idx].Id);
+					ESD_GpuAlloc_FreeId(ga, ga->AllocEntries[idx].Id);
 
 					// Due to free collapse, the current idx may become another allocated entry
 					--idx;
@@ -265,7 +265,7 @@ void Ft_Esd_GpuAlloc_Update(Ft_Esd_GpuAlloc *ga)
 }
 
 // Get total used GPU RAM
-uint32_t Ft_Esd_GpuAlloc_GetTotalUsed(Ft_Esd_GpuAlloc *ga)
+uint32_t ESD_GpuAlloc_GetTotalUsed(ESD_GpuAlloc *ga)
 {
 	uint32_t total = 0;
 	uint32_t idx;
@@ -282,13 +282,13 @@ uint32_t Ft_Esd_GpuAlloc_GetTotalUsed(Ft_Esd_GpuAlloc *ga)
 }
 
 // Get total GPU RAM
-uint32_t Ft_Esd_GpuAlloc_GetTotal(Ft_Esd_GpuAlloc *ga)
+uint32_t ESD_GpuAlloc_GetTotal(ESD_GpuAlloc *ga)
 {
 	return ga->RamGSize;
 }
 
 #ifndef NDEBUG
-void Ft_Esd_GpuAlloc_Print(Ft_Esd_GpuAlloc *ga)
+void ESD_GpuAlloc_Print(ESD_GpuAlloc *ga)
 {
 	uint32_t idx;
 	eve_printf_debug("GpuAlloc:\n");

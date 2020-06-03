@@ -2,15 +2,15 @@
 Bitmap info structure
 */
 
-#ifndef FT_ESD_BITMAPINFO_H
-#define FT_ESD_BITMAPINFO_H
+#ifndef ESD_BITMAPINFO__H
+#define ESD_BITMAPINFO__H
 
 #include "Ft_Esd.h"
-#include "Ft_Esd_GpuAlloc.h"
-#include "Ft_Esd_ResourceInfo.h"
+#include "ESD_GpuAlloc.h"
+#include "ESD_ResourceInfo.h"
 
-ESD_TYPE(Ft_Esd_BitmapInfo, Native = Struct) // TODO: Struct support, expose values
-typedef struct Ft_Esd_BitmapInfo
+ESD_TYPE(ESD_BitmapInfo, Native = Struct) // TODO: Struct support, expose values
+typedef struct ESD_BitmapInfo
 {
 	ft_int32_t Width;
 	ft_int32_t Height;
@@ -24,7 +24,7 @@ typedef struct Ft_Esd_BitmapInfo
 	};
 
 	// (Runtime) Handle pointing to the address in RAM_G if it is allocated
-	Ft_Esd_GpuHandle GpuHandle;
+	ESD_GpuHandle GpuHandle;
 
 	// (Runtime) Bitmap handle that is being used
 	ft_uint32_t BitmapHandle;
@@ -35,7 +35,7 @@ typedef struct Ft_Esd_BitmapInfo
 		const char *PaletteFile;
 		ft_int32_t PaletteFlashAddress;
 	};
-	Ft_Esd_GpuHandle PaletteGpuHandle;
+	ESD_GpuHandle PaletteGpuHandle;
 
 	// Used for DXT1 format
 	union
@@ -43,7 +43,7 @@ typedef struct Ft_Esd_BitmapInfo
 		const char *AdditionalFile;
 		ft_int32_t AdditionalFlashAddress;
 	};
-	struct Ft_Esd_BitmapInfo *AdditionalInfo;
+	struct ESD_BitmapInfo *AdditionalInfo;
 
 	// Number of cells usable by the user. There may be additional internally used cells after this
 	ft_uint16_t Cells;
@@ -63,7 +63,7 @@ typedef struct Ft_Esd_BitmapInfo
 	ft_bool_t Compressed : 1;
 
 	// When this is set, the allocated ram is not free'd automatically
-	// Use Ft_Esd_GpuAlloc_Free(GpuAlloc, GpuHandle) to free the GPU ram manually
+	// Use ESD_GpuAlloc_Free(GpuAlloc, GpuHandle) to free the GPU ram manually
 	ft_bool_t Persistent : 1;
 
 	// Load from flash. Structure has flash addresses set, rather than file names
@@ -75,28 +75,28 @@ typedef struct Ft_Esd_BitmapInfo
 	// Load image using coprocessor (for JPEG and PNG)
 	ft_bool_t CoLoad : 1;
 
-} Ft_Esd_BitmapInfo;
+} ESD_BitmapInfo;
 
-ESD_TYPE(Ft_Esd_BitmapInfo *, Native = Pointer, Edit = Library)
+ESD_TYPE(ESD_BitmapInfo *, Native = Pointer, Edit = Library)
 
-ESD_TYPE(Ft_Esd_BitmapCell, Native = Struct, Edit = Library) // TODO: Struct support, expose values
+ESD_TYPE(ESD_BitmapCell, Native = Struct, Edit = Library) // TODO: Struct support, expose values
 typedef struct
 {
-	Ft_Esd_BitmapInfo *Info;
+	ESD_BitmapInfo *Info;
 	ft_int32_t Cell;
-} Ft_Esd_BitmapCell;
+} ESD_BitmapCell;
 
-ESD_TYPE(Ft_Esd_BitmapCell *, Native = Pointer, Edit = Library)
+ESD_TYPE(ESD_BitmapCell *, Native = Pointer, Edit = Library)
 
 /// A function to load bitmap data(not including palette data) into RAM_G
-ESD_FUNCTION(Ft_Esd_LoadBitmap, Type = ft_uint32_t, Include = "Ft_Esd_BitmapInfo.h", DisplayName = "Load Bitmap to RAM_G", Category = EsdUtilities)
-ESD_PARAMETER(bitmapInfo, Type = Ft_Esd_BitmapInfo *)
-ft_uint32_t Ft_Esd_LoadBitmap(Ft_Esd_BitmapInfo *bitmapInfo);
+ESD_FUNCTION(ESD_LoadBitmap, Type = ft_uint32_t, Include = "ESD_BitmapInfo.h", DisplayName = "Load Bitmap to RAM_G", Category = EsdUtilities)
+ESD_PARAMETER(bitmapInfo, Type = ESD_BitmapInfo *)
+ft_uint32_t ESD_LoadBitmap(ESD_BitmapInfo *bitmapInfo);
 
 /// A function to load palette data of bitmap into RAM_G
-ESD_FUNCTION(Ft_Esd_LoadPalette, Type = ft_uint32_t, Include = "Ft_Esd_BitmapInfo.h", DisplayName = "Load Palette to RAM_G", Category = EsdUtilities)
-ESD_PARAMETER(bitmapInfo, Type = Ft_Esd_BitmapInfo *)
-ft_uint32_t Ft_Esd_LoadPalette(Ft_Esd_BitmapInfo *bitmapInfo);
+ESD_FUNCTION(ESD_LoadPalette, Type = ft_uint32_t, Include = "ESD_BitmapInfo.h", DisplayName = "Load Palette to RAM_G", Category = EsdUtilities)
+ESD_PARAMETER(bitmapInfo, Type = ESD_BitmapInfo *)
+ft_uint32_t ESD_LoadPalette(ESD_BitmapInfo *bitmapInfo);
 
 ESD_ENUM(_BitmapResourceFormat, DisplayName = "Bitmap Format")
 // Hardware bitmap formats
@@ -135,28 +135,28 @@ ESD_IDENTIFIER(COMPRESSED_RGBA_ASTC_12x12_KHR)
 ESD_END()
 
 ///  Switch bitmap cell number
-ESD_FUNCTION(Ft_Esd_SwitchBitmapCell, Type = Ft_Esd_BitmapCell, DisplayName = "Switch Bitmap Cell", Category = EsdUtilities)
-ESD_PARAMETER(BitmapInfo, Type = Ft_Esd_BitmapCell, DisplayName = "Bitmap Cell")
+ESD_FUNCTION(ESD_SwitchBitmapCell, Type = ESD_BitmapCell, DisplayName = "Switch Bitmap Cell", Category = EsdUtilities)
+ESD_PARAMETER(BitmapInfo, Type = ESD_BitmapCell, DisplayName = "Bitmap Cell")
 ESD_PARAMETER(Cell, Type = ft_uint16_t, DisplayName = "Cell")
-Ft_Esd_BitmapCell Ft_Esd_SwitchBitmapCell(Ft_Esd_BitmapCell bitmapCell, ft_uint16_t cell);
+ESD_BitmapCell ESD_SwitchBitmapCell(ESD_BitmapCell bitmapCell, ft_uint16_t cell);
 
 /// A function to make bitmap persistent in memory by reloading the data if necessary, called during the Update cycle of each frame
-ESD_UPDATE(Ft_Esd_BitmapPersist, DisplayName = "Persist Bitmap", Category = EsdUtilities)
-ESD_PARAMETER(bitmapCell, Type = Ft_Esd_BitmapCell)
-void Ft_Esd_BitmapPersist(Ft_Esd_BitmapCell bitmapCell);
+ESD_UPDATE(ESD_BitmapPersist, DisplayName = "Persist Bitmap", Category = EsdUtilities)
+ESD_PARAMETER(bitmapCell, Type = ESD_BitmapCell)
+void ESD_BitmapPersist(ESD_BitmapCell bitmapCell);
 
 /// A function to get bitmap information structure from bitmap cell
-ESD_FUNCTION(Ft_Esd_BitmapCell_GetInfo, Type = Ft_Esd_BitmapInfo *, DisplayName = "ESD BitmapCell GetInfo", Category = EsdUtilities, Inline)
-ESD_PARAMETER(bitmapCell, Type = Ft_Esd_BitmapCell)
-static inline Ft_Esd_BitmapInfo *Ft_Esd_BitmapCell_GetInfo(Ft_Esd_BitmapCell bitmapCell)
+ESD_FUNCTION(ESD_BitmapCell_GetInfo, Type = ESD_BitmapInfo *, DisplayName = "ESD BitmapCell GetInfo", Category = EsdUtilities, Inline)
+ESD_PARAMETER(bitmapCell, Type = ESD_BitmapCell)
+static inline ESD_BitmapInfo *ESD_BitmapCell_GetInfo(ESD_BitmapCell bitmapCell)
 {
 	return bitmapCell.Info;
 }
 
 /// A function to get the bitmap width from bitmap information. Returns width of 1 pixel for NULL bitmapInfo
-ESD_FUNCTION(Ft_Esd_BitmapInfo_GetWidth, Type = ft_int32_t, DisplayName = "ESD BitmapInfo GetWidth", Category = EsdUtilities, Inline)
-ESD_PARAMETER(bitmapInfo, Type = Ft_Esd_BitmapInfo *)
-static inline ft_int32_t Ft_Esd_BitmapInfo_GetWidth(Ft_Esd_BitmapInfo *bitmapInfo)
+ESD_FUNCTION(ESD_BitmapInfo_GetWidth, Type = ft_int32_t, DisplayName = "ESD BitmapInfo GetWidth", Category = EsdUtilities, Inline)
+ESD_PARAMETER(bitmapInfo, Type = ESD_BitmapInfo *)
+static inline ft_int32_t ESD_BitmapInfo_GetWidth(ESD_BitmapInfo *bitmapInfo)
 {
 	if (!bitmapInfo)
 		return 1;
@@ -164,15 +164,15 @@ static inline ft_int32_t Ft_Esd_BitmapInfo_GetWidth(Ft_Esd_BitmapInfo *bitmapInf
 }
 
 /// A function to get the bitmap height from bitmap information. Returns height of 1 pixel for NULL bitmapInfo
-ESD_FUNCTION(Ft_Esd_BitmapInfo_GetHeight, Type = ft_int32_t, DisplayName = "ESD BitmapInfo GetHeight", Category = EsdUtilities, Inline)
-ESD_PARAMETER(bitmapInfo, Type = Ft_Esd_BitmapInfo *)
-static inline ft_int32_t Ft_Esd_BitmapInfo_GetHeight(Ft_Esd_BitmapInfo *bitmapInfo)
+ESD_FUNCTION(ESD_BitmapInfo_GetHeight, Type = ft_int32_t, DisplayName = "ESD BitmapInfo GetHeight", Category = EsdUtilities, Inline)
+ESD_PARAMETER(bitmapInfo, Type = ESD_BitmapInfo *)
+static inline ft_int32_t ESD_BitmapInfo_GetHeight(ESD_BitmapInfo *bitmapInfo)
 {
 	if (!bitmapInfo)
 		return 1;
 	return bitmapInfo->Height;
 }
 
-#endif /* #ifndef FT_ESD_BITMAPINFO_H */
+#endif /* #ifndef ESD_BITMAPINFO_H */
 
 /* end of file */

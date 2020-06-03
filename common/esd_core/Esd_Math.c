@@ -1,15 +1,15 @@
 
-#include "Ft_Esd_Math.h"
+#include "ESD_Math.h"
 
 // #define ESD_RECT_STRICT (1) //< Results not guaranteed for inverted rectangles when disabled (width or height negative)
 
-ft_bool_t Ft_Esd_Rect16_Intersects(Ft_Esd_Rect16 a, Ft_Esd_Rect16 b)
+ft_bool_t ESD_Rect16_Intersects(ESD_Rect16 a, ESD_Rect16 b)
 {
 	return (b.X < (a.X + a.Width)) && (a.X < (b.X + b.Width))
 	    && (b.Y < (a.Y + a.Height)) && (a.Y < (b.Y + b.Height));
 }
 
-ft_bool_t Ft_Esd_Rect16_IsInside(Ft_Esd_Rect16 subrect, Ft_Esd_Rect16 rect)
+ft_bool_t ESD_Rect16_IsInside(ESD_Rect16 subrect, ESD_Rect16 rect)
 {
 #ifdef ESD_RECT_STRICT
 	return (subrect.X >= rect.X) && (subrect.X < (rect.X + rect.Width))
@@ -22,7 +22,7 @@ ft_bool_t Ft_Esd_Rect16_IsInside(Ft_Esd_Rect16 subrect, Ft_Esd_Rect16 rect)
 #endif
 }
 
-ft_bool_t Ft_Esd_Rect16_IsInsideHorizontal(Ft_Esd_Rect16 subrect, Ft_Esd_Rect16 rect)
+ft_bool_t ESD_Rect16_IsInsideHorizontal(ESD_Rect16 subrect, ESD_Rect16 rect)
 {
 #ifdef ESD_RECT_STRICT
 	return (subrect.X >= rect.X) && (subrect.X < (rect.X + rect.Width))
@@ -32,7 +32,7 @@ ft_bool_t Ft_Esd_Rect16_IsInsideHorizontal(Ft_Esd_Rect16 subrect, Ft_Esd_Rect16 
 #endif
 }
 
-ft_bool_t Ft_Esd_Rect16_IsInsideVertical(Ft_Esd_Rect16 subrect, Ft_Esd_Rect16 rect)
+ft_bool_t ESD_Rect16_IsInsideVertical(ESD_Rect16 subrect, ESD_Rect16 rect)
 {
 #ifdef ESD_RECT_STRICT
 	return (subrect.Y >= rect.Y) && (subrect.Y < (rect.Y + rect.Height))
@@ -42,7 +42,7 @@ ft_bool_t Ft_Esd_Rect16_IsInsideVertical(Ft_Esd_Rect16 subrect, Ft_Esd_Rect16 re
 #endif
 }
 
-Ft_Esd_Rect16 Ft_Esd_Rect16_Crop(Ft_Esd_Rect16 rect, Ft_Esd_Rect16 crop)
+ESD_Rect16 ESD_Rect16_Crop(ESD_Rect16 rect, ESD_Rect16 crop)
 {
 	ft_int16_t x1diff;
 	ft_int16_t y1diff;
