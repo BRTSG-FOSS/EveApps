@@ -28,7 +28,6 @@ extern ESD_EXTERN_LIBARY ESD_Rect16 ESD_ScissorRect;
 
 // Reset any cached state
 void Esd_ResetGpuState();
-void Esd_ResetCoState();
 
 // Returns the current scissor area
 ESD_FUNCTION(ESD_Dl_Scissor_Get, Type = ESD_Rect16, Category = EveRenderFunctions)

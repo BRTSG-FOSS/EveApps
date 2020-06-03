@@ -68,7 +68,6 @@ int Ft_Main__Running__ESD();
 #endif
 
 void Esd_ResetGpuState();
-void Esd_ResetCoState(); // TODO: Call after coprocessor reset procedure
 
 // extern void ESD_Widget_ProcessFree(); // TODO: Bind from widgets
 
@@ -160,7 +159,6 @@ void ESD_initialize(ESD_Context *ec, Esd_Parameters *ep)
 	ESD_GpuAlloc_Reset(&ec->GpuAlloc);
 
 	Esd_BitmapHandle_Initialize();
-	Esd_ResetCoState();
 }
 
 // !!! NOTE:
@@ -338,7 +336,6 @@ bool ESD_waitSwap(ESD_Context *ec)
 	{
 		/* TODO: Create a utility function that resets the coprocessor and all cached state */
 		EVE_Util_resetCoprocessor(&ec->HalContext);
-		Esd_ResetCoState();
 		Esd_BitmapHandle_Reset(&ec->HandleState);
 
 #if _DEBUG

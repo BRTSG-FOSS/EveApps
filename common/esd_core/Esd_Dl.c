@@ -25,11 +25,6 @@ void Esd_ResetGpuState() // Begin of frame
 	ESD_ScissorRect.Height = ESD_DispHeight;
 }
 
-void Esd_ResetCoState()
-{
-
-}
-
 ESD_Rect16 ESD_Dl_Scissor_Get()
 {
 	return ESD_ScissorRect;
