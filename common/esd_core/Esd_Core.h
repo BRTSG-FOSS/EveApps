@@ -71,7 +71,7 @@ typedef struct
 
 	Esd_HandleState HandleState;
 
-	/// Callbacks called by Esd_Loop
+	/// Callbacks called by ESD_loop
 	void (*Start)(void *context);
 	void (*Update)(void *context);
 	void (*Render)(void *context);
@@ -79,12 +79,12 @@ typedef struct
 	void (*End)(void *context);
 	void *UserContext;
 
-} Esd_Context;
+} ESD_Context;
 
 /// Parameters for initializing an ESD context
 typedef struct
 {
-	/// Callbacks called by Esd_Loop
+	/// Callbacks called by ESD_loop
 	void (*Start)(void *context);
 	void (*Update)(void *context);
 	void (*Render)(void *context);
@@ -97,7 +97,7 @@ typedef struct
 #ifndef ESD_EXTERN_LIBARY
 #define ESD_EXTERN_LIBARY
 #endif
-extern ESD_EXTERN_LIBARY Esd_Context *Esd_CurrentContext; //< Pointer to current ESD context
+extern ESD_EXTERN_LIBARY ESD_Context *Esd_CurrentContext; //< Pointer to current ESD context
 extern ESD_EXTERN_LIBARY EVE_HalContext *ESD_Host; //< Pointer to current EVE hal context
 extern ESD_EXTERN_LIBARY ESD_GpuAlloc *ESD_GAlloc; //< Pointer to current allocator
 
@@ -107,21 +107,21 @@ extern ESD_EXTERN_LIBARY ESD_GpuAlloc *ESD_GAlloc; //< Pointer to current alloca
 #define ESD_CO_SCRATCH_HANDLE (15)
 #endif
 
-void Esd_SetCurrent(Esd_Context *ec);
+void ESD_setCurrent(ESD_Context *ec);
 
-void Esd_Defaults(Esd_Parameters *ep);
-void Esd_Initialize(Esd_Context *ec, Esd_Parameters *ep);
-void Esd_Release(Esd_Context *ec);
-void Esd_Shutdown();
+void ESD_defaults(Esd_Parameters *ep);
+void ESD_initialize(ESD_Context *ec, Esd_Parameters *ep);
+void ESD_close(ESD_Context *ec);
+void ESD_release();
 
-/// Main loop, calls Esd_Start, Esd_Update, Esd_WaitSwap, and Esd_Stop
-void Esd_Loop(Esd_Context *ec);
+/// Main loop, calls ESD_start, ESD_update, ESD_waitSwap, and ESD_stop
+void ESD_loop(ESD_Context *ec);
 
-void Esd_Start(Esd_Context *ec);
-void Esd_Update(Esd_Context *ec);
-void Esd_Render(Esd_Context *ec);
-bool Esd_WaitSwap(Esd_Context *ec);
-void Esd_Stop(Esd_Context *ec);
+void ESD_start(ESD_Context *ec);
+void ESD_update(ESD_Context *ec);
+void ESD_render(ESD_Context *ec);
+bool ESD_waitSwap(ESD_Context *ec);
+void ESD_stop(ESD_Context *ec);
 
 #endif /* #ifndef ESD_CORE__H */
 

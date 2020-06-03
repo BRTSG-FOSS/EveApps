@@ -252,8 +252,11 @@ void LogError__ESD(const char *str);
 #undef FT_DispHeight
 #endif
 
-#define FT_DispWidth ESD_DispWidth
-#define FT_DispHeight ESD_DispHeight
+#define FT_DispWidth phost->Width
+#define FT_DispHeight phost->Height
+
+#define ESD_DispWidth phost->Width
+#define ESD_DispHeight phost->Height
 
 #endif /* #ifndef ESD_H */
 

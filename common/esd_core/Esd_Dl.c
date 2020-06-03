@@ -10,7 +10,6 @@
 
 extern EVE_HalContext *ESD_Host;
 /* extern ESD_GpuAlloc *ESD_GAlloc; */
-extern int16_t ESD_DispWidth, ESD_DispHeight;
 
 // GPU state for the current display list
 #if ESD_DL_OPTIMIZE
@@ -24,6 +23,8 @@ ESD_Rect16 ESD_ScissorRect;
 
 void Esd_ResetGpuState() // Begin of frame
 {
+	EVE_HalContext *phost = ESD_Host;
+
 #if ESD_DL_OPTIMIZE
 	ESD_GpuState_I = 0;
 	ESD_GpuState[0] = (ESD_GpuState_T)
@@ -147,13 +148,13 @@ void FT_Esd_Render_Rect_Grad(int16_t x, int16_t y, int16_t w, int16_t h, ft_argb
 		// Not a gradient
 		ESD_Rect16 scissor;
 		// Ft_Gpu_CoCmd_StartFunc(ESD_Host, FT_CMD_SIZE * 4);
-		EVE_CoCmd_dl(ESD_Host, SAVE_CONTEXT());
+		EVE_CoCmd_dl(phost, SAVE_CONTEXT());
 		scissor = ESD_Rect16_Crop(rect, ESD_Dl_Scissor_Get());
-		EVE_CoCmd_dl(ESD_Host, SCISSOR_XY(scissor.X, scissor.Y));
-		EVE_CoCmd_dl(ESD_Host, SCISSOR_SIZE(scissor.Width, scissor.Height));
+		EVE_CoCmd_dl(phost, SCISSOR_XY(scissor.X, scissor.Y));
+		EVE_CoCmd_dl(phost, SCISSOR_SIZE(scissor.Width, scissor.Height));
 		ESD_Dl_COLOR_ARGB(color1);
 		FT_Esd_Render_Rect(x, y, w, h);
-		EVE_CoCmd_dl(ESD_Host, RESTORE_CONTEXT());
+		EVE_CoCmd_dl(phost, RESTORE_CONTEXT());
 		// Ft_Gpu_CoCmd_EndFunc(ESD_Host);
 		return;
 	}
@@ -170,7 +171,7 @@ void FT_Esd_Render_Rect_Grad(int16_t x, int16_t y, int16_t w, int16_t h, ft_argb
 		int16_t dx = (int16_t)(half * cosine);
 
 		ESD_Rect16 s = ESD_Dl_Scissor_Set(rect);
-		Ft_Gpu_CoCmd_Gradient(ESD_Host, x0 - dx, y0 - dy, color1, x0 + dx, y0 + dy, color2);
+		EVE_CoCmd_gradient(phost, x0 - dx, y0 - dy, color1, x0 + dx, y0 + dy, color2);
 		ESD_Dl_Scissor_Reset(s);
 	}
 }
@@ -187,13 +188,13 @@ void FT_Esd_Render_Rect(int16_t x, int16_t y, int16_t w, int16_t h)
 // Deprecated
 void ESD_Cmd_Button(int16_t x, int16_t y, int16_t w, int16_t h, int16_t font, uint16_t options, const char *s)
 {
-	Ft_Gpu_CoCmd_Button(ESD_Host, x, y, w, h, font, options, s);
+	EVE_CoCmd_button(ESD_Host, x, y, w, h, font, options, s);
 }
 
 // Deprecated
 void ESD_Cmd_Number(int16_t x, int16_t y, int16_t font, uint16_t options, int32_t n)
 {
-	Ft_Gpu_CoCmd_Number(ESD_Host, x, y, font, options, n);
+	EVE_CoCmd_number(ESD_Host, x, y, font, options, n);
 }
 
 /* end of file */

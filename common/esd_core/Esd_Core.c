@@ -40,10 +40,9 @@
 //
 // Globals
 //
-Esd_Context *Esd_CurrentContext = NULL;
+ESD_Context *Esd_CurrentContext = NULL;
 EVE_HalContext *ESD_Host = NULL; // Pointer to current s_Host
 ESD_GpuAlloc *ESD_GAlloc = NULL; // Pointer to current s_GAlloc
-int16_t ESD_DispWidth, ESD_DispHeight;
 
 //
 // External definitions
@@ -81,21 +80,21 @@ void Esd_ResetCoState(); // TODO: Call after coprocessor reset procedure
 //
 #define FT_WELCOME_MESSAGE "Copyright (C) Bridgetek Pte Ltd\n"
 
-void Esd_SetCurrent(Esd_Context *ec)
+void ESD_setCurrent(ESD_Context *ec)
 {
 	Esd_CurrentContext = ec;
 	ESD_Host = &ec->HalContext;
 	ESD_GAlloc = &ec->GpuAlloc;
 }
 
-void Esd_Defaults(Esd_Parameters *ep)
+void ESD_defaults(Esd_Parameters *ep)
 {
 	memset(ep, 0, sizeof(Esd_Parameters));
 }
 
 bool cbCmdWait(struct EVE_HalContext *phost)
 {
-	Esd_Context *ec = (Esd_Context *)phost->UserContext;
+	ESD_Context *ec = (ESD_Context *)phost->UserContext;
 
 	/* Loop an idle task instead of doing nothing */
 	if (ec->Idle)
@@ -113,9 +112,11 @@ bool cbCmdWait(struct EVE_HalContext *phost)
 #endif
 }
 
-void Esd_Initialize(Esd_Context *ec, Esd_Parameters *ep)
+void ESD_initialize(ESD_Context *ec, Esd_Parameters *ep)
 {
-	memset(ec, 0, sizeof(Esd_Context));
+	// FIXME: separate ESD_initialize and ESD_open
+
+	memset(ec, 0, sizeof(ESD_Context));
 	ec->ClearColor = 0x212121;
 	ec->Start = (void (*)(void *))ep->Start;
 	ec->Update = (void (*)(void *))ep->Update;
@@ -123,10 +124,10 @@ void Esd_Initialize(Esd_Context *ec, Esd_Parameters *ep)
 	ec->Idle = (void (*)(void *))ep->Idle;
 	ec->End = (void (*)(void *))ep->End;
 	ec->UserContext = ep->UserContext;
-	Esd_SetCurrent(ec);
+	ESD_setCurrent(ec);
 
-	Ft_Gpu_HalInit_t halInit;
-	Ft_Gpu_Hal_Init(&halInit);
+	EVE_Hal_initialize();
+	// EVE_Hal_list();
 
 #ifdef ESD_SIMULATION
 	eve_printf_debug("\f"); // Shows horizontal line in ESD output window
@@ -143,13 +144,9 @@ void Esd_Initialize(Esd_Context *ec, Esd_Parameters *ep)
 	parameters.CbCmdWait = cbCmdWait;
 	eve_assert_do(EVE_Hal_open(&ec->HalContext, &parameters));
 	eve_assert(ec->HalContext.UserContext == ec);
-	eve_assert(ec->HalContext.Parameters.UserContext == ec);
 
 	EVE_HalContext *phost = &ec->HalContext;
 	EVE_Util_bootupConfig(phost);
-
-	ESD_DispWidth = EVE_Hal_rd16(phost, REG_HSIZE);
-	ESD_DispHeight = EVE_Hal_rd16(phost, REG_VSIZE);
 
 #ifndef ESD_SIMULATION
 	// TODO: Store calibration somewhere!
@@ -166,46 +163,50 @@ void Esd_Initialize(Esd_Context *ec, Esd_Parameters *ep)
 	Esd_ResetCoState();
 }
 
-void Esd_Release(Esd_Context *ec)
+// !!! NOTE:
+#define Esd_Release ESD_close
+#define Esd_Shutdown ESD_release
+
+void ESD_close(ESD_Context *ec)
 {
 	// ESD_Widget_ProcessFree(); // TODO: Link this back up!!!
-	Ft_Gpu_Hal_Close(&ec->HalContext);
-	memset(ec, 0, sizeof(Esd_Context));
+	EVE_Hal_close(&ec->HalContext);
+	memset(ec, 0, sizeof(ESD_Context));
 
 	Esd_CurrentContext = NULL;
 	ESD_Host = NULL;
 	ESD_GAlloc = NULL;
 }
 
-void Esd_Shutdown()
+void ESD_release()
 {
-	Ft_Gpu_Hal_DeInit();
+	EVE_Hal_release();
 }
 
-void Esd_Loop(Esd_Context *ec)
+void ESD_loop(ESD_Context *ec)
 {
-	Esd_SetCurrent(ec);
+	ESD_setCurrent(ec);
 	EVE_HalContext *phost = &ec->HalContext;
 	(void)phost;
 
 	if (!Ft_Main__Running__ESD() || ec->RequestStop)
 		return;
 
-	Esd_Start(ec);
+	ESD_start(ec);
 
 	while (Ft_Main__Running__ESD() && !ec->RequestStop)
 	{
-		Esd_Update(ec);
-		Esd_Render(ec);
-		Esd_WaitSwap(ec);
+		ESD_update(ec);
+		ESD_render(ec);
+		ESD_waitSwap(ec);
 	}
 
-	Esd_Stop(ec);
+	ESD_stop(ec);
 }
 
-void Esd_Start(Esd_Context *ec)
+void ESD_start(ESD_Context *ec)
 {
-	Esd_SetCurrent(ec);
+	ESD_setCurrent(ec);
 
 	// Initialize framework
 	Esd_ResetGpuState();
@@ -224,9 +225,9 @@ void Esd_Start(Esd_Context *ec)
 		ec->Start(ec->UserContext);
 }
 
-void Esd_Update(Esd_Context *ec)
+void ESD_update(ESD_Context *ec)
 {
-	Esd_SetCurrent(ec);
+	ESD_setCurrent(ec);
 	EVE_HalContext *phost = &ec->HalContext;
 
 	// Restore initial frame values
@@ -238,10 +239,10 @@ void Esd_Update(Esd_Context *ec)
 	if (ec->ShowLogo)
 		return;
 	if (ec->ShowingLogo)
-		ec->Millis = ft_millis(); // Reset time
+		ec->Millis = EVE_millis(); // Reset time
 
 	// Verify initialization
-	Ft_Hal_LoadSDCard();
+	EVE_Util_loadSdCard(phost); // Does this really need phost???
 #if defined(EVE_FLASH_AVAILABLE)
 	Esd_AttachFlashFast();
 #endif
@@ -257,7 +258,7 @@ void Esd_Update(Esd_Context *ec)
 
 	// Update GUI state before render
 	ec->LoopState = ESD_LOOPSTATE_UPDATE;
-	uint32_t ms = ft_millis(); // Calculate frame time delta
+	uint32_t ms = EVE_millis(); // Calculate frame time delta
 	ec->DeltaMs = ms - ec->Millis;
 	ec->Millis = ms;
 	ESD_GpuAlloc_Update(ESD_GAlloc); // Run GC
@@ -270,9 +271,9 @@ void Esd_Update(Esd_Context *ec)
 	ec->LoopState = ESD_LOOPSTATE_IDLE;
 }
 
-void Esd_Render(Esd_Context *ec)
+void ESD_render(ESD_Context *ec)
 {
-	Esd_SetCurrent(ec);
+	ESD_setCurrent(ec);
 	EVE_HalContext *phost = &ec->HalContext;
 
 	if (ec->ShowLogo)
@@ -292,12 +293,10 @@ void Esd_Render(Esd_Context *ec)
 	// Process all coprocessor commands
 	ec->LoopState = ESD_LOOPSTATE_RENDER;
 
-	Ft_Gpu_CoCmd_StartFrame(phost);
-
-	Ft_Gpu_CoCmd_SendCmd(phost, CMD_DLSTART);
-	Ft_Gpu_CoCmd_SendCmd(phost, (2UL << 24) | ec->ClearColor); // Set CLEAR_COLOR_RGB from user var
-	Ft_Gpu_CoCmd_SendCmd(phost, CLEAR_TAG(255)); // Always default to 255, so no touch = 0, touch non-tag = 255
-	Ft_Gpu_CoCmd_SendCmd(phost, CLEAR(1, 1, 1));
+	EVE_CoCmd_dl(phost, CMD_DLSTART);
+	EVE_CoCmd_dl(phost, (2UL << 24) | ec->ClearColor); // Set CLEAR_COLOR_RGB from user var
+	EVE_CoCmd_dl(phost, CLEAR_TAG(255)); // Always default to 255, so no touch = 0, touch non-tag = 255
+	EVE_CoCmd_dl(phost, CLEAR(1, 1, 1));
 	if (ec->Render)
 		ec->Render(ec->UserContext);
 
@@ -305,20 +304,18 @@ void Esd_Render(Esd_Context *ec)
 	{
 		// Spinner used for switching longer loading pages with bitmaps etc
 		ESD_Dl_COLOR_RGB(~(ec->ClearColor));
-		ESD_CoCmd_Spinner(Esd_Update, ESD_DispWidth >> 1, ESD_DispHeight >> 1, 0, 0);
+		// FIXME 2020 JUN 04: Spinner with ownership -- ESD_CoCmd_spinner(ESD_update, phost->Width >> 1, phost->Height >> 1, 0, 0);
 		ec->SpinnerPopup = false;
 		ec->SpinnerPopped = true;
 	}
 	else if (ec->SpinnerPopped)
 	{
-		ESD_CoCmd_Stop(Esd_Update);
+		// FIXME 2020 JUN 04: Spinner with ownership -- ESD_CoCmd_stop(ESD_update);
 		ec->SpinnerPopped = false;
 	}
 
-	Ft_Gpu_CoCmd_SendCmd(phost, DISPLAY());
-	Ft_Gpu_CoCmd_Swap(phost);
-
-	Ft_Gpu_CoCmd_EndFrame(phost);
+	EVE_CoCmd_dl(phost, DISPLAY());
+	EVE_CoCmd_swap(phost);
 
 	// Replacement for Ft_Gpu_Hal_WaitCmdfifo_empty(phost); with idle function
 	ec->LoopState = ESD_LOOPSTATE_IDLE;
@@ -327,9 +324,9 @@ void Esd_Render(Esd_Context *ec)
 	++ec->Frame;
 }
 
-bool Esd_WaitSwap(Esd_Context *ec)
+bool ESD_waitSwap(ESD_Context *ec)
 {
-	Esd_SetCurrent(ec);
+	ESD_setCurrent(ec);
 	EVE_HalContext *phost = &ec->HalContext;
 	(void)phost;
 
@@ -355,9 +352,9 @@ bool Esd_WaitSwap(Esd_Context *ec)
 	return true;
 }
 
-void Esd_Stop(Esd_Context *ec)
+void ESD_stop(ESD_Context *ec)
 {
-	Esd_SetCurrent(ec);
+	ESD_setCurrent(ec);
 
 	// Cleanup application (generally unreachable)
 	ec->LoopState = ESD_LOOPSTATE_NONE;

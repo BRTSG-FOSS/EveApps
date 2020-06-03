@@ -90,17 +90,17 @@ static void Main_End(void *context) { Ft_Main__End__ESD(); }
 int32_t main(int32_t argc, char *argv[])
 {
 	Esd_Parameters ep;
-	Esd_Defaults(&ep);
+	ESD_defaults(&ep);
 	ep.Start = Main_Start;
 	ep.Update = Main_Update;
 	ep.Render = Main_Render;
 	ep.Idle = Main_Idle;
 	ep.End = Main_End;
-	Esd_Context ec;
-	Esd_Initialize(&ec, &ep);
-	Esd_Loop(&ec);
-	Esd_Release(&ec);
-	Esd_Shutdown();
+	ESD_Context ec;
+	ESD_initialize(&ec, &ep);
+	ESD_loop(&ec);
+	ESD_close(&ec);
+	ESD_release();
 	return EXIT_SUCCESS;
 }
 
