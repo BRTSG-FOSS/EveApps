@@ -94,7 +94,7 @@ extern ESD_EXTERN_LIBARY EVE_HalContext *ESD_Host; //< Pointer to current EVE ha
 extern ESD_EXTERN_LIBARY ESD_GpuAlloc *ESD_GAlloc; //< Pointer to current allocator
 
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
-#define ESD_CO_SCRATCH_HANDLE (EVE_CHIPID >= EVE_FT810 ? ESD_Host->ScratchHandle : 15)
+#define ESD_CO_SCRATCH_HANDLE (EVE_CHIPID >= EVE_FT810 ? ESD_Host->CoScratchHandle : 15)
 #else
 #define ESD_CO_SCRATCH_HANDLE (15)
 #endif
