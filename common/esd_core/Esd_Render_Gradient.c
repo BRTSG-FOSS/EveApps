@@ -140,8 +140,9 @@ void Esd_Render_MultiGradient_Rounded(int16_t x, int16_t y, int16_t width, int16
 	EVE_CoCmd_dl(ESD_Host, COLOR_MASK(0, 0, 0, 1));
 	EVE_CoDl_lineWidth(phost, 16);
 	EVE_CoDl_begin(phost, RECTS);
-	ESD_Dl_VERTEX2F_0(x, y);
-	ESD_Dl_VERTEX2F_0(x + width, y + height);
+	EVE_CoDl_vertexFormat(phost, 0);
+	EVE_CoDl_vertex2f(phost, x, y);
+	EVE_CoDl_vertex2f(phost, x + width, y + height);
 	EVE_CoDl_end(phost);
 	EVE_CoCmd_dl(ESD_Host, COLOR_MASK(1, 1, 1, 1));
 

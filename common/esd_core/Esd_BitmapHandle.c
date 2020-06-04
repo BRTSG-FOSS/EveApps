@@ -147,6 +147,8 @@ uint32_t ESD_BitmapHandle_GetTotal()
 Esd_FontInfo *ESD_getRomFont(uint8_t font)
 {
 	EVE_HalContext *phost = ESD_Host;
+	(void)phost;
+
 	if (font >= ESD_ROMFONT_MIN && font < ESD_ROMFONT_MAX)
 		return (Esd_FontInfo *)(void *)&Esd_RomFonts[font - ESD_ROMFONT_MIN];
 	return NULL;
@@ -186,7 +188,7 @@ uint8_t ESD_CoDl_setupBitmap(ESD_BitmapInfo *bitmapInfo)
 	// Get bitmap address
 	EVE_HalContext *phost = ESD_Host;
 	uint32_t addr = ESD_loadBitmap(bitmapInfo);
-	(void)phost;
+
 	if (addr == GA_INVALID)
 		return ESD_BITMAPHANDLE_INVALID; // Bitmap not loaded (out of memory or file not found)
 
@@ -237,7 +239,7 @@ uint8_t ESD_CoDl_setupBitmap(ESD_BitmapInfo *bitmapInfo)
 			format = RGB565; // TODO: Support for other PNG formats
 
 		if (EVE_CHIPID >= EVE_FT810)
-			EVE_CoCmd_setBitmap(ESD_Host, addr, format, bitmapInfo->Width, bitmapInfo->Height); // TODO: What with stride?
+			EVE_CoCmd_setBitmap(phost, addr, format, bitmapInfo->Width, bitmapInfo->Height); // TODO: What with stride?
 		else
 			eve_assert_ex(false, "No support yet in ESD for bitmaps for FT800 target");
 
@@ -246,9 +248,9 @@ uint8_t ESD_CoDl_setupBitmap(ESD_BitmapInfo *bitmapInfo)
 		{
 			// Important. Bitmap swizzle not reset by SETBITMAP
 			if (bitmapInfo->Swizzle)
-				EVE_CoCmd_dl(ESD_Host, BITMAP_SWIZZLE(bitmapInfo->SwizzleR, bitmapInfo->SwizzleG, bitmapInfo->SwizzleB, bitmapInfo->SwizzleA));
+				EVE_CoCmd_dl(phost, BITMAP_SWIZZLE(bitmapInfo->SwizzleR, bitmapInfo->SwizzleG, bitmapInfo->SwizzleB, bitmapInfo->SwizzleA));
 			else
-				EVE_CoCmd_dl(ESD_Host, BITMAP_SWIZZLE(RED, GREEN, BLUE, ALPHA));
+				EVE_CoCmd_dl(phost, BITMAP_SWIZZLE(RED, GREEN, BLUE, ALPHA));
 		}
 #endif
 

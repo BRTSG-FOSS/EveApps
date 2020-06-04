@@ -7,21 +7,6 @@
 
 extern EVE_HalContext *ESD_Host;
 
-// Rectangle Gradient drawing with some logic to convert from radius to line width and width height to positions to simplify usage
-void ESD_Render_RectangleF_Gradient(
-    int32_f4_t x, int32_f4_t y,
-    int32_f4_t w, int32_f4_t h,
-    ft_argb32_t color1, ft_argb32_t color2,
-    int16_t direction)
-{
-	int16_t x0 = x >> 4;
-	int16_t y0 = y >> 4;
-	int16_t w1 = w >> 4;
-	int16_t h1 = h >> 4;
-
-	ESD_Render_Rect_Grad(x0, y0, w1, h1, color1, color2, direction);
-}
-
 // Rectangle drawing with some logic to convert from radius to line width and width height to positions to simplify usage
 void ESD_Render_RectangleF(int32_f4_t x, int32_f4_t y, int32_f4_t w, int32_f4_t h, int32_f4_t radius, ft_argb32_t color)
 {

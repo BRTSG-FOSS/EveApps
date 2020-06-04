@@ -104,13 +104,13 @@ uint32_t Esd_LoadResource(Esd_ResourceInfo *resourceInfo, uint32_t *imageFormat)
 		switch (resourceInfo->Compressed)
 		{
 		case ESD_RESOURCE_RAW:
-			loaded = Ft_Hal_LoadRawFile(ESD_Host, addr, resourceInfo->File);
+			loaded = EVE_Util_loadRawFile(ESD_Host, addr, resourceInfo->File);
 			break;
 		case ESD_RESOURCE_DEFLATE:
-			loaded = Ft_Hal_LoadInflateFile(ESD_Host, addr, resourceInfo->File);
+			loaded = EVE_Util_loadInflateFile(ESD_Host, addr, resourceInfo->File);
 			break;
 		case ESD_RESOURCE_IMAGE:
-			loaded = Ft_Hal_LoadImageFile(ESD_Host, addr, resourceInfo->File, imageFormat);
+			loaded = EVE_Util_loadImageFile(ESD_Host, addr, resourceInfo->File, imageFormat);
 			break;
 		}
 		break;

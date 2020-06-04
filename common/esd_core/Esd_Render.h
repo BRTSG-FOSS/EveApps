@@ -121,31 +121,6 @@ void ESD_Render_BitmapFreeform(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_Rec
 void ESD_Render_BitmapRotate_Scaled(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_Rect16 globalRect, int32_t rotateAngle, int32_f16_t xscale, int32_f16_t yscale);
 void ESD_Render_BitmapRotate(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_Rect16 globalRect, int32_t rotateAngle);
 
-// Basic rectangle Gradient rendering with fixed point precision
-ESD_RENDER(ESD_Render_RectangleF_Gradient, Type = void, DisplayName = "ESD Gradient Rectangle (Fixed Point)", Include = "ESD_Render.h", Category = EsdPrimitives)
-ESD_PARAMETER(x, Type = int32_f4_t, Default = 0)
-ESD_PARAMETER(y, Type = int32_f4_t, Default = 0)
-ESD_PARAMETER(width, Type = int32_f4_t, Default = 60)
-ESD_PARAMETER(height, Type = int32_f4_t, Default = 20)
-ESD_PARAMETER(color1, Type = ft_argb32_t, DisplayName = "color1", Default = #FF3F3F3F)
-ESD_PARAMETER(color2, Type = ft_argb32_t, DisplayName = "color2", Default = #FFFFFFFF)
-ESD_PARAMETER(direction, Type = int16_t, DisplayName = "direction", Default = 90)
-void ESD_Render_RectangleF_Gradient(int32_f4_t x, int32_f4_t y, int32_f4_t w, int32_f4_t h, ft_argb32_t color1, ft_argb32_t color2, int16_t direction);
-
-// Basic rectangle Gradient rendering
-ESD_RENDER(ESD_Render_Rectangle_Gradient, Type = void, DisplayName = "ESD Gradient Rectangle (Integer)", Include = "ESD_Render.h", Category = EsdPrimitives, Inline)
-ESD_PARAMETER(x, Type = int32_t, Default = 0)
-ESD_PARAMETER(y, Type = int32_t, Default = 0)
-ESD_PARAMETER(width, Type = int32_t, Default = 60)
-ESD_PARAMETER(height, Type = int32_t, Default = 20)
-ESD_PARAMETER(color1, Type = ft_argb32_t, DisplayName = "color1", Default = #FF3F3F3F)
-ESD_PARAMETER(color2, Type = ft_argb32_t, DisplayName = "color2", Default = #FFFFFFFF)
-ESD_PARAMETER(direction, Type = int16_t, DisplayName = "direction", Default = 90)
-static inline void ESD_Render_Rectangle_Gradient(int32_t x, int32_t y, int32_f4_t w, int32_f4_t h, ft_argb32_t color1, ft_argb32_t color2, int16_t direction)
-{
-	ESD_Render_RectangleF_Gradient(x << 4, y << 4, w << 4, h << 4, color1, color2, direction);
-}
-
 // Basic rectangle rendering with fixed point precision
 ESD_RENDER(ESD_Render_RectangleF, Type = void, DisplayName = "ESD Rectangle (Fixed Point)", Include = "ESD_Render.h", Category = EsdPrimitives)
 ESD_PARAMETER(x, Type = int32_f4_t, Default = 0)
