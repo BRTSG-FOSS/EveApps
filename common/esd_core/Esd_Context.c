@@ -40,7 +40,7 @@
 //
 // Globals
 //
-ESD_Context *Esd_CurrentContext = NULL;
+ESD_Context *ESD_CurrentContext = NULL;
 EVE_HalContext *ESD_Host = NULL; // Pointer to current s_Host
 ESD_GpuAlloc *ESD_GAlloc = NULL; // Pointer to current s_GAlloc
 
@@ -81,7 +81,7 @@ void Esd_ResetGpuState();
 
 void ESD_setCurrent(ESD_Context *ec)
 {
-	Esd_CurrentContext = ec;
+	ESD_CurrentContext = ec;
 	ESD_Host = &ec->HalContext;
 	ESD_GAlloc = &ec->GpuAlloc;
 }
@@ -173,7 +173,7 @@ void ESD_close(ESD_Context *ec)
 	EVE_Hal_close(&ec->HalContext);
 	memset(ec, 0, sizeof(ESD_Context));
 
-	Esd_CurrentContext = NULL;
+	ESD_CurrentContext = NULL;
 	ESD_Host = NULL;
 	ESD_GAlloc = NULL;
 }

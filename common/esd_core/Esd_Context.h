@@ -89,7 +89,7 @@ typedef struct
 #ifndef ESD_EXTERN_LIBARY
 #define ESD_EXTERN_LIBARY
 #endif
-extern ESD_EXTERN_LIBARY ESD_Context *Esd_CurrentContext; //< Pointer to current ESD context
+extern ESD_EXTERN_LIBARY ESD_Context *ESD_CurrentContext; //< Pointer to current ESD context
 extern ESD_EXTERN_LIBARY EVE_HalContext *ESD_Host; //< Pointer to current EVE hal context
 extern ESD_EXTERN_LIBARY ESD_GpuAlloc *ESD_GAlloc; //< Pointer to current allocator
 

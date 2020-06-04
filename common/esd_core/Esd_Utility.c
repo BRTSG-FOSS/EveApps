@@ -21,7 +21,7 @@ static uint32_t s_FlashErrorLast = ~0;
 ESD_FUNCTION(ESD_Spinner_Popup, DisplayName = "Pop-up Spinner", Category = EsdUtilities)
 void ESD_Spinner_Popup()
 {
-	Esd_CurrentContext->SpinnerPopup = true;
+	ESD_CurrentContext->SpinnerPopup = true;
 }
 
 #if defined(EVE_FLASH_AVAILABLE)
@@ -140,7 +140,7 @@ void ESD_endLogo()
 
 void ESD_showLogo()
 {
-	Esd_CurrentContext->ShowLogo = true;
+	ESD_CurrentContext->ShowLogo = true;
 }
 
 /// Run calibrate procedure

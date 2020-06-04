@@ -129,7 +129,7 @@ uint32_t ESD_BitmapHandle_GetTotalUsed()
 	(void)phost;
 	for (uint32_t i = 0; i < ESD_BITMAPHANDLE_NB; ++i)
 	{
-		if ((i != ESD_SCRATCHHANDLE) && (Esd_CurrentContext->HandleState.Use[i] > 0))
+		if ((i != ESD_SCRATCHHANDLE) && (ESD_CurrentContext->HandleState.Use[i] > 0))
 		{
 			++total;
 		}
@@ -161,17 +161,17 @@ static eve_progmem_const uint8_t c_AstcBlockHeight[] = {
 void ESD_CoDl_pagedBitmapSource(uint8_t handle, uint8_t page)
 {
 	EVE_HalContext *phost = ESD_Host;
-	if (ESD_BITMAPHANDLE_VALID(handle) && Esd_CurrentContext->HandleState.Page[handle] != page)
+	if (ESD_BITMAPHANDLE_VALID(handle) && ESD_CurrentContext->HandleState.Page[handle] != page)
 	{
-		ESD_BitmapInfo *info = Esd_CurrentContext->HandleState.Info[handle];
-		uint32_t addr = ESD_GpuAlloc_Get(ESD_GAlloc, Esd_CurrentContext->HandleState.GpuHandle[handle]);
+		ESD_BitmapInfo *info = ESD_CurrentContext->HandleState.Info[handle];
+		uint32_t addr = ESD_GpuAlloc_Get(ESD_GAlloc, ESD_CurrentContext->HandleState.GpuHandle[handle]);
 		EVE_CoDl_bitmapHandle(phost, handle);
 		uint32_t pageOffset = ((((uint32_t)page) << 7) * info->Stride * info->Height);
 		if (EVE_CHIPID >= EVE_BT815 && ESD_IS_FORMAT_ASTC(info->Format))
 			pageOffset /= c_AstcBlockHeight[info->Format & 0xF]; // Stride under ASTC is by block row
 		uint32_t pageAddr = addr + pageOffset;
 		EVE_CoCmd_dl(phost, BITMAP_SOURCE(pageAddr));
-		Esd_CurrentContext->HandleState.Page[handle] = page;
+		ESD_CurrentContext->HandleState.Page[handle] = page;
 	}
 }
 
@@ -195,14 +195,14 @@ uint8_t ESD_CoDl_setupBitmap(ESD_BitmapInfo *bitmapInfo)
 	uint32_t handle = bitmapInfo->BitmapHandle;
 	if (!(ESD_BITMAPHANDLE_VALID(handle)
 	        && (handle != ESD_SCRATCHHANDLE)
-	        && (Esd_CurrentContext->HandleState.Info[handle] == bitmapInfo)
-	        && (Esd_CurrentContext->HandleState.GpuHandle[handle].Id == bitmapInfo->GpuHandle.Id)
-	        && (Esd_CurrentContext->HandleState.GpuHandle[handle].Seq == bitmapInfo->GpuHandle.Seq)))
+	        && (ESD_CurrentContext->HandleState.Info[handle] == bitmapInfo)
+	        && (ESD_CurrentContext->HandleState.GpuHandle[handle].Id == bitmapInfo->GpuHandle.Id)
+	        && (ESD_CurrentContext->HandleState.GpuHandle[handle].Seq == bitmapInfo->GpuHandle.Seq)))
 	{
 		// Bitmap is loaded but no handle is setup, create a new handle for this bitmap
 		// eve_printf_debug("Find free bitmap handle for addr %i\n", (int)addr);
 
-		if (Esd_CurrentContext->LoopState != ESD_LOOPSTATE_RENDER)
+		if (ESD_CurrentContext->LoopState != ESD_LOOPSTATE_RENDER)
 		{
 			eve_printf_debug("Warning: Can only setup bitmap during render pass\n");
 			return ESD_BITMAPHANDLE_INVALID;
@@ -212,12 +212,12 @@ uint8_t ESD_CoDl_setupBitmap(ESD_BitmapInfo *bitmapInfo)
 		handle = ESD_SCRATCHHANDLE; // Fallback to scratch handle
 		for (uint32_t i = 0; i < ESD_BITMAPHANDLE_NB; ++i)
 		{
-			if ((i != ESD_SCRATCHHANDLE) && (!Esd_CurrentContext->HandleState.Use[i]))
+			if ((i != ESD_SCRATCHHANDLE) && (!ESD_CurrentContext->HandleState.Use[i]))
 			{
 				// Attach this handle to the bitmap info
 				handle = i;
-				Esd_CurrentContext->HandleState.Info[i] = bitmapInfo;
-				Esd_CurrentContext->HandleState.GpuHandle[i] = bitmapInfo->GpuHandle;
+				ESD_CurrentContext->HandleState.Info[i] = bitmapInfo;
+				ESD_CurrentContext->HandleState.GpuHandle[i] = bitmapInfo->GpuHandle;
 				break;
 			}
 		}
@@ -254,8 +254,8 @@ uint8_t ESD_CoDl_setupBitmap(ESD_BitmapInfo *bitmapInfo)
 		}
 #endif
 
-		Esd_CurrentContext->HandleState.Resized[handle] = 0;
-		Esd_CurrentContext->HandleState.Page[handle] = 0;
+		ESD_CurrentContext->HandleState.Resized[handle] = 0;
+		ESD_CurrentContext->HandleState.Page[handle] = 0;
 	}
 
 	// TEMPORARY WORKAROUND: SetBitmap not correctly being applied some frames... Need to check!
@@ -269,7 +269,7 @@ uint8_t ESD_CoDl_setupBitmap(ESD_BitmapInfo *bitmapInfo)
 
 	if (ESD_BITMAPHANDLE_VALID(handle) && (handle != ESD_SCRATCHHANDLE)) // When valid and not using scratch handle
 	{
-		Esd_CurrentContext->HandleState.Use[handle] = 2; // In use
+		ESD_CurrentContext->HandleState.Use[handle] = 2; // In use
 	}
 
 	if (EVE_CHIPID >= EVE_FT810)
@@ -308,13 +308,13 @@ uint8_t ESD_CoDl_setupFont(Esd_FontInfo *fontInfo)
 
 			if (!ESD_BITMAPHANDLE_VALID(handle)
 			    || (handle == ESD_SCRATCHHANDLE)
-			    || (Esd_CurrentContext->HandleState.Info[handle] != romFontInfo)
-			    || (Esd_CurrentContext->HandleState.GpuHandle[handle].Id != MAX_NUM_ALLOCATIONS)
-			    || (Esd_CurrentContext->HandleState.GpuHandle[handle].Seq != font))
+			    || (ESD_CurrentContext->HandleState.Info[handle] != romFontInfo)
+			    || (ESD_CurrentContext->HandleState.GpuHandle[handle].Id != MAX_NUM_ALLOCATIONS)
+			    || (ESD_CurrentContext->HandleState.GpuHandle[handle].Seq != font))
 			{
 				// The handle is no longer valid, make a new one
 
-				if (Esd_CurrentContext->LoopState != ESD_LOOPSTATE_RENDER)
+				if (ESD_CurrentContext->LoopState != ESD_LOOPSTATE_RENDER)
 				{
 					eve_printf_debug("Warning: Can only setup rom font during render pass\n");
 					return ESD_BITMAPHANDLE_INVALID;
@@ -324,13 +324,13 @@ uint8_t ESD_CoDl_setupFont(Esd_FontInfo *fontInfo)
 				handle = ESD_SCRATCHHANDLE; // Fallback to scratch handle
 				for (uint32_t i = 0; i < ESD_BITMAPHANDLE_NB; ++i)
 				{
-					if ((i != ESD_SCRATCHHANDLE) && (!Esd_CurrentContext->HandleState.Use[i]))
+					if ((i != ESD_SCRATCHHANDLE) && (!ESD_CurrentContext->HandleState.Use[i]))
 					{
 						// Attach this handle to the bitmap info
 						handle = i;
-						Esd_CurrentContext->HandleState.Info[i] = romFontInfo;
-						Esd_CurrentContext->HandleState.GpuHandle[i].Id = MAX_NUM_ALLOCATIONS;
-						Esd_CurrentContext->HandleState.GpuHandle[i].Seq = font;
+						ESD_CurrentContext->HandleState.Info[i] = romFontInfo;
+						ESD_CurrentContext->HandleState.GpuHandle[i].Id = MAX_NUM_ALLOCATIONS;
+						ESD_CurrentContext->HandleState.GpuHandle[i].Seq = font;
 						break;
 					}
 				}
@@ -344,8 +344,8 @@ uint8_t ESD_CoDl_setupFont(Esd_FontInfo *fontInfo)
 #if ESD_DL_OPTIMIZE
 				ESD_STATE.Handle = handle;
 #endif
-				Esd_CurrentContext->HandleState.Resized[handle] = 0;
-				Esd_CurrentContext->HandleState.Page[handle] = 0;
+				ESD_CurrentContext->HandleState.Resized[handle] = 0;
+				ESD_CurrentContext->HandleState.Page[handle] = 0;
 			}
 		}
 		else
@@ -363,13 +363,13 @@ uint8_t ESD_CoDl_setupFont(Esd_FontInfo *fontInfo)
 
 		if (!ESD_BITMAPHANDLE_VALID(handle)
 		    || (handle == ESD_SCRATCHHANDLE)
-		    || (Esd_CurrentContext->HandleState.Info[handle] != fontInfo)
-		    || (Esd_CurrentContext->HandleState.GpuHandle[handle].Id != fontInfo->FontResource.GpuHandle.Id)
-		    || (Esd_CurrentContext->HandleState.GpuHandle[handle].Seq != fontInfo->FontResource.GpuHandle.Seq))
+		    || (ESD_CurrentContext->HandleState.Info[handle] != fontInfo)
+		    || (ESD_CurrentContext->HandleState.GpuHandle[handle].Id != fontInfo->FontResource.GpuHandle.Id)
+		    || (ESD_CurrentContext->HandleState.GpuHandle[handle].Seq != fontInfo->FontResource.GpuHandle.Seq))
 		{
 			// The handle is no longer valid, make a new one
 
-			if (Esd_CurrentContext->LoopState != ESD_LOOPSTATE_RENDER)
+			if (ESD_CurrentContext->LoopState != ESD_LOOPSTATE_RENDER)
 			{
 				eve_printf_debug("Warning: Can only setup font during render pass\n");
 				return ESD_BITMAPHANDLE_INVALID;
@@ -379,12 +379,12 @@ uint8_t ESD_CoDl_setupFont(Esd_FontInfo *fontInfo)
 			handle = ESD_SCRATCHHANDLE; // Fallback to scratch handle
 			for (uint32_t i = 0; i < ESD_BITMAPHANDLE_NB; ++i)
 			{
-				if ((i != ESD_SCRATCHHANDLE) && (!Esd_CurrentContext->HandleState.Use[i]))
+				if ((i != ESD_SCRATCHHANDLE) && (!ESD_CurrentContext->HandleState.Use[i]))
 				{
 					// Attach this handle to the font info
 					handle = i;
-					Esd_CurrentContext->HandleState.Info[i] = fontInfo;
-					Esd_CurrentContext->HandleState.GpuHandle[i] = fontInfo->FontResource.GpuHandle;
+					ESD_CurrentContext->HandleState.Info[i] = fontInfo;
+					ESD_CurrentContext->HandleState.GpuHandle[i] = fontInfo->FontResource.GpuHandle;
 					break;
 				}
 			}
@@ -407,14 +407,14 @@ uint8_t ESD_CoDl_setupFont(Esd_FontInfo *fontInfo)
 #if ESD_DL_OPTIMIZE
 			ESD_STATE.Handle = handle;
 #endif
-			Esd_CurrentContext->HandleState.Resized[handle] = 0;
-			Esd_CurrentContext->HandleState.Page[handle] = 0;
+			ESD_CurrentContext->HandleState.Resized[handle] = 0;
+			ESD_CurrentContext->HandleState.Page[handle] = 0;
 		}
 	}
 
 	if (ESD_BITMAPHANDLE_VALID(handle) && (handle != ESD_SCRATCHHANDLE)) // When valid and not using scratch handle
 	{
-		Esd_CurrentContext->HandleState.Use[handle] = 2; // In use
+		ESD_CurrentContext->HandleState.Use[handle] = 2; // In use
 	}
 
 	return handle;
@@ -425,7 +425,7 @@ void ESD_CoDl_bitmapWidthHeight(uint8_t handle, uint16_t width, uint16_t height)
 	EVE_HalContext *phost = ESD_Host;
 	EVE_CoDl_bitmapHandle(phost, handle);
 	EVE_CoDl_bitmapSize(phost, NEAREST, BORDER, BORDER, width, height);
-	Esd_CurrentContext->HandleState.Resized[handle] = true;
+	ESD_CurrentContext->HandleState.Resized[handle] = true;
 }
 
 void ESD_CoDl_bitmapSize(uint8_t handle, uint8_t filter, uint8_t wrapx, uint8_t wrapy, uint16_t width, uint16_t height)
@@ -433,16 +433,16 @@ void ESD_CoDl_bitmapSize(uint8_t handle, uint8_t filter, uint8_t wrapx, uint8_t 
 	EVE_HalContext *phost = ESD_Host;
 	EVE_CoDl_bitmapHandle(phost, handle);
 	EVE_CoDl_bitmapSize(phost, filter, wrapx, wrapy, width, height);
-	Esd_CurrentContext->HandleState.Resized[handle] = true;
+	ESD_CurrentContext->HandleState.Resized[handle] = true;
 }
 
 void ESD_CoDl_bitmapSizeReset(uint8_t handle)
 {
-	if (Esd_CurrentContext->HandleState.Resized[handle])
+	if (ESD_CurrentContext->HandleState.Resized[handle])
 	{
-		ESD_BitmapInfo *bitmapInfo = (ESD_BitmapInfo *)Esd_CurrentContext->HandleState.Info[handle];
+		ESD_BitmapInfo *bitmapInfo = (ESD_BitmapInfo *)ESD_CurrentContext->HandleState.Info[handle];
 		ESD_CoDl_bitmapWidthHeight(handle, bitmapInfo->Width, bitmapInfo->Height);
-		Esd_CurrentContext->HandleState.Resized[handle] = false;
+		ESD_CurrentContext->HandleState.Resized[handle] = false;
 	}
 }
 

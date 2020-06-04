@@ -48,7 +48,7 @@ void ESD_TouchTag_Start(ESD_TouchTag *context)
 	int i;
 
 #ifdef ESD_SIMULATION
-	if (s_LastTagFrame > Esd_CurrentContext->Frame && (s_LastTagFrame != ~0))
+	if (s_LastTagFrame > ESD_CurrentContext->Frame && (s_LastTagFrame != ~0))
 	{
 		// Reset static
 		s_LastTagFrame = ~0;
@@ -86,13 +86,13 @@ void ESD_TouchTag_Update(ESD_TouchTag *context)
 {
 	EVE_HalContext *phost = ESD_Host;
 	(void)phost;
-	if (s_LastTagFrame != Esd_CurrentContext->Frame)
+	if (s_LastTagFrame != ESD_CurrentContext->Frame)
 	{
 		uint32_t regTouchXY;
 		uint8_t regTouchTag;
 
 		// Global tag update
-		s_LastTagFrame = Esd_CurrentContext->Frame;
+		s_LastTagFrame = ESD_CurrentContext->Frame;
 
 		// Read registers
 		regTouchXY = EVE_Hal_rd32(ESD_Host, REG_TOUCH_TAG_XY);
