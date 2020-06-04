@@ -1,6 +1,6 @@
 /*
-ESD Framework
-Copyright (C) 2018  Bridgetek Pte Lte
+ESD Core
+Copyright (C) 2018-2020  Bridgetek Pte Lte
 Author: Jan Boon <jan.boon@kaetemi.be>
 */
 

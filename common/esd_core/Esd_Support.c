@@ -29,7 +29,7 @@
 * has no liability in relation to those amendments.
 */
 
-#include "ESD_Core.h"
+#include "ESD_Context.h"
 
 /// A function to get milliseconds for current frame
 ESD_FUNCTION(ESD_GetMillis, Type = uint32_t, DisplayName = "Get Milliseconds", Category = EsdUtilities)

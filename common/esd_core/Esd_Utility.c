@@ -6,7 +6,7 @@
 #include "ESD_Dl.h"
 #include "ESD_GpuAlloc.h"
 #include "ESD_TouchTag.h"
-#include "ESD_Core.h"
+#include "ESD_Context.h"
 
 extern EVE_HalContext *ESD_Host;
 extern ESD_GpuAlloc *ESD_GAlloc;

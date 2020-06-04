@@ -29,91 +29,12 @@
 * has no liability in relation to those amendments.
 */
 
-#ifndef ESD_CORE___H
-#define ESD_CORE___H
+#ifndef ESD_CORE__H
+#define ESD_CORE__H
 
-#include <EVE_Hal.h>
-
-#include "ESD_TypeDefs.h"
-#include "ESD_GpuAlloc.h"
-#include "ESD_Dl.h"
-#include "ESD_BitmapHandle.h"
-#include "ESD_TouchTag.h"
-
-/// Runtime context of ESD
-typedef struct
-{
-	EVE_HalContext HalContext; //< Pointer to current s_Host
-	ESD_GpuAlloc GpuAlloc; //< Pointer to current s_GAlloc
-	uint32_t Millis; //< Time in milliseconds for current frame
-	uint32_t DeltaMs; //< Delta time in milliseconds between frames
-	uint32_t Frame; //< Number of times Render has been called
-	ft_rgb32_t ClearColor; //< Screen clear color (default is 0x212121)
-	uint8_t LoopState; //< Current state of loop
-
-	bool RequestStop; //< Flag to stop the loop
-
-	bool ShowLogo; //< True to pop up logo during next render
-	bool SpinnerPopup;
-
-	bool SwapIdled; //< True if idled during swap
-	bool SpinnerPopped; //< Spinner is currently visible
-	bool ShowingLogo; //< Logo is currently showing (animation already finished)
-	void *CmdOwner; //< Owner of currently long-running coprocessor function (sketch, spinner, etc.)
-
-	ESD_HandleState HandleState;
-
-	/// Callbacks called by ESD_loop
-	void (*Start)(void *context);
-	void (*Update)(void *context);
-	void (*Render)(void *context);
-	void (*Idle)(void *context);
-	void (*End)(void *context);
-	void *UserContext;
-
-} ESD_Context;
-
-/// Parameters for initializing an ESD context
-typedef struct
-{
-	/// Callbacks called by ESD_loop
-	void (*Start)(void *context);
-	void (*Update)(void *context);
-	void (*Render)(void *context);
-	void (*Idle)(void *context);
-	void (*End)(void *context);
-	void *UserContext;
-
-} Esd_Parameters;
-
-#ifndef ESD_EXTERN_LIBARY
-#define ESD_EXTERN_LIBARY
-#endif
-extern ESD_EXTERN_LIBARY ESD_Context *Esd_CurrentContext; //< Pointer to current ESD context
-extern ESD_EXTERN_LIBARY EVE_HalContext *ESD_Host; //< Pointer to current EVE hal context
-extern ESD_EXTERN_LIBARY ESD_GpuAlloc *ESD_GAlloc; //< Pointer to current allocator
-
-#if (EVE_SUPPORT_CHIPID >= EVE_FT810)
-#define ESD_CO_SCRATCH_HANDLE (EVE_CHIPID >= EVE_FT810 ? ESD_Host->CoScratchHandle : 15)
-#else
-#define ESD_CO_SCRATCH_HANDLE (15)
-#endif
-
-void ESD_setCurrent(ESD_Context *ec);
-
-void ESD_defaults(Esd_Parameters *ep);
-void ESD_initialize(ESD_Context *ec, Esd_Parameters *ep);
-void ESD_close(ESD_Context *ec);
-void ESD_release();
-
-/// Main loop, calls ESD_start, ESD_update, ESD_waitSwap, and ESD_stop
-void ESD_loop(ESD_Context *ec);
-
-void ESD_start(ESD_Context *ec);
-void ESD_update(ESD_Context *ec);
-void ESD_render(ESD_Context *ec);
-bool ESD_waitSwap(ESD_Context *ec);
-void ESD_stop(ESD_Context *ec);
+#include "ESD_Context.h"
+#include "ESD_Render.h"
+#include "ESD_Utility.h"
 
 #endif /* #ifndef ESD_CORE__H */
 

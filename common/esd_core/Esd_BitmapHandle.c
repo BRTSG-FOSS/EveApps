@@ -5,7 +5,7 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 */
 
 #include "ESD_BitmapHandle.h"
-#include "ESD_Core.h"
+#include "ESD_Context.h"
 
 // Number of bitmap handles to use (and also the scratch handle)
 // List which bitmap info is using a handle
