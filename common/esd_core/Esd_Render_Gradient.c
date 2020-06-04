@@ -63,13 +63,13 @@ void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t width, int16_t heigh
 	EVE_Cmd_wrMem(phost, (void *)colors, 8);
 
 	// Set required state
-	ESD_Dl_colorArgb(ESD_ARGB_WHITE);
+	EVE_CoDl_colorArgb_ex(phost, ESD_ARGB_WHITE);
 
 	// Use the scratch handle
-	ESD_Dl_BITMAP_HANDLE(ESD_CO_SCRATCH_HANDLE);
+	EVE_CoDl_bitmapHandle(phost, ESD_CO_SCRATCH_HANDLE);
 	if (EVE_CHIPID >= EVE_FT810)
-		ESD_Dl_VERTEX_FORMAT(0);
-	ESD_Dl_BEGIN(BITMAPS);
+		EVE_CoDl_vertexFormat(phost, 0);
+	EVE_CoDl_begin(phost, BITMAPS);
 
 	// Use local rendering context, bypass ESD display list functions.
 	// This is useful here, since we're changing bitmap transform matrices, which may use a lot of display list entries.
@@ -118,7 +118,7 @@ void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t width, int16_t heigh
 	EVE_CoCmd_loadIdentity(ESD_Host);
 #endif
 	EVE_CoCmd_dl(ESD_Host, RESTORE_CONTEXT());
-	ESD_Dl_END();
+	EVE_CoDl_end(phost);
 
 	// Move to the next cell in the bitmap for next gradient
 	++s_MultiGradient_Cell;
@@ -127,20 +127,22 @@ void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t width, int16_t heigh
 
 void Esd_Render_MultiGradient_Rounded(int16_t x, int16_t y, int16_t width, int16_t height, int32_f4_t radius, uint8_t alpha, ft_argb32_t topLeft, ft_argb32_t topRight, ft_argb32_t bottomLeft, ft_argb32_t bottomRight)
 {
-	// ESD_Dl_SAVE_CONTEXT();
+	EVE_HalContext *phost = ESD_Host;
+
+	// EVE_CoDl_saveContext(phost);
 
 	// Set alpha of the target rendering area to 255
 	// ESD_Dl_CLEAR_COLOR_A(255);
 	// ESD_Rect16 scissor = ESD_Dl_Scissor_Set(globalRect);
 	// ESD_Dl_CLEAR(1, 0, 0);
 	// ESD_Dl_Scissor_Reset(scissor);
-	ESD_Dl_colorArgb(ESD_ARGB_WHITE);
+	EVE_CoDl_colorArgb_ex(phost, ESD_ARGB_WHITE);
 	EVE_CoCmd_dl(ESD_Host, COLOR_MASK(0, 0, 0, 1));
-	ESD_Dl_LINE_WIDTH(16);
-	ESD_Dl_BEGIN(RECTS);
+	EVE_CoDl_lineWidth(phost, 16);
+	EVE_CoDl_begin(phost, RECTS);
 	ESD_Dl_VERTEX2F_0(x, y);
 	ESD_Dl_VERTEX2F_0(x + width, y + height);
-	ESD_Dl_END();
+	EVE_CoDl_end(phost);
 	EVE_CoCmd_dl(ESD_Host, COLOR_MASK(1, 1, 1, 1));
 
 	// Draw rounded rectangle as masking shape
@@ -152,7 +154,7 @@ void Esd_Render_MultiGradient_Rounded(int16_t x, int16_t y, int16_t width, int16
 	Esd_Render_MultiGradient(x, y, width, height, topLeft | 0xFF000000, topRight | 0xFF000000, bottomLeft | 0xFF000000, bottomRight | 0xFF000000);
 
 	// Restore context
-	// ESD_Dl_RESTORE_CONTEXT();
+	// EVE_CoDl_restoreContext(phost);
 	EVE_CoCmd_dl(ESD_Host, BLEND_FUNC(SRC_ALPHA, ONE_MINUS_SRC_ALPHA));
 }
 

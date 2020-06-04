@@ -70,10 +70,10 @@ void Esd_Render_Rect_Stroke(
 	}
 
 	// Use local rendering context, bypass ESD display list functions.
-	ESD_Dl_BEGIN(RECTS);
-	ESD_Dl_colorArgb(color);
+	EVE_CoDl_begin(phost, RECTS);
+	EVE_CoDl_colorArgb_ex(phost, color);
 	if (EVE_CHIPID >= EVE_FT810)
-		ESD_Dl_VERTEX_FORMAT(4);
+		EVE_CoDl_vertexFormat(phost, 4);
 	EVE_CoCmd_dl(phost, SAVE_CONTEXT());
 
 	// Outer reset
@@ -116,7 +116,7 @@ void Esd_Render_Rect_Stroke(
 
 	// Restore rendering context, ESD display list optimizations functions should be used again after this.
 	EVE_CoCmd_dl(phost, RESTORE_CONTEXT());
-	ESD_Dl_END();
+	EVE_CoDl_end(phost);
 }
 
 /* end of file */

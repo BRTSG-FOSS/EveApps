@@ -35,13 +35,13 @@
 #include <EVE_Hal.h>
 #include "ESD_TypeDefs.h"
 
-void Esd_AttachFlashFast();
+void ESD_attachFlashFast();
 
-void Esd_ShowLogo();
-void Esd_BeginLogo();
-void Esd_EndLogo();
+void ESD_showLogo();
+void ESD_beginLogo();
+void ESD_endLogo();
 
-bool Esd_Calibrate();
+bool ESD_calibrate();
 
 #endif /* #ifndef ESD_UTILITY_H */
 

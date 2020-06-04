@@ -53,7 +53,7 @@ void ESD_Dl_Scissor_Reset(ESD_Rect16 state);
 ESD_FUNCTION(ESD_GetFontHeight, Type = uint16_t, DisplayName = "Get Font Height", Category = _GroupHidden, Macro)
 ESD_PARAMETER(i, Type = int, DisplayName = "Bitmap Handle", Default = 0, Min = 0, Max = 31)
 // inline static uint16_t ESD_GetFontHeight(int i) { return ESD_FontHeight[i]; }
-#define ESD_GetFontHeight(i) (Esd_GetFontHeight(Esd_GetRomFont(i)));
+#define ESD_GetFontHeight(i) (ESD_getFontHeight(ESD_getRomFont(i)));
 
 ESD_FUNCTION(ESD_Dl_CLEAR, Type = void, Category = EveRenderFunctions, Inline)
 ESD_PARAMETER(c, Type = uint8_t, DisplayName = "Clear Color")

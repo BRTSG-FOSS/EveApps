@@ -39,7 +39,7 @@ extern void Esd_SetFlashSize__ESD(int size);
 	} while (false)
 #endif
 
-void Esd_AttachFlashFast()
+void ESD_attachFlashFast()
 {
 	// Wait for flash status to move on from FLASH_STATUS_INIT
 	EVE_HalContext *phost = ESD_Host;
@@ -97,15 +97,14 @@ void Esd_AttachFlashFast()
 	}
 }
 #else
-#define Esd_AttachFlashFast() eve_noop()
+#define ESD_attachFlashFast() eve_noop()
 #endif
 
-void Esd_BeginLogo()
+void ESD_beginLogo()
 {
 	EVE_HalContext *phost = ESD_Host;
 	ESD_GpuAlloc_Reset(ESD_GAlloc);
 	ESD_GpuAlloc_Alloc(ESD_GAlloc, RAM_G_SIZE, 0); // Block allocation
-	EVE_CoCmd_startFrame(phost);
 	EVE_CoCmd_dlStart(phost);
 	EVE_CoCmd_dl(phost, CLEAR_COLOR_RGB(255, 255, 255));
 	EVE_CoCmd_dl(phost, CLEAR(1, 0, 0));
@@ -121,35 +120,31 @@ void Esd_BeginLogo()
 	EVE_CoCmd_dl(phost, CLEAR(1, 0, 0));
 	EVE_CoCmd_dl(phost, DISPLAY());
 	// EVE_CoCmd_memSet(ESD_Host, 0, 0xFF, RAM_G_SIZE);
-	EVE_CoCmd_endFrame(phost);
-	Ft_Gpu_Hal_WaitCmdFifoEmpty(phost);
-	EVE_CoCmd_startFrame(phost);
+	EVE_Cmd_waitFlush(phost);
 	EVE_CoCmd_logo(phost);
-	EVE_CoCmd_endFrame(phost);
-	Ft_Gpu_Hal_WaitLogo_Finish(phost);
+	EVE_Cmd_waitLogo(phost);
 	EVE_sleep(3000);
 }
 
-void Esd_EndLogo()
+void ESD_endLogo()
 {
-	EVE_CoCmd_startFrame(ESD_Host);
-	EVE_CoCmd_dlStart(ESD_Host);
-	EVE_CoCmd_dl(ESD_Host, CLEAR_COLOR_RGB(255, 255, 255));
-	EVE_CoCmd_dl(ESD_Host, CLEAR(1, 0, 0));
-	EVE_CoCmd_dl(ESD_Host, DISPLAY());
-	EVE_CoCmd_swap(ESD_Host);
-	EVE_CoCmd_endFrame(ESD_Host);
-	Ft_Gpu_Hal_WaitCmdFifoEmpty(ESD_Host);
+	EVE_HalContext *phost = ESD_Host;
+	EVE_CoCmd_dlStart(phost);
+	EVE_CoCmd_dl(phost, CLEAR_COLOR_RGB(255, 255, 255));
+	EVE_CoCmd_dl(phost, CLEAR(1, 0, 0));
+	EVE_CoCmd_dl(phost, DISPLAY());
+	EVE_CoCmd_swap(phost);
+	EVE_Cmd_waitFlush(phost);
 	ESD_GpuAlloc_Reset(ESD_GAlloc);
 }
 
-void Esd_ShowLogo()
+void ESD_showLogo()
 {
 	Esd_CurrentContext->ShowLogo = true;
 }
 
 /// Run calibrate procedure
-bool Esd_Calibrate()
+bool ESD_calibrate()
 {
 	EVE_HalContext *phost = ESD_Host;
 	uint32_t result;
@@ -159,8 +154,7 @@ bool Esd_Calibrate()
 	EVE_Hal_wr8(phost, REG_CTOUCH_EXTENDED, CTOUCH_MODE_COMPATIBILITY);
 #endif
 
-	eve_printf_debug("App_CoPro_Widget_Calibrate: Start Frame\n");
-	EVE_CoCmd_startFrame(phost);
+	eve_printf_debug("ESD_calibrate: Start Frame\n");
 
 	EVE_CoCmd_dlStart(phost);
 	EVE_CoCmd_dl(phost, CLEAR_COLOR_RGB(64, 64, 64));
@@ -171,8 +165,7 @@ bool Esd_Calibrate()
 
 	result = EVE_CoCmd_calibrate(phost);
 
-	eve_printf_debug("App_CoPro_Widget_Calibrate: End Frame\n");
-	EVE_CoCmd_endFrame(phost);
+	eve_printf_debug("ESD_calibrate: End Frame\n");
 
 	// Print the configured values
 	EVE_Hal_rdMem(phost, REG_TOUCH_TRANSFORM_A, (uint8_t *)transMatrix, 4 * 6); //read all the 6 coefficients

@@ -31,27 +31,27 @@ void ESD_Render_RectangleF(int32_f4_t x, int32_f4_t y, int32_f4_t w, int32_f4_t 
 	int32_t y0 = y + radius;
 	int32_t x1 = x + w - 16 - radius;
 	int32_t y1 = y + h - 16 - radius;
-	ESD_Dl_colorArgb(color);
-	ESD_Dl_LINE_WIDTH(width);
-	ESD_Dl_BEGIN(RECTS);
+	EVE_CoDl_colorArgb_ex(phost, color);
+	EVE_CoDl_lineWidth(phost, width);
+	EVE_CoDl_begin(phost, RECTS);
 	if (EVE_CHIPID >= EVE_FT810)
-		ESD_Dl_VERTEX_FORMAT(4);
+		EVE_CoDl_vertexFormat(phost, 4);
 	EVE_CoCmd_dl(phost, VERTEX2F(x0, y0));
 	EVE_CoCmd_dl(phost, VERTEX2F(x1, y1));
-	ESD_Dl_END();
+	EVE_CoDl_end(phost);
 }
 
 void ESD_Render_LineF(int32_f4_t x0, int32_f4_t y0, int32_f4_t x1, int32_f4_t y1, int32_f3_t width, ft_argb32_t color)
 {
 	EVE_HalContext *phost = ESD_Host;
-	ESD_Dl_colorArgb(color);
-	ESD_Dl_LINE_WIDTH(width);
-	ESD_Dl_BEGIN(LINES);
+	EVE_CoDl_colorArgb_ex(phost, color);
+	EVE_CoDl_lineWidth(phost, width);
+	EVE_CoDl_begin(phost, LINES);
 	if (EVE_CHIPID >= EVE_FT810)
-		ESD_Dl_VERTEX_FORMAT(4);
+		EVE_CoDl_vertexFormat(phost, 4);
 	EVE_CoCmd_dl(phost, VERTEX2F(x0, y0));
 	EVE_CoCmd_dl(phost, VERTEX2F(x1, y1));
-	ESD_Dl_END();
+	EVE_CoDl_end(phost);
 }
 
 void ESD_Dl_Bitmap_Vertex(int16_t x, int16_t y, uint8_t handle, uint16_t cell)
@@ -59,15 +59,15 @@ void ESD_Dl_Bitmap_Vertex(int16_t x, int16_t y, uint8_t handle, uint16_t cell)
 	EVE_HalContext *phost = ESD_Host;
 	if ((EVE_CHIPID >= EVE_FT810) && (x < 0 || y < 0 || x >= 512 || y >= 512))
 	{
-		ESD_Dl_VERTEX_FORMAT(0);
-		ESD_Dl_BITMAP_HANDLE(handle);
-		ESD_Dl_Bitmap_Page(handle, cell >> 7);
-		ESD_Dl_CELL(cell & 0x7F);
+		EVE_CoDl_vertexFormat(phost, 0);
+		EVE_CoDl_bitmapHandle(phost, handle);
+		ESD_CoDl_pagedBitmapSource(handle, cell >> 7);
+		EVE_CoDl_cell(phost, cell & 0x7F);
 		EVE_CoCmd_dl(phost, VERTEX2F(x, y));
 	}
 	else
 	{
-		ESD_Dl_Bitmap_Page(handle, cell >> 7);
+		ESD_CoDl_pagedBitmapSource(handle, cell >> 7);
 		EVE_CoCmd_dl(phost, VERTEX2II(x, y, handle, cell));
 	}
 }
@@ -97,20 +97,20 @@ void ESD_Dl_Bitmap_Vertex_DXT1(int16_t x, int16_t y, uint8_t handle, uint8_t add
 void ESD_Dl_Bitmap_Vertex_PALETTED8(int16_t x, int16_t y, uint8_t handle, uint16_t cell, uint32_t paletteAddr)
 {
 	EVE_HalContext *phost = ESD_Host;
-	ESD_Dl_Alpha_Func(ALWAYS, 0);
+	EVE_CoDl_alphaFunc(phost, ALWAYS, 0);
 	EVE_CoCmd_dl(phost, BLEND_FUNC(ONE, ZERO));
 	EVE_CoCmd_dl(phost, COLOR_MASK(0, 0, 0, 1));
-	ESD_Dl_PALETTE_SOURCE(paletteAddr + 3);
+	EVE_CoDl_paletteSource(phost, paletteAddr + 3);
 	ESD_Dl_Bitmap_Vertex(x, y, handle, cell);
 	EVE_CoCmd_dl(phost, BLEND_FUNC(DST_ALPHA, ONE_MINUS_DST_ALPHA));
 	EVE_CoCmd_dl(phost, COLOR_MASK(1, 0, 0, 0));
-	ESD_Dl_PALETTE_SOURCE(paletteAddr + 2);
+	EVE_CoDl_paletteSource(phost, paletteAddr + 2);
 	ESD_Dl_Bitmap_Vertex(x, y, handle, cell);
 	EVE_CoCmd_dl(phost, COLOR_MASK(0, 1, 0, 0));
-	ESD_Dl_PALETTE_SOURCE(paletteAddr + 1);
+	EVE_CoDl_paletteSource(phost, paletteAddr + 1);
 	ESD_Dl_Bitmap_Vertex(x, y, handle, cell);
 	EVE_CoCmd_dl(phost, COLOR_MASK(0, 0, 1, 0));
-	ESD_Dl_PALETTE_SOURCE(paletteAddr);
+	EVE_CoDl_paletteSource(phost, paletteAddr);
 	ESD_Dl_Bitmap_Vertex(x, y, handle, cell);
 }
 #else
@@ -131,34 +131,34 @@ void ESD_Render_Bitmap(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, ft_argb3
 	bitmapInfo = bitmapCell.Info;
 	cell = bitmapCell.Cell;
 	phost = ESD_Host;
-	handle = ESD_Dl_Bitmap_Setup(bitmapInfo);
+	handle = ESD_CoDl_setupBitmap(bitmapInfo);
 
 	if (ESD_BITMAPHANDLE_VALID(handle))
 	{
 		uint8_t additional = bitmapInfo->AdditionalInfo
-		    ? ESD_Dl_Bitmap_Setup(bitmapInfo->AdditionalInfo)
+		    ? ESD_CoDl_setupBitmap(bitmapInfo->AdditionalInfo)
 		    : ESD_BITMAPHANDLE_INVALID;
 
-		ESD_Dl_Bitmap_WidthHeightReset(handle);
-		ESD_Dl_colorArgb(c);
-		ESD_Dl_BEGIN(BITMAPS);
+		ESD_CoDl_bitmapSizeReset(handle);
+		EVE_CoDl_colorArgb_ex(phost, c);
+		EVE_CoDl_begin(phost, BITMAPS);
 		if (EVE_CHIPID >= EVE_FT810 && bitmapInfo->Format == PALETTED8)
 		{
 			uint32_t paletteAddr;
-			ESD_Dl_SAVE_CONTEXT();
+			EVE_CoDl_saveContext(phost);
 			paletteAddr = ESD_LoadPalette(bitmapInfo);
 			ESD_Dl_Bitmap_Vertex_PALETTED8(x, y, handle, cell, paletteAddr);
 			if (ESD_BITMAPHANDLE_VALID(additional))
 				ESD_Dl_Bitmap_Vertex_PALETTED8(x, y, additional, cell, paletteAddr);
-			ESD_Dl_RESTORE_CONTEXT();
+			EVE_CoDl_restoreContext(phost);
 		}
 		else if (bitmapInfo->Format == DXT1 && ESD_BITMAPHANDLE_VALID(additional))
 		{
-			ESD_Dl_Bitmap_WidthHeight(additional, bitmapInfo->Width, bitmapInfo->Height);
-			ESD_Dl_SAVE_CONTEXT();
+			ESD_CoDl_bitmapWidthHeight(additional, bitmapInfo->Width, bitmapInfo->Height);
+			EVE_CoDl_saveContext(phost);
 			ESD_Dl_Bitmap_Vertex_DXT1(x, y, handle, additional, cell, bitmapInfo->Cells);
 			EVE_CoCmd_loadIdentity(ESD_Host);
-			ESD_Dl_RESTORE_CONTEXT();
+			EVE_CoDl_restoreContext(phost);
 		}
 		else
 		{
@@ -166,42 +166,41 @@ void ESD_Render_Bitmap(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, ft_argb3
 			if (ESD_BITMAPHANDLE_VALID(additional))
 				ESD_Dl_Bitmap_Vertex(x, y, additional, cell);
 		}
-		ESD_Dl_END();
+		EVE_CoDl_end(phost);
 	}
 }
 
 void ESD_Render_BitmapScaled(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, ft_argb32_t c, int32_f16_t xscale, int32_f16_t yscale, int32_f16_t xoffset, int32_f16_t yoffset, int16_t width, int16_t height)
 {
+	EVE_HalContext *phost;
 	ESD_BitmapInfo *bitmapInfo;
 	uint16_t cell;
-	EVE_HalContext *phost;
 	uint8_t handle;
-	(void)phost;
 
 	if (!bitmapCell.Info)
 		return;
 
+	phost = ESD_Host;
 	bitmapInfo = bitmapCell.Info;
 	cell = bitmapCell.Cell;
-	phost = ESD_Host;
-	handle = ESD_Dl_Bitmap_Setup(bitmapInfo);
+	handle = ESD_CoDl_setupBitmap(bitmapInfo);
 
 	if (ESD_BITMAPHANDLE_VALID(handle))
 	{
 		uint8_t additional = bitmapInfo->AdditionalInfo
-		    ? ESD_Dl_Bitmap_Setup(bitmapInfo->AdditionalInfo)
+		    ? ESD_CoDl_setupBitmap(bitmapInfo->AdditionalInfo)
 		    : ESD_BITMAPHANDLE_INVALID;
 
 		if (bitmapInfo->Format == DXT1)
-			ESD_Dl_Bitmap_WidthHeight(handle, width, height);
+			ESD_CoDl_bitmapWidthHeight(handle, width, height);
 		else
-			ESD_Dl_Bitmap_WidthHeight_BILINEAR(handle, width, height);
-		ESD_Dl_colorArgb(c);
-		ESD_Dl_SAVE_CONTEXT();
+			ESD_CoDl_bitmapSize(handle, BILINEAR, BORDER, BORDER, width, height);
+		EVE_CoDl_colorArgb_ex(phost, c);
+		EVE_CoDl_saveContext(phost);
 		EVE_CoCmd_translate(ESD_Host, xoffset, yoffset);
 		EVE_CoCmd_scale(ESD_Host, xscale, yscale);
 		EVE_CoCmd_setMatrix(ESD_Host);
-		ESD_Dl_BEGIN(BITMAPS);
+		EVE_CoDl_begin(phost, BITMAPS);
 		if ((EVE_CHIPID >= EVE_FT810) && (bitmapInfo->Format == PALETTED8))
 		{
 			uint32_t paletteAddr = ESD_LoadPalette(bitmapInfo);
@@ -211,7 +210,7 @@ void ESD_Render_BitmapScaled(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, ft
 		}
 		else if (bitmapInfo->Format == DXT1 && ESD_BITMAPHANDLE_VALID(additional))
 		{
-			ESD_Dl_Bitmap_WidthHeight(additional, width, height);
+			ESD_CoDl_bitmapWidthHeight(additional, width, height);
 			ESD_Dl_Bitmap_Vertex_DXT1(x, y, handle, additional, cell, bitmapInfo->Cells);
 		}
 		else
@@ -220,19 +219,23 @@ void ESD_Render_BitmapScaled(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, ft
 			if (ESD_BITMAPHANDLE_VALID(additional))
 				ESD_Dl_Bitmap_Vertex(x, y, additional, cell);
 		}
-		ESD_Dl_END();
+		EVE_CoDl_end(phost);
 		EVE_CoCmd_loadIdentity(ESD_Host);
-		ESD_Dl_RESTORE_CONTEXT();
+		EVE_CoDl_restoreContext(phost);
 	}
 }
 
 // Render bitmap using freeform rectangle within a specified global screen rectangle, freeform is relative to global
 void ESD_Render_BitmapFreeform(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_Rect16 globalRect, ESD_Rect16 freeformRect, uint8_t minAlpha)
 {
+	EVE_HalContext *phost;
+
 	if (!bitmapCell.Info)
 		return;
 
-	ESD_Dl_Alpha_Func((minAlpha > 0) ? GEQUAL : ALWAYS, minAlpha);
+	phost = ESD_Host;
+
+	EVE_CoDl_alphaFunc(phost, (minAlpha > 0) ? GEQUAL : ALWAYS, minAlpha);
 
 	if (freeformRect.Width == bitmapCell.Info->Width // No scaling
 	    && freeformRect.Height == bitmapCell.Info->Height)
@@ -260,12 +263,12 @@ void ESD_Render_BitmapFreeform(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_Rec
 		    globalRect.Width, globalRect.Height);
 	}
 
-	ESD_Dl_Alpha_Func(ALWAYS, 0);
+	EVE_CoDl_alphaFunc(phost, ALWAYS, 0);
 }
 
 void ESD_Render_BitmapRotate_Scaled(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_Rect16 globalRect, int32_t rotateAngle, int32_f16_t xscale, int32_f16_t yscale)
 {
-	EVE_HalContext *phost = ESD_Host;
+	EVE_HalContext *phost;
 	ESD_BitmapInfo *bitmapInfo;
 	uint16_t cell;
 	uint8_t handle;
@@ -274,9 +277,10 @@ void ESD_Render_BitmapRotate_Scaled(ESD_BitmapCell bitmapCell, ft_argb32_t c, ES
 	if (!bitmapCell.Info)
 		return;
 
+	phost = ESD_Host;
 	bitmapInfo = bitmapCell.Info;
 	cell = bitmapCell.Cell;
-	handle = ESD_Dl_Bitmap_Setup(bitmapInfo);
+	handle = ESD_CoDl_setupBitmap(bitmapInfo);
 
 	if (ESD_BITMAPHANDLE_VALID(handle))
 	{
@@ -285,15 +289,15 @@ void ESD_Render_BitmapRotate_Scaled(ESD_BitmapCell bitmapCell, ft_argb32_t c, ES
 		int16_t x = globalRect.X; // + x_center;
 		int16_t y = globalRect.Y; // + y_center;
 
-		ESD_Dl_colorArgb(c);
+		EVE_CoDl_colorArgb_ex(phost, c);
 
 		if (EVE_CHIPID >= EVE_FT810)
-			ESD_Dl_VERTEX_FORMAT(4);
+			EVE_CoDl_vertexFormat(phost, 4);
 
-		ESD_Dl_Bitmap_WidthHeight_BILINEAR(handle, bitmapInfo->Width, bitmapInfo->Height);
-		ESD_Dl_CELL_Paged(handle, cell);
+		ESD_CoDl_bitmapSize(handle, BILINEAR, BORDER, BORDER, bitmapInfo->Width, bitmapInfo->Height);
+		ESD_CoDl_pagedCell(handle, cell);
 
-		ESD_Dl_SAVE_CONTEXT();
+		EVE_CoDl_saveContext(phost);
 		EVE_CoCmd_loadIdentity(ESD_Host);
 		EVE_CoCmd_translate(ESD_Host, x_center << 16, y_center << 16);
 		EVE_CoCmd_scale(ESD_Host, xscale, yscale);
@@ -302,10 +306,10 @@ void ESD_Render_BitmapRotate_Scaled(ESD_BitmapCell bitmapCell, ft_argb32_t c, ES
 		EVE_CoCmd_translate(ESD_Host, -x_center << 16, -y_center << 16);
 		EVE_CoCmd_setMatrix(ESD_Host);
 		EVE_CoCmd_loadIdentity(ESD_Host);
-		ESD_Dl_BEGIN(BITMAPS);
+		EVE_CoDl_begin(phost, BITMAPS);
 		EVE_CoCmd_dl(ESD_Host, VERTEX2F(x * 16, y * 16));
-		ESD_Dl_END();
-		ESD_Dl_RESTORE_CONTEXT();
+		EVE_CoDl_end(phost);
+		EVE_CoDl_restoreContext(phost);
 	}
 }
 
@@ -322,7 +326,7 @@ void ESD_Render_BitmapRotate(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_Rect1
 
 	bitmapInfo = bitmapCell.Info;
 	cell = bitmapCell.Cell;
-	handle = ESD_Dl_Bitmap_Setup(bitmapInfo);
+	handle = ESD_CoDl_setupBitmap(bitmapInfo);
 
 	if (ESD_BITMAPHANDLE_VALID(handle))
 	{
@@ -337,16 +341,16 @@ void ESD_Render_BitmapRotate(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_Rect1
 
 		int tilenumber = 0;
 		const int TITLE_SIZE = 64; //Magic number, DONOT CHANGE
-		ESD_Dl_colorArgb(c);
-		ESD_Dl_SAVE_CONTEXT();
+		EVE_CoDl_colorArgb_ex(phost, c);
+		EVE_CoDl_saveContext(phost);
 
-		ESD_Dl_Bitmap_WidthHeight_BILINEAR(handle, TITLE_SIZE, TITLE_SIZE); //Bitmap_Size command
+		ESD_CoDl_bitmapSize(handle, BILINEAR, BORDER, BORDER, TITLE_SIZE, TITLE_SIZE); //Bitmap_Size command
 
-		ESD_Dl_BEGIN(BITMAPS);
+		EVE_CoDl_begin(phost, BITMAPS);
 
 		if (EVE_CHIPID >= EVE_FT810)
-			ESD_Dl_VERTEX_FORMAT(4);
-		ESD_Dl_CELL_Paged(handle, cell);
+			EVE_CoDl_vertexFormat(phost, 4);
+		ESD_CoDl_pagedCell(handle, cell);
 		scope
 		{
 			int dx, dy;
@@ -370,7 +374,7 @@ void ESD_Render_BitmapRotate(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_Rect1
 		}
 		//eve_printf_debug("draw tile %d\n",tilenumber);
 		EVE_CoCmd_loadIdentity(ESD_Host);
-		ESD_Dl_RESTORE_CONTEXT();
+		EVE_CoDl_restoreContext(phost);
 	}
 }
 

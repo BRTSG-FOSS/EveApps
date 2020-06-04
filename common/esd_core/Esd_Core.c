@@ -149,7 +149,7 @@ void ESD_initialize(ESD_Context *ec, Esd_Parameters *ep)
 
 #ifndef ESD_SIMULATION
 	// TODO: Store calibration somewhere!
-	if (!Esd_Calibrate())
+	if (!ESD_calibrate())
 	{
 		eve_printf_debug("Calibrate failed\n");
 	}
@@ -158,7 +158,7 @@ void ESD_initialize(ESD_Context *ec, Esd_Parameters *ep)
 	ec->GpuAlloc.RamGSize = RAM_G_SIZE;
 	ESD_GpuAlloc_Reset(&ec->GpuAlloc);
 
-	Esd_BitmapHandle_Initialize();
+	ESD_BitmapHandle_initialize();
 }
 
 // !!! NOTE:
@@ -215,7 +215,7 @@ void ESD_start(ESD_Context *ec)
 	// Initialize storage
 	EVE_Util_loadSdCard(&ec->HalContext);
 #if defined(EVE_FLASH_AVAILABLE)
-	Esd_AttachFlashFast();
+	ESD_attachFlashFast();
 #endif
 
 	// Initialize application
@@ -232,7 +232,7 @@ void ESD_update(ESD_Context *ec)
 	// EVE_CoCmd_loadIdentity(phost); // ?
 	Esd_ResetGpuState();
 	// ESD_Widget_ProcessFree(); // TODO: Link this back up!!!
-	Esd_BitmapHandle_FrameStart(&ec->HandleState);
+	ESD_BitmapHandle_frameStart(&ec->HandleState);
 
 	if (ec->ShowLogo)
 		return;
@@ -242,7 +242,7 @@ void ESD_update(ESD_Context *ec)
 	// Verify initialization
 	EVE_Util_loadSdCard(phost); // Does this really need phost???
 #if defined(EVE_FLASH_AVAILABLE)
-	Esd_AttachFlashFast();
+	ESD_attachFlashFast();
 #endif
 
 	// Idle at least once every frame
@@ -278,14 +278,14 @@ void ESD_render(ESD_Context *ec)
 	{
 		ec->ShowLogo = false;
 		ec->ShowingLogo = true;
-		Esd_BeginLogo();
+		ESD_beginLogo();
 		return;
 	}
 
 	if (ec->ShowingLogo)
 	{
 		ec->ShowingLogo = false;
-		Esd_EndLogo();
+		ESD_endLogo();
 	}
 
 	// Process all coprocessor commands
@@ -301,7 +301,7 @@ void ESD_render(ESD_Context *ec)
 	if (ec->SpinnerPopup)
 	{
 		// Spinner used for switching longer loading pages with bitmaps etc
-		ESD_Dl_COLOR_RGB(~(ec->ClearColor));
+		EVE_CoDl_colorRgb_ex(phost, ~(ec->ClearColor));
 		// FIXME 2020 JUN 04: Spinner with ownership -- ESD_CoCmd_spinner(ESD_update, phost->Width >> 1, phost->Height >> 1, 0, 0);
 		ec->SpinnerPopup = false;
 		ec->SpinnerPopped = true;
@@ -336,7 +336,7 @@ bool ESD_waitSwap(ESD_Context *ec)
 	{
 		/* TODO: Create a utility function that resets the coprocessor and all cached state */
 		EVE_Util_resetCoprocessor(&ec->HalContext);
-		Esd_BitmapHandle_Reset(&ec->HandleState);
+		ESD_BitmapHandle_reset(&ec->HandleState);
 
 #if _DEBUG
 		/* Show error for a while */

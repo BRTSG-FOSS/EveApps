@@ -57,11 +57,11 @@ void Esd_Render_Circle_Stroke(
 		// TODO: This is just a circle
 	}
 
-	// Use local rendering context, bypass ESD display list functions.
-	EVE_CoCmd_dl(phost, BEGIN(POINTS));
-	ESD_Dl_colorArgb(color);
-	if (EVE_CHIPID >= EVE_FT810)
-		EVE_CoCmd_dl(phost, VERTEX_FORMAT(4));
+	EVE_CoDl_begin(phost, POINTS);
+	EVE_CoDl_colorArgb_ex(phost, color);
+	EVE_CoDl_vertexFormat(phost, 4);
+
+	// Use local rendering context, bypass EVE_CoDl display list functions.
 	EVE_CoCmd_dl(phost, SAVE_CONTEXT());
 
 	// Outer reset
@@ -98,9 +98,10 @@ void Esd_Render_Circle_Stroke(
 	EVE_CoCmd_dl(phost, POINT_SIZE(outerRadius));
 	EVE_CoCmd_dl(phost, VERTEX2F(x, y));
 
-	// Restore rendering context, ESD display list optimizations functions should be used again after this.
+	// Restore rendering context, EVE_CoDl display list optimizations functions should be used again after this.
 	EVE_CoCmd_dl(phost, RESTORE_CONTEXT());
-	EVE_CoCmd_dl(phost, END());
+
+	EVE_CoDl_end(phost);
 }
 
 /* end of file */

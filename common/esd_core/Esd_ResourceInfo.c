@@ -142,10 +142,10 @@ uint32_t Esd_LoadResource(Esd_ResourceInfo *resourceInfo, uint32_t *imageFormat)
 			loaded = EVE_CoCmd_flashRead(ESD_Host, addr, resourceInfo->FlashAddress, resourceInfo->StorageSize << 2);
 			break;
 		case ESD_RESOURCE_DEFLATE:
-			loaded = EVE_CoCmd_inflate_Flash(ESD_Host, addr, resourceInfo->FlashAddress);
+			loaded = EVE_CoCmd_inflate_flash(ESD_Host, addr, resourceInfo->FlashAddress);
 			break;
 		case ESD_RESOURCE_IMAGE:
-			loaded = EVE_CoCmd_loadImage_Flash(ESD_Host, addr, resourceInfo->FlashAddress, imageFormat);
+			loaded = EVE_CoCmd_loadImage_flash(ESD_Host, addr, resourceInfo->FlashAddress, imageFormat);
 			break;
 		}
 		break;
