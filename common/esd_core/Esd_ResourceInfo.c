@@ -120,14 +120,14 @@ uint32_t Esd_LoadResource(Esd_ResourceInfo *resourceInfo, uint32_t *imageFormat)
 		switch (resourceInfo->Compressed)
 		{
 		case ESD_RESOURCE_RAW:
-			EVE_Hal_wrMem_ProgMem(ESD_Host, addr, resourceInfo->ProgMem, resourceInfo->StorageSize << 2);
+			EVE_Hal_wrProgmem(ESD_Host, addr, resourceInfo->ProgMem, resourceInfo->StorageSize << 2);
 			loaded = true;
 			break;
 		case ESD_RESOURCE_DEFLATE:
-			loaded = EVE_CoCmd_inflate_ProgMem(ESD_Host, addr, resourceInfo->ProgMem, resourceInfo->StorageSize << 2);
+			loaded = EVE_CoCmd_inflate_progMem(ESD_Host, addr, resourceInfo->ProgMem, resourceInfo->StorageSize << 2);
 			break;
 		case ESD_RESOURCE_IMAGE:
-			loaded = EVE_CoCmd_loadImage_ProgMem(ESD_Host, addr, resourceInfo->ProgMem, resourceInfo->StorageSize << 2, imageFormat);
+			loaded = EVE_CoCmd_loadImage_progMem(ESD_Host, addr, resourceInfo->ProgMem, resourceInfo->StorageSize << 2, imageFormat);
 			break;
 		}
 		break;
