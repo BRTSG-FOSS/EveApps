@@ -86,9 +86,9 @@ void ESD_setCurrent(ESD_Context *ec)
 	ESD_GAlloc = &ec->GpuAlloc;
 }
 
-void ESD_defaults(Esd_Parameters *ep)
+void ESD_defaults(ESD_Parameters *ep)
 {
-	memset(ep, 0, sizeof(Esd_Parameters));
+	memset(ep, 0, sizeof(ESD_Parameters));
 }
 
 bool cbCmdWait(struct EVE_HalContext *phost)
@@ -111,10 +111,22 @@ bool cbCmdWait(struct EVE_HalContext *phost)
 #endif
 }
 
-void ESD_initialize(ESD_Context *ec, Esd_Parameters *ep)
+void ESD_initialize()
 {
-	// FIXME: separate ESD_initialize and ESD_open
+	EVE_Hal_initialize();
 
+#ifdef ESD_SIMULATION
+	eve_printf_debug("\f"); // Shows horizontal line in ESD output window
+#endif
+	eve_printf_debug(FT_WELCOME_MESSAGE);
+
+#if _DEBUG
+	Esd_CheckTypeSizes();
+#endif
+}
+
+void ESD_open(ESD_Context *ec, ESD_Parameters *ep)
+{
 	memset(ec, 0, sizeof(ESD_Context));
 	ec->ClearColor = 0x212121;
 	ec->Start = (void (*)(void *))ep->Start;
@@ -125,17 +137,7 @@ void ESD_initialize(ESD_Context *ec, Esd_Parameters *ep)
 	ec->UserContext = ep->UserContext;
 	ESD_setCurrent(ec);
 
-	EVE_Hal_initialize();
-	// EVE_Hal_list();
-
-#ifdef ESD_SIMULATION
-	eve_printf_debug("\f"); // Shows horizontal line in ESD output window
-#endif
-	eve_printf_debug(FT_WELCOME_MESSAGE);
-
-#if _DEBUG
-	Esd_CheckTypeSizes();
-#endif
+	// TODO: Use interactive launch and adjust launch for emulator flash
 
 	EVE_HalParameters parameters;
 	EVE_Hal_defaults(&parameters);
@@ -148,7 +150,7 @@ void ESD_initialize(ESD_Context *ec, Esd_Parameters *ep)
 	EVE_Util_bootupConfig(phost);
 
 #ifndef ESD_SIMULATION
-	// TODO: Store calibration somewhere!
+	// TODO: Store calibration somewhere
 	if (!ESD_calibrate())
 	{
 		eve_printf_debug("Calibrate failed\n");

@@ -84,7 +84,7 @@ typedef struct
 	void (*End)(void *context);
 	void *UserContext;
 
-} Esd_Parameters;
+} ESD_Parameters;
 
 #ifndef ESD_EXTERN_LIBARY
 #define ESD_EXTERN_LIBARY
@@ -101,10 +101,12 @@ extern ESD_EXTERN_LIBARY ESD_GpuAlloc *ESD_GAlloc; //< Pointer to current alloca
 
 void ESD_setCurrent(ESD_Context *ec);
 
-void ESD_defaults(Esd_Parameters *ep);
-void ESD_initialize(ESD_Context *ec, Esd_Parameters *ep);
-void ESD_close(ESD_Context *ec);
+void ESD_initialize();
 void ESD_release();
+
+void ESD_defaults(ESD_Parameters *ep);
+void ESD_open(ESD_Context *ec, ESD_Parameters *ep);
+void ESD_close(ESD_Context *ec);
 
 /// Main loop, calls ESD_start, ESD_update, ESD_waitSwap, and ESD_stop
 void ESD_loop(ESD_Context *ec);

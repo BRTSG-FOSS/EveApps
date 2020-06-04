@@ -89,7 +89,7 @@ static void Main_End(void *context) { Ft_Main__End__ESD(); }
 /* Main entry point */
 int32_t main(int32_t argc, char *argv[])
 {
-	Esd_Parameters ep;
+	ESD_Parameters ep;
 	ESD_defaults(&ep);
 	ep.Start = Main_Start;
 	ep.Update = Main_Update;
@@ -97,7 +97,8 @@ int32_t main(int32_t argc, char *argv[])
 	ep.Idle = Main_Idle;
 	ep.End = Main_End;
 	ESD_Context ec;
-	ESD_initialize(&ec, &ep);
+	ESD_initialize();
+	ESD_open(&ec, &ep);
 	ESD_loop(&ec);
 	ESD_close(&ec);
 	ESD_release();
