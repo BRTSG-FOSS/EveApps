@@ -110,6 +110,6 @@ void ESD_GpuAlloc_Print(ESD_GpuAlloc *ga);
 	} while (0)
 #endif
 
-#endif /* #ifndef ESD_GPUALLOC_H */
+#endif /* #ifndef ESD_GPUALLOC__H */
 
 /* end of file */

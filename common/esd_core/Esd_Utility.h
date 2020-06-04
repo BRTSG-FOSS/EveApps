@@ -43,6 +43,6 @@ void ESD_endLogo();
 
 bool ESD_calibrate();
 
-#endif /* #ifndef ESD_UTILITY_H */
+#endif /* #ifndef ESD_UTILITY__H */
 
 /* end of file */

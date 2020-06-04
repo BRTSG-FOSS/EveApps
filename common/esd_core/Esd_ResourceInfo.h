@@ -108,6 +108,6 @@ void Esd_ResourcePersist(Esd_ResourceInfo *resourceInfo);
 /// Check if a format is an ASTC format
 #define ESD_IS_FORMAT_ASTC(format) ((format & 0xFFF0) == 0x93B0)
 
-#endif /* #ifndef ESD_FONTINFO_H */
+#endif /* #ifndef ESD_FONTINFO__H */
 
 /* end of file */

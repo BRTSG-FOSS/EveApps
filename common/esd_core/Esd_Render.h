@@ -265,6 +265,6 @@ ESD_ENUM(Esd_Stroke, Type = uint8_t)
 #define ESD_STROKE_CENTER (3)
 ESD_END()
 
-#endif /* #ifndef ESD_PRIMITIVES_H */
+#endif /* #ifndef ESD_PRIMITIVES__H */
 
 /* Nothing beyond this */

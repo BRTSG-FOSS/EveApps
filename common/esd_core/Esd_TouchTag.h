@@ -115,6 +115,6 @@ ESD_PARAMETER(context, Type = ESD_TouchTag *, Static)
 
 ESD_TYPE(ESD_TouchTag *, Native = Pointer, Edit = None)
 
-#endif /* ESD_TOUCHTAG_H */
+#endif /* ESD_TOUCHTAG__H */
 
 /* Nothing beyond this */

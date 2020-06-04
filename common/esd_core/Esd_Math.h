@@ -119,6 +119,6 @@ ESD_PARAMETER(min, Type = float, Default = 0)
 ESD_PARAMETER(max, Type = float, Default = 100)
 #define ESD_Float_ClampedValue(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
 
-#endif /* ESD_MATH_H */
+#endif /* ESD_MATH__H */
 
 /* end of file */

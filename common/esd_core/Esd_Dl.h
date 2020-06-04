@@ -87,6 +87,6 @@ ESD_PARAMETER(w, Type = int16_t, Default = 60)
 ESD_PARAMETER(h, Type = int16_t, Default = 20)
 void ESD_Render_Rect(int16_t x, int16_t y, int16_t w, int16_t h);
 
-#endif /* #ifndef ESD_DL_H */
+#endif /* #ifndef ESD_DL__H */
 
 /* end of file */

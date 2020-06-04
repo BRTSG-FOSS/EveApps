@@ -173,6 +173,6 @@ static inline int32_t ESD_BitmapInfo_getHeight(ESD_BitmapInfo *bitmapInfo)
 	return bitmapInfo->Height;
 }
 
-#endif /* #ifndef ESD_BITMAPINFO_H */
+#endif /* #ifndef ESD_BITMAPINFO__H */
 
 /* end of file */

@@ -95,6 +95,6 @@ ESD_UPDATE(Esd_FontPersist, DisplayName = "Persist Font", Category = EsdUtilitie
 ESD_PARAMETER(fontInfo, Type = Esd_FontInfo *)
 void Esd_FontPersist(Esd_FontInfo *fontInfo);
 
-#endif /* #ifndef ESD_FONTINFO_H */
+#endif /* #ifndef ESD_FONTINFO__H */
 
 /* end of file */

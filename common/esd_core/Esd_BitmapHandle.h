@@ -78,6 +78,6 @@ uint16_t ESD_getFontCapsHeight(Esd_FontInfo *fontInfo);
 
 /* end of supported functions */
 
-#endif /* #ifndef ESD_BITMAPHANDLE_H */
+#endif /* #ifndef ESD_BITMAPHANDLE__H */
 
 /* end of file */
