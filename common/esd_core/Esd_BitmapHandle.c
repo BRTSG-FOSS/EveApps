@@ -185,7 +185,7 @@ uint8_t ESD_CoDl_setupBitmap(ESD_BitmapInfo *bitmapInfo)
 {
 	// Get bitmap address
 	EVE_HalContext *phost = ESD_Host;
-	uint32_t addr = ESD_LoadBitmap(bitmapInfo);
+	uint32_t addr = ESD_loadBitmap(bitmapInfo);
 	(void)phost;
 	if (addr == GA_INVALID)
 		return ESD_BITMAPHANDLE_INVALID; // Bitmap not loaded (out of memory or file not found)
@@ -273,7 +273,7 @@ uint8_t ESD_CoDl_setupBitmap(ESD_BitmapInfo *bitmapInfo)
 	if (EVE_CHIPID >= EVE_FT810)
 	{
 		// Use palette if available
-		uint32_t paletteAddr = ESD_LoadPalette(bitmapInfo);
+		uint32_t paletteAddr = ESD_loadPalette(bitmapInfo);
 		if (paletteAddr != GA_INVALID && bitmapInfo->Format != PALETTED8) // PALETTED8 uses custom palette setup
 		{
 			EVE_CoDl_paletteSource(phost, paletteAddr);

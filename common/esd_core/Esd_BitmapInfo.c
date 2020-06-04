@@ -37,7 +37,7 @@ static bool ESD_LoadFromFlash(uint32_t *imageFormat, bool deflate, uint32_t dst,
 
 #endif
 
-uint32_t ESD_LoadBitmap(ESD_BitmapInfo *bitmapInfo)
+uint32_t ESD_loadBitmap(ESD_BitmapInfo *bitmapInfo)
 {
 	EVE_HalContext *phost = ESD_Host;
 	uint32_t addr;
@@ -157,7 +157,7 @@ uint32_t ESD_LoadBitmap(ESD_BitmapInfo *bitmapInfo)
 	return addr;
 }
 
-uint32_t ESD_LoadPalette(ESD_BitmapInfo *bitmapInfo)
+uint32_t ESD_loadPalette(ESD_BitmapInfo *bitmapInfo)
 {
 	EVE_HalContext *phost = ESD_Host;
 	uint32_t addr;
@@ -258,18 +258,18 @@ uint32_t ESD_LoadPalette(ESD_BitmapInfo *bitmapInfo)
 	return addr;
 }
 
-ESD_BitmapCell ESD_SwitchBitmapCell(ESD_BitmapCell bitmapCell, uint16_t cell)
+ESD_BitmapCell ESD_BitmapCell_switched(ESD_BitmapCell bitmapCell, uint16_t cell)
 {
 	bitmapCell.Cell = cell;
 	return bitmapCell;
 }
 
-void ESD_BitmapPersist(ESD_BitmapCell bitmapCell)
+void ESD_BitmapCell_persist(ESD_BitmapCell bitmapCell)
 {
 	if (bitmapCell.Info)
 	{
-		ESD_LoadBitmap(bitmapCell.Info);
-		ESD_LoadPalette(bitmapCell.Info);
+		ESD_loadBitmap(bitmapCell.Info);
+		ESD_loadPalette(bitmapCell.Info);
 	}
 }
 

@@ -89,14 +89,14 @@ typedef struct
 ESD_TYPE(ESD_BitmapCell *, Native = Pointer, Edit = Library)
 
 /// A function to load bitmap data(not including palette data) into RAM_G
-ESD_FUNCTION(ESD_LoadBitmap, Type = uint32_t, Include = "ESD_BitmapInfo.h", DisplayName = "Load Bitmap to RAM_G", Category = EsdUtilities)
+ESD_FUNCTION(ESD_loadBitmap, Type = uint32_t, Include = "ESD_BitmapInfo.h", DisplayName = "Load Bitmap to RAM_G", Category = EsdUtilities)
 ESD_PARAMETER(bitmapInfo, Type = ESD_BitmapInfo *)
-uint32_t ESD_LoadBitmap(ESD_BitmapInfo *bitmapInfo);
+uint32_t ESD_loadBitmap(ESD_BitmapInfo *bitmapInfo);
 
 /// A function to load palette data of bitmap into RAM_G
-ESD_FUNCTION(ESD_LoadPalette, Type = uint32_t, Include = "ESD_BitmapInfo.h", DisplayName = "Load Palette to RAM_G", Category = EsdUtilities)
+ESD_FUNCTION(ESD_loadPalette, Type = uint32_t, Include = "ESD_BitmapInfo.h", DisplayName = "Load Palette to RAM_G", Category = EsdUtilities)
 ESD_PARAMETER(bitmapInfo, Type = ESD_BitmapInfo *)
-uint32_t ESD_LoadPalette(ESD_BitmapInfo *bitmapInfo);
+uint32_t ESD_loadPalette(ESD_BitmapInfo *bitmapInfo);
 
 ESD_ENUM(_BitmapResourceFormat, DisplayName = "Bitmap Format")
 // Hardware bitmap formats
@@ -135,28 +135,28 @@ ESD_IDENTIFIER(COMPRESSED_RGBA_ASTC_12x12_KHR)
 ESD_END()
 
 ///  Switch bitmap cell number
-ESD_FUNCTION(ESD_SwitchBitmapCell, Type = ESD_BitmapCell, DisplayName = "Switch Bitmap Cell", Category = EsdUtilities)
+ESD_FUNCTION(ESD_BitmapCell_switched, Type = ESD_BitmapCell, DisplayName = "Switch Bitmap Cell", Category = EsdUtilities)
 ESD_PARAMETER(BitmapInfo, Type = ESD_BitmapCell, DisplayName = "Bitmap Cell")
 ESD_PARAMETER(Cell, Type = uint16_t, DisplayName = "Cell")
-ESD_BitmapCell ESD_SwitchBitmapCell(ESD_BitmapCell bitmapCell, uint16_t cell);
+ESD_BitmapCell ESD_BitmapCell_switched(ESD_BitmapCell bitmapCell, uint16_t cell);
 
 /// A function to make bitmap persistent in memory by reloading the data if necessary, called during the Update cycle of each frame
-ESD_UPDATE(ESD_BitmapPersist, DisplayName = "Persist Bitmap", Category = EsdUtilities)
+ESD_UPDATE(ESD_BitmapCell_persist, DisplayName = "Persist Bitmap", Category = EsdUtilities)
 ESD_PARAMETER(bitmapCell, Type = ESD_BitmapCell)
-void ESD_BitmapPersist(ESD_BitmapCell bitmapCell);
+void ESD_BitmapCell_persist(ESD_BitmapCell bitmapCell);
 
 /// A function to get bitmap information structure from bitmap cell
-ESD_FUNCTION(ESD_BitmapCell_GetInfo, Type = ESD_BitmapInfo *, DisplayName = "ESD BitmapCell GetInfo", Category = EsdUtilities, Inline)
+ESD_FUNCTION(ESD_BitmapCell_getInfo, Type = ESD_BitmapInfo *, DisplayName = "ESD BitmapCell GetInfo", Category = EsdUtilities, Inline)
 ESD_PARAMETER(bitmapCell, Type = ESD_BitmapCell)
-static inline ESD_BitmapInfo *ESD_BitmapCell_GetInfo(ESD_BitmapCell bitmapCell)
+static inline ESD_BitmapInfo *ESD_BitmapCell_getInfo(ESD_BitmapCell bitmapCell)
 {
 	return bitmapCell.Info;
 }
 
 /// A function to get the bitmap width from bitmap information. Returns width of 1 pixel for NULL bitmapInfo
-ESD_FUNCTION(ESD_BitmapInfo_GetWidth, Type = int32_t, DisplayName = "ESD BitmapInfo GetWidth", Category = EsdUtilities, Inline)
+ESD_FUNCTION(ESD_BitmapInfo_getWidth, Type = int32_t, DisplayName = "ESD BitmapInfo GetWidth", Category = EsdUtilities, Inline)
 ESD_PARAMETER(bitmapInfo, Type = ESD_BitmapInfo *)
-static inline int32_t ESD_BitmapInfo_GetWidth(ESD_BitmapInfo *bitmapInfo)
+static inline int32_t ESD_BitmapInfo_getWidth(ESD_BitmapInfo *bitmapInfo)
 {
 	if (!bitmapInfo)
 		return 1;
@@ -164,9 +164,9 @@ static inline int32_t ESD_BitmapInfo_GetWidth(ESD_BitmapInfo *bitmapInfo)
 }
 
 /// A function to get the bitmap height from bitmap information. Returns height of 1 pixel for NULL bitmapInfo
-ESD_FUNCTION(ESD_BitmapInfo_GetHeight, Type = int32_t, DisplayName = "ESD BitmapInfo GetHeight", Category = EsdUtilities, Inline)
+ESD_FUNCTION(ESD_BitmapInfo_getHeight, Type = int32_t, DisplayName = "ESD BitmapInfo GetHeight", Category = EsdUtilities, Inline)
 ESD_PARAMETER(bitmapInfo, Type = ESD_BitmapInfo *)
-static inline int32_t ESD_BitmapInfo_GetHeight(ESD_BitmapInfo *bitmapInfo)
+static inline int32_t ESD_BitmapInfo_getHeight(ESD_BitmapInfo *bitmapInfo)
 {
 	if (!bitmapInfo)
 		return 1;

@@ -146,7 +146,7 @@ void ESD_Render_Bitmap(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, ft_argb3
 		{
 			uint32_t paletteAddr;
 			EVE_CoDl_saveContext(phost);
-			paletteAddr = ESD_LoadPalette(bitmapInfo);
+			paletteAddr = ESD_loadPalette(bitmapInfo);
 			ESD_Dl_Bitmap_Vertex_PALETTED8(x, y, handle, cell, paletteAddr);
 			if (ESD_BITMAPHANDLE_VALID(additional))
 				ESD_Dl_Bitmap_Vertex_PALETTED8(x, y, additional, cell, paletteAddr);
@@ -203,7 +203,7 @@ void ESD_Render_BitmapScaled(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, ft
 		EVE_CoDl_begin(phost, BITMAPS);
 		if ((EVE_CHIPID >= EVE_FT810) && (bitmapInfo->Format == PALETTED8))
 		{
-			uint32_t paletteAddr = ESD_LoadPalette(bitmapInfo);
+			uint32_t paletteAddr = ESD_loadPalette(bitmapInfo);
 			ESD_Dl_Bitmap_Vertex_PALETTED8(x, y, handle, cell, paletteAddr);
 			if (ESD_BITMAPHANDLE_VALID(additional))
 				ESD_Dl_Bitmap_Vertex_PALETTED8(x, y, additional, cell, paletteAddr);
