@@ -64,7 +64,7 @@ typedef struct ESD_FontInfo // (40 bytes) (56 bytes on 64 bit)
 #pragma ESD_TYPE(ESD_FontInfo *, Native = Pointer, Edit = Library)
 
 // Reduced ESD FontInfo structure with binary compatible type header, specific for ROM fonts
-typedef struct ESD_RomFontInfo // (4 bytes)
+typedef struct ESD_RomFontInfo // (8 bytes)
 {
 	// (Runtime) Bitmap handle that is being used
 	uint8_t BitmapHandle : 6;

@@ -131,6 +131,10 @@ ESD_Callback ESD_HookEnd__ESD(ESD_Context *ec, ESD_Callback end);
 
 ESD_CORE_EXPORT void ESD_Open(ESD_Context *ec, ESD_Parameters *ep)
 {
+	EVE_HalContext *phost;
+	EVE_CHIPID_T chipId;
+	size_t deviceIdx;
+
 	memset(ec, 0, sizeof(ESD_Context));
 	ec->ClearColor = 0x212121;
 	ec->Start = ep->Start;
@@ -150,10 +154,6 @@ ESD_CORE_EXPORT void ESD_Open(ESD_Context *ec, ESD_Parameters *ep)
 	ec->End = ESD_HookStart__ESD(ec, ec->End);
 #endif
 
-	// TODO: Use interactive launch and adjust launch for emulator flash
-	EVE_CHIPID_T chipId;
-	size_t deviceIdx;
-
 #ifdef ESD_SIMULATION
 	chipId = EVE_SUPPORT_CHIPID;
 	deviceIdx = -1;
@@ -162,13 +162,15 @@ ESD_CORE_EXPORT void ESD_Open(ESD_Context *ec, ESD_Parameters *ep)
 	EVE_Util_selectDeviceInteractive(&chipId, &deviceIdx);
 #endif
 
-	EVE_HalParameters parameters;
-	EVE_Hal_defaultsEx(&parameters, deviceIdx);
-	parameters.UserContext = ec;
-	parameters.CbCmdWait = cbCmdWait;
-	eve_assert_do(EVE_Hal_open(&ec->HalContext, &parameters));
+	{
+		EVE_HalParameters parameters;
+		EVE_Hal_defaultsEx(&parameters, deviceIdx);
+		parameters.UserContext = ec;
+		parameters.CbCmdWait = cbCmdWait;
+		eve_assert_do(EVE_Hal_open(&ec->HalContext, &parameters));
+	}
 
-	EVE_HalContext *phost = &ec->HalContext;
+	phost = &ec->HalContext;
 #if ESD_SIMULATION
 	eve_assert_do(EVE_Util_bootupConfig(phost));
 #else
@@ -211,8 +213,8 @@ ESD_CORE_EXPORT void ESD_Release()
 
 ESD_CORE_EXPORT void ESD_Loop(ESD_Context *ec)
 {
-	ESD_SetCurrent(ec);
 	EVE_HalContext *phost = &ec->HalContext;
+	ESD_SetCurrent(ec);
 	(void)phost;
 
 	if (!ESD_IsRunning__ESD() || ec->RequestStop)
@@ -253,8 +255,10 @@ ESD_CORE_EXPORT void ESD_Start(ESD_Context *ec)
 
 ESD_CORE_EXPORT void ESD_Update(ESD_Context *ec)
 {
-	ESD_SetCurrent(ec);
+	uint32_t ms;
+
 	EVE_HalContext *phost = &ec->HalContext;
+	ESD_SetCurrent(ec);
 
 	// Restore initial frame values
 	// EVE_CoCmd_loadIdentity(phost); // ?
@@ -284,7 +288,7 @@ ESD_CORE_EXPORT void ESD_Update(ESD_Context *ec)
 
 	// Update GUI state before render
 	ec->LoopState = ESD_LOOPSTATE_UPDATE;
-	uint32_t ms = EVE_millis(); // Calculate frame time delta
+	ms = EVE_millis(); // Calculate frame time delta
 	ec->DeltaMs = ms - ec->Millis;
 	ec->Millis = ms;
 	ESD_GpuAlloc_Update(ESD_GAlloc); // Run GC
@@ -299,8 +303,8 @@ ESD_CORE_EXPORT void ESD_Update(ESD_Context *ec)
 
 ESD_CORE_EXPORT void ESD_Render(ESD_Context *ec)
 {
-	ESD_SetCurrent(ec);
 	EVE_HalContext *phost = &ec->HalContext;
+	ESD_SetCurrent(ec);
 
 	if (ec->ShowLogo)
 	{
@@ -352,8 +356,8 @@ ESD_CORE_EXPORT void ESD_Render(ESD_Context *ec)
 
 ESD_CORE_EXPORT bool ESD_WaitSwap(ESD_Context *ec)
 {
-	ESD_SetCurrent(ec);
 	EVE_HalContext *phost = &ec->HalContext;
+	ESD_SetCurrent(ec);
 	(void)phost;
 
 	ec->SwapIdled = false;

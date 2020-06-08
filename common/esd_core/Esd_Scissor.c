@@ -36,12 +36,11 @@ ESD_CORE_EXPORT ESD_Rect16 ESD_Scissor_Set(ESD_Rect16 rect)
 ESD_CORE_EXPORT void ESD_Scissor_Adjust(ESD_Rect16 rect, ESD_Rect16 state)
 {
 	EVE_HalContext *phost = ESD_GetHost();
-	(void)phost;
-
 	int16_t x1diff;
 	int16_t y1diff;
 	int16_t x2diff;
 	int16_t y2diff;
+	(void)phost;
 
 	x1diff = (state.X - rect.X); // old x1 - new x1
 	if (x1diff > 0) // old x1 > new x1

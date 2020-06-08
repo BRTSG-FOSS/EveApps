@@ -31,7 +31,7 @@ typedef struct
 	// Variables
 	//
 	int Tag;
-	int Set;
+	bool Set;
 
 } ESD_TouchTag;
 

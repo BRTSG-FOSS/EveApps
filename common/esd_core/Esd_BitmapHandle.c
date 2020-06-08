@@ -31,6 +31,32 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 #define ESD_ROMFONT_MIN 16UL // Min, rom font handle, inclusive
 #define ESD_ROMFONT_NBCAP (ESD_ROMFONT_CAP - ESD_ROMFONT_MIN)
 #define ESD_ROMFONT_NB (ESD_ROMFONT_MAX - ESD_ROMFONT_MIN)
+#if defined(_MSC_VER) && (_MSC_VER < 1800)
+/* Designated initializers not supported in older Visual Studio versions */
+static ESD_RomFontInfo s_RomFonts[ESD_ROMFONT_NBCAP] = {
+	{ 0, ESD_FONT_ROM, 16UL, 0, 0, 0 },
+	{ 0, ESD_FONT_ROM, 17UL, 0, 0, 0 },
+	{ 0, ESD_FONT_ROM, 18UL, 0, 0, 0 },
+	{ 0, ESD_FONT_ROM, 19UL, 0, 0, 0 },
+	{ 0, ESD_FONT_ROM, 20UL, 0, 0, 0 },
+	{ 0, ESD_FONT_ROM, 21UL, 0, 0, 0 },
+	{ 0, ESD_FONT_ROM, 22UL, 0, 0, 0 },
+	{ 0, ESD_FONT_ROM, 23UL, 0, 0, 0 },
+	{ 0, ESD_FONT_ROM, 24UL, 0, 0, 0 },
+	{ 0, ESD_FONT_ROM, 25UL, 0, 0, 0 },
+	{ 0, ESD_FONT_ROM, 26UL, 0, 0, 0 },
+	{ 0, ESD_FONT_ROM, 27UL, 0, 0, 0 },
+	{ 0, ESD_FONT_ROM, 28UL, 0, 0, 0 },
+	{ 0, ESD_FONT_ROM, 29UL, 0, 0, 0 },
+	{ 0, ESD_FONT_ROM, 30UL, 0, 0, 0 },
+	{ 0, ESD_FONT_ROM, 31UL, 0, 0, 0 },
+#if (EVE_SUPPORT_CHIPID >= EVE_FT810)
+	{ 0, ESD_FONT_ROM, 32UL, 0, 0, 0 },
+	{ 0, ESD_FONT_ROM, 33UL, 0, 0, 0 },
+	{ 0, ESD_FONT_ROM, 34UL, 0, 0, 0 },
+#endif
+};
+#else
 static ESD_RomFontInfo s_RomFonts[ESD_ROMFONT_NBCAP] = {
 	{ .Type = ESD_FONT_ROM, .RomFont = 16UL },
 	{ .Type = ESD_FONT_ROM, .RomFont = 17UL },
@@ -54,6 +80,7 @@ static ESD_RomFontInfo s_RomFonts[ESD_ROMFONT_NBCAP] = {
 	{ .Type = ESD_FONT_ROM, .RomFont = 34UL },
 #endif
 };
+#endif
 
 static void ESD_InitRomFontHeight()
 {
@@ -100,8 +127,10 @@ void ESD_BitmapHandle_Initialize()
 ESD_CORE_EXPORT void ESD_BitmapHandle_FrameStart(ESD_HandleState *handleState)
 {
 	EVE_HalContext *phost = ESD_GetHost();
+	uint32_t i;
 	(void)phost;
-	for (uint32_t i = 0; i < ESD_BITMAPHANDLE_NB; ++i)
+
+	for (i = 0; i < ESD_BITMAPHANDLE_NB; ++i)
 	{
 		// 2: In use last frame
 		// 1: Not in use anymore
@@ -126,8 +155,10 @@ ESD_CORE_EXPORT uint32_t ESD_BitmapHandle_GetTotalUsed()
 {
 	EVE_HalContext *phost = ESD_GetHost();
 	uint32_t total = 0;
+	uint32_t i;
 	(void)phost;
-	for (uint32_t i = 0; i < ESD_BITMAPHANDLE_NB; ++i)
+
+	for (i = 0; i < ESD_BITMAPHANDLE_NB; ++i)
 	{
 		if ((i != ESD_SCRATCHHANDLE) && (ESD_CurrentContext->HandleState.Use[i] > 0))
 		{
@@ -163,13 +194,15 @@ ESD_CORE_EXPORT void ESD_CoDl_PagedBitmapSource(uint8_t handle, uint8_t page)
 	EVE_HalContext *phost = ESD_GetHost();
 	if (ESD_BITMAPHANDLE_VALID(handle) && ESD_CurrentContext->HandleState.Page[handle] != page)
 	{
+		uint32_t pageAddr;
+		uint32_t pageOffset;
 		ESD_BitmapInfo *info = ESD_CurrentContext->HandleState.Info[handle];
 		uint32_t addr = ESD_GpuAlloc_Get(ESD_GAlloc, ESD_CurrentContext->HandleState.GpuHandle[handle]);
 		EVE_CoDl_bitmapHandle(phost, handle);
-		uint32_t pageOffset = ((((uint32_t)page) << 7) * info->Stride * info->Height);
+		pageOffset = ((((uint32_t)page) << 7) * info->Stride * info->Height);
 		if (EVE_CHIPID >= EVE_BT815 && ESD_IS_FORMAT_ASTC(info->Format))
 			pageOffset /= c_AstcBlockHeight[info->Format & 0xF]; // Stride under ASTC is by block row
-		uint32_t pageAddr = addr + pageOffset;
+		pageAddr = addr + pageOffset;
 		EVE_CoCmd_dl(phost, BITMAP_SOURCE(pageAddr));
 		ESD_CurrentContext->HandleState.Page[handle] = page;
 	}
@@ -188,17 +221,21 @@ ESD_CORE_EXPORT uint8_t ESD_CoDl_SetupBitmap(ESD_BitmapInfo *bitmapInfo)
 	// Get bitmap address
 	EVE_HalContext *phost = ESD_GetHost();
 	uint32_t addr = ESD_LoadBitmap(bitmapInfo);
+	uint32_t handle;
 
 	if (addr == GA_INVALID)
 		return ESD_BITMAPHANDLE_INVALID; // Bitmap not loaded (out of memory or file not found)
 
-	uint32_t handle = bitmapInfo->BitmapHandle;
+	handle = bitmapInfo->BitmapHandle;
 	if (!(ESD_BITMAPHANDLE_VALID(handle)
 	        && (handle != ESD_SCRATCHHANDLE)
 	        && (ESD_CurrentContext->HandleState.Info[handle] == bitmapInfo)
 	        && (ESD_CurrentContext->HandleState.GpuHandle[handle].Id == bitmapInfo->GpuHandle.Id)
 	        && (ESD_CurrentContext->HandleState.GpuHandle[handle].Seq == bitmapInfo->GpuHandle.Seq)))
 	{
+		uint32_t i;
+		uint32_t format;
+
 		// Bitmap is loaded but no handle is setup, create a new handle for this bitmap
 		// eve_printf_debug("Find free bitmap handle for addr %i\n", (int)addr);
 
@@ -210,7 +247,7 @@ ESD_CORE_EXPORT uint8_t ESD_CoDl_SetupBitmap(ESD_BitmapInfo *bitmapInfo)
 
 		// Find a free handle
 		handle = ESD_SCRATCHHANDLE; // Fallback to scratch handle
-		for (uint32_t i = 0; i < ESD_BITMAPHANDLE_NB; ++i)
+		for (i = 0; i < ESD_BITMAPHANDLE_NB; ++i)
 		{
 			if ((i != ESD_SCRATCHHANDLE) && (!ESD_CurrentContext->HandleState.Use[i]))
 			{
@@ -230,7 +267,7 @@ ESD_CORE_EXPORT uint8_t ESD_CoDl_SetupBitmap(ESD_BitmapInfo *bitmapInfo)
 
 		// Setup the handle
 		EVE_CoDl_bitmapHandle(phost, handle);
-		uint32_t format = bitmapInfo->Format;
+		format = bitmapInfo->Format;
 		if (format == DXT1)
 			format = L1;
 		else if (format == JPEG)
@@ -312,6 +349,7 @@ ESD_CORE_EXPORT uint8_t ESD_CoDl_SetupFont(ESD_FontInfo *fontInfo)
 			    || (ESD_CurrentContext->HandleState.GpuHandle[handle].Id != MAX_NUM_ALLOCATIONS)
 			    || (ESD_CurrentContext->HandleState.GpuHandle[handle].Seq != font))
 			{
+				uint32_t i;
 				// The handle is no longer valid, make a new one
 
 				if (ESD_CurrentContext->LoopState != ESD_LOOPSTATE_RENDER)
@@ -322,7 +360,7 @@ ESD_CORE_EXPORT uint8_t ESD_CoDl_SetupFont(ESD_FontInfo *fontInfo)
 
 				// Find a free handle
 				handle = ESD_SCRATCHHANDLE; // Fallback to scratch handle
-				for (uint32_t i = 0; i < ESD_BITMAPHANDLE_NB; ++i)
+				for (i = 0; i < ESD_BITMAPHANDLE_NB; ++i)
 				{
 					if ((i != ESD_SCRATCHHANDLE) && (!ESD_CurrentContext->HandleState.Use[i]))
 					{
@@ -367,6 +405,8 @@ ESD_CORE_EXPORT uint8_t ESD_CoDl_SetupFont(ESD_FontInfo *fontInfo)
 		    || (ESD_CurrentContext->HandleState.GpuHandle[handle].Id != fontInfo->FontResource.GpuHandle.Id)
 		    || (ESD_CurrentContext->HandleState.GpuHandle[handle].Seq != fontInfo->FontResource.GpuHandle.Seq))
 		{
+			uint32_t i;
+
 			// The handle is no longer valid, make a new one
 
 			if (ESD_CurrentContext->LoopState != ESD_LOOPSTATE_RENDER)
@@ -377,7 +417,7 @@ ESD_CORE_EXPORT uint8_t ESD_CoDl_SetupFont(ESD_FontInfo *fontInfo)
 
 			// Find a free handle
 			handle = ESD_SCRATCHHANDLE; // Fallback to scratch handle
-			for (uint32_t i = 0; i < ESD_BITMAPHANDLE_NB; ++i)
+			for (i = 0; i < ESD_BITMAPHANDLE_NB; ++i)
 			{
 				if ((i != ESD_SCRATCHHANDLE) && (!ESD_CurrentContext->HandleState.Use[i]))
 				{

@@ -104,13 +104,13 @@ ESD_CORE_EXPORT uint32_t ESD_LoadResource(ESD_ResourceInfo *resourceInfo, uint32
 		switch (resourceInfo->Compressed)
 		{
 		case ESD_RESOURCE_RAW:
-			loaded = EVE_Util_loadRawFile(ESD_Host, addr, resourceInfo->File);
+			loaded = EVE_Util_loadRawFile(phost, addr, resourceInfo->File);
 			break;
 		case ESD_RESOURCE_DEFLATE:
-			loaded = EVE_Util_loadInflateFile(ESD_Host, addr, resourceInfo->File);
+			loaded = EVE_Util_loadInflateFile(phost, addr, resourceInfo->File);
 			break;
 		case ESD_RESOURCE_IMAGE:
-			loaded = EVE_Util_loadImageFile(ESD_Host, addr, resourceInfo->File, imageFormat);
+			loaded = EVE_Util_loadImageFile(phost, addr, resourceInfo->File, imageFormat);
 			break;
 		}
 		break;
@@ -120,14 +120,14 @@ ESD_CORE_EXPORT uint32_t ESD_LoadResource(ESD_ResourceInfo *resourceInfo, uint32
 		switch (resourceInfo->Compressed)
 		{
 		case ESD_RESOURCE_RAW:
-			EVE_Hal_wrProgMem(ESD_Host, addr, resourceInfo->ProgMem, resourceInfo->StorageSize << 2);
+			EVE_Hal_wrProgMem(phost, addr, resourceInfo->ProgMem, resourceInfo->StorageSize << 2);
 			loaded = true;
 			break;
 		case ESD_RESOURCE_DEFLATE:
-			loaded = EVE_CoCmd_inflate_progMem(ESD_Host, addr, resourceInfo->ProgMem, resourceInfo->StorageSize << 2);
+			loaded = EVE_CoCmd_inflate_progMem(phost, addr, resourceInfo->ProgMem, resourceInfo->StorageSize << 2);
 			break;
 		case ESD_RESOURCE_IMAGE:
-			loaded = EVE_CoCmd_loadImage_progMem(ESD_Host, addr, resourceInfo->ProgMem, resourceInfo->StorageSize << 2, imageFormat);
+			loaded = EVE_CoCmd_loadImage_progMem(phost, addr, resourceInfo->ProgMem, resourceInfo->StorageSize << 2, imageFormat);
 			break;
 		}
 		break;
@@ -139,13 +139,14 @@ ESD_CORE_EXPORT uint32_t ESD_LoadResource(ESD_ResourceInfo *resourceInfo, uint32
 		switch (resourceInfo->Compressed)
 		{
 		case ESD_RESOURCE_RAW:
-			loaded = EVE_CoCmd_flashRead(ESD_Host, addr, resourceInfo->FlashAddress, resourceInfo->StorageSize << 2);
+			EVE_CoCmd_flashRead(phost, addr, resourceInfo->FlashAddress, resourceInfo->StorageSize << 2);
+			loaded = EVE_Cmd_waitFlush(phost);
 			break;
 		case ESD_RESOURCE_DEFLATE:
-			loaded = EVE_CoCmd_inflate_flash(ESD_Host, addr, resourceInfo->FlashAddress);
+			loaded = EVE_CoCmd_inflate_flash(phost, addr, resourceInfo->FlashAddress);
 			break;
 		case ESD_RESOURCE_IMAGE:
-			loaded = EVE_CoCmd_loadImage_flash(ESD_Host, addr, resourceInfo->FlashAddress, imageFormat);
+			loaded = EVE_CoCmd_loadImage_flash(phost, addr, resourceInfo->FlashAddress, imageFormat);
 			break;
 		}
 		break;

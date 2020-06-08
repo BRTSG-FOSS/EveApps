@@ -3,6 +3,17 @@
 #include "ESD_Context.h"
 
 static uint32_t s_LastTagFrame = ~0;
+#if defined(_MSC_VER) && (_MSC_VER < 1800)
+/* Designated initializers not supported in older Visual Studio versions */
+static ESD_TouchTag s_NullTag = {
+	NULL,
+	ESD_Noop,
+	ESD_Noop,
+	ESD_Noop,
+	0,
+	false
+};
+#else
 static ESD_TouchTag s_NullTag = {
 	.Down = ESD_Noop,
 	.Up = ESD_Noop,
@@ -10,6 +21,7 @@ static ESD_TouchTag s_NullTag = {
 	.Tag = 0,
 	.Set = false
 };
+#endif
 static bool s_SuppressCurrentTags = 0;
 static uint8_t s_GpuRegTouchTag = 0;
 static uint8_t s_TagDown = 0;
@@ -28,8 +40,14 @@ int16_t s_TouchPosXDelta = 0;
 int16_t s_TouchPosYDelta = 0;
 
 static ESD_TouchTag *s_TagHandlers[256] = {
-	[0] = &s_NullTag,
-	[255] = &s_NullTag
+	&s_NullTag, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+	NULL, NULL, NULL, NULL, NULL, NULL, NULL, &s_NullTag
 };
 
 ESD_CORE_EXPORT void ESD_TouchTag__Initializer(ESD_TouchTag *context)

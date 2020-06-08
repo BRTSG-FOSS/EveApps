@@ -17,13 +17,16 @@ uint32_t s_MultiGradient_Cell;
 ESD_CORE_EXPORT void ESD_Render_MultiGradient(int16_t x, int16_t y, int16_t width, int16_t height, esd_argb32_t topLeft, esd_argb32_t topRight, esd_argb32_t bottomLeft, esd_argb32_t bottomRight)
 {
 	EVE_HalContext *phost = ESD_GetHost();
-	(void)phost;
+	uint32_t addr;
+	bool alpha;
+	uint16_t colors[4];
+
 	// Don't render empty
 	if (width == 0 || height == 0)
 		return;
 
 	// Get address of RAM_G used for gradient palette
-	uint32_t addr = ESD_GpuAlloc_Get(ESD_GAlloc, s_MultiGradient_GpuHandle);
+	addr = ESD_GpuAlloc_Get(ESD_GAlloc, s_MultiGradient_GpuHandle);
 	if (addr == GA_INVALID)
 	{
 		// Allocate enough memory for 32 gradients.
@@ -41,8 +44,7 @@ ESD_CORE_EXPORT void ESD_Render_MultiGradient(int16_t x, int16_t y, int16_t widt
 	addr += (s_MultiGradient_Cell * 8);
 
 	// Check if the colors have alpha, if so we'll use ARGB4, otherwise RGB565
-	bool alpha = topLeft < 0xFF000000 || topRight < 0xFF000000 || bottomLeft < 0xFF000000 || bottomRight < 0xFF000000;
-	uint16_t colors[4];
+	alpha = topLeft < 0xFF000000 || topRight < 0xFF000000 || bottomLeft < 0xFF000000 || bottomRight < 0xFF000000;
 	if (alpha)
 	{
 		colors[0] = ESD_COLOR_ARGB4(topLeft);

@@ -61,6 +61,8 @@ ESD_CORE_EXPORT void ESD_Render_Rect_Stroke(
 
 	if (border < 16)
 	{
+		uint32_t alpha;
+
 		// Expand border centrally to 16 subpixels
 		esd_int32_f4_t adjust = (16 - border);
 		esd_int32_f4_t innerAdjust = adjust >> 1;
@@ -69,7 +71,7 @@ ESD_CORE_EXPORT void ESD_Render_Rect_Stroke(
 		outerRadius += outerAdjust;
 
 		// Lessen alpha
-		uint32_t alpha = color >> 24;
+		alpha = color >> 24;
 		alpha *= border;
 		alpha >>= 4; // Divide by 4
 		color = (alpha << 24) | (color & 0xFFFFFF);
