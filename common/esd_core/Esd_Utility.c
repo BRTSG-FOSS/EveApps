@@ -16,12 +16,6 @@ static uint32_t s_FlashErrorLast = ~0;
 #endif
 #endif
 
-//A function to enable spinner when frame is rendered.
-ESD_CORE_EXPORT void ESD_Spinner_Popup()
-{
-	ESD_CurrentContext->SpinnerPopup = true;
-}
-
 #if defined(EVE_FLASH_AVAILABLE)
 #ifdef ESD_SIMULATION
 extern void ESD_SetFlashStatus__ESD(int status);

@@ -334,13 +334,13 @@ ESD_CORE_EXPORT void ESD_Render(ESD_Context *ec)
 	{
 		// Spinner used for switching longer loading pages with bitmaps etc
 		EVE_CoDl_colorRgb_ex(phost, ~(ec->ClearColor));
-		// FIXME 2020 JUN 04: Spinner with ownership -- ESD_CoCmd_spinner(ESD_Update, phost->Width >> 1, phost->Height >> 1, 0, 0);
+		ESD_CoWidget_Spinner(ESD_Update, phost->Width >> 1, phost->Height >> 1, 0, 0);
 		ec->SpinnerPopup = false;
 		ec->SpinnerPopped = true;
 	}
 	else if (ec->SpinnerPopped)
 	{
-		// FIXME 2020 JUN 04: Spinner with ownership -- ESD_CoCmd_stop(ESD_Update);
+		ESD_CoWidget_Stop(ESD_Update);
 		ec->SpinnerPopped = false;
 	}
 

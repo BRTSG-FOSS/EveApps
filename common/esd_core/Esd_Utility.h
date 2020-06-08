@@ -40,9 +40,6 @@ ESD_CORE_EXPORT void ESD_ShowLogo();
 ESD_CORE_EXPORT void ESD_BeginLogo();
 ESD_CORE_EXPORT void ESD_EndLogo();
 
-#pragma ESD_FUNCTION(ESD_Spinner_Popup, Attributes = ESD_CORE_EXPORT, DisplayName = "Pop-up Spinner", Category = EsdUtilities)
-ESD_CORE_EXPORT void ESD_Spinner_Popup();
-
 ESD_CORE_EXPORT bool ESD_Calibrate();
 
 #endif /* #ifndef ESD_UTILITY__H */

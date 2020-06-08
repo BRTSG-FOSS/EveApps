@@ -266,4 +266,4 @@ ESD_CORE_EXPORT void ESD_TouchTag_SuppressCurrentTags()
 	s_SuppressCurrentTags = 1;
 }
 
-/* Nothing beyond this */
+/* end of file */

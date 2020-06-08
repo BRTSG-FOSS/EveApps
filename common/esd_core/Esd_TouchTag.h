@@ -117,4 +117,4 @@ ESD_PARAMETER(context, Type = ESD_TouchTag *, Static)
 
 #endif /* ESD_TOUCHTAG__H */
 
-/* Nothing beyond this */
+/* end of file */

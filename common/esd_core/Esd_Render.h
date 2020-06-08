@@ -1,6 +1,6 @@
 
-#ifndef ESD_PRIMITIVES__H
-#define ESD_PRIMITIVES__H
+#ifndef ESD_RENDER__H
+#define ESD_RENDER__H
 
 #include "ESD_Base.h"
 #include "ESD_Scissor.h"
@@ -43,7 +43,7 @@
 #define ESD_ARGB_BLACK 0xFF000000
 
 // Rectangular gradient with four colored corners
-#pragma ESD_RENDER(ESD_Render_MultiGradient, Type = void, DisplayName = "ESD Multi Gradient", Include = "ESD_Render.h", Category = EsdPrimitives)
+#pragma ESD_RENDER(ESD_Render_MultiGradient, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Multi Gradient", Include = "ESD_Render.h", Category = EsdPrimitives)
 #pragma ESD_PARAMETER(x, Type = int16_t, Default = 0)
 #pragma ESD_PARAMETER(y, Type = int16_t, Default = 0)
 #pragma ESD_PARAMETER(width, Type = int16_t, Default = 0)
@@ -55,7 +55,7 @@
 ESD_CORE_EXPORT void ESD_Render_MultiGradient(int16_t x, int16_t y, int16_t width, int16_t height, esd_argb32_t topLeft, esd_argb32_t topRight, esd_argb32_t bottomLeft, esd_argb32_t bottomRight);
 
 // Rounded rectangular gradient with four colored corners
-#pragma ESD_RENDER(ESD_Render_MultiGradient_Rounded, Type = void, DisplayName = "ESD Multi Gradient (Rounded)", Include = "ESD_Render.h", Category = EsdPrimitives)
+#pragma ESD_RENDER(ESD_Render_MultiGradient_Rounded, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Multi Gradient (Rounded)", Include = "ESD_Render.h", Category = EsdPrimitives)
 #pragma ESD_PARAMETER(x, Type = int16_t, Default = 0)
 #pragma ESD_PARAMETER(y, Type = int16_t, Default = 0)
 #pragma ESD_PARAMETER(width, Type = int16_t, Default = 0)
@@ -82,7 +82,7 @@ ESD_CORE_EXPORT void ESD_Render_Rect_Stroke(
     uint8_t stroke, esd_argb32_t color);
 
 // Basic bitmap rendering
-#pragma ESD_RENDER(ESD_Render_Bitmap, Type = void, DisplayName = "ESD Bitmap", Category = EsdPrimitives, Icon = ":/icons/image.png", Include = "ESD_Render.h")
+#pragma ESD_RENDER(ESD_Render_Bitmap, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Bitmap", Category = EsdPrimitives, Icon = ":/icons/image.png", Include = "ESD_Render.h")
 #pragma ESD_PARAMETER(x, Type = int16_t, Default = 0)
 #pragma ESD_PARAMETER(y, Type = int16_t, Default = 0)
 #pragma ESD_PARAMETER(bitmapCell, Type = ESD_BitmapCell, DisplayName = "Bitmap Cell")
@@ -91,7 +91,7 @@ ESD_CORE_EXPORT void ESD_Render_Rect_Stroke(
 ESD_CORE_EXPORT void ESD_Render_Bitmap(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, esd_argb32_t c);
 
 // Scaled bitmap rendering
-#pragma ESD_RENDER(ESD_Render_Bitmap_Scaled, Type = void, DisplayName = "ESD Bitmap Scaled", Category = EsdPrimitives, Icon = ":/icons/image.png", Include = "ESD_Render.h")
+#pragma ESD_RENDER(ESD_Render_Bitmap_Scaled, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Bitmap Scaled", Category = EsdPrimitives, Icon = ":/icons/image.png", Include = "ESD_Render.h")
 #pragma ESD_PARAMETER(x, Type = int16_t, Default = 0)
 #pragma ESD_PARAMETER(y, Type = int16_t, Default = 0)
 #pragma ESD_PARAMETER(bitmapCell, Type = ESD_BitmapCell, DisplayName = "Bitmap Cell")
@@ -119,7 +119,7 @@ ESD_CORE_EXPORT void ESD_Render_Bitmap_RotateScaled(ESD_BitmapCell bitmapCell, e
 ESD_CORE_EXPORT void ESD_Render_Bitmap_Rotate(ESD_BitmapCell bitmapCell, esd_argb32_t c, ESD_Rect16 globalRect, int32_t rotateAngle);
 
 // Basic rectangle rendering with fixed point precision
-#pragma ESD_RENDER(ESD_Render_RectF, Type = void, DisplayName = "ESD Rectangle (Fixed Point)", Include = "ESD_Render.h", Category = EsdPrimitives)
+#pragma ESD_RENDER(ESD_Render_RectF, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Rectangle (Fixed Point)", Include = "ESD_Render.h", Category = EsdPrimitives)
 #pragma ESD_PARAMETER(x, Type = esd_int32_f4_t, Default = 0)
 #pragma ESD_PARAMETER(y, Type = esd_int32_f4_t, Default = 0)
 #pragma ESD_PARAMETER(width, Type = esd_int32_f4_t, Default = 60)
@@ -129,7 +129,7 @@ ESD_CORE_EXPORT void ESD_Render_Bitmap_Rotate(ESD_BitmapCell bitmapCell, esd_arg
 ESD_CORE_EXPORT void ESD_Render_RectF(esd_int32_f4_t x, esd_int32_f4_t y, esd_int32_f4_t w, esd_int32_f4_t h, esd_int32_f4_t radius, esd_argb32_t color);
 
 // Basic rectangle rendering
-#pragma ESD_RENDER(ESD_Render_Rect, Type = void, DisplayName = "ESD Rectangle (Integer)", Include = "ESD_Render.h", Category = EsdPrimitives, Inline)
+#pragma ESD_RENDER(ESD_Render_Rect, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Rectangle (Integer)", Include = "ESD_Render.h", Category = EsdPrimitives, Inline)
 #pragma ESD_PARAMETER(x, Type = int32_t, Default = 0)
 #pragma ESD_PARAMETER(y, Type = int32_t, Default = 0)
 #pragma ESD_PARAMETER(width, Type = int32_t, Default = 60)
@@ -142,7 +142,7 @@ static inline void ESD_Render_Rect(int32_t x, int32_t y, int32_t w, int32_t h, i
 }
 
 // Basic line rendering with fixed point precision
-#pragma ESD_RENDER(ESD_Render_LineF, Type = void, DisplayName = "ESD Line (Fixed Point)", Include = "ESD_Render.h", Category = EsdPrimitives)
+#pragma ESD_RENDER(ESD_Render_LineF, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Line (Fixed Point)", Include = "ESD_Render.h", Category = EsdPrimitives)
 #pragma ESD_PARAMETER(x0, Type = esd_int32_f4_t, Default = 0)
 #pragma ESD_PARAMETER(y0, Type = esd_int32_f4_t, Default = 0)
 #pragma ESD_PARAMETER(x1, Type = esd_int32_f4_t, Default = 60)
@@ -152,7 +152,7 @@ static inline void ESD_Render_Rect(int32_t x, int32_t y, int32_t w, int32_t h, i
 ESD_CORE_EXPORT void ESD_Render_LineF(esd_int32_f4_t x0, esd_int32_f4_t y0, esd_int32_f4_t x1, esd_int32_f4_t y1, esd_int32_f3_t width, esd_argb32_t color);
 
 // Basic line rendering
-#pragma ESD_RENDER(ESD_Render_Line, Type = void, DisplayName = "ESD Line (Integer)", Include = "ESD_Render.h", Category = EsdPrimitives, Inline)
+#pragma ESD_RENDER(ESD_Render_Line, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Line (Integer)", Include = "ESD_Render.h", Category = EsdPrimitives, Inline)
 #pragma ESD_PARAMETER(x0, Type = int32_t, Default = 0)
 #pragma ESD_PARAMETER(y0, Type = int32_t, Default = 0)
 #pragma ESD_PARAMETER(x1, Type = int32_t, Default = 60)
@@ -237,6 +237,6 @@ ESD_CORE_EXPORT ESD_Rect16 ESD_Math_GetAlignedRect(ESD_Size16 boundary, ESD_Size
 #define ESD_STROKE_CENTER (3)
 #pragma ESD_END()
 
-#endif /* #ifndef ESD_PRIMITIVES__H */
+#endif /* #ifndef ESD_RENDER__H */
 
-/* Nothing beyond this */
+/* end of file */
