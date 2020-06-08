@@ -160,8 +160,8 @@ void ESD_Open(ESD_Context *ec, ESD_Parameters *ep)
 }
 
 // !!! NOTE:
-#define ESD_Release ESD_Close
-#define ESD_Shutdown ESD_Release
+#define Ft_Esd_Release ESD_Close
+#define Ft_Esd_Shutdown ESD_Release
 
 void ESD_Close(ESD_Context *ec)
 {
