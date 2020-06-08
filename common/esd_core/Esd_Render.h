@@ -2,7 +2,7 @@
 #ifndef ESD_PRIMITIVES__H
 #define ESD_PRIMITIVES__H
 
-#include "ESD_TypeDefs.h"
+#include "ESD_Base.h"
 #include "ESD_Dl.h"
 #include "ESD_BitmapInfo.h"
 #include "ESD_Math.h"

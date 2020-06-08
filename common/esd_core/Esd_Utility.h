@@ -33,7 +33,7 @@
 #define ESD_UTILITY__H
 
 #include <EVE_Hal.h>
-#include "ESD_TypeDefs.h"
+#include "ESD_Base.h"
 
 void ESD_attachFlashFast();
 

@@ -11,7 +11,7 @@ Resource info structure
 #ifndef ESD_RESOURCEINFO__H
 #define ESD_RESOURCEINFO__H
 
-#include "ESD_TypeDefs.h"
+#include "ESD_Base.h"
 #include "ESD_GpuAlloc.h"
 
 // Resource loading mechanisms

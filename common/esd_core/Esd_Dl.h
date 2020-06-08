@@ -4,7 +4,7 @@
 
 #include <EVE_Hal.h>
 
-#include "ESD_TypeDefs.h"
+#include "ESD_Base.h"
 #include "ESD_BitmapInfo.h"
 #include "ESD_Math.h"
 #include "ESD_BitmapHandle.h"

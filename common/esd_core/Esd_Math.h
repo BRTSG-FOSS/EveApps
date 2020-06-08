@@ -31,7 +31,7 @@
 #ifndef ESD_MATH__H
 #define ESD_MATH__H
 
-#include "ESD_TypeDefs.h"
+#include "ESD_Base.h"
 
 ESD_TYPE(ESD_Point16, Native = Struct) // TODO: Struct support, expose values
 typedef struct

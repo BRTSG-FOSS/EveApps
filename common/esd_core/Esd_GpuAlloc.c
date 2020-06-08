@@ -4,7 +4,7 @@ Allocation mechanism for RAM_G.
 
 */
 
-#include "ESD_TypeDefs.h"
+#include "ESD_Base.h"
 #include "ESD_GpuAlloc.h"
 
 #include <EVE_Hal.h>

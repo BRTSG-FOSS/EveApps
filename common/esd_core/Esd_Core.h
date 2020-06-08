@@ -32,7 +32,7 @@
 #ifndef ESD_CORE__H
 #define ESD_CORE__H
 
-#include "ESD_TypeDefs.h"
+#include "ESD_Base.h"
 #include "ESD_Context.h"
 #include "ESD_Render.h"
 #include "ESD_Utility.h"

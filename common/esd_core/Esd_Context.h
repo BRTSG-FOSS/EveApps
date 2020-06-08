@@ -34,7 +34,7 @@
 
 #include <EVE_Hal.h>
 
-#include "ESD_TypeDefs.h"
+#include "ESD_Base.h"
 #include "ESD_GpuAlloc.h"
 #include "ESD_Dl.h"
 #include "ESD_BitmapHandle.h"
