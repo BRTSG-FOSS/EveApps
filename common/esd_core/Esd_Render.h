@@ -10,7 +10,7 @@
 // ESD_Render_Rectangle
 // ESD_Render_Line
 // ESD_Render_Point
-// ESD_RenderBitmap_
+// ESD_Render_Bitmap_
 // ESD_Render_LineStrip
 // ESD_Render_EdgeStrip
 
@@ -85,16 +85,16 @@ void ESD_Render_Rect_Stroke(
     uint8_t stroke, esd_argb32_t color);
 
 // Basic bitmap rendering
-ESD_RENDER(ESD_RenderBitmap_, Type = void, DisplayName = "ESD Bitmap", Category = EsdPrimitives, Icon = ":/icons/image.png", Include = "ESD_Render.h")
+ESD_RENDER(ESD_Render_Bitmap, Type = void, DisplayName = "ESD Bitmap", Category = EsdPrimitives, Icon = ":/icons/image.png", Include = "ESD_Render.h")
 ESD_PARAMETER(x, Type = int16_t, Default = 0)
 ESD_PARAMETER(y, Type = int16_t, Default = 0)
 ESD_PARAMETER(bitmapCell, Type = ESD_BitmapCell, DisplayName = "Bitmap Cell")
 // Color to be multiplied with bitmap color, can be used for alpha fade for example
 ESD_PARAMETER(c, Type = esd_argb32_t, DisplayName = "Color", Default = #FFFFFFFF)
-void ESD_RenderBitmap_(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, esd_argb32_t c);
+void ESD_Render_Bitmap(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, esd_argb32_t c);
 
 // Scaled bitmap rendering
-ESD_RENDER(ESD_RenderBitmap_Scaled, Type = void, DisplayName = "ESD Bitmap Scaled", Category = EsdPrimitives, Icon = ":/icons/image.png", Include = "ESD_Render.h")
+ESD_RENDER(ESD_Render_Bitmap_Scaled, Type = void, DisplayName = "ESD Bitmap Scaled", Category = EsdPrimitives, Icon = ":/icons/image.png", Include = "ESD_Render.h")
 ESD_PARAMETER(x, Type = int16_t, Default = 0)
 ESD_PARAMETER(y, Type = int16_t, Default = 0)
 ESD_PARAMETER(bitmapCell, Type = ESD_BitmapCell, DisplayName = "Bitmap Cell")
@@ -112,14 +112,14 @@ ESD_PARAMETER(yoffset, Type = esd_int32_f16_t, DisplayName = "Y Offset", Default
 ESD_PARAMETER(width, Type = int16_t, DisplayName = "Render Width", Default = 200)
 // Height used as rendering boundary
 ESD_PARAMETER(height, Type = int16_t, DisplayName = "Render Height", Default = 100)
-void ESD_RenderBitmap_Scaled(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, esd_argb32_t c, esd_int32_f16_t xscale, esd_int32_f16_t yscale, esd_int32_f16_t xoffset, esd_int32_f16_t yoffset, int16_t width, int16_t height);
+void ESD_Render_Bitmap_Scaled(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, esd_argb32_t c, esd_int32_f16_t xscale, esd_int32_f16_t yscale, esd_int32_f16_t xoffset, esd_int32_f16_t yoffset, int16_t width, int16_t height);
 
 // Render bitmap using freeform rectangle within a specified global screen rectangle, freeform is relative to global
-void ESD_RenderBitmap_Freeform(ESD_BitmapCell bitmapCell, esd_argb32_t c, ESD_Rect16 globalRect, ESD_Rect16 freeformRect, uint8_t minAlpha);
+void ESD_Render_Bitmap_Freeform(ESD_BitmapCell bitmapCell, esd_argb32_t c, ESD_Rect16 globalRect, ESD_Rect16 freeformRect, uint8_t minAlpha);
 
 //Render bitmap with rotation option
-void ESD_RenderBitmap_RotateScaled(ESD_BitmapCell bitmapCell, esd_argb32_t c, ESD_Rect16 globalRect, int32_t rotateAngle, esd_int32_f16_t xscale, esd_int32_f16_t yscale);
-void ESD_RenderBitmap_Rotate(ESD_BitmapCell bitmapCell, esd_argb32_t c, ESD_Rect16 globalRect, int32_t rotateAngle);
+void ESD_Render_Bitmap_RotateScaled(ESD_BitmapCell bitmapCell, esd_argb32_t c, ESD_Rect16 globalRect, int32_t rotateAngle, esd_int32_f16_t xscale, esd_int32_f16_t yscale);
+void ESD_Render_Bitmap_Rotate(ESD_BitmapCell bitmapCell, esd_argb32_t c, ESD_Rect16 globalRect, int32_t rotateAngle);
 
 // Basic rectangle rendering with fixed point precision
 ESD_RENDER(ESD_Render_RectangleF, Type = void, DisplayName = "ESD Rectangle (Fixed Point)", Include = "ESD_Render.h", Category = EsdPrimitives)
