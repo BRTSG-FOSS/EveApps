@@ -189,6 +189,10 @@ typedef uint32_t esd_classid_t;
 #define ESD_CORE_EXPORT
 #endif
 
+#ifdef _MSC_VER
+#define inline __inline
+#endif
+
 #pragma ESD_FUNCTION(ESD_noop, Category = _GroupHidden)
 #pragma ESD_PARAMETER(context, Type = void *)
 ESD_CORE_EXPORT void ESD_noop(void *context);
@@ -219,10 +223,6 @@ void logError__ESD(const char *str);
 	do                     \
 	{                      \
 	} while (0)
-#endif
-
-#ifdef _MSC_VER
-#define inline __inline
 #endif
 
 #endif /* #ifndef ESD_TYPEDEFS__H */

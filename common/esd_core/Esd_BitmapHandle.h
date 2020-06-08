@@ -32,8 +32,8 @@ void ESD_BitmapHandle_frameStart(ESD_HandleState *state);
 /// Reset the bitmap handle state
 void ESD_BitmapHandle_reset(ESD_HandleState *state);
 
-uint32_t ESD_BitmapHandle_GetTotalUsed();
-uint32_t ESD_BitmapHandle_GetTotal();
+uint32_t ESD_BitmapHandle_getTotalUsed();
+uint32_t ESD_BitmapHandle_getTotal();
 
 ESD_FUNCTION(ESD_getRomFont, Type = Esd_FontInfo *, DisplayName = "Get ROM Font", Category = EsdUtilities, Macro)
 ESD_PARAMETER(i, Type = int, DisplayName = "ROM Font", Default = 0, Min = 16, Max = 34)

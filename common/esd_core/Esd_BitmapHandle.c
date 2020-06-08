@@ -122,7 +122,7 @@ void ESD_BitmapHandle_reset(ESD_HandleState *state)
 	memset(state, 0, sizeof(ESD_HandleState));
 }
 
-uint32_t ESD_BitmapHandle_GetTotalUsed()
+uint32_t ESD_BitmapHandle_getTotalUsed()
 {
 	EVE_HalContext *phost = ESD_Host;
 	uint32_t total = 0;
@@ -137,7 +137,7 @@ uint32_t ESD_BitmapHandle_GetTotalUsed()
 	return total;
 }
 
-uint32_t ESD_BitmapHandle_GetTotal()
+uint32_t ESD_BitmapHandle_getTotal()
 {
 	EVE_HalContext *phost = ESD_Host;
 	(void)phost;
