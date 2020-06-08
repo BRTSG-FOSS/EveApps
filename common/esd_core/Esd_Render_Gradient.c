@@ -14,7 +14,7 @@ uint32_t s_MultiGradient_Cell;
 // The maximum number of multi gradients that can be on screen at once, multiplied by two
 #define ESD_MULTIGRADIENT_MAX_NB (1 << 6)
 
-void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t width, int16_t height, esd_argb32_t topLeft, esd_argb32_t topRight, esd_argb32_t bottomLeft, esd_argb32_t bottomRight)
+void ESD_Render_MultiGradient(int16_t x, int16_t y, int16_t width, int16_t height, esd_argb32_t topLeft, esd_argb32_t topRight, esd_argb32_t bottomLeft, esd_argb32_t bottomRight)
 {
 	EVE_HalContext *phost = ESD_Host;
 	(void)phost;
@@ -125,7 +125,7 @@ void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t width, int16_t heigh
 	s_MultiGradient_Cell &= (ESD_MULTIGRADIENT_MAX_NB - 1);
 }
 
-void Esd_Render_MultiGradient_Rounded(int16_t x, int16_t y, int16_t width, int16_t height, esd_int32_f4_t radius, uint8_t alpha, esd_argb32_t topLeft, esd_argb32_t topRight, esd_argb32_t bottomLeft, esd_argb32_t bottomRight)
+void ESD_Render_MultiGradient_Rounded(int16_t x, int16_t y, int16_t width, int16_t height, esd_int32_f4_t radius, uint8_t alpha, esd_argb32_t topLeft, esd_argb32_t topRight, esd_argb32_t bottomLeft, esd_argb32_t bottomRight)
 {
 	EVE_HalContext *phost = ESD_Host;
 
@@ -133,9 +133,9 @@ void Esd_Render_MultiGradient_Rounded(int16_t x, int16_t y, int16_t width, int16
 
 	// Set alpha of the target rendering area to 255
 	// EVE_CoDl_clear_COLOR_A(255);
-	// ESD_Rect16 scissor = ESD_Scissor_set(globalRect);
+	// ESD_Rect16 scissor = ESD_Scissor_Set(globalRect);
 	// EVE_CoDl_clear(1, 0, 0);
-	// ESD_Scissor_reset(scissor);
+	// ESD_Scissor_Reset(scissor);
 	EVE_CoDl_colorArgb_ex(phost, ESD_ARGB_WHITE);
 	EVE_CoCmd_dl(ESD_Host, COLOR_MASK(0, 0, 0, 1));
 	EVE_CoDl_lineWidth(phost, 16);
@@ -152,7 +152,7 @@ void Esd_Render_MultiGradient_Rounded(int16_t x, int16_t y, int16_t width, int16
 
 	// Draw color using mask alpha
 	EVE_CoCmd_dl(ESD_Host, BLEND_FUNC(ONE_MINUS_DST_ALPHA, ONE));
-	Esd_Render_MultiGradient(x, y, width, height, topLeft | 0xFF000000, topRight | 0xFF000000, bottomLeft | 0xFF000000, bottomRight | 0xFF000000);
+	ESD_Render_MultiGradient(x, y, width, height, topLeft | 0xFF000000, topRight | 0xFF000000, bottomLeft | 0xFF000000, bottomRight | 0xFF000000);
 
 	// Restore context
 	// EVE_CoDl_restoreContext(phost);

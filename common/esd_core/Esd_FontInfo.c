@@ -19,7 +19,7 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 extern ESD_CORE_EXPORT EVE_HalContext *ESD_Host;
 extern ESD_CORE_EXPORT ESD_GpuAlloc *ESD_GAlloc;
 
-uint32_t Esd_LoadFont(Esd_FontInfo *fontInfo)
+uint32_t ESD_LoadFont(ESD_FontInfo *fontInfo)
 {
 	uint32_t glyphAddr;
 
@@ -29,7 +29,7 @@ uint32_t Esd_LoadFont(Esd_FontInfo *fontInfo)
 	}
 
 	// Load glyphs
-	glyphAddr = Esd_LoadResource(&fontInfo->GlyphResource, NULL);
+	glyphAddr = ESD_LoadResource(&fontInfo->GlyphResource, NULL);
 	if (glyphAddr != GA_INVALID)
 	{
 		// Load map
@@ -43,7 +43,7 @@ uint32_t Esd_LoadFont(Esd_FontInfo *fontInfo)
 		fontAddr = ESD_GpuAlloc_Get(ESD_GAlloc, fontInfo->FontResource.GpuHandle);
 		if (fontAddr == GA_INVALID)
 		{
-			fontAddr = Esd_LoadResource(&fontInfo->FontResource, NULL);
+			fontAddr = ESD_LoadResource(&fontInfo->FontResource, NULL);
 			rewriteAddr = true;
 		}
 		else
@@ -55,7 +55,7 @@ uint32_t Esd_LoadFont(Esd_FontInfo *fontInfo)
 		{
 			// Failed to load font block, unload glyphs
 			esd_resourceinfo_printf("Failed to load font block, free glyphs\n");
-			Esd_FreeResource(&fontInfo->GlyphResource);
+			ESD_FreeResource(&fontInfo->GlyphResource);
 			return GA_INVALID;
 		}
 
@@ -98,12 +98,12 @@ uint32_t Esd_LoadFont(Esd_FontInfo *fontInfo)
 				// In case the glyph resource was set to direct flash but is not in ASTC format, reload it
 				esd_resourceinfo_printf("Glyph resource set to Direct Flash but is not in ASTC format, reload\n");
 				fontInfo->GlyphResource.Type = ESD_RESOURCE_FLASH;
-				glyphAddr = Esd_LoadResource(&fontInfo->GlyphResource, NULL);
+				glyphAddr = ESD_LoadResource(&fontInfo->GlyphResource, NULL);
 				if (glyphAddr == GA_INVALID)
 				{
 					// Failed to reload glyph, free font block resource
 					esd_resourceinfo_printf("Failed to reload glyph, free font block resource\n");
-					Esd_FreeResource(&fontInfo->FontResource);
+					ESD_FreeResource(&fontInfo->FontResource);
 					return GA_INVALID;
 				}
 			}
@@ -116,9 +116,9 @@ uint32_t Esd_LoadFont(Esd_FontInfo *fontInfo)
 	return GA_INVALID;
 }
 
-void Esd_FontPersist(Esd_FontInfo *fontInfo)
+void ESD_FontPersist(ESD_FontInfo *fontInfo)
 {
-	Esd_LoadFont(fontInfo);
+	ESD_LoadFont(fontInfo);
 }
 
 /* end of file */

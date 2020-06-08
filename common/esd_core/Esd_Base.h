@@ -39,7 +39,7 @@ ESD_TYPE(uint32_t, Native = UInt32, Edit = Int)
 
 ESD_TYPE(char *, Native = Latin1, Edit = String)
 
-ESD_TYPE(Esd_BitmapCell *, Native = Pointer, Edit = Library)
+ESD_TYPE(ESD_BitmapCell *, Native = Pointer, Edit = Library)
 
 typedef int32_t esd_int32_f4_t;
 ESD_TYPE(esd_int32_f4_t, Native = Int32, Edit = Fixed4)
@@ -83,7 +83,7 @@ ESD_PARAMETER(message, Type = char *)
 void testPrint(char *message);
 
 ESD_FUNCTION(EVE_CoCmd_dl, Include = "EVE_Hal.h")
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = "ESD_host()", Hidden, Internal)
+ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = "ESD_GetHost()", Hidden, Internal)
 ESD_PARAMETER(dl, Type = uint32_t)
 
 */
@@ -189,19 +189,15 @@ typedef uint32_t esd_classid_t;
 #define ESD_CORE_EXPORT
 #endif
 
-#ifdef _MSC_VER
-#define inline __inline
-#endif
-
 #pragma ESD_TYPE(EVE_HalContext *, Native = Pointer, Edit = Library)
 
 #pragma ESD_CATEGORY(EsdUtilities, DisplayName = "ESD Utilities")
 #pragma ESD_CATEGORY(EsdRenderable, DisplayName = "ESD Render Functions")
 #pragma ESD_CATEGORY(EveRenderFunctions, DisplayName = "Display List", Category = EsdRenderable)
 
-#pragma ESD_FUNCTION(ESD_noop, Category = _GroupHidden)
+#pragma ESD_FUNCTION(ESD_Noop, Category = _GroupHidden)
 #pragma ESD_PARAMETER(context, Type = void *)
-ESD_CORE_EXPORT void ESD_noop(void *context);
+ESD_CORE_EXPORT void ESD_Noop(void *context);
 
 #define ESD_LOOPSTATE_NONE 0
 #define ESD_LOOPSTATE_IDLE 1
@@ -213,19 +209,19 @@ ESD_CORE_EXPORT void ESD_noop(void *context);
 void logMessage__ESD(const char *str);
 void logWarning__ESD(const char *str);
 void logError__ESD(const char *str);
-#define ESD_logMessage(s) logMessage__ESD(s)
-#define ESD_logWarning(s) logWarning__ESD(s)
-#define ESD_logError(s) logError__ESD(s)
+#define ESD_LogMessage(s) logMessage__ESD(s)
+#define ESD_LogWarning(s) logWarning__ESD(s)
+#define ESD_LogError(s) logError__ESD(s)
 #else
-#define ESD_logMessage(s) \
+#define ESD_LogMessage(s) \
 	do                       \
 	{                        \
 	} while (0)
-#define ESD_logWarning(s) \
+#define ESD_LogWarning(s) \
 	do                       \
 	{                        \
 	} while (0)
-#define ESD_logError(s) \
+#define ESD_LogError(s) \
 	do                     \
 	{                      \
 	} while (0)

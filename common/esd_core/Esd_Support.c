@@ -32,16 +32,16 @@
 #include "ESD_Context.h"
 
 /// A function to get milliseconds for current frame
-ESD_FUNCTION(ESD_millis, Type = uint32_t, DisplayName = "Get Milliseconds", Category = EsdUtilities)
-uint32_t ESD_millis() { return ESD_CurrentContext->Millis; }
+ESD_FUNCTION(ESD_GetMillis, Type = uint32_t, DisplayName = "Get Milliseconds", Category = EsdUtilities)
+uint32_t ESD_GetMillis() { return ESD_CurrentContext->Millis; }
 
 /// A function to get the difference in milliseconds since last frame Update call
-ESD_FUNCTION(ESD_deltaMs, Type = uint32_t, DisplayName = "Get Delta Ms", Category = EsdUtilities)
-uint32_t ESD_deltaMs() { return ESD_CurrentContext->DeltaMs; }
+ESD_FUNCTION(ESD_GetDeltaMs, Type = uint32_t, DisplayName = "Get Delta Ms", Category = EsdUtilities)
+uint32_t ESD_GetDeltaMs() { return ESD_CurrentContext->DeltaMs; }
 
 /// A function to get the current HAL context data structure
-ESD_FUNCTION(ESD_host, Type = EVE_HalContext *, DisplayName = "Get EVE Host", Category = EsdUtilities)
-EVE_HalContext *ESD_host() { return ESD_Host; }
+ESD_FUNCTION(ESD_GetHost, Type = EVE_HalContext *, DisplayName = "Get EVE Host", Category = EsdUtilities)
+EVE_HalContext *ESD_GetHost() { return ESD_Host; }
 
 #ifdef ESD_SIMULATION
 
@@ -65,43 +65,43 @@ uint32_t ESD_GAlloc_GetTotal(ESD_GpuAlloc *ga)
 
 #if 0
 
-// When not in the simulation, use the Ft_Main__Start etc symbols
+// When not in the simulation, use the ESD_Main__Start etc symbols
 // as exported by the single Application logic document included
 #ifndef ESD_SIMULATION
-#define Ft_Main__Start__ESD Ft_Main__Start
-#define Ft_Main__Update__ESD Ft_Main__Update
-#define Ft_Main__Render__ESD Ft_Main__Render
-#define Ft_Main__Idle__ESD Ft_Main__Idle
-#define Ft_Main__End__ESD Ft_Main__End
+#define ESD_Main__Start__ESD ESD_Main__Start
+#define ESD_Main__Update__ESD ESD_Main__Update
+#define ESD_Main__Render__ESD ESD_Main__Render
+#define ESD_Main__Idle__ESD ESD_Main__Idle
+#define ESD_Main__End__ESD ESD_Main__End
 #endif
 
-void Ft_Main__Start__ESD();
-void Ft_Main__Update__ESD();
-void Ft_Main__Render__ESD();
-void Ft_Main__Idle__ESD();
-void Ft_Main__End__ESD();
+void ESD_Main__Start__ESD();
+void ESD_Main__Update__ESD();
+void ESD_Main__Render__ESD();
+void ESD_Main__Idle__ESD();
+void ESD_Main__End__ESD();
 
-static void Main_Start(void *context) { Ft_Main__Start__ESD(); }
-static void Main_Update(void *context) { Ft_Main__Update__ESD(); }
-static void Main_Render(void *context) { Ft_Main__Render__ESD(); }
-static void Main_Idle(void *context) { Ft_Main__Idle__ESD(); }
-static void Main_End(void *context) { Ft_Main__End__ESD(); }
+static void Main_Start(void *context) { ESD_Main__Start__ESD(); }
+static void Main_Update(void *context) { ESD_Main__Update__ESD(); }
+static void Main_Render(void *context) { ESD_Main__Render__ESD(); }
+static void Main_Idle(void *context) { ESD_Main__Idle__ESD(); }
+static void Main_End(void *context) { ESD_Main__End__ESD(); }
 /* Main entry point */
 int32_t main(int32_t argc, char *argv[])
 {
 	ESD_Parameters ep;
-	ESD_defaults(&ep);
+	ESD_Defaults(&ep);
 	ep.Start = Main_Start;
 	ep.Update = Main_Update;
 	ep.Render = Main_Render;
 	ep.Idle = Main_Idle;
 	ep.End = Main_End;
 	ESD_Context ec;
-	ESD_initialize();
-	ESD_open(&ec, &ep);
-	ESD_loop(&ec);
-	ESD_close(&ec);
-	ESD_release();
+	ESD_Initialize();
+	ESD_Open(&ec, &ep);
+	ESD_Loop(&ec);
+	ESD_Close(&ec);
+	ESD_Release();
 	return EXIT_SUCCESS;
 }
 

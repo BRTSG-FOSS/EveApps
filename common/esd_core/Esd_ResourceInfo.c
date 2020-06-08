@@ -23,7 +23,7 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 extern ESD_CORE_EXPORT EVE_HalContext *ESD_Host;
 extern ESD_CORE_EXPORT ESD_GpuAlloc *ESD_GAlloc;
 
-uint32_t Esd_LoadResource(Esd_ResourceInfo *resourceInfo, uint32_t *imageFormat)
+uint32_t ESD_LoadResource(ESD_ResourceInfo *resourceInfo, uint32_t *imageFormat)
 {
 	EVE_HalContext *phost = ESD_Host;
 	uint32_t addr;
@@ -183,7 +183,7 @@ uint32_t Esd_LoadResource(Esd_ResourceInfo *resourceInfo, uint32_t *imageFormat)
 	return GA_INVALID;
 }
 
-void Esd_FreeResource(Esd_ResourceInfo *resourceInfo)
+void ESD_FreeResource(ESD_ResourceInfo *resourceInfo)
 {
 	if (!resourceInfo)
 		return;
@@ -192,9 +192,9 @@ void Esd_FreeResource(Esd_ResourceInfo *resourceInfo)
 	resourceInfo->GpuHandle.Id = MAX_NUM_ALLOCATIONS;
 }
 
-void Esd_ResourcePersist(Esd_ResourceInfo *resourceInfo)
+void ESD_ResourcePersist(ESD_ResourceInfo *resourceInfo)
 {
-	Esd_LoadResource(resourceInfo, false);
+	ESD_LoadResource(resourceInfo, false);
 }
 
 /* end of file */

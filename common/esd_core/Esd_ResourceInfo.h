@@ -15,14 +15,14 @@ Resource info structure
 #include "ESD_GpuAlloc.h"
 
 // Resource loading mechanisms
-ESD_ENUM(Esd_ResourceType, DisplayName = "Resource Type")
+ESD_ENUM(ESD_ResourceType, DisplayName = "Resource Type")
 #define ESD_RESOURCE_FILE 0
 #define ESD_RESOURCE_PROGMEM 1
 #define ESD_RESOURCE_FLASH 2
 #define ESD_RESOURCE_DIRECTFLASH 3
 ESD_END()
 
-ESD_ENUM(Esd_ResourceCompression, DisplayName = "Resource Compression")
+ESD_ENUM(ESD_ResourceCompression, DisplayName = "Resource Compression")
 #define ESD_RESOURCE_RAW 0
 #define ESD_RESOURCE_DEFLATE 1
 #define ESD_RESOURCE_IMAGE 2
@@ -31,8 +31,8 @@ ESD_END()
 // Both flash and direct flash have the same type bit set on purpose
 #define ESD_RESOURCE_IS_FLASH(resourceType) ((resourceType & ESD_RESOURCE_FLASH) == ESD_RESOURCE_FLASH)
 
-ESD_TYPE(Esd_ResourceInfo, Native = Struct)
-typedef struct Esd_ResourceInfo // (16 bytes) (24 bytes on 64 bit)
+ESD_TYPE(ESD_ResourceInfo, Native = Struct)
+typedef struct ESD_ResourceInfo // (16 bytes) (24 bytes on 64 bit)
 {
 	// Source of data
 	union
@@ -48,22 +48,22 @@ typedef struct Esd_ResourceInfo // (16 bytes) (24 bytes on 64 bit)
 	// Size of data in storage, divided by 4, rounded up ((size + 3) >> 2) (size in int32)
 	uint32_t StorageSize : 27;
 
-	// (Esd_ResourceType) Source of data
+	// (ESD_ResourceType) Source of data
 	uint32_t Type : 2;
 
 	// Load from compressed format
 	uint32_t Compressed : 2;
 
 	// When this is set, the allocated ram is not free'd automatically
-	// Use ESD_GpuAlloc_Free(GpuAlloc, GpuHandle) or Esd_FreeResource to free the GPU ram manually
+	// Use ESD_GpuAlloc_Free(GpuAlloc, GpuHandle) or ESD_FreeResource to free the GPU ram manually
 	uint32_t Persistent : 1;
 
 	// Size of data when decompressed into RAM_G
 	uint32_t RawSize;
 
-} Esd_ResourceInfo;
+} ESD_ResourceInfo;
 
-ESD_TYPE(Esd_ResourceInfo *, Native = Pointer, Edit = Library)
+ESD_TYPE(ESD_ResourceInfo *, Native = Pointer, Edit = Library)
 
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 #ifdef EVE_FLASH_AVAILABLE
@@ -83,15 +83,15 @@ ESD_TYPE(Esd_ResourceInfo *, Native = Pointer, Edit = Library)
 /// A function to load resource data into RAM_G (or to use the resource from flash directly)
 /// Returns address in the format as specified by the BITMAP_SOURCE command (see ESD_DL_FLASH_ADDRESS and ESD_DL_RAM_G_ADDRESS macros)
 /// Returns the output image format if the resource is an image loaded through the coprocessor
-uint32_t Esd_LoadResource(Esd_ResourceInfo *resourceInfo, uint32_t *imageFormat);
+uint32_t ESD_LoadResource(ESD_ResourceInfo *resourceInfo, uint32_t *imageFormat);
 
 /// Free a currently loaded resource from RAM_G. Can be used to enforce reloading a resource.
-void Esd_FreeResource(Esd_ResourceInfo *resourceInfo);
+void ESD_FreeResource(ESD_ResourceInfo *resourceInfo);
 
 /// A function to make fonts persistent in memory by reloading the data if necessary, called during the Update cycle of each frame
-ESD_UPDATE(Esd_ResourcePersist, DisplayName = "Persist Resource", Category = EsdUtilities)
-ESD_PARAMETER(resourceInfo, Type = Esd_ResourceInfo *)
-void Esd_ResourcePersist(Esd_ResourceInfo *resourceInfo);
+ESD_UPDATE(ESD_ResourcePersist, DisplayName = "Persist Resource", Category = EsdUtilities)
+ESD_PARAMETER(resourceInfo, Type = ESD_ResourceInfo *)
+void ESD_ResourcePersist(ESD_ResourceInfo *resourceInfo);
 
 // Number of available bitmap handles
 #define ESD_BITMAPHANDLE_NB (EVE_CHIPID >= EVE_FT810 ? 32UL : 16UL)

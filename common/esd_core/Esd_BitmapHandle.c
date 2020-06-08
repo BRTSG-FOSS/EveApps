@@ -30,7 +30,7 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 #define ESD_ROMFONT_MAX (phost ? ((EVE_CHIPID >= EVE_FT810) ? 35UL : 32UL) : ESD_ROMFONT_CAP)
 #define ESD_ROMFONT_MIN 16UL // Min, rom font handle, inclusive
 #define ESD_ROMFONT_NB (ESD_ROMFONT_CAP - ESD_ROMFONT_MIN)
-Esd_RomFontInfo Esd_RomFonts[ESD_ROMFONT_NB] = {
+ESD_RomFontInfo ESD_RomFonts[ESD_ROMFONT_NB] = {
 	{ .Type = ESD_FONT_ROM, .RomFont = 16UL },
 	{ .Type = ESD_FONT_ROM, .RomFont = 17UL },
 	{ .Type = ESD_FONT_ROM, .RomFont = 18UL },
@@ -54,7 +54,7 @@ Esd_RomFontInfo Esd_RomFonts[ESD_ROMFONT_NB] = {
 #endif
 };
 
-void Esd_InitRomFontHeight()
+void ESD_InitRomFontHeight()
 {
 	int i;
 	EVE_HalContext *phost = ESD_Host;
@@ -64,40 +64,40 @@ void Esd_InitRomFontHeight()
 	for (i = 0; i < ESD_ROMFONT_NB; ++i)
 	{
 		uint32_t addr = ft + (EVE_GPU_FONT_TABLE_SIZE * i) + (uint32_t)(uintptr_t)(&(((EVE_Gpu_Fonts *)(void *)0)->FontHeightInPixels));
-		Esd_RomFonts[i].FontHeight = EVE_Hal_rd16(ESD_Host, addr);
-		Esd_RomFonts[i].BaseLine = Esd_RomFonts[i].FontHeight;
-		Esd_RomFonts[i].CapsHeight = Esd_RomFonts[i].FontHeight;
+		ESD_RomFonts[i].FontHeight = EVE_Hal_rd16(ESD_Host, addr);
+		ESD_RomFonts[i].BaseLine = ESD_RomFonts[i].FontHeight;
+		ESD_RomFonts[i].CapsHeight = ESD_RomFonts[i].FontHeight;
 	}
 }
 
-uint16_t ESD_getFontHeight(Esd_FontInfo *fontInfo)
+uint16_t ESD_GetFontHeight(ESD_FontInfo *fontInfo)
 {
 	if (fontInfo)
 		return fontInfo->FontHeight;
 	return 0;
 }
 
-uint16_t ESD_getFontBaseLine(Esd_FontInfo *fontInfo)
+uint16_t ESD_GetFontBaseLine(ESD_FontInfo *fontInfo)
 {
 	if (fontInfo)
 		return fontInfo->BaseLine;
 	return 0;
 }
 
-uint16_t ESD_getFontCapsHeight(Esd_FontInfo *fontInfo)
+uint16_t ESD_GetFontCapsHeight(ESD_FontInfo *fontInfo)
 {
 	if (fontInfo)
 		return fontInfo->CapsHeight;
 	return 0;
 }
 
-void ESD_BitmapHandle_initialize()
+void ESD_BitmapHandle_Initialize()
 {
 	// memset(ESD_BitmapHandleGpuHandle, 0, sizeof(ESD_BitmapHandleGpuHandle));
-	Esd_InitRomFontHeight();
+	ESD_InitRomFontHeight();
 }
 
-void ESD_BitmapHandle_frameStart(ESD_HandleState *handleState)
+void ESD_BitmapHandle_FrameStart(ESD_HandleState *handleState)
 {
 	EVE_HalContext *phost = ESD_Host;
 	(void)phost;
@@ -117,12 +117,12 @@ void ESD_BitmapHandle_frameStart(ESD_HandleState *handleState)
 }
 
 /// Reset the bitmap handle state
-void ESD_BitmapHandle_reset(ESD_HandleState *state)
+void ESD_BitmapHandle_Reset(ESD_HandleState *state)
 {
 	memset(state, 0, sizeof(ESD_HandleState));
 }
 
-uint32_t ESD_BitmapHandle_getTotalUsed()
+uint32_t ESD_BitmapHandle_GetTotalUsed()
 {
 	EVE_HalContext *phost = ESD_Host;
 	uint32_t total = 0;
@@ -137,20 +137,20 @@ uint32_t ESD_BitmapHandle_getTotalUsed()
 	return total;
 }
 
-uint32_t ESD_BitmapHandle_getTotal()
+uint32_t ESD_BitmapHandle_GetTotal()
 {
 	EVE_HalContext *phost = ESD_Host;
 	(void)phost;
 	return ESD_BITMAPHANDLE_NB - 1; // NB minus one used for scratch
 }
 
-Esd_FontInfo *ESD_getRomFont(uint8_t font)
+ESD_FontInfo *ESD_GetRomFont(uint8_t font)
 {
 	EVE_HalContext *phost = ESD_Host;
 	(void)phost;
 
 	if (font >= ESD_ROMFONT_MIN && font < ESD_ROMFONT_MAX)
-		return (Esd_FontInfo *)(void *)&Esd_RomFonts[font - ESD_ROMFONT_MIN];
+		return (ESD_FontInfo *)(void *)&ESD_RomFonts[font - ESD_ROMFONT_MIN];
 	return NULL;
 }
 
@@ -158,7 +158,7 @@ static eve_progmem_const uint8_t c_AstcBlockHeight[] = {
 	4, 4, 5, 5, 6, 5, 6, 8, 5, 6, 8, 10, 10, 12, 0xFF, 0xFF
 };
 
-void ESD_CoDl_pagedBitmapSource(uint8_t handle, uint8_t page)
+void ESD_CoDl_PagedBitmapSource(uint8_t handle, uint8_t page)
 {
 	EVE_HalContext *phost = ESD_Host;
 	if (ESD_BITMAPHANDLE_VALID(handle) && ESD_CurrentContext->HandleState.Page[handle] != page)
@@ -175,19 +175,19 @@ void ESD_CoDl_pagedBitmapSource(uint8_t handle, uint8_t page)
 	}
 }
 
-void ESD_CoDl_pagedCell(uint8_t handle, uint16_t cell)
+void ESD_CoDl_PagedCell(uint8_t handle, uint16_t cell)
 {
 	EVE_HalContext *phost = ESD_Host;
 	EVE_CoDl_bitmapHandle(phost, handle);
-	ESD_CoDl_pagedBitmapSource(handle, cell >> 7);
+	ESD_CoDl_PagedBitmapSource(handle, cell >> 7);
 	EVE_CoDl_cell(phost, cell & 0x7F);
 }
 
-uint8_t ESD_CoDl_setupBitmap(ESD_BitmapInfo *bitmapInfo)
+uint8_t ESD_CoDl_SetupBitmap(ESD_BitmapInfo *bitmapInfo)
 {
 	// Get bitmap address
 	EVE_HalContext *phost = ESD_Host;
-	uint32_t addr = ESD_loadBitmap(bitmapInfo);
+	uint32_t addr = ESD_LoadBitmap(bitmapInfo);
 
 	if (addr == GA_INVALID)
 		return ESD_BITMAPHANDLE_INVALID; // Bitmap not loaded (out of memory or file not found)
@@ -275,7 +275,7 @@ uint8_t ESD_CoDl_setupBitmap(ESD_BitmapInfo *bitmapInfo)
 	if (EVE_CHIPID >= EVE_FT810)
 	{
 		// Use palette if available
-		uint32_t paletteAddr = ESD_loadPalette(bitmapInfo);
+		uint32_t paletteAddr = ESD_LoadPalette(bitmapInfo);
 		if (paletteAddr != GA_INVALID && bitmapInfo->Format != PALETTED8) // PALETTED8 uses custom palette setup
 		{
 			EVE_CoDl_paletteSource(phost, paletteAddr);
@@ -285,19 +285,19 @@ uint8_t ESD_CoDl_setupBitmap(ESD_BitmapInfo *bitmapInfo)
 	return handle;
 }
 
-uint8_t ESD_CoDl_setupRomFont(uint8_t font)
+uint8_t ESD_CoDl_SetupRomFont(uint8_t font)
 {
-	return ESD_CoDl_setupFont(ESD_getRomFont(font));
+	return ESD_CoDl_SetupFont(ESD_GetRomFont(font));
 }
 
-uint8_t ESD_CoDl_setupFont(Esd_FontInfo *fontInfo)
+uint8_t ESD_CoDl_SetupFont(ESD_FontInfo *fontInfo)
 {
 	EVE_HalContext *phost = ESD_Host;
 	uint32_t handle = fontInfo->BitmapHandle;
 	if (fontInfo->Type == ESD_FONT_ROM)
 	{
 		// Get rom font
-		Esd_RomFontInfo *romFontInfo = (Esd_RomFontInfo *)(void *)fontInfo;
+		ESD_RomFontInfo *romFontInfo = (ESD_RomFontInfo *)(void *)fontInfo;
 		uint8_t font = romFontInfo->RomFont;
 		if (EVE_CHIPID >= EVE_FT810)
 		{
@@ -357,7 +357,7 @@ uint8_t ESD_CoDl_setupFont(Esd_FontInfo *fontInfo)
 	else
 	{
 		// Get font address
-		uint32_t addr = Esd_LoadFont(fontInfo);
+		uint32_t addr = ESD_LoadFont(fontInfo);
 		if (addr == GA_INVALID)
 			return ESD_BITMAPHANDLE_INVALID; // Font not loaded (out of memory or file not found)
 
@@ -420,7 +420,7 @@ uint8_t ESD_CoDl_setupFont(Esd_FontInfo *fontInfo)
 	return handle;
 }
 
-void ESD_CoDl_bitmapWidthHeight(uint8_t handle, uint16_t width, uint16_t height)
+void ESD_CoDl_BitmapWidthHeight(uint8_t handle, uint16_t width, uint16_t height)
 {
 	EVE_HalContext *phost = ESD_Host;
 	EVE_CoDl_bitmapHandle(phost, handle);
@@ -428,7 +428,7 @@ void ESD_CoDl_bitmapWidthHeight(uint8_t handle, uint16_t width, uint16_t height)
 	ESD_CurrentContext->HandleState.Resized[handle] = true;
 }
 
-void ESD_CoDl_bitmapSize(uint8_t handle, uint8_t filter, uint8_t wrapx, uint8_t wrapy, uint16_t width, uint16_t height)
+void ESD_CoDl_BitmapSize(uint8_t handle, uint8_t filter, uint8_t wrapx, uint8_t wrapy, uint16_t width, uint16_t height)
 {
 	EVE_HalContext *phost = ESD_Host;
 	EVE_CoDl_bitmapHandle(phost, handle);
@@ -436,12 +436,12 @@ void ESD_CoDl_bitmapSize(uint8_t handle, uint8_t filter, uint8_t wrapx, uint8_t 
 	ESD_CurrentContext->HandleState.Resized[handle] = true;
 }
 
-void ESD_CoDl_bitmapSizeReset(uint8_t handle)
+void ESD_CoDl_BitmapSizeReset(uint8_t handle)
 {
 	if (ESD_CurrentContext->HandleState.Resized[handle])
 	{
 		ESD_BitmapInfo *bitmapInfo = (ESD_BitmapInfo *)ESD_CurrentContext->HandleState.Info[handle];
-		ESD_CoDl_bitmapWidthHeight(handle, bitmapInfo->Width, bitmapInfo->Height);
+		ESD_CoDl_BitmapWidthHeight(handle, bitmapInfo->Width, bitmapInfo->Height);
 		ESD_CurrentContext->HandleState.Resized[handle] = false;
 	}
 }

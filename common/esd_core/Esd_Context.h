@@ -63,7 +63,7 @@ typedef struct
 
 	ESD_HandleState HandleState;
 
-	/// Callbacks called by ESD_loop
+	/// Callbacks called by ESD_Loop
 	void (*Start)(void *context);
 	void (*Update)(void *context);
 	void (*Render)(void *context);
@@ -76,7 +76,7 @@ typedef struct
 /// Parameters for initializing an ESD context
 typedef struct
 {
-	/// Callbacks called by ESD_loop
+	/// Callbacks called by ESD_Loop
 	void (*Start)(void *context);
 	void (*Update)(void *context);
 	void (*Render)(void *context);
@@ -96,23 +96,23 @@ extern ESD_CORE_EXPORT ESD_GpuAlloc *ESD_GAlloc; //< Pointer to current allocato
 #define ESD_CO_SCRATCH_HANDLE (15)
 #endif
 
-void ESD_setCurrent(ESD_Context *ec);
+void ESD_SetCurrent(ESD_Context *ec);
 
-void ESD_initialize();
-void ESD_release();
+void ESD_Initialize();
+void ESD_Release();
 
-void ESD_defaults(ESD_Parameters *ep);
-void ESD_open(ESD_Context *ec, ESD_Parameters *ep);
-void ESD_close(ESD_Context *ec);
+void ESD_Defaults(ESD_Parameters *ep);
+void ESD_Open(ESD_Context *ec, ESD_Parameters *ep);
+void ESD_Close(ESD_Context *ec);
 
-/// Main loop, calls ESD_start, ESD_update, ESD_waitSwap, and ESD_stop
-void ESD_loop(ESD_Context *ec);
+/// Main loop, calls ESD_Start, ESD_Update, ESD_WaitSwap, and ESD_Stop
+void ESD_Loop(ESD_Context *ec);
 
-void ESD_start(ESD_Context *ec);
-void ESD_update(ESD_Context *ec);
-void ESD_render(ESD_Context *ec);
-bool ESD_waitSwap(ESD_Context *ec);
-void ESD_stop(ESD_Context *ec);
+void ESD_Start(ESD_Context *ec);
+void ESD_Update(ESD_Context *ec);
+void ESD_Render(ESD_Context *ec);
+bool ESD_WaitSwap(ESD_Context *ec);
+void ESD_Stop(ESD_Context *ec);
 
 #endif /* #ifndef ESD_CONTEXT__H */
 

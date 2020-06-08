@@ -3,7 +3,7 @@
 #include "ESD_Render.h"
 #include "ESD_Scissor.h"
 
-void Esd_Render_Circle_Stroke(
+void ESD_Render_Circle_Stroke(
     esd_int32_f4_t x, esd_int32_f4_t y,
     esd_int32_f4_t radius, esd_int32_f4_t border,
     uint8_t stroke, esd_argb32_t color)

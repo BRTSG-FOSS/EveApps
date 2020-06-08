@@ -26,20 +26,20 @@ void ESD_Spinner_Popup()
 
 #if defined(EVE_FLASH_AVAILABLE)
 #ifdef ESD_SIMULATION
-extern void Esd_SetFlashStatus__ESD(int status);
-extern void Esd_SetFlashSize__ESD(int size);
+extern void ESD_SetFlashStatus__ESD(int status);
+extern void ESD_SetFlashSize__ESD(int size);
 #else
-#define Esd_SetFlashStatus__ESD(status) \
+#define ESD_SetFlashStatus__ESD(status) \
 	do                                  \
 	{                                   \
 	} while (false)
-#define Esd_SetFlashSize__ESD(status) \
+#define ESD_SetFlashSize__ESD(status) \
 	do                                \
 	{                                 \
 	} while (false)
 #endif
 
-void ESD_attachFlashFast()
+void ESD_AttachFlashFast()
 {
 	// Wait for flash status to move on from FLASH_STATUS_INIT
 	EVE_HalContext *phost = ESD_Host;
@@ -56,14 +56,14 @@ void ESD_attachFlashFast()
 	{
 		uint32_t error;
 
-		Esd_SetFlashStatus__ESD(flashStatus);
+		ESD_SetFlashStatus__ESD(flashStatus);
 
 		flashStatus = EVE_CoCmd_flashAttach(phost);
-		Esd_SetFlashStatus__ESD(flashStatus);
-		Esd_SetFlashSize__ESD(EVE_Hal_rd32(phost, REG_FLASH_SIZE));
+		ESD_SetFlashStatus__ESD(flashStatus);
+		ESD_SetFlashSize__ESD(EVE_Hal_rd32(phost, REG_FLASH_SIZE));
 
 		flashStatus = EVE_CoCmd_flashFast(phost, &error);
-		Esd_SetFlashStatus__ESD(flashStatus);
+		ESD_SetFlashStatus__ESD(flashStatus);
 
 #ifndef NDEBUG
 		if (error != s_FlashErrorLast)
@@ -97,10 +97,10 @@ void ESD_attachFlashFast()
 	}
 }
 #else
-#define ESD_attachFlashFast() eve_noop()
+#define ESD_AttachFlashFast() eve_noop()
 #endif
 
-void ESD_beginLogo()
+void ESD_BeginLogo()
 {
 	EVE_HalContext *phost = ESD_Host;
 	ESD_GpuAlloc_Reset(ESD_GAlloc);
@@ -126,7 +126,7 @@ void ESD_beginLogo()
 	EVE_sleep(3000);
 }
 
-void ESD_endLogo()
+void ESD_EndLogo()
 {
 	EVE_HalContext *phost = ESD_Host;
 	EVE_CoCmd_dlStart(phost);
@@ -138,13 +138,13 @@ void ESD_endLogo()
 	ESD_GpuAlloc_Reset(ESD_GAlloc);
 }
 
-void ESD_showLogo()
+void ESD_ShowLogo()
 {
 	ESD_CurrentContext->ShowLogo = true;
 }
 
 /// Run calibrate procedure
-bool ESD_calibrate()
+bool ESD_Calibrate()
 {
 	EVE_HalContext *phost = ESD_Host;
 	uint32_t result;
@@ -154,7 +154,7 @@ bool ESD_calibrate()
 	EVE_Hal_wr8(phost, REG_CTOUCH_EXTENDED, CTOUCH_MODE_COMPATIBILITY);
 #endif
 
-	eve_printf_debug("ESD_calibrate: Start Frame\n");
+	eve_printf_debug("ESD_Calibrate: Start Frame\n");
 
 	EVE_CoCmd_dlStart(phost);
 	EVE_CoCmd_dl(phost, CLEAR_COLOR_RGB(64, 64, 64));
@@ -165,7 +165,7 @@ bool ESD_calibrate()
 
 	result = EVE_CoCmd_calibrate(phost);
 
-	eve_printf_debug("ESD_calibrate: End Frame\n");
+	eve_printf_debug("ESD_Calibrate: End Frame\n");
 
 	// Print the configured values
 	EVE_Hal_rdMem(phost, (uint8_t *)transMatrix, REG_TOUCH_TRANSFORM_A, 4 * 6); //read all the 6 coefficients

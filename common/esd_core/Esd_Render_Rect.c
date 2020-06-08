@@ -2,7 +2,7 @@
 #include "ESD_Context.h"
 #include "ESD_Render.h"
 
-void Esd_Render_Rect_Stroke(
+void ESD_Render_Rect_Stroke(
     esd_int32_f4_t x, esd_int32_f4_t y,
     esd_int32_f4_t width, esd_int32_f4_t height,
     esd_int32_f4_t radius, esd_int32_f4_t border,
