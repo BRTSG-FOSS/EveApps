@@ -102,7 +102,7 @@ void ESD_CoDl_Bitmap_Vertex_PALETTED8(int16_t x, int16_t y, uint8_t handle, uint
 #define ESD_CoDl_Bitmap_Vertex_PALETTED8(x, y, handle, cell, paletteAddr) eve_assert(false)
 #endif
 
-void ESD_Render_Bitmap_(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, esd_argb32_t c)
+void ESD_Render_Bitmap(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, esd_argb32_t c)
 {
 	ESD_BitmapInfo *bitmapInfo;
 	uint16_t cell;
@@ -229,12 +229,12 @@ void ESD_Render_Bitmap_Freeform(ESD_BitmapCell bitmapCell, esd_argb32_t c, ESD_R
 		freeformRect.Y += globalRect.Y;
 		if (ESD_Rect16_IsInside(freeformRect, globalRect)) // No scissor
 		{
-			ESD_Render_Bitmap_(freeformRect.X, freeformRect.Y, bitmapCell, c);
+			ESD_Render_Bitmap(freeformRect.X, freeformRect.Y, bitmapCell, c);
 		}
 		else
 		{
 			ESD_Rect16 state = ESD_Scissor_Set(globalRect);
-			ESD_Render_Bitmap_(freeformRect.X, freeformRect.Y, bitmapCell, c);
+			ESD_Render_Bitmap(freeformRect.X, freeformRect.Y, bitmapCell, c);
 			ESD_Scissor_Reset(state);
 		}
 	}
