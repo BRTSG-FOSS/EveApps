@@ -15,23 +15,23 @@ Resource info structure
 #include "ESD_GpuAlloc.h"
 
 // Resource loading mechanisms
-ESD_ENUM(ESD_ResourceType, DisplayName = "Resource Type")
+#pragma ESD_ENUM(ESD_ResourceType, DisplayName = "Resource Type")
 #define ESD_RESOURCE_FILE 0
 #define ESD_RESOURCE_PROGMEM 1
 #define ESD_RESOURCE_FLASH 2
 #define ESD_RESOURCE_DIRECTFLASH 3
-ESD_END()
+#pragma ESD_END()
 
-ESD_ENUM(ESD_ResourceCompression, DisplayName = "Resource Compression")
+#pragma ESD_ENUM(ESD_ResourceCompression, DisplayName = "Resource Compression")
 #define ESD_RESOURCE_RAW 0
 #define ESD_RESOURCE_DEFLATE 1
 #define ESD_RESOURCE_IMAGE 2
-ESD_END()
+#pragma ESD_END()
 
 // Both flash and direct flash have the same type bit set on purpose
 #define ESD_RESOURCE_IS_FLASH(resourceType) ((resourceType & ESD_RESOURCE_FLASH) == ESD_RESOURCE_FLASH)
 
-ESD_TYPE(ESD_ResourceInfo, Native = Struct)
+#pragma ESD_TYPE(ESD_ResourceInfo, Native = Struct)
 typedef struct ESD_ResourceInfo // (16 bytes) (24 bytes on 64 bit)
 {
 	// Source of data
@@ -63,7 +63,7 @@ typedef struct ESD_ResourceInfo // (16 bytes) (24 bytes on 64 bit)
 
 } ESD_ResourceInfo;
 
-ESD_TYPE(ESD_ResourceInfo *, Native = Pointer, Edit = Library)
+#pragma ESD_TYPE(ESD_ResourceInfo *, Native = Pointer, Edit = Library)
 
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 #ifdef EVE_FLASH_AVAILABLE
@@ -89,8 +89,8 @@ ESD_CORE_EXPORT uint32_t ESD_LoadResource(ESD_ResourceInfo *resourceInfo, uint32
 ESD_CORE_EXPORT void ESD_FreeResource(ESD_ResourceInfo *resourceInfo);
 
 /// A function to make fonts persistent in memory by reloading the data if necessary, called during the Update cycle of each frame
-ESD_UPDATE(ESD_ResourcePersist, DisplayName = "Persist Resource", Category = EsdUtilities)
-ESD_PARAMETER(resourceInfo, Type = ESD_ResourceInfo *)
+#pragma ESD_UPDATE(ESD_ResourcePersist, DisplayName = "Persist Resource", Category = EsdUtilities)
+#pragma ESD_PARAMETER(resourceInfo, Type = ESD_ResourceInfo *)
 ESD_CORE_EXPORT void ESD_ResourcePersist(ESD_ResourceInfo *resourceInfo);
 
 // Number of available bitmap handles

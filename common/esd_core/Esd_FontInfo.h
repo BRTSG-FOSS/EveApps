@@ -15,21 +15,21 @@ Font info structure
 #include "ESD_GpuAlloc.h"
 #include "ESD_ResourceInfo.h"
 
-ESD_ENUM(ESD_FontType, DisplayName = "Bitmap Format")
+#pragma ESD_ENUM(ESD_FontType, DisplayName = "Bitmap Format")
 #define ESD_FONT_ROM 0
 #define ESD_FONT_LEGACY 1
 #define ESD_FONT_EXTENDED 2
-ESD_END()
+#pragma ESD_END()
 
 // Preset font formats
-ESD_ENUM(_FontResourceFormat, DisplayName = "Font Resource Format")
-// ESD_IDENTIFIER(LEGACY_L1)
-// ESD_IDENTIFIER(LEGACY_L8)
-ESD_IDENTIFIER(EXTENDED_ASTC)
-ESD_END()
+#pragma ESD_ENUM(_FontResourceFormat, DisplayName = "Font Resource Format")
+// #pragma ESD_IDENTIFIER(LEGACY_L1)
+// #pragma ESD_IDENTIFIER(LEGACY_L8)
+#pragma ESD_IDENTIFIER(EXTENDED_ASTC)
+#pragma ESD_END()
 
 // Structure providing information on how a font is loaded, as well as it's current loaded state
-ESD_TYPE(ESD_FontInfo, Native = Struct)
+#pragma ESD_TYPE(ESD_FontInfo, Native = Struct)
 typedef struct ESD_FontInfo // (40 bytes) (56 bytes on 64 bit)
 {
 	// (Runtime) Bitmap handle that is being used
@@ -61,7 +61,7 @@ typedef struct ESD_FontInfo // (40 bytes) (56 bytes on 64 bit)
 
 } ESD_FontInfo;
 
-ESD_TYPE(ESD_FontInfo *, Native = Pointer, Edit = Library)
+#pragma ESD_TYPE(ESD_FontInfo *, Native = Pointer, Edit = Library)
 
 // Reduced ESD FontInfo structure with binary compatible type header, specific for ROM fonts
 typedef struct ESD_RomFontInfo // (4 bytes)
@@ -91,8 +91,8 @@ typedef struct ESD_RomFontInfo // (4 bytes)
 ESD_CORE_EXPORT uint32_t ESD_LoadFont(ESD_FontInfo *fontInfo);
 
 /// A function to make fonts persistent in memory by reloading the data if necessary, called during the Update cycle of each frame
-ESD_UPDATE(ESD_FontPersist, DisplayName = "Persist Font", Category = EsdUtilities)
-ESD_PARAMETER(fontInfo, Type = ESD_FontInfo *)
+#pragma ESD_UPDATE(ESD_FontPersist, DisplayName = "Persist Font", Category = EsdUtilities)
+#pragma ESD_PARAMETER(fontInfo, Type = ESD_FontInfo *)
 ESD_CORE_EXPORT void ESD_FontPersist(ESD_FontInfo *fontInfo);
 
 #endif /* #ifndef ESD_FONTINFO__H */

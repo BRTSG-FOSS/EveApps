@@ -113,15 +113,15 @@ ESD_CORE_EXPORT bool ESD_WaitSwap(ESD_Context *ec);
 ESD_CORE_EXPORT void ESD_Stop(ESD_Context *ec);
 
 /// A function to get milliseconds for current frame
-ESD_FUNCTION(ESD_GetMillis, Type = uint32_t, DisplayName = "Get Milliseconds", Category = EsdUtilities, Inline)
+#pragma ESD_FUNCTION(ESD_GetMillis, Type = uint32_t, DisplayName = "Get Milliseconds", Category = EsdUtilities, Inline)
 static inline uint32_t ESD_GetMillis() { return ESD_CurrentContext->Millis; }
 
 /// A function to get the difference in milliseconds since last frame Update call
-ESD_FUNCTION(ESD_GetDeltaMs, Type = uint32_t, DisplayName = "Get Delta Ms", Category = EsdUtilities, Inline)
+#pragma ESD_FUNCTION(ESD_GetDeltaMs, Type = uint32_t, DisplayName = "Get Delta Ms", Category = EsdUtilities, Inline)
 static inline uint32_t ESD_GetDeltaMs() { return ESD_CurrentContext->DeltaMs; }
 
 /// A function to get the current HAL context data structure
-ESD_FUNCTION(ESD_GetHost, Type = EVE_HalContext *, DisplayName = "Get EVE Host", Category = EsdUtilities, Inline)
+#pragma ESD_FUNCTION(ESD_GetHost, Type = EVE_HalContext *, DisplayName = "Get EVE Host", Category = EsdUtilities, Inline)
 static inline EVE_HalContext *ESD_GetHost() { return ESD_Host; }
 
 #endif /* #ifndef ESD_CONTEXT__H */

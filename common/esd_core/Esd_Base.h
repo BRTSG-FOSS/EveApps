@@ -198,7 +198,7 @@ typedef uint32_t esd_classid_t;
 /* A generic callback with context pointer */
 typedef void (*ESD_Callback)(void *context);
 
-#pragma ESD_FUNCTION(ESD_Noop, Category = _GroupHidden)
+#pragma ESD_FUNCTION(ESD_Noop, Attributes = ESD_CORE_EXPORT, Category = _GroupHidden)
 #pragma ESD_PARAMETER(context, Type = void *)
 ESD_CORE_EXPORT void ESD_Noop(void *context);
 
