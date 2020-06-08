@@ -114,17 +114,6 @@ ESD_PARAMETER(dl, Type = uint32_t)
 
 #include "EVE_Hal.h"
 
-#ifdef EVE_MULTI_TARGET
-#ifdef ESD_CORE_EXPORT
-#undef ESD_CORE_EXPORT
-#define ESD_CORE_EXPORT _declspec(dllexport)
-#else
-#define ESD_CORE_EXPORT _declspec(dllimport)
-#endif
-#else
-#define ESD_CORE_EXPORT
-#endif
-
 #pragma ESD_TYPE(void, Native = Void)
 #pragma ESD_TYPE(char, Native = Char, Edit = String)
 #pragma ESD_TYPE(signed char, Native = Int8, Edit = Integer)
@@ -189,9 +178,20 @@ typedef uint32_t esd_rgb32_t;
 #pragma ESD_TYPE(esd_classid_t, Native = UInt32, Edit = Library)
 typedef uint32_t esd_classid_t;
 
+#ifdef EVE_MULTI_TARGET
+#ifdef ESD_CORE_EXPORT
+#undef ESD_CORE_EXPORT
+#define ESD_CORE_EXPORT _declspec(dllexport)
+#else
+#define ESD_CORE_EXPORT _declspec(dllimport)
+#endif
+#else
+#define ESD_CORE_EXPORT
+#endif
+
 #pragma ESD_FUNCTION(ESD_noop, Category = _GroupHidden)
 #pragma ESD_PARAMETER(context, Type = void *)
-void ESD_noop(void *context);
+ESD_CORE_EXPORT void ESD_noop(void *context);
 
 #define ESD_LOOPSTATE_NONE 0
 #define ESD_LOOPSTATE_IDLE 1

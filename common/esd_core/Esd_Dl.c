@@ -21,8 +21,8 @@ void Esd_ResetGpuState() // Begin of frame
 	// Reset scissor state to display size
 	ESD_ScissorRect.X = 0;
 	ESD_ScissorRect.Y = 0;
-	ESD_ScissorRect.Width = ESD_DispWidth;
-	ESD_ScissorRect.Height = ESD_DispHeight;
+	ESD_ScissorRect.Width = phost->Width;
+	ESD_ScissorRect.Height = phost->Height;
 }
 
 ESD_Rect16 ESD_Dl_Scissor_Get()

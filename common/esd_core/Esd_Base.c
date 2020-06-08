@@ -1,7 +1,7 @@
 
 #include "ESD_Base.h"
 
-void ESD_noop(void *context)
+ESD_CORE_EXPORT void ESD_noop(void *context)
 {
 	// no-op
 }
