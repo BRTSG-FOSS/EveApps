@@ -1,7 +1,7 @@
 
 #include "ESD_TypeDefs.h"
 
-void ESD_Noop(void *context)
+void ESD_noop(void *context)
 {
 	// no-op
 }

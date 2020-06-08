@@ -4,14 +4,14 @@
 #include "ESD_Dl.h"
 
 void Esd_Render_Circle_Stroke(
-    int32_f4_t x, int32_f4_t y,
-    int32_f4_t radius, int32_f4_t border,
-    uint8_t stroke, ft_argb32_t color)
+    esd_int32_f4_t x, esd_int32_f4_t y,
+    esd_int32_f4_t radius, esd_int32_f4_t border,
+    uint8_t stroke, esd_argb32_t color)
 {
 	EVE_HalContext *phost = ESD_Host;
-	int32_f4_t r = radius;
-	int32_f4_t innerRadius;
-	int32_f4_t outerRadius;
+	esd_int32_f4_t r = radius;
+	esd_int32_f4_t innerRadius;
+	esd_int32_f4_t outerRadius;
 
 	if (border <= 0)
 	{
@@ -39,9 +39,9 @@ void Esd_Render_Circle_Stroke(
 	if (border < 16)
 	{
 		// Expand border centrally to 16 subpixels
-		int32_f4_t adjust = (16 - border);
-		int32_f4_t innerAdjust = adjust >> 1;
-		int32_f4_t outerAdjust = adjust - innerAdjust;
+		esd_int32_f4_t adjust = (16 - border);
+		esd_int32_f4_t innerAdjust = adjust >> 1;
+		esd_int32_f4_t outerAdjust = adjust - innerAdjust;
 		innerRadius -= innerAdjust;
 		outerRadius += outerAdjust;
 

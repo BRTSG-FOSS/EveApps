@@ -14,7 +14,7 @@ uint32_t s_MultiGradient_Cell;
 // The maximum number of multi gradients that can be on screen at once, multiplied by two
 #define ESD_MULTIGRADIENT_MAX_NB (1 << 6)
 
-void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t width, int16_t height, ft_argb32_t topLeft, ft_argb32_t topRight, ft_argb32_t bottomLeft, ft_argb32_t bottomRight)
+void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t width, int16_t height, esd_argb32_t topLeft, esd_argb32_t topRight, esd_argb32_t bottomLeft, esd_argb32_t bottomRight)
 {
 	EVE_HalContext *phost = ESD_Host;
 	(void)phost;
@@ -125,7 +125,7 @@ void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t width, int16_t heigh
 	s_MultiGradient_Cell &= (ESD_MULTIGRADIENT_MAX_NB - 1);
 }
 
-void Esd_Render_MultiGradient_Rounded(int16_t x, int16_t y, int16_t width, int16_t height, int32_f4_t radius, uint8_t alpha, ft_argb32_t topLeft, ft_argb32_t topRight, ft_argb32_t bottomLeft, ft_argb32_t bottomRight)
+void Esd_Render_MultiGradient_Rounded(int16_t x, int16_t y, int16_t width, int16_t height, esd_int32_f4_t radius, uint8_t alpha, esd_argb32_t topLeft, esd_argb32_t topRight, esd_argb32_t bottomLeft, esd_argb32_t bottomRight)
 {
 	EVE_HalContext *phost = ESD_Host;
 

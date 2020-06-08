@@ -8,7 +8,7 @@
 extern EVE_HalContext *ESD_Host;
 
 // Rectangle drawing with some logic to convert from radius to line width and width height to positions to simplify usage
-void ESD_Render_RectangleF(int32_f4_t x, int32_f4_t y, int32_f4_t w, int32_f4_t h, int32_f4_t radius, ft_argb32_t color)
+void ESD_Render_RectangleF(esd_int32_f4_t x, esd_int32_f4_t y, esd_int32_f4_t w, esd_int32_f4_t h, esd_int32_f4_t radius, esd_argb32_t color)
 {
 	EVE_HalContext *phost = ESD_Host;
 	int32_t width = radius + 8;
@@ -26,7 +26,7 @@ void ESD_Render_RectangleF(int32_f4_t x, int32_f4_t y, int32_f4_t w, int32_f4_t 
 	EVE_CoDl_end(phost);
 }
 
-void ESD_Render_LineF(int32_f4_t x0, int32_f4_t y0, int32_f4_t x1, int32_f4_t y1, int32_f3_t width, ft_argb32_t color)
+void ESD_Render_LineF(esd_int32_f4_t x0, esd_int32_f4_t y0, esd_int32_f4_t x1, esd_int32_f4_t y1, esd_int32_f3_t width, esd_argb32_t color)
 {
 	EVE_HalContext *phost = ESD_Host;
 	EVE_CoDl_colorArgb_ex(phost, color);
@@ -102,7 +102,7 @@ void ESD_Dl_Bitmap_Vertex_PALETTED8(int16_t x, int16_t y, uint8_t handle, uint16
 #define ESD_Dl_Bitmap_Vertex_PALETTED8(x, y, handle, cell, paletteAddr) eve_assert(false)
 #endif
 
-void ESD_Render_Bitmap(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, ft_argb32_t c)
+void ESD_Render_Bitmap(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, esd_argb32_t c)
 {
 	ESD_BitmapInfo *bitmapInfo;
 	uint16_t cell;
@@ -155,7 +155,7 @@ void ESD_Render_Bitmap(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, ft_argb3
 	}
 }
 
-void ESD_Render_BitmapScaled(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, ft_argb32_t c, int32_f16_t xscale, int32_f16_t yscale, int32_f16_t xoffset, int32_f16_t yoffset, int16_t width, int16_t height)
+void ESD_Render_BitmapScaled(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, esd_argb32_t c, esd_int32_f16_t xscale, esd_int32_f16_t yscale, esd_int32_f16_t xoffset, esd_int32_f16_t yoffset, int16_t width, int16_t height)
 {
 	EVE_HalContext *phost;
 	ESD_BitmapInfo *bitmapInfo;
@@ -211,7 +211,7 @@ void ESD_Render_BitmapScaled(int16_t x, int16_t y, ESD_BitmapCell bitmapCell, ft
 }
 
 // Render bitmap using freeform rectangle within a specified global screen rectangle, freeform is relative to global
-void ESD_Render_BitmapFreeform(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_Rect16 globalRect, ESD_Rect16 freeformRect, uint8_t minAlpha)
+void ESD_Render_BitmapFreeform(ESD_BitmapCell bitmapCell, esd_argb32_t c, ESD_Rect16 globalRect, ESD_Rect16 freeformRect, uint8_t minAlpha)
 {
 	EVE_HalContext *phost;
 
@@ -227,7 +227,7 @@ void ESD_Render_BitmapFreeform(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_Rec
 	{
 		freeformRect.X += globalRect.X;
 		freeformRect.Y += globalRect.Y;
-		if (ESD_Rect16_IsInside(freeformRect, globalRect)) // No scissor
+		if (ESD_Rect16_isInside(freeformRect, globalRect)) // No scissor
 		{
 			ESD_Render_Bitmap(freeformRect.X, freeformRect.Y, bitmapCell, c);
 		}
@@ -240,18 +240,18 @@ void ESD_Render_BitmapFreeform(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_Rec
 	}
 	else
 	{
-		int32_f16_t xscale = (((int32_f16_t)freeformRect.Width) << 16) / ((int32_f16_t)bitmapCell.Info->Width);
-		int32_f16_t yscale = (((int32_f16_t)freeformRect.Height) << 16) / ((int32_f16_t)bitmapCell.Info->Height);
+		esd_int32_f16_t xscale = (((esd_int32_f16_t)freeformRect.Width) << 16) / ((esd_int32_f16_t)bitmapCell.Info->Width);
+		esd_int32_f16_t yscale = (((esd_int32_f16_t)freeformRect.Height) << 16) / ((esd_int32_f16_t)bitmapCell.Info->Height);
 		// eve_printf_debug("scale: %i, %i\n", xscale, yscale);
 		ESD_Render_BitmapScaled(globalRect.X, globalRect.Y, bitmapCell, c, xscale, yscale,
-		    (((int32_f16_t)freeformRect.X) << 16), (((int32_f16_t)freeformRect.Y) << 16),
+		    (((esd_int32_f16_t)freeformRect.X) << 16), (((esd_int32_f16_t)freeformRect.Y) << 16),
 		    globalRect.Width, globalRect.Height);
 	}
 
 	EVE_CoDl_alphaFunc(phost, ALWAYS, 0);
 }
 
-void ESD_Render_BitmapRotate_Scaled(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_Rect16 globalRect, int32_t rotateAngle, int32_f16_t xscale, int32_f16_t yscale)
+void ESD_Render_BitmapRotate_Scaled(ESD_BitmapCell bitmapCell, esd_argb32_t c, ESD_Rect16 globalRect, int32_t rotateAngle, esd_int32_f16_t xscale, esd_int32_f16_t yscale)
 {
 	EVE_HalContext *phost;
 	ESD_BitmapInfo *bitmapInfo;
@@ -298,7 +298,7 @@ void ESD_Render_BitmapRotate_Scaled(ESD_BitmapCell bitmapCell, ft_argb32_t c, ES
 	}
 }
 
-void ESD_Render_BitmapRotate(ESD_BitmapCell bitmapCell, ft_argb32_t c, ESD_Rect16 globalRect, int32_t rotateAngle)
+void ESD_Render_BitmapRotate(ESD_BitmapCell bitmapCell, esd_argb32_t c, ESD_Rect16 globalRect, int32_t rotateAngle)
 {
 	EVE_HalContext *phost = ESD_Host;
 	ESD_BitmapInfo *bitmapInfo;
@@ -372,8 +372,8 @@ ESD_Size16 ESD_Primitive_GetScaledSize(ESD_Size16 boundary, ESD_Size16 original,
 	case ESD_SCALING_FIT: // Keep Aspect ratio, stay inside rect
 	{
 		// There are two real options: scale original to boundary width or scale original to boundary height
-		int32_f16_t boundaryRatio = (((int32_f16_t)boundary.Width) << 16) / ((int32_f16_t)boundary.Height);
-		int32_f16_t originalRatio = (((int32_f16_t)original.Width) << 16) / ((int32_f16_t)original.Height);
+		esd_int32_f16_t boundaryRatio = (((esd_int32_f16_t)boundary.Width) << 16) / ((esd_int32_f16_t)boundary.Height);
+		esd_int32_f16_t originalRatio = (((esd_int32_f16_t)original.Width) << 16) / ((esd_int32_f16_t)original.Height);
 		bool originalWider;
 		bool wantFit;
 		ESD_Size16 res;
@@ -385,18 +385,18 @@ ESD_Size16 ESD_Primitive_GetScaledSize(ESD_Size16 boundary, ESD_Size16 original,
 		    //                          (original wider && want fill)  || (boundary wider && want fit)
 		{
 			// Scale to height
-			int32_f16_t scale;
+			esd_int32_f16_t scale;
 			res.Height = boundary.Height;
-			scale = (((int32_f16_t)boundary.Height) << 16) / ((int32_f16_t)original.Height);
-			res.Width = (((int32_f16_t)original.Width) * scale) >> 16;
+			scale = (((esd_int32_f16_t)boundary.Height) << 16) / ((esd_int32_f16_t)original.Height);
+			res.Width = (((esd_int32_f16_t)original.Width) * scale) >> 16;
 		}
 		else
 		{
 			// Scale to width
-			int32_f16_t scale;
+			esd_int32_f16_t scale;
 			res.Width = boundary.Width;
-			scale = (((int32_f16_t)boundary.Width) << 16) / ((int32_f16_t)original.Width);
-			res.Height = (((int32_f16_t)original.Height) * scale) >> 16;
+			scale = (((esd_int32_f16_t)boundary.Width) << 16) / ((esd_int32_f16_t)original.Width);
+			res.Height = (((esd_int32_f16_t)original.Height) * scale) >> 16;
 		}
 		return res;
 	}

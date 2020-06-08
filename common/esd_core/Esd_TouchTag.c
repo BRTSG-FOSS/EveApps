@@ -4,15 +4,15 @@
 
 #include "ESD_Context.h"
 
-extern void ESD_Noop(void *context);
+extern void ESD_noop(void *context);
 
 extern EVE_HalContext *ESD_Host;
 
 static uint32_t s_LastTagFrame = ~0;
 static ESD_TouchTag s_NullTag = {
-	.Down = ESD_Noop,
-	.Up = ESD_Noop,
-	.Tap = ESD_Noop,
+	.Down = ESD_noop,
+	.Up = ESD_noop,
+	.Tap = ESD_noop,
 	.Tag = 0,
 	.Set = false
 };

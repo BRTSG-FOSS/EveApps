@@ -82,42 +82,42 @@ typedef struct
 	uint32_t X, Y, Width, Height;
 } ESD_URect32;
 
-bool ESD_Rect16_Intersects(ESD_Rect16 a, ESD_Rect16 b);
-bool ESD_Rect16_IsInside(ESD_Rect16 subrect, ESD_Rect16 rect);
-bool ESD_Rect16_IsInsideHorizontal(ESD_Rect16 subrect, ESD_Rect16 rect);
-bool ESD_Rect16_IsInsideVertical(ESD_Rect16 subrect, ESD_Rect16 rect);
+bool ESD_Rect16_intersects(ESD_Rect16 a, ESD_Rect16 b);
+bool ESD_Rect16_isInside(ESD_Rect16 subrect, ESD_Rect16 rect);
+bool ESD_Rect16_isInsideHorizontal(ESD_Rect16 subrect, ESD_Rect16 rect);
+bool ESD_Rect16_isInsideVertical(ESD_Rect16 subrect, ESD_Rect16 rect);
 
-ESD_Rect16 ESD_Rect16_Crop(ESD_Rect16 rect, ESD_Rect16 crop);
+ESD_Rect16 ESD_Rect16_crop(ESD_Rect16 rect, ESD_Rect16 crop);
 
-ESD_FUNCTION(ESD_Int16_ClampedValue, Type = int16_t, DisplayName = "Clamp Int16", Category = EsdUtilities, Macro)
+ESD_FUNCTION(ESD_Int16_clampedValue, Type = int16_t, DisplayName = "Clamp Int16", Category = EsdUtilities, Macro)
 ESD_PARAMETER(value, Type = int16_t, Default = 0)
 ESD_PARAMETER(min, Type = int16_t, Default = 0)
 ESD_PARAMETER(max, Type = int16_t, Default = 100)
-#define ESD_Int16_ClampedValue(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
+#define ESD_Int16_clampedValue(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
 
-ESD_FUNCTION(ESD_UInt16_ClampedValue, Type = uint16_t, DisplayName = "Clamp UInt16", Category = EsdUtilities, Macro)
+ESD_FUNCTION(ESD_UInt16_clampedValue, Type = uint16_t, DisplayName = "Clamp UInt16", Category = EsdUtilities, Macro)
 ESD_PARAMETER(value, Type = uint16_t, Default = 0)
 ESD_PARAMETER(min, Type = uint16_t, Default = 0)
 ESD_PARAMETER(max, Type = uint16_t, Default = 100)
-#define ESD_UInt16_ClampedValue(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
+#define ESD_UInt16_clampedValue(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
 
-ESD_FUNCTION(ESD_Int32_ClampedValue, Type = int32_t, DisplayName = "Clamp Int32", Category = EsdUtilities, Macro)
+ESD_FUNCTION(ESD_Int32_clampedValue, Type = int32_t, DisplayName = "Clamp Int32", Category = EsdUtilities, Macro)
 ESD_PARAMETER(value, Type = int32_t, Default = 0)
 ESD_PARAMETER(min, Type = int32_t, Default = 0)
 ESD_PARAMETER(max, Type = int32_t, Default = 100)
-#define ESD_Int32_ClampedValue(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
+#define ESD_Int32_clampedValue(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
 
-ESD_FUNCTION(ESD_UInt32_ClampedValue, Type = uint32_t, DisplayName = "Clamp UInt32", Category = EsdUtilities, Macro)
+ESD_FUNCTION(ESD_UInt32_clampedValue, Type = uint32_t, DisplayName = "Clamp UInt32", Category = EsdUtilities, Macro)
 ESD_PARAMETER(value, Type = uint32_t, Default = 0)
 ESD_PARAMETER(min, Type = uint32_t, Default = 0)
 ESD_PARAMETER(max, Type = uint32_t, Default = 100)
-#define ESD_UInt32_ClampedValue(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
+#define ESD_UInt32_clampedValue(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
 
-ESD_FUNCTION(ESD_Float_ClampedValue, Type = float, DisplayName = "Clamp Float", Category = EsdUtilities, Macro)
+ESD_FUNCTION(ESD_Float_clampedValue, Type = float, DisplayName = "Clamp Float", Category = EsdUtilities, Macro)
 ESD_PARAMETER(value, Type = float, Default = 0)
 ESD_PARAMETER(min, Type = float, Default = 0)
 ESD_PARAMETER(max, Type = float, Default = 100)
-#define ESD_Float_ClampedValue(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
+#define ESD_Float_clampedValue(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
 
 #endif /* ESD_MATH__H */
 

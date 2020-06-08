@@ -140,7 +140,7 @@ ReturnInvalidHandle:
 #ifdef ESD_SIMULATION
 	if (!s_ErrorGpuAllocFailed)
 	{
-		ESD_LogError("Unable to allocate RAM_G space");
+		ESD_logError("Unable to allocate RAM_G space");
 		s_ErrorGpuAllocFailed = 1;
 	}
 #endif

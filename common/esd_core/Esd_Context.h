@@ -48,7 +48,7 @@ typedef struct
 	uint32_t Millis; //< Time in milliseconds for current frame
 	uint32_t DeltaMs; //< Delta time in milliseconds between frames
 	uint32_t Frame; //< Number of times Render has been called
-	ft_rgb32_t ClearColor; //< Screen clear color (default is 0x212121)
+	esd_rgb32_t ClearColor; //< Screen clear color (default is 0x212121)
 	uint8_t LoopState; //< Current state of loop
 
 	bool RequestStop; //< Flag to stop the loop
