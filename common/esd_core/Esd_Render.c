@@ -2,45 +2,24 @@
 #include "ESD_Render.h"
 #include <EVE_Hal.h>
 
+#include "ESD_Context.h"
 #include "ESD_Scissor.h"
 #include "ESD_BitmapHandle.h"
 
-extern ESD_CORE_EXPORT EVE_HalContext *ESD_Host;
-
-// Rectangle drawing with some logic to convert from radius to line width and width height to positions to simplify usage
-void ESD_Render_RectangleF(esd_int32_f4_t x, esd_int32_f4_t y, esd_int32_f4_t w, esd_int32_f4_t h, esd_int32_f4_t radius, esd_argb32_t color)
+ESD_CORE_EXPORT void ESD_Render_LineF(esd_int32_f4_t x0, esd_int32_f4_t y0, esd_int32_f4_t x1, esd_int32_f4_t y1, esd_int32_f3_t width, esd_argb32_t color)
 {
-	EVE_HalContext *phost = ESD_Host;
-	int32_t width = radius + 8;
-	int32_t x0 = x + radius;
-	int32_t y0 = y + radius;
-	int32_t x1 = x + w - 16 - radius;
-	int32_t y1 = y + h - 16 - radius;
-	EVE_CoDl_colorArgb_ex(phost, color);
-	EVE_CoDl_lineWidth(phost, width);
-	EVE_CoDl_begin(phost, RECTS);
-	if (EVE_CHIPID >= EVE_FT810)
-		EVE_CoDl_vertexFormat(phost, 4);
-	EVE_CoCmd_dl(phost, VERTEX2F(x0, y0));
-	EVE_CoCmd_dl(phost, VERTEX2F(x1, y1));
-	EVE_CoDl_end(phost);
-}
-
-void ESD_Render_LineF(esd_int32_f4_t x0, esd_int32_f4_t y0, esd_int32_f4_t x1, esd_int32_f4_t y1, esd_int32_f3_t width, esd_argb32_t color)
-{
-	EVE_HalContext *phost = ESD_Host;
+	EVE_HalContext *phost = ESD_GetHost();
 	EVE_CoDl_colorArgb_ex(phost, color);
 	EVE_CoDl_lineWidth(phost, width);
 	EVE_CoDl_begin(phost, LINES);
-	if (EVE_CHIPID >= EVE_FT810)
-		EVE_CoDl_vertexFormat(phost, 4);
+	EVE_CoDl_vertexFormat(phost, 4);
 	EVE_CoCmd_dl(phost, VERTEX2F(x0, y0));
 	EVE_CoCmd_dl(phost, VERTEX2F(x1, y1));
 	EVE_CoDl_end(phost);
 }
 
 // Get scaled size
-ESD_Size16 ESD_Math_GetScaledSize(ESD_Size16 boundary, ESD_Size16 original, uint8_t scaling)
+ESD_CORE_EXPORT ESD_Size16 ESD_Math_GetScaledSize(ESD_Size16 boundary, ESD_Size16 original, uint8_t scaling)
 {
 	switch (scaling)
 	{
@@ -84,7 +63,7 @@ ESD_Size16 ESD_Math_GetScaledSize(ESD_Size16 boundary, ESD_Size16 original, uint
 }
 
 // Get alignment position
-ESD_Rect16 ESD_Math_GetAlignedRect(ESD_Size16 boundary, ESD_Size16 size, uint8_t align)
+ESD_CORE_EXPORT ESD_Rect16 ESD_Math_GetAlignedRect(ESD_Size16 boundary, ESD_Size16 size, uint8_t align)
 {
 	ESD_Rect16 res;
 	uint8_t halign;

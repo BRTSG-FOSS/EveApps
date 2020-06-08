@@ -157,9 +157,9 @@ bool ESD_Calibrate()
 	eve_printf_debug("ESD_Calibrate: Start Frame\n");
 
 	EVE_CoCmd_dlStart(phost);
-	EVE_CoCmd_dl(phost, CLEAR_COLOR_RGB(64, 64, 64));
-	EVE_CoCmd_dl(phost, CLEAR(1, 1, 1));
-	EVE_CoCmd_dl(phost, COLOR_RGB(0xff, 0xff, 0xff));
+	EVE_CoDl_clearColorRgb(phost, 64, 64, 64);
+	EVE_CoDl_clear(phost, true, true, true);
+	EVE_CoDl_colorRgb(phost, 0xff, 0xff, 0xff);
 
 	// EVE_CoCmd_text(phost, (ESD_Host->Parameters.Display.Width / 2), (ESD_Host->Parameters.Display.Height / 2), 27, OPT_CENTER, "Please Tap on the dot");
 

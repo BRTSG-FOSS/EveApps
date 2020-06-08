@@ -1,6 +1,6 @@
 
-#include "ESD_Context.h"
 #include "ESD_Render.h"
+#include "ESD_Context.h"
 #include "ESD_GpuAlloc.h"
 #include "ESD_BitmapHandle.h"
 
@@ -14,9 +14,9 @@ uint32_t s_MultiGradient_Cell;
 // The maximum number of multi gradients that can be on screen at once, multiplied by two
 #define ESD_MULTIGRADIENT_MAX_NB (1 << 6)
 
-void ESD_Render_MultiGradient(int16_t x, int16_t y, int16_t width, int16_t height, esd_argb32_t topLeft, esd_argb32_t topRight, esd_argb32_t bottomLeft, esd_argb32_t bottomRight)
+ESD_CORE_EXPORT void ESD_Render_MultiGradient(int16_t x, int16_t y, int16_t width, int16_t height, esd_argb32_t topLeft, esd_argb32_t topRight, esd_argb32_t bottomLeft, esd_argb32_t bottomRight)
 {
-	EVE_HalContext *phost = ESD_Host;
+	EVE_HalContext *phost = ESD_GetHost();
 	(void)phost;
 	// Don't render empty
 	if (width == 0 || height == 0)
@@ -67,8 +67,7 @@ void ESD_Render_MultiGradient(int16_t x, int16_t y, int16_t width, int16_t heigh
 
 	// Use the scratch handle
 	EVE_CoDl_bitmapHandle(phost, ESD_CO_SCRATCH_HANDLE);
-	if (EVE_CHIPID >= EVE_FT810)
-		EVE_CoDl_vertexFormat(phost, 0);
+	EVE_CoDl_vertexFormat(phost, 0);
 	EVE_CoDl_begin(phost, BITMAPS);
 
 	// Use local rendering context, bypass ESD display list functions.
@@ -125,9 +124,9 @@ void ESD_Render_MultiGradient(int16_t x, int16_t y, int16_t width, int16_t heigh
 	s_MultiGradient_Cell &= (ESD_MULTIGRADIENT_MAX_NB - 1);
 }
 
-void ESD_Render_MultiGradient_Rounded(int16_t x, int16_t y, int16_t width, int16_t height, esd_int32_f4_t radius, uint8_t alpha, esd_argb32_t topLeft, esd_argb32_t topRight, esd_argb32_t bottomLeft, esd_argb32_t bottomRight)
+ESD_CORE_EXPORT void ESD_Render_MultiGradient_Rounded(int16_t x, int16_t y, int16_t width, int16_t height, esd_int32_f4_t radius, uint8_t alpha, esd_argb32_t topLeft, esd_argb32_t topRight, esd_argb32_t bottomLeft, esd_argb32_t bottomRight)
 {
-	EVE_HalContext *phost = ESD_Host;
+	EVE_HalContext *phost = ESD_GetHost();
 
 	// EVE_CoDl_saveContext(phost);
 
@@ -148,7 +147,7 @@ void ESD_Render_MultiGradient_Rounded(int16_t x, int16_t y, int16_t width, int16
 
 	// Draw rounded rectangle as masking shape
 	EVE_CoCmd_dl(ESD_Host, BLEND_FUNC(ZERO, ONE_MINUS_SRC_ALPHA));
-	ESD_Render_RectangleF(x << 4, y << 4, width << 4, height << 4, radius, ESD_ColorARGB_Combine(0xFFFFFF, alpha));
+	ESD_Render_RectF(x << 4, y << 4, width << 4, height << 4, radius, ESD_COMPOSE_RGB_ALPHA(0xFFFFFF, alpha));
 
 	// Draw color using mask alpha
 	EVE_CoCmd_dl(ESD_Host, BLEND_FUNC(ONE_MINUS_DST_ALPHA, ONE));

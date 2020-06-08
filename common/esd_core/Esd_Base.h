@@ -195,6 +195,9 @@ typedef uint32_t esd_classid_t;
 #pragma ESD_CATEGORY(EsdRenderable, DisplayName = "ESD Render Functions")
 #pragma ESD_CATEGORY(EveRenderFunctions, DisplayName = "Display List", Category = EsdRenderable)
 
+/* A generic callback with context pointer */
+typedef void (*ESD_Callback)(void *context);
+
 #pragma ESD_FUNCTION(ESD_Noop, Category = _GroupHidden)
 #pragma ESD_PARAMETER(context, Type = void *)
 ESD_CORE_EXPORT void ESD_Noop(void *context);

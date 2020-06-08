@@ -54,13 +54,15 @@ void ESD_CheckTypeSizes();
 // When not in the simulation, use the ESD_Main__Start etc symbols
 // as exported by the single Application logic document included
 #ifndef ESD_SIMULATION
-#ifdef BT8XXEMU_PLATFORM
-#define ESD_Main__Running__ESD() BT8XXEMU_isRunning(ESD_Host->Emulator)
+#if defined(EVE_MULTI_TARGET)
+#define ESD_IsRunning__ESD() (phost->Host == EVE_HOST_BT8XXEMU ? BT8XXEMU_isRunning(phost->Emulator) : true)
+#elif defined(BT8XXEMU_PLATFORM)
+#define ESD_IsRunning__ESD() BT8XXEMU_isRunning(ESD_Host->Emulator)
 #else
-#define ESD_Main__Running__ESD() (1)
+#define ESD_IsRunning__ESD() true
 #endif
 #else
-int ESD_Main__Running__ESD();
+int ESD_IsRunning__ESD();
 #endif
 
 void ESD_Scissor_DlStart();
@@ -75,14 +77,14 @@ void ESD_Scissor_DlStart();
 //
 #define FT_WELCOME_MESSAGE "Copyright (C) Bridgetek Pte Ltd\n"
 
-void ESD_SetCurrent(ESD_Context *ec)
+ESD_CORE_EXPORT void ESD_SetCurrent(ESD_Context *ec)
 {
 	ESD_CurrentContext = ec;
 	ESD_Host = &ec->HalContext;
 	ESD_GAlloc = &ec->GpuAlloc;
 }
 
-void ESD_Defaults(ESD_Parameters *ep)
+ESD_CORE_EXPORT void ESD_Defaults(ESD_Parameters *ep)
 {
 	memset(ep, 0, sizeof(ESD_Parameters));
 }
@@ -97,17 +99,10 @@ bool cbCmdWait(struct EVE_HalContext *phost)
 	/* EVE_Hal_idle(&ec->HalContext); */ /* Already called by EVE HAL */
 	ec->SwapIdled = true;
 
-#if defined(EVE_MULTI_TARGET)
-	return (phost->Host == EVE_HOST_BT8XXEMU) ? BT8XXEMU_isRunning(phost->Emulator) : true;
-#elif defined(BT8XXEMU_PLATFORM)
-	/* TODO: This may be handled by HAL idle function instead */
-	return BT8XXEMU_isRunning(phost->Emulator);
-#else
-	return true;
-#endif
+	return ESD_IsRunning__ESD() && !ec->RequestStop;
 }
 
-void ESD_Initialize()
+ESD_CORE_EXPORT void ESD_Initialize()
 {
 	EVE_Hal_initialize();
 
@@ -121,29 +116,64 @@ void ESD_Initialize()
 #endif
 }
 
-void ESD_Open(ESD_Context *ec, ESD_Parameters *ep)
+#ifdef ESD_SIMULATION
+
+void ESD_HookOpen__ESD(ESD_Context *ec);
+void ESD_HookClose__ESD(ESD_Context *ec);
+
+ESD_Callback ESD_HookStart__ESD(ESD_Context *ec, ESD_Callback start);
+ESD_Callback ESD_HookUpdate__ESD(ESD_Context *ec, ESD_Callback update);
+ESD_Callback ESD_HookRender__ESD(ESD_Context *ec, ESD_Callback render);
+ESD_Callback ESD_HookIdle__ESD(ESD_Context *ec, ESD_Callback idle);
+ESD_Callback ESD_HookEnd__ESD(ESD_Context *ec, ESD_Callback end);
+
+#endif
+
+ESD_CORE_EXPORT void ESD_Open(ESD_Context *ec, ESD_Parameters *ep)
 {
 	memset(ec, 0, sizeof(ESD_Context));
 	ec->ClearColor = 0x212121;
-	ec->Start = (void (*)(void *))ep->Start;
-	ec->Update = (void (*)(void *))ep->Update;
-	ec->Render = (void (*)(void *))ep->Render;
-	ec->Idle = (void (*)(void *))ep->Idle;
-	ec->End = (void (*)(void *))ep->End;
+	ec->Start = ep->Start;
+	ec->Update = ep->Update;
+	ec->Render = ep->Render;
+	ec->Idle = ep->Idle;
+	ec->End = ep->End;
 	ec->UserContext = ep->UserContext;
 	ESD_SetCurrent(ec);
 
+#ifdef ESD_SIMULATION
+	ESD_HookOpen__ESD(ec);
+	ec->Start = ESD_HookStart__ESD(ec, ec->Start);
+	ec->Update = ESD_HookStart__ESD(ec, ec->Update);
+	ec->Render = ESD_HookStart__ESD(ec, ec->Render);
+	ec->Idle = ESD_HookStart__ESD(ec, ec->Idle);
+	ec->End = ESD_HookStart__ESD(ec, ec->End);
+#endif
+
 	// TODO: Use interactive launch and adjust launch for emulator flash
+	EVE_CHIPID_T chipId;
+	size_t deviceIdx;
+
+#ifdef ESD_SIMULATION
+	chipId = EVE_SUPPORT_CHIPID;
+	deviceIdx = -1;
+#else
+	/* Interactive device selection */
+	EVE_Util_selectDeviceInteractive(&chipId, &deviceIdx);
+#endif
 
 	EVE_HalParameters parameters;
-	EVE_Hal_defaults(&parameters);
+	EVE_Hal_defaultsEx(&parameters, deviceIdx);
 	parameters.UserContext = ec;
 	parameters.CbCmdWait = cbCmdWait;
 	eve_assert_do(EVE_Hal_open(&ec->HalContext, &parameters));
-	eve_assert(ec->HalContext.UserContext == ec);
 
 	EVE_HalContext *phost = &ec->HalContext;
-	EVE_Util_bootupConfig(phost);
+#if ESD_SIMULATION
+	eve_assert_do(EVE_Util_bootupConfig(phost));
+#else
+	eve_assert_do(EVE_Util_bootupConfigInteractive(phost, EVE_DISPLAY_DEFAULT));
+#endif
 
 #ifndef ESD_SIMULATION
 	// TODO: Store calibration somewhere
@@ -159,38 +189,38 @@ void ESD_Open(ESD_Context *ec, ESD_Parameters *ep)
 	ESD_BitmapHandle_Initialize();
 }
 
-// !!! NOTE:
-#define Ft_Esd_Release ESD_Close
-#define Ft_Esd_Shutdown ESD_Release
-
-void ESD_Close(ESD_Context *ec)
+ESD_CORE_EXPORT void ESD_Close(ESD_Context *ec)
 {
-	// ESD_Widget_ProcessFree(); // TODO: Link this back up!!!
+	// ESD_Widget_ProcessFree(); // TODO: Link this back up (add ESD_Framework_Initialize and ESD_Framework_Release)
 	EVE_Hal_close(&ec->HalContext);
 	memset(ec, 0, sizeof(ESD_Context));
+
+#ifdef ESD_SIMULATION
+	ESD_HookClose__ESD(ec);
+#endif
 
 	ESD_CurrentContext = NULL;
 	ESD_Host = NULL;
 	ESD_GAlloc = NULL;
 }
 
-void ESD_Release()
+ESD_CORE_EXPORT void ESD_Release()
 {
 	EVE_Hal_release();
 }
 
-void ESD_Loop(ESD_Context *ec)
+ESD_CORE_EXPORT void ESD_Loop(ESD_Context *ec)
 {
 	ESD_SetCurrent(ec);
 	EVE_HalContext *phost = &ec->HalContext;
 	(void)phost;
 
-	if (!ESD_Main__Running__ESD() || ec->RequestStop)
+	if (!ESD_IsRunning__ESD() || ec->RequestStop)
 		return;
 
 	ESD_Start(ec);
 
-	while (ESD_Main__Running__ESD() && !ec->RequestStop)
+	while (ESD_IsRunning__ESD() && !ec->RequestStop)
 	{
 		ESD_Update(ec);
 		ESD_Render(ec);
@@ -200,7 +230,7 @@ void ESD_Loop(ESD_Context *ec)
 	ESD_Stop(ec);
 }
 
-void ESD_Start(ESD_Context *ec)
+ESD_CORE_EXPORT void ESD_Start(ESD_Context *ec)
 {
 	ESD_SetCurrent(ec);
 
@@ -208,7 +238,7 @@ void ESD_Start(ESD_Context *ec)
 	ESD_Scissor_DlStart();
 	ec->Frame = 0;
 	ec->Millis = EVE_millis();
-	// ESD_Timer_CancelGlobal(); // TODO
+	// ESD_Timer_CancelGlobal(); // TODO (in ESD_Framework_Initialize)
 
 	// Initialize storage
 	EVE_Util_loadSdCard(&ec->HalContext);
@@ -221,7 +251,7 @@ void ESD_Start(ESD_Context *ec)
 		ec->Start(ec->UserContext);
 }
 
-void ESD_Update(ESD_Context *ec)
+ESD_CORE_EXPORT void ESD_Update(ESD_Context *ec)
 {
 	ESD_SetCurrent(ec);
 	EVE_HalContext *phost = &ec->HalContext;
@@ -267,7 +297,7 @@ void ESD_Update(ESD_Context *ec)
 	ec->LoopState = ESD_LOOPSTATE_IDLE;
 }
 
-void ESD_Render(ESD_Context *ec)
+ESD_CORE_EXPORT void ESD_Render(ESD_Context *ec)
 {
 	ESD_SetCurrent(ec);
 	EVE_HalContext *phost = &ec->HalContext;
@@ -289,10 +319,10 @@ void ESD_Render(ESD_Context *ec)
 	// Process all coprocessor commands
 	ec->LoopState = ESD_LOOPSTATE_RENDER;
 
-	EVE_CoCmd_dl(phost, CMD_DLSTART);
-	EVE_CoCmd_dl(phost, (2UL << 24) | ec->ClearColor); // Set CLEAR_COLOR_RGB from user var
-	EVE_CoCmd_dl(phost, CLEAR_TAG(255)); // Always default to 255, so no touch = 0, touch non-tag = 255
-	EVE_CoCmd_dl(phost, CLEAR(1, 1, 1));
+	EVE_CoCmd_dlStart(phost);
+	EVE_CoDl_clearColorRgb_ex(phost, ec->ClearColor); // Set CLEAR_COLOR_RGB from user var
+	EVE_CoDl_clearTag(phost, 255); // Always default to 255, so no touch = 0, touch non-tag = 255
+	EVE_CoDl_clear(phost, true, true, true);
 	if (ec->Render)
 		ec->Render(ec->UserContext);
 
@@ -310,7 +340,7 @@ void ESD_Render(ESD_Context *ec)
 		ec->SpinnerPopped = false;
 	}
 
-	EVE_CoCmd_dl(phost, DISPLAY());
+	EVE_CoDl_display(phost);
 	EVE_CoCmd_swap(phost);
 
 	// Replacement for Ft_Gpu_Hal_WaitCmdfifo_empty(phost); with idle function
@@ -320,7 +350,7 @@ void ESD_Render(ESD_Context *ec)
 	++ec->Frame;
 }
 
-bool ESD_WaitSwap(ESD_Context *ec)
+ESD_CORE_EXPORT bool ESD_WaitSwap(ESD_Context *ec)
 {
 	ESD_SetCurrent(ec);
 	EVE_HalContext *phost = &ec->HalContext;
@@ -347,7 +377,7 @@ bool ESD_WaitSwap(ESD_Context *ec)
 	return true;
 }
 
-void ESD_Stop(ESD_Context *ec)
+ESD_CORE_EXPORT void ESD_Stop(ESD_Context *ec)
 {
 	ESD_SetCurrent(ec);
 
@@ -357,5 +387,29 @@ void ESD_Stop(ESD_Context *ec)
 	if (ec->End)
 		ec->End(ec->UserContext);
 }
+
+/* Implements a generic main function, for reference only */
+/*
+int ESD_Main(int argc, char *argv[])
+{
+	ESD_Initialize();
+
+	ESD_Parameters ep;
+	ESD_Defaults(&ep);
+	ep.Start = Main_Start;
+	ep.Update = Main_Update;
+	ep.Render = Main_Render;
+	ep.Idle = Main_Idle;
+	ep.End = Main_End;
+	ESD_Context ec;
+
+	ESD_Open(&ec, &ep);
+	ESD_Loop(&ec);
+	ESD_Close(&ec);
+
+	ESD_Release();
+	return EXIT_SUCCESS;
+}
+*/
 
 /* end of file */

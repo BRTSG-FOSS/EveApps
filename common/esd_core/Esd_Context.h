@@ -40,7 +40,7 @@
 #include "ESD_BitmapHandle.h"
 #include "ESD_TouchTag.h"
 
-/// Runtime context of ESD
+/* Runtime context of ESD */
 typedef struct
 {
 	EVE_HalContext HalContext; //< Pointer to current s_Host
@@ -63,12 +63,12 @@ typedef struct
 
 	ESD_HandleState HandleState;
 
-	/// Callbacks called by ESD_Loop
-	void (*Start)(void *context);
-	void (*Update)(void *context);
-	void (*Render)(void *context);
-	void (*Idle)(void *context);
-	void (*End)(void *context);
+	/* Callbacks called by ESD_Loop */
+	ESD_Callback Start;
+	ESD_Callback Update;
+	ESD_Callback Render;
+	ESD_Callback Idle;
+	ESD_Callback End;
 	void *UserContext;
 
 } ESD_Context;
@@ -76,12 +76,12 @@ typedef struct
 /// Parameters for initializing an ESD context
 typedef struct
 {
-	/// Callbacks called by ESD_Loop
-	void (*Start)(void *context);
-	void (*Update)(void *context);
-	void (*Render)(void *context);
-	void (*Idle)(void *context);
-	void (*End)(void *context);
+	/* Callbacks called by ESD_Loop */
+	ESD_Callback Start;
+	ESD_Callback Update;
+	ESD_Callback Render;
+	ESD_Callback Idle;
+	ESD_Callback End;
 	void *UserContext;
 
 } ESD_Parameters;
@@ -96,23 +96,35 @@ extern ESD_CORE_EXPORT ESD_GpuAlloc *ESD_GAlloc; //< Pointer to current allocato
 #define ESD_CO_SCRATCH_HANDLE (15)
 #endif
 
-void ESD_SetCurrent(ESD_Context *ec);
+ESD_CORE_EXPORT void ESD_SetCurrent(ESD_Context *ec);
 
-void ESD_Initialize();
-void ESD_Release();
+ESD_CORE_EXPORT void ESD_Initialize();
+ESD_CORE_EXPORT void ESD_Release();
 
-void ESD_Defaults(ESD_Parameters *ep);
-void ESD_Open(ESD_Context *ec, ESD_Parameters *ep);
-void ESD_Close(ESD_Context *ec);
+ESD_CORE_EXPORT void ESD_Defaults(ESD_Parameters *ep);
+ESD_CORE_EXPORT void ESD_Open(ESD_Context *ec, ESD_Parameters *ep);
+ESD_CORE_EXPORT void ESD_Close(ESD_Context *ec);
 
-/// Main loop, calls ESD_Start, ESD_Update, ESD_WaitSwap, and ESD_Stop
-void ESD_Loop(ESD_Context *ec);
+/* Main loop, calls ESD_Start, ESD_Update, ESD_WaitSwap, and ESD_Stop */
+ESD_CORE_EXPORT void ESD_Loop(ESD_Context *ec);
 
-void ESD_Start(ESD_Context *ec);
-void ESD_Update(ESD_Context *ec);
-void ESD_Render(ESD_Context *ec);
-bool ESD_WaitSwap(ESD_Context *ec);
-void ESD_Stop(ESD_Context *ec);
+ESD_CORE_EXPORT void ESD_Start(ESD_Context *ec);
+ESD_CORE_EXPORT void ESD_Update(ESD_Context *ec);
+ESD_CORE_EXPORT void ESD_Render(ESD_Context *ec);
+ESD_CORE_EXPORT bool ESD_WaitSwap(ESD_Context *ec);
+ESD_CORE_EXPORT void ESD_Stop(ESD_Context *ec);
+
+/// A function to get milliseconds for current frame
+ESD_FUNCTION(ESD_GetMillis, Type = uint32_t, DisplayName = "Get Milliseconds", Category = EsdUtilities, Inline)
+static inline uint32_t ESD_GetMillis() { return ESD_CurrentContext->Millis; }
+
+/// A function to get the difference in milliseconds since last frame Update call
+ESD_FUNCTION(ESD_GetDeltaMs, Type = uint32_t, DisplayName = "Get Delta Ms", Category = EsdUtilities, Inline)
+static inline uint32_t ESD_GetDeltaMs() { return ESD_CurrentContext->DeltaMs; }
+
+/// A function to get the current HAL context data structure
+ESD_FUNCTION(ESD_GetHost, Type = EVE_HalContext *, DisplayName = "Get EVE Host", Category = EsdUtilities, Inline)
+static inline EVE_HalContext *ESD_GetHost() { return ESD_Host; }
 
 #endif /* #ifndef ESD_CONTEXT__H */
 
