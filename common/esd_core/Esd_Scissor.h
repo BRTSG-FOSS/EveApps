@@ -1,17 +1,9 @@
 
-#ifndef ESD_DL__H
-#define ESD_DL__H
-
-#include <EVE_Hal.h>
+#ifndef ESD_SCISSOR__H
+#define ESD_SCISSOR__H
 
 #include "ESD_Base.h"
-#include "ESD_BitmapInfo.h"
 #include "ESD_Math.h"
-#include "ESD_BitmapHandle.h"
-
-ESD_CATEGORY(EsdUtilities, DisplayName = "ESD Utilities")
-ESD_CATEGORY(EsdRenderable, DisplayName = "ESD Render Functions")
-ESD_CATEGORY(EveRenderFunctions, DisplayName = "Display List", Category = EsdRenderable)
 
 //
 // Globals
@@ -41,6 +33,6 @@ ESD_FUNCTION(ESD_Scissor_reset, Attributes = ESD_CORE_EXPORT, Category = EveRend
 ESD_PARAMETER(state, Type = ESD_Rect16)
 ESD_CORE_EXPORT void ESD_Scissor_reset(ESD_Rect16 state);
 
-#endif /* #ifndef ESD_DL__H */
+#endif /* #ifndef ESD_SCISSOR__H */
 
 /* end of file */

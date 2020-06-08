@@ -195,6 +195,10 @@ typedef uint32_t esd_classid_t;
 
 #pragma ESD_TYPE(EVE_HalContext *, Native = Pointer, Edit = Library)
 
+#pragma ESD_CATEGORY(EsdUtilities, DisplayName = "ESD Utilities")
+#pragma ESD_CATEGORY(EsdRenderable, DisplayName = "ESD Render Functions")
+#pragma ESD_CATEGORY(EveRenderFunctions, DisplayName = "Display List", Category = EsdRenderable)
+
 #pragma ESD_FUNCTION(ESD_noop, Category = _GroupHidden)
 #pragma ESD_PARAMETER(context, Type = void *)
 ESD_CORE_EXPORT void ESD_noop(void *context);

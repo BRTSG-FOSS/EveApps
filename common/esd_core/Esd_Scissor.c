@@ -1,5 +1,5 @@
 
-#include "ESD_Dl.h"
+#include "ESD_Scissor.h"
 #include <EVE_Hal.h>
 
 #include "ESD_Context.h"
@@ -8,11 +8,11 @@
 #define _USE_MATH_DEFINES 1
 #include <math.h>
 
+// Globals
 extern ESD_CORE_EXPORT EVE_HalContext *ESD_Host;
-/* extern ESD_CORE_EXPORT ESD_GpuAlloc *ESD_GAlloc; */
 
 // GPU state for the current display list
-ESD_Rect16 ESD_ScissorRect;
+ESD_CORE_EXPORT ESD_Rect16 ESD_ScissorRect;
 
 void ESD_Scissor_dlStart() // Begin of frame
 {

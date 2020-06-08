@@ -1,7 +1,7 @@
 
 #include "ESD_Context.h"
 #include "ESD_Render.h"
-#include "ESD_Dl.h"
+#include "ESD_Scissor.h"
 
 void Esd_Render_Circle_Stroke(
     esd_int32_f4_t x, esd_int32_f4_t y,

@@ -2,7 +2,7 @@
 #include "ESD_Render.h"
 #include <EVE_Hal.h>
 
-#include "ESD_Dl.h"
+#include "ESD_Scissor.h"
 #include "ESD_BitmapHandle.h"
 
 extern ESD_CORE_EXPORT EVE_HalContext *ESD_Host;
