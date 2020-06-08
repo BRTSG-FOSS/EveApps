@@ -112,7 +112,7 @@ ESD_PARAMETER(dl, Type = uint32_t)
 
 #define ESD_CATEGORY(name, ...)
 
-#include "EVE_Hal.h"
+#include <EVE_Hal.h>
 
 #pragma ESD_TYPE(void, Native = Void)
 #pragma ESD_TYPE(char, Native = Char, Edit = String)

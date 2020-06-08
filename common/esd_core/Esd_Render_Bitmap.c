@@ -1,6 +1,5 @@
 
 #include "ESD_Render.h"
-#include <EVE_Hal.h>
 
 #include "ESD_Context.h"
 #include "ESD_Scissor.h"
@@ -51,7 +50,7 @@ void ESD_CoDl_Bitmap_Vertex_PALETTED8(int16_t x, int16_t y, uint8_t handle, uint
 	EVE_HalContext *phost = ESD_GetHost();
 	if (EVE_CHIPID >= EVE_FT810)
 	{
-		EVE_HalContext *phost = ESD_Host;
+		EVE_HalContext *phost = ESD_GetHost();
 		EVE_CoDl_alphaFunc(phost, ALWAYS, 0);
 		EVE_CoCmd_dl(phost, BLEND_FUNC(ONE, ZERO));
 		EVE_CoCmd_dl(phost, COLOR_MASK(0, 0, 0, 1));
@@ -270,7 +269,7 @@ ESD_CORE_EXPORT void ESD_Render_Bitmap_RotateScaled(ESD_BitmapCell bitmapCell, e
 
 ESD_CORE_EXPORT void ESD_Render_Bitmap_Rotate(ESD_BitmapCell bitmapCell, esd_argb32_t c, ESD_Rect16 globalRect, int32_t rotateAngle)
 {
-	EVE_HalContext *phost = ESD_Host;
+	EVE_HalContext *phost = ESD_GetHost();
 	ESD_BitmapInfo *bitmapInfo;
 	uint16_t cell;
 	uint8_t handle;

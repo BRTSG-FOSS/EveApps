@@ -88,12 +88,12 @@ typedef struct ESD_RomFontInfo // (4 bytes)
 
 /// A function to load font data into RAM_G (or to use the font glyphs from flash directly if so specified)
 /// Returns RAM_G address of the font information block (or GA_INVALID if the font failed to load)
-uint32_t ESD_LoadFont(ESD_FontInfo *fontInfo);
+ESD_CORE_EXPORT uint32_t ESD_LoadFont(ESD_FontInfo *fontInfo);
 
 /// A function to make fonts persistent in memory by reloading the data if necessary, called during the Update cycle of each frame
 ESD_UPDATE(ESD_FontPersist, DisplayName = "Persist Font", Category = EsdUtilities)
 ESD_PARAMETER(fontInfo, Type = ESD_FontInfo *)
-void ESD_FontPersist(ESD_FontInfo *fontInfo);
+ESD_CORE_EXPORT void ESD_FontPersist(ESD_FontInfo *fontInfo);
 
 #endif /* #ifndef ESD_FONTINFO__H */
 

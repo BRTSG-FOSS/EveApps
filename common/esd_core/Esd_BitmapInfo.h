@@ -91,12 +91,12 @@ ESD_TYPE(ESD_BitmapCell *, Native = Pointer, Edit = Library)
 /// A function to load bitmap data(not including palette data) into RAM_G
 ESD_FUNCTION(ESD_LoadBitmap, Type = uint32_t, Include = "ESD_BitmapInfo.h", DisplayName = "Load Bitmap to RAM_G", Category = EsdUtilities)
 ESD_PARAMETER(bitmapInfo, Type = ESD_BitmapInfo *)
-uint32_t ESD_LoadBitmap(ESD_BitmapInfo *bitmapInfo);
+ESD_CORE_EXPORT uint32_t ESD_LoadBitmap(ESD_BitmapInfo *bitmapInfo);
 
 /// A function to load palette data of bitmap into RAM_G
 ESD_FUNCTION(ESD_LoadPalette, Type = uint32_t, Include = "ESD_BitmapInfo.h", DisplayName = "Load Palette to RAM_G", Category = EsdUtilities)
 ESD_PARAMETER(bitmapInfo, Type = ESD_BitmapInfo *)
-uint32_t ESD_LoadPalette(ESD_BitmapInfo *bitmapInfo);
+ESD_CORE_EXPORT uint32_t ESD_LoadPalette(ESD_BitmapInfo *bitmapInfo);
 
 ESD_ENUM(_BitmapResourceFormat, DisplayName = "Bitmap Format")
 // Hardware bitmap formats
@@ -135,15 +135,19 @@ ESD_IDENTIFIER(COMPRESSED_RGBA_ASTC_12x12_KHR)
 ESD_END()
 
 ///  Switch bitmap cell number
-ESD_FUNCTION(ESD_BitmapCell_Switched, Type = ESD_BitmapCell, DisplayName = "Switch Bitmap Cell", Category = EsdUtilities)
+ESD_FUNCTION(ESD_BitmapCell_Switched, Type = ESD_BitmapCell, DisplayName = "Switch Bitmap Cell", Category = EsdUtilities, Inline)
 ESD_PARAMETER(BitmapInfo, Type = ESD_BitmapCell, DisplayName = "Bitmap Cell")
 ESD_PARAMETER(Cell, Type = uint16_t, DisplayName = "Cell")
-ESD_BitmapCell ESD_BitmapCell_Switched(ESD_BitmapCell bitmapCell, uint16_t cell);
+static inline ESD_BitmapCell ESD_BitmapCell_Switched(ESD_BitmapCell bitmapCell, uint16_t cell)
+{
+	bitmapCell.Cell = cell;
+	return bitmapCell;
+}
 
 /// A function to make bitmap persistent in memory by reloading the data if necessary, called during the Update cycle of each frame
 ESD_UPDATE(ESD_BitmapCell_Persist, DisplayName = "Persist Bitmap", Category = EsdUtilities)
 ESD_PARAMETER(bitmapCell, Type = ESD_BitmapCell)
-void ESD_BitmapCell_Persist(ESD_BitmapCell bitmapCell);
+ESD_CORE_EXPORT void ESD_BitmapCell_Persist(ESD_BitmapCell bitmapCell);
 
 /// A function to get bitmap information structure from bitmap cell
 ESD_FUNCTION(ESD_BitmapCell_GetInfo, Type = ESD_BitmapInfo *, DisplayName = "ESD BitmapCell GetInfo", Category = EsdUtilities, Inline)

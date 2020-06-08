@@ -82,12 +82,12 @@ typedef struct
 	uint32_t X, Y, Width, Height;
 } ESD_URect32;
 
-bool ESD_Rect16_Intersects(ESD_Rect16 a, ESD_Rect16 b);
-bool ESD_Rect16_IsInside(ESD_Rect16 subrect, ESD_Rect16 rect);
-bool ESD_Rect16_IsInsideHorizontal(ESD_Rect16 subrect, ESD_Rect16 rect);
-bool ESD_Rect16_IsInsideVertical(ESD_Rect16 subrect, ESD_Rect16 rect);
+ESD_CORE_EXPORT bool ESD_Rect16_Intersects(ESD_Rect16 a, ESD_Rect16 b);
+ESD_CORE_EXPORT bool ESD_Rect16_IsInside(ESD_Rect16 subrect, ESD_Rect16 rect);
+ESD_CORE_EXPORT bool ESD_Rect16_IsInsideHorizontal(ESD_Rect16 subrect, ESD_Rect16 rect);
+ESD_CORE_EXPORT bool ESD_Rect16_IsInsideVertical(ESD_Rect16 subrect, ESD_Rect16 rect);
 
-ESD_Rect16 ESD_Rect16_Crop(ESD_Rect16 rect, ESD_Rect16 crop);
+ESD_CORE_EXPORT ESD_Rect16 ESD_Rect16_Crop(ESD_Rect16 rect, ESD_Rect16 crop);
 
 ESD_FUNCTION(ESD_Int16_ClampedValue, Type = int16_t, DisplayName = "Clamp Int16", Category = EsdUtilities, Macro)
 ESD_PARAMETER(value, Type = int16_t, Default = 0)

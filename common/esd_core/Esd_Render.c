@@ -1,6 +1,5 @@
 
 #include "ESD_Render.h"
-#include <EVE_Hal.h>
 
 #include "ESD_Context.h"
 #include "ESD_Scissor.h"

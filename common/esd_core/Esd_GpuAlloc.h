@@ -81,28 +81,28 @@ typedef struct
 } ESD_GpuAlloc;
 
 // Initialize or reset gpu ram allocation mechanism
-void ESD_GpuAlloc_Reset(ESD_GpuAlloc *ga);
+ESD_CORE_EXPORT void ESD_GpuAlloc_Reset(ESD_GpuAlloc *ga);
 
 // Run basic garbage collection and any other mechanisms, call first in the Update cycle, after the frame is fully rendered and swapped
-void ESD_GpuAlloc_Update(ESD_GpuAlloc *ga);
+ESD_CORE_EXPORT void ESD_GpuAlloc_Update(ESD_GpuAlloc *ga);
 
 // Allocate a gpu ram block
-ESD_GpuHandle ESD_GpuAlloc_Alloc(ESD_GpuAlloc *ga, uint32_t size, uint16_t flags);
+ESD_CORE_EXPORT ESD_GpuHandle ESD_GpuAlloc_Alloc(ESD_GpuAlloc *ga, uint32_t size, uint16_t flags);
 
 // Free a gpu ram block
-void ESD_GpuAlloc_Free(ESD_GpuAlloc *ga, ESD_GpuHandle handle);
+ESD_CORE_EXPORT void ESD_GpuAlloc_Free(ESD_GpuAlloc *ga, ESD_GpuHandle handle);
 
 // Get ram address from handle. Returns ~0 when invalid.
-uint32_t ESD_GpuAlloc_Get(ESD_GpuAlloc *ga, ESD_GpuHandle handle);
+ESD_CORE_EXPORT uint32_t ESD_GpuAlloc_Get(ESD_GpuAlloc *ga, ESD_GpuHandle handle);
 
 // Get total used GPU RAM
-uint32_t ESD_GpuAlloc_GetTotalUsed(ESD_GpuAlloc *ga);
+ESD_CORE_EXPORT uint32_t ESD_GpuAlloc_GetTotalUsed(ESD_GpuAlloc *ga);
 
 // Get total GPU RAM
-uint32_t ESD_GpuAlloc_GetTotal(ESD_GpuAlloc *ga);
+ESD_CORE_EXPORT uint32_t ESD_GpuAlloc_GetTotal(ESD_GpuAlloc *ga);
 
 #ifndef NDEBUG
-void ESD_GpuAlloc_Print(ESD_GpuAlloc *ga);
+ESD_CORE_EXPORT void ESD_GpuAlloc_Print(ESD_GpuAlloc *ga);
 #else
 #define ESD_GpuAlloc_Print(ga) \
 	do                            \

@@ -32,16 +32,18 @@
 #ifndef ESD_UTILITY__H
 #define ESD_UTILITY__H
 
-#include <EVE_Hal.h>
 #include "ESD_Base.h"
 
-void ESD_AttachFlashFast();
+ESD_CORE_EXPORT void ESD_AttachFlashFast();
 
-void ESD_ShowLogo();
-void ESD_BeginLogo();
-void ESD_EndLogo();
+ESD_CORE_EXPORT void ESD_ShowLogo();
+ESD_CORE_EXPORT void ESD_BeginLogo();
+ESD_CORE_EXPORT void ESD_EndLogo();
 
-bool ESD_Calibrate();
+ESD_FUNCTION(ESD_Spinner_Popup, DisplayName = "Pop-up Spinner", Category = EsdUtilities)
+ESD_CORE_EXPORT void ESD_Spinner_Popup();
+
+ESD_CORE_EXPORT bool ESD_Calibrate();
 
 #endif /* #ifndef ESD_UTILITY__H */
 

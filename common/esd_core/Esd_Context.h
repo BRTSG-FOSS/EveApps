@@ -32,8 +32,6 @@
 #ifndef ESD_CONTEXT___H
 #define ESD_CONTEXT___H
 
-#include <EVE_Hal.h>
-
 #include "ESD_Base.h"
 #include "ESD_GpuAlloc.h"
 #include "ESD_Scissor.h"

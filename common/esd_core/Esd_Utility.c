@@ -1,6 +1,5 @@
 
 #include "ESD_Utility.h"
-#include <EVE_Hal.h>
 
 #include "ESD_Base.h"
 #include "ESD_Scissor.h"
@@ -18,8 +17,7 @@ static uint32_t s_FlashErrorLast = ~0;
 #endif
 
 //A function to enable spinner when frame is rendered.
-ESD_FUNCTION(ESD_Spinner_Popup, DisplayName = "Pop-up Spinner", Category = EsdUtilities)
-void ESD_Spinner_Popup()
+ESD_CORE_EXPORT void ESD_Spinner_Popup()
 {
 	ESD_CurrentContext->SpinnerPopup = true;
 }
@@ -39,10 +37,10 @@ extern void ESD_SetFlashSize__ESD(int size);
 	} while (false)
 #endif
 
-void ESD_AttachFlashFast()
+ESD_CORE_EXPORT void ESD_AttachFlashFast()
 {
 	// Wait for flash status to move on from FLASH_STATUS_INIT
-	EVE_HalContext *phost = ESD_Host;
+	EVE_HalContext *phost = ESD_GetHost();
 	uint32_t flashStatus;
 	while (!(flashStatus = EVE_Hal_rd32(phost, REG_FLASH_STATUS)))
 	{
@@ -100,9 +98,9 @@ void ESD_AttachFlashFast()
 #define ESD_AttachFlashFast() eve_noop()
 #endif
 
-void ESD_BeginLogo()
+ESD_CORE_EXPORT void ESD_BeginLogo()
 {
-	EVE_HalContext *phost = ESD_Host;
+	EVE_HalContext *phost = ESD_GetHost();
 	ESD_GpuAlloc_Reset(ESD_GAlloc);
 	ESD_GpuAlloc_Alloc(ESD_GAlloc, RAM_G_SIZE, 0); // Block allocation
 	EVE_CoCmd_dlStart(phost);
@@ -126,9 +124,9 @@ void ESD_BeginLogo()
 	EVE_sleep(3000);
 }
 
-void ESD_EndLogo()
+ESD_CORE_EXPORT void ESD_EndLogo()
 {
-	EVE_HalContext *phost = ESD_Host;
+	EVE_HalContext *phost = ESD_GetHost();
 	EVE_CoCmd_dlStart(phost);
 	EVE_CoCmd_dl(phost, CLEAR_COLOR_RGB(255, 255, 255));
 	EVE_CoCmd_dl(phost, CLEAR(1, 0, 0));
@@ -138,15 +136,15 @@ void ESD_EndLogo()
 	ESD_GpuAlloc_Reset(ESD_GAlloc);
 }
 
-void ESD_ShowLogo()
+ESD_CORE_EXPORT void ESD_ShowLogo()
 {
 	ESD_CurrentContext->ShowLogo = true;
 }
 
 /// Run calibrate procedure
-bool ESD_Calibrate()
+ESD_CORE_EXPORT bool ESD_Calibrate()
 {
-	EVE_HalContext *phost = ESD_Host;
+	EVE_HalContext *phost = ESD_GetHost();
 	uint32_t result;
 	uint32_t transMatrix[6];
 

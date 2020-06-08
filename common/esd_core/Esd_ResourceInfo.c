@@ -5,7 +5,7 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 */
 
 #include "ESD_ResourceInfo.h"
-#include <EVE_Hal.h>
+#include "ESD_Context.h"
 
 #ifndef NDEBUG
 #define ESD_RESOURCEINFO_DEBUG
@@ -23,9 +23,9 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 extern ESD_CORE_EXPORT EVE_HalContext *ESD_Host;
 extern ESD_CORE_EXPORT ESD_GpuAlloc *ESD_GAlloc;
 
-uint32_t ESD_LoadResource(ESD_ResourceInfo *resourceInfo, uint32_t *imageFormat)
+ESD_CORE_EXPORT uint32_t ESD_LoadResource(ESD_ResourceInfo *resourceInfo, uint32_t *imageFormat)
 {
-	EVE_HalContext *phost = ESD_Host;
+	EVE_HalContext *phost = ESD_GetHost();
 	uint32_t addr;
 	bool loaded;
 	(void)phost;
@@ -183,7 +183,7 @@ uint32_t ESD_LoadResource(ESD_ResourceInfo *resourceInfo, uint32_t *imageFormat)
 	return GA_INVALID;
 }
 
-void ESD_FreeResource(ESD_ResourceInfo *resourceInfo)
+ESD_CORE_EXPORT void ESD_FreeResource(ESD_ResourceInfo *resourceInfo)
 {
 	if (!resourceInfo)
 		return;
@@ -192,7 +192,7 @@ void ESD_FreeResource(ESD_ResourceInfo *resourceInfo)
 	resourceInfo->GpuHandle.Id = MAX_NUM_ALLOCATIONS;
 }
 
-void ESD_ResourcePersist(ESD_ResourceInfo *resourceInfo)
+ESD_CORE_EXPORT void ESD_ResourcePersist(ESD_ResourceInfo *resourceInfo)
 {
 	ESD_LoadResource(resourceInfo, false);
 }

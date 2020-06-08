@@ -1,6 +1,6 @@
 
 #include "ESD_BitmapInfo.h"
-#include <EVE_Hal.h>
+#include "ESD_Context.h"
 
 #include "ESD_GpuAlloc.h"
 
@@ -37,9 +37,9 @@ static bool ESD_LoadFromFlash(uint32_t *imageFormat, bool deflate, uint32_t dst,
 
 #endif
 
-uint32_t ESD_LoadBitmap(ESD_BitmapInfo *bitmapInfo)
+ESD_CORE_EXPORT uint32_t ESD_LoadBitmap(ESD_BitmapInfo *bitmapInfo)
 {
-	EVE_HalContext *phost = ESD_Host;
+	EVE_HalContext *phost = ESD_GetHost();
 	uint32_t addr;
 	(void)phost;
 
@@ -157,9 +157,9 @@ uint32_t ESD_LoadBitmap(ESD_BitmapInfo *bitmapInfo)
 	return addr;
 }
 
-uint32_t ESD_LoadPalette(ESD_BitmapInfo *bitmapInfo)
+ESD_CORE_EXPORT uint32_t ESD_LoadPalette(ESD_BitmapInfo *bitmapInfo)
 {
-	EVE_HalContext *phost = ESD_Host;
+	EVE_HalContext *phost = ESD_GetHost();
 	uint32_t addr;
 	(void)phost;
 
@@ -258,13 +258,7 @@ uint32_t ESD_LoadPalette(ESD_BitmapInfo *bitmapInfo)
 	return addr;
 }
 
-ESD_BitmapCell ESD_BitmapCell_Switched(ESD_BitmapCell bitmapCell, uint16_t cell)
-{
-	bitmapCell.Cell = cell;
-	return bitmapCell;
-}
-
-void ESD_BitmapCell_Persist(ESD_BitmapCell bitmapCell)
+ESD_CORE_EXPORT void ESD_BitmapCell_Persist(ESD_BitmapCell bitmapCell)
 {
 	if (bitmapCell.Info)
 	{

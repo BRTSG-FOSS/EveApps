@@ -83,15 +83,15 @@ ESD_TYPE(ESD_ResourceInfo *, Native = Pointer, Edit = Library)
 /// A function to load resource data into RAM_G (or to use the resource from flash directly)
 /// Returns address in the format as specified by the BITMAP_SOURCE command (see ESD_DL_FLASH_ADDRESS and ESD_DL_RAM_G_ADDRESS macros)
 /// Returns the output image format if the resource is an image loaded through the coprocessor
-uint32_t ESD_LoadResource(ESD_ResourceInfo *resourceInfo, uint32_t *imageFormat);
+ESD_CORE_EXPORT uint32_t ESD_LoadResource(ESD_ResourceInfo *resourceInfo, uint32_t *imageFormat);
 
 /// Free a currently loaded resource from RAM_G. Can be used to enforce reloading a resource.
-void ESD_FreeResource(ESD_ResourceInfo *resourceInfo);
+ESD_CORE_EXPORT void ESD_FreeResource(ESD_ResourceInfo *resourceInfo);
 
 /// A function to make fonts persistent in memory by reloading the data if necessary, called during the Update cycle of each frame
 ESD_UPDATE(ESD_ResourcePersist, DisplayName = "Persist Resource", Category = EsdUtilities)
 ESD_PARAMETER(resourceInfo, Type = ESD_ResourceInfo *)
-void ESD_ResourcePersist(ESD_ResourceInfo *resourceInfo);
+ESD_CORE_EXPORT void ESD_ResourcePersist(ESD_ResourceInfo *resourceInfo);
 
 // Number of available bitmap handles
 #define ESD_BITMAPHANDLE_NB (EVE_CHIPID >= EVE_FT810 ? 32UL : 16UL)

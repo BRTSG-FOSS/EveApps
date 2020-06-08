@@ -19,7 +19,7 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 extern ESD_CORE_EXPORT EVE_HalContext *ESD_Host;
 extern ESD_CORE_EXPORT ESD_GpuAlloc *ESD_GAlloc;
 
-uint32_t ESD_LoadFont(ESD_FontInfo *fontInfo)
+ESD_CORE_EXPORT uint32_t ESD_LoadFont(ESD_FontInfo *fontInfo)
 {
 	uint32_t glyphAddr;
 
@@ -116,7 +116,7 @@ uint32_t ESD_LoadFont(ESD_FontInfo *fontInfo)
 	return GA_INVALID;
 }
 
-void ESD_FontPersist(ESD_FontInfo *fontInfo)
+ESD_CORE_EXPORT void ESD_FontPersist(ESD_FontInfo *fontInfo)
 {
 	ESD_LoadFont(fontInfo);
 }
