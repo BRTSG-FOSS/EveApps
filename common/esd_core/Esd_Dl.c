@@ -8,13 +8,13 @@
 #define _USE_MATH_DEFINES 1
 #include <math.h>
 
-extern EVE_HalContext *ESD_Host;
-/* extern ESD_GpuAlloc *ESD_GAlloc; */
+extern ESD_CORE_EXPORT EVE_HalContext *ESD_Host;
+/* extern ESD_CORE_EXPORT ESD_GpuAlloc *ESD_GAlloc; */
 
 // GPU state for the current display list
 ESD_Rect16 ESD_ScissorRect;
 
-void Esd_ResetGpuState() // Begin of frame
+void ESD_Scissor_dlStart() // Begin of frame
 {
 	EVE_HalContext *phost = ESD_Host;
 
@@ -25,19 +25,19 @@ void Esd_ResetGpuState() // Begin of frame
 	ESD_ScissorRect.Height = phost->Height;
 }
 
-ESD_Rect16 ESD_Dl_Scissor_Get()
+ESD_Rect16 ESD_Scissor_get()
 {
 	return ESD_ScissorRect;
 }
 
-ESD_Rect16 ESD_Dl_Scissor_Set(ESD_Rect16 rect)
+ESD_Rect16 ESD_Scissor_set(ESD_Rect16 rect)
 {
 	ESD_Rect16 state = ESD_ScissorRect;
-	ESD_Dl_Scissor_Adjust(rect, state);
+	ESD_Scissor_adjust(rect, state);
 	return state;
 }
 
-void ESD_Dl_Scissor_Adjust(ESD_Rect16 rect, ESD_Rect16 state)
+void ESD_Scissor_adjust(ESD_Rect16 rect, ESD_Rect16 state)
 {
 	EVE_HalContext *phost = ESD_Host;
 	(void)phost;
@@ -78,7 +78,7 @@ void ESD_Dl_Scissor_Adjust(ESD_Rect16 rect, ESD_Rect16 state)
 	ESD_ScissorRect = rect;
 }
 
-void ESD_Dl_Scissor_Reset(ESD_Rect16 state)
+void ESD_Scissor_reset(ESD_Rect16 state)
 {
 	// EVE_CoCmd_startFunc(ESD_Host, FT_CMD_SIZE * 2);
 	EVE_HalContext *phost = ESD_Host;
@@ -90,13 +90,5 @@ void ESD_Dl_Scissor_Reset(ESD_Rect16 state)
 	// EVE_CoCmd_endFunc(ESD_Host);
 	ESD_ScissorRect = state;
 }
-
-/* end of supported functions */
-
-// Deprecated
-// ESD_Render_Rect_Grad
-// ESD_Render_Rect
-// ESD_Cmd_Button
-// ESD_Cmd_Number
 
 /* end of file */

@@ -132,10 +132,10 @@ void Esd_Render_MultiGradient_Rounded(int16_t x, int16_t y, int16_t width, int16
 	// EVE_CoDl_saveContext(phost);
 
 	// Set alpha of the target rendering area to 255
-	// ESD_Dl_CLEAR_COLOR_A(255);
-	// ESD_Rect16 scissor = ESD_Dl_Scissor_Set(globalRect);
-	// ESD_Dl_CLEAR(1, 0, 0);
-	// ESD_Dl_Scissor_Reset(scissor);
+	// EVE_CoDl_clear_COLOR_A(255);
+	// ESD_Rect16 scissor = ESD_Scissor_set(globalRect);
+	// EVE_CoDl_clear(1, 0, 0);
+	// ESD_Scissor_reset(scissor);
 	EVE_CoDl_colorArgb_ex(phost, ESD_ARGB_WHITE);
 	EVE_CoCmd_dl(ESD_Host, COLOR_MASK(0, 0, 0, 1));
 	EVE_CoDl_lineWidth(phost, 16);

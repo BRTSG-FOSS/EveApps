@@ -68,6 +68,11 @@ ESD_FUNCTION(ESD_getFontHeight, Type = uint16_t, DisplayName = "Get Font Height"
 ESD_PARAMETER(fontInfo, Type = Esd_FontInfo *)
 uint16_t ESD_getFontHeight(Esd_FontInfo *fontInfo);
 
+/* Get the height of a builtin ROM font */
+ESD_FUNCTION(ESD_getRomFontHeight, Type = uint16_t, DisplayName = "Get ROM Font Height", Category = _GroupHidden, Macro)
+ESD_PARAMETER(handle, Type = uint8_t, DisplayName = "ROM Font Handle", Default = 0, Min = 0, Max = 31)
+#define ESD_getRomFontHeight(handle) (ESD_getFontHeight(ESD_getRomFont(handle)));
+
 ESD_FUNCTION(ESD_getFontBaseLine, Type = uint16_t, DisplayName = "Get Font Base Line", Category = EsdUtilities)
 ESD_PARAMETER(fontInfo, Type = Esd_FontInfo *)
 uint16_t ESD_getFontBaseLine(Esd_FontInfo *fontInfo);

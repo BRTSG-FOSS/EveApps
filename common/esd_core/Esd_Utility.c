@@ -8,8 +8,8 @@
 #include "ESD_TouchTag.h"
 #include "ESD_Context.h"
 
-extern EVE_HalContext *ESD_Host;
-extern ESD_GpuAlloc *ESD_GAlloc;
+extern ESD_CORE_EXPORT EVE_HalContext *ESD_Host;
+extern ESD_CORE_EXPORT ESD_GpuAlloc *ESD_GAlloc;
 
 #if defined(EVE_FLASH_AVAILABLE)
 #ifndef NDEBUG

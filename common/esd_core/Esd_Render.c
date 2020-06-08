@@ -5,7 +5,7 @@
 #include "ESD_Dl.h"
 #include "ESD_BitmapHandle.h"
 
-extern EVE_HalContext *ESD_Host;
+extern ESD_CORE_EXPORT EVE_HalContext *ESD_Host;
 
 // Rectangle drawing with some logic to convert from radius to line width and width height to positions to simplify usage
 void ESD_Render_RectangleF(esd_int32_f4_t x, esd_int32_f4_t y, esd_int32_f4_t w, esd_int32_f4_t h, esd_int32_f4_t radius, esd_argb32_t color)
@@ -233,9 +233,9 @@ void ESD_Render_BitmapFreeform(ESD_BitmapCell bitmapCell, esd_argb32_t c, ESD_Re
 		}
 		else
 		{
-			ESD_Rect16 state = ESD_Dl_Scissor_Set(globalRect);
+			ESD_Rect16 state = ESD_Scissor_set(globalRect);
 			ESD_Render_Bitmap(freeformRect.X, freeformRect.Y, bitmapCell, c);
-			ESD_Dl_Scissor_Reset(state);
+			ESD_Scissor_reset(state);
 		}
 	}
 	else

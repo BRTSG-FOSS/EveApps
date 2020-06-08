@@ -8,8 +8,8 @@
 #define ESD_BITMAPINFO_DEBUG
 #endif
 
-extern EVE_HalContext *ESD_Host;
-extern ESD_GpuAlloc *ESD_GAlloc;
+extern ESD_CORE_EXPORT EVE_HalContext *ESD_Host;
+extern ESD_CORE_EXPORT ESD_GpuAlloc *ESD_GAlloc;
 
 #ifdef EVE_FLASH_AVAILABLE
 #define ESD_BITMAPINFO_SUPPORT_DIRECT_FLASH(bitmapInfo) (bitmapInfo->Flash && ESD_IS_FORMAT_ASTC(bitmapInfo->Format))

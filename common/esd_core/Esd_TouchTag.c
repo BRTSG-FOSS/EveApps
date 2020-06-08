@@ -6,7 +6,7 @@
 
 extern void ESD_noop(void *context);
 
-extern EVE_HalContext *ESD_Host;
+extern ESD_CORE_EXPORT EVE_HalContext *ESD_Host;
 
 static uint32_t s_LastTagFrame = ~0;
 static ESD_TouchTag s_NullTag = {

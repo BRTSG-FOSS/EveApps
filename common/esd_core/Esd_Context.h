@@ -86,12 +86,9 @@ typedef struct
 
 } ESD_Parameters;
 
-#ifndef ESD_EXTERN_LIBARY
-#define ESD_EXTERN_LIBARY
-#endif
-extern ESD_EXTERN_LIBARY ESD_Context *ESD_CurrentContext; //< Pointer to current ESD context
-extern ESD_EXTERN_LIBARY EVE_HalContext *ESD_Host; //< Pointer to current EVE hal context
-extern ESD_EXTERN_LIBARY ESD_GpuAlloc *ESD_GAlloc; //< Pointer to current allocator
+extern ESD_CORE_EXPORT ESD_Context *ESD_CurrentContext; //< Pointer to current ESD context
+extern ESD_CORE_EXPORT EVE_HalContext *ESD_Host; //< Pointer to current EVE hal context
+extern ESD_CORE_EXPORT ESD_GpuAlloc *ESD_GAlloc; //< Pointer to current allocator
 
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 #define ESD_CO_SCRATCH_HANDLE (EVE_CHIPID >= EVE_FT810 ? ESD_Host->CoScratchHandle : 15)

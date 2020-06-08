@@ -29,8 +29,8 @@
 * has no liability in relation to those amendments.
 */
 
-#ifndef ESD_TYPEDEFS__H
-#define ESD_TYPEDEFS__H
+#ifndef ESD_BASE__H
+#define ESD_BASE__H
 
 /*
 Type definition
@@ -83,7 +83,7 @@ ESD_PARAMETER(message, Type = char *)
 void testPrint(char *message);
 
 ESD_FUNCTION(EVE_CoCmd_dl, Include = "EVE_Hal.h")
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = "ESD_currentHost()", Hidden, Internal)
+ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = "ESD_host()", Hidden, Internal)
 ESD_PARAMETER(dl, Type = uint32_t)
 
 */
@@ -193,6 +193,8 @@ typedef uint32_t esd_classid_t;
 #define inline __inline
 #endif
 
+#pragma ESD_TYPE(EVE_HalContext *, Native = Pointer, Edit = Library)
+
 #pragma ESD_FUNCTION(ESD_noop, Category = _GroupHidden)
 #pragma ESD_PARAMETER(context, Type = void *)
 ESD_CORE_EXPORT void ESD_noop(void *context);
@@ -225,6 +227,6 @@ void logError__ESD(const char *str);
 	} while (0)
 #endif
 
-#endif /* #ifndef ESD_TYPEDEFS__H */
+#endif /* #ifndef ESD_BASE__H */
 
 /* end of file */

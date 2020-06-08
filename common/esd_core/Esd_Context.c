@@ -40,20 +40,16 @@
 //
 // Globals
 //
-ESD_Context *ESD_CurrentContext = NULL;
-EVE_HalContext *ESD_Host = NULL; // Pointer to current s_Host
-ESD_GpuAlloc *ESD_GAlloc = NULL; // Pointer to current s_GAlloc
+ESD_CORE_EXPORT ESD_Context *ESD_CurrentContext = NULL;
+ESD_CORE_EXPORT EVE_HalContext *ESD_Host = NULL; // Pointer to current s_Host
+ESD_CORE_EXPORT ESD_GpuAlloc *ESD_GAlloc = NULL; // Pointer to current s_GAlloc
 
 //
 // External definitions
 //
-// TODO: Decouple global state
 #if _DEBUG
-void Esd_CheckTypeSizes();
+void ESD_checkTypeSizes();
 #endif
-// FT_Mcu_Hal.c
-// void Eve_BootupConfig(EVE_HalContext *s_Host);
-#define Eve_BootupConfig EVE_Util_bootupConfig
 
 // When not in the simulation, use the Ft_Main__Start etc symbols
 // as exported by the single Application logic document included
@@ -67,7 +63,7 @@ void Esd_CheckTypeSizes();
 int Ft_Main__Running__ESD();
 #endif
 
-void Esd_ResetGpuState();
+void ESD_Scissor_dlStart();
 
 // extern void ESD_Widget_ProcessFree(); // TODO: Bind from widgets
 
@@ -121,7 +117,7 @@ void ESD_initialize()
 	eve_printf_debug(FT_WELCOME_MESSAGE);
 
 #if _DEBUG
-	Esd_CheckTypeSizes();
+	ESD_checkTypeSizes();
 #endif
 }
 
@@ -209,7 +205,7 @@ void ESD_start(ESD_Context *ec)
 	ESD_setCurrent(ec);
 
 	// Initialize framework
-	Esd_ResetGpuState();
+	ESD_Scissor_dlStart();
 	ec->Frame = 0;
 	ec->Millis = EVE_millis();
 	// ESD_Timer_CancelGlobal(); // TODO
@@ -232,7 +228,7 @@ void ESD_update(ESD_Context *ec)
 
 	// Restore initial frame values
 	// EVE_CoCmd_loadIdentity(phost); // ?
-	Esd_ResetGpuState();
+	ESD_Scissor_dlStart();
 	// ESD_Widget_ProcessFree(); // TODO: Link this back up!!!
 	ESD_BitmapHandle_frameStart(&ec->HandleState);
 

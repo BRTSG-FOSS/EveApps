@@ -30,13 +30,12 @@
 */
 
 #if _DEBUG
-#include <EVE_Hal.h>
 #include "ESD_Base.h"
 #include "ESD_GpuAlloc.h"
 
 #include "ESD_FontInfo.h"
 
-void Esd_CheckTypeSizes()
+void ESD_checkTypeSizes()
 {
 	eve_printf("sizeof(ESD_GpuHandle): %i\n", (int)sizeof(ESD_GpuHandle));
 	eve_printf("sizeof(Esd_ResourceInfo): %i\n", (int)sizeof(Esd_ResourceInfo));

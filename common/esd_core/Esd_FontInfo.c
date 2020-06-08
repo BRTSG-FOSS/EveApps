@@ -16,8 +16,8 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 #define esd_resourceinfo_printf(fmt, ...) eve_noop()
 #endif
 
-extern EVE_HalContext *ESD_Host;
-extern ESD_GpuAlloc *ESD_GAlloc;
+extern ESD_CORE_EXPORT EVE_HalContext *ESD_Host;
+extern ESD_CORE_EXPORT ESD_GpuAlloc *ESD_GAlloc;
 
 uint32_t Esd_LoadFont(Esd_FontInfo *fontInfo)
 {

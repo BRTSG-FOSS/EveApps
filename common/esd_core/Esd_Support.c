@@ -32,16 +32,16 @@
 #include "ESD_Context.h"
 
 /// A function to get milliseconds for current frame
-ESD_FUNCTION(ESD_GetMillis, Type = uint32_t, DisplayName = "Get Milliseconds", Category = EsdUtilities)
-uint32_t ESD_GetMillis() { return ESD_CurrentContext->Millis; }
+ESD_FUNCTION(ESD_millis, Type = uint32_t, DisplayName = "Get Milliseconds", Category = EsdUtilities)
+uint32_t ESD_millis() { return ESD_CurrentContext->Millis; }
 
 /// A function to get the difference in milliseconds since last frame Update call
-ESD_FUNCTION(ESD_GetDeltaMs, Type = uint32_t, DisplayName = "Get Delta Ms", Category = EsdUtilities)
-uint32_t ESD_GetDeltaMs() { return ESD_CurrentContext->DeltaMs; }
+ESD_FUNCTION(ESD_deltaMs, Type = uint32_t, DisplayName = "Get Delta Ms", Category = EsdUtilities)
+uint32_t ESD_deltaMs() { return ESD_CurrentContext->DeltaMs; }
 
 /// A function to get the current HAL context data structure
-ESD_FUNCTION(ESD_GetHost, Type = EVE_HalContext *, DisplayName = "Get EVE Host", Category = EsdUtilities)
-EVE_HalContext *ESD_GetHost() { return ESD_Host; }
+ESD_FUNCTION(ESD_host, Type = EVE_HalContext *, DisplayName = "Get EVE Host", Category = EsdUtilities)
+EVE_HalContext *ESD_host() { return ESD_Host; }
 
 #ifdef ESD_SIMULATION
 
