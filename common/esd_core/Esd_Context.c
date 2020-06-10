@@ -36,6 +36,7 @@
 #include "ESD_Scissor.h"
 #include "ESD_BitmapHandle.h"
 #include "ESD_TouchTag.h"
+#include "ESD_CoWidget.h"
 
 //
 // Globals
