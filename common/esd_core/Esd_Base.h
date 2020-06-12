@@ -178,6 +178,12 @@ typedef uint32_t esd_rgb32_t;
 #pragma ESD_TYPE(esd_classid_t, Native = UInt32, Edit = Library)
 typedef uint32_t esd_classid_t;
 
+#ifdef ESD_EXTERN_LIBARY
+#ifdef ESD_CORE_EXPORT
+#undef ESD_CORE_EXPORT
+#endif
+#define ESD_CORE_EXPORT ESD_EXTERN_LIBARY
+#else
 #ifdef EVE_MULTI_TARGET
 #ifdef ESD_CORE_EXPORT
 #undef ESD_CORE_EXPORT
@@ -187,6 +193,7 @@ typedef uint32_t esd_classid_t;
 #endif
 #else
 #define ESD_CORE_EXPORT
+#endif
 #endif
 
 #pragma ESD_TYPE(EVE_HalContext *, Native = Pointer, Edit = Library)
