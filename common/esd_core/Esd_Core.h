@@ -36,6 +36,7 @@
 #include "ESD_Context.h"
 #include "ESD_Render.h"
 #include "ESD_Utility.h"
+#include "ESD_CoWidget.h"
 
 #endif /* #ifndef ESD_CORE__H */
 

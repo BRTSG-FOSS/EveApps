@@ -92,7 +92,20 @@ ESD_CORE_EXPORT void ESD_Render_Rect_Stroke(
 	// Use local rendering context, bypass ESD display list functions.
 	EVE_CoDl_begin(phost, RECTS);
 	EVE_CoDl_colorArgb_ex(phost, color);
-	EVE_CoDl_vertexFormat(phost, 4);
+	int vertexFormat = 4;
+	while (vertexFormat > 0 && (
+		x0 < EVE_VERTEX2F_MIN || x0 > EVE_VERTEX2F_MAX
+		|| x1 < EVE_VERTEX2F_MIN || x1 > EVE_VERTEX2F_MAX
+		|| x0 < EVE_VERTEX2F_MIN || x0 > EVE_VERTEX2F_MAX
+		|| y1 < EVE_VERTEX2F_MIN || y1 > EVE_VERTEX2F_MAX))
+	{
+		--vertexFormat;
+		x0 >>= 1;
+		x1 >>= 1;
+		y0 >>= 1;
+		y1 >>= 1;
+	}
+	EVE_CoDl_vertexFormat(phost, vertexFormat);
 	EVE_CoCmd_dl(phost, SAVE_CONTEXT());
 
 	// Outer reset

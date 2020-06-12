@@ -35,12 +35,16 @@ ESD_CORE_EXPORT void ESD_AttachFlashFast()
 {
 	// Wait for flash status to move on from FLASH_STATUS_INIT
 	EVE_HalContext *phost = ESD_GetHost();
+	if (!EVE_Hal_supportFlash(phost))
+		return;
+
 	uint32_t flashStatus;
 	while (!(flashStatus = EVE_Hal_rd32(phost, REG_FLASH_STATUS)))
 	{
 #ifndef NDEBUG
 		eve_printf_debug("Waiting for REG_FLASH_STATUS (%u)\n", flashStatus);
 #endif
+		EVE_sleep(100);
 	}
 
 	// No need to continue if flash is okay

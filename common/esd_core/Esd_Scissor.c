@@ -40,7 +40,6 @@ ESD_CORE_EXPORT void ESD_Scissor_Adjust(ESD_Rect16 rect, ESD_Rect16 state)
 	int16_t y1diff;
 	int16_t x2diff;
 	int16_t y2diff;
-	(void)phost;
 
 	x1diff = (state.X - rect.X); // old x1 - new x1
 	if (x1diff > 0) // old x1 > new x1
@@ -64,25 +63,24 @@ ESD_CORE_EXPORT void ESD_Scissor_Adjust(ESD_Rect16 rect, ESD_Rect16 state)
 	{
 		rect.Height += y2diff;
 	}
-	// EVE_CoCmd_startFunc(ESD_Host, FT_CMD_SIZE * 2);
+	if (rect.Width < 0)
+		rect.Width = 0;
+	if (rect.Height < 0)
+		rect.Height = 0;
 	if (ESD_ScissorRect.X != rect.X || ESD_ScissorRect.Y != rect.Y)
-		EVE_CoCmd_dl(ESD_Host, SCISSOR_XY(rect.X, rect.Y));
+		EVE_CoDl_scissorXY(phost, rect.X, rect.Y);
 	if (ESD_ScissorRect.Width != rect.Width || ESD_ScissorRect.Height != rect.Height)
-		EVE_CoCmd_dl(ESD_Host, SCISSOR_SIZE(rect.Width, rect.Height));
-	// EVE_CoCmd_endFunc(ESD_Host);
+		EVE_CoDl_scissorSize(phost, rect.Width, rect.Height);
 	ESD_ScissorRect = rect;
 }
 
 ESD_CORE_EXPORT void ESD_Scissor_Reset(ESD_Rect16 state)
 {
-	// EVE_CoCmd_startFunc(ESD_Host, FT_CMD_SIZE * 2);
 	EVE_HalContext *phost = ESD_GetHost();
-	(void)phost;
 	if (ESD_ScissorRect.X != state.X || ESD_ScissorRect.Y != state.Y)
-		EVE_CoCmd_dl(ESD_Host, SCISSOR_XY(state.X, state.Y));
+		EVE_CoDl_scissorXY(phost, state.X, state.Y);
 	if (ESD_ScissorRect.Width != state.Width || ESD_ScissorRect.Height != state.Height)
-		EVE_CoCmd_dl(ESD_Host, SCISSOR_SIZE(state.Width, state.Height));
-	// EVE_CoCmd_endFunc(ESD_Host);
+		EVE_CoDl_scissorSize(phost, state.Width, state.Height);
 	ESD_ScissorRect = state;
 }
 

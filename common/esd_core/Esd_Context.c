@@ -164,11 +164,39 @@ ESD_CORE_EXPORT void ESD_Open(ESD_Context *ec, ESD_Parameters *ep)
 #endif
 
 	{
-		EVE_HalParameters parameters;
-		EVE_Hal_defaultsEx(&parameters, deviceIdx);
-		parameters.UserContext = ec;
-		parameters.CbCmdWait = cbCmdWait;
-		eve_assert_do(EVE_Hal_open(&ec->HalContext, &parameters));
+		EVE_HalParameters params;
+#if defined(BT8XXEMU_PLATFORM) || defined(EVE_MULTI_TARGET)
+		BT8XXEMU_EmulatorParameters emulatorParams;
+		BT8XXEMU_FlashParameters flashParams;
+#endif
+
+		EVE_Hal_defaultsEx(&params, deviceIdx);
+		params.UserContext = ec;
+		params.CbCmdWait = cbCmdWait;
+
+#if defined(BT8XXEMU_PLATFORM) || defined(EVE_MULTI_TARGET)
+		if (params.Host == EVE_HOST_BT8XXEMU)
+		{
+			BT8XXEMU_defaults(BT8XXEMU_VERSION_API, &emulatorParams, chipId);
+			emulatorParams.Flags &= (~BT8XXEMU_EmulatorEnableDynamicDegrade & ~BT8XXEMU_EmulatorEnableRegPwmDutyEmulation);
+			// TODO: emulatorParams.Log
+			params.EmulatorParameters = &emulatorParams;
+			/*
+			if (flashFile)
+			{
+				BT8XXEMU_Flash_defaults(BT8XXEMU_VERSION_API, &flashParams);
+				wcscpy_s(flashParams.DataFilePath, _countof(flashParams.DataFilePath), flashPath[0] ? flashPath : flashFile);
+				flashParams.SizeBytes = 2 * 1024 * 1024;
+				while (flashParams.SizeBytes < flashSize)
+					flashParams.SizeBytes *= 2;
+				// TODO: flashParams.Log
+				params.EmulatorFlashParameters = &flashParams;
+			}
+			*/
+		}
+#endif
+
+		eve_assert_do(EVE_Hal_open(&ec->HalContext, &params));
 	}
 
 	phost = &ec->HalContext;
