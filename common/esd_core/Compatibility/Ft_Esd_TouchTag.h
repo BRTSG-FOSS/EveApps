@@ -2,27 +2,27 @@
 #ifndef FT_ESD_COMPATIBILITY_TOUCHTAG_H
 #define FT_ESD_COMPATIBILITY_TOUCHTAG_H
 
-#include "ESD_Core.h"
+#include "Esd_Core.h"
 #include "Ft_Esd.h"
 
 // Utility for managing touch tag identifiers. Create one instance for each tag you need to handle
 ESD_ACTOR(Ft_Esd_TouchTag, Callback, Include = "Ft_Esd_TouchTag.h", DisplayName = "Touch Tag", Category = _GroupHidden, Icon = ":/icons/hand-point-090.png")
-#define Ft_Esd_TouchTag ESD_TouchTag
+#define Ft_Esd_TouchTag Esd_TouchTag
 
-#define Ft_Esd_TouchTag__Initializer ESD_TouchTag__Initializer
-#define Ft_Esd_TouchTag_Start ESD_TouchTag_Start
-#define Ft_Esd_TouchTag_Update ESD_TouchTag_Update
-#define Ft_Esd_TouchTag_End ESD_TouchTag_End
-#define Ft_Esd_TouchTag_Touching ESD_TouchTag_Touching
-#define Ft_Esd_TouchTag_Inside ESD_TouchTag_Inside
-#define Ft_Esd_TouchTag_Hover ESD_TouchTag_Hover
-#define Ft_Esd_TouchTag_Tag ESD_TouchTag_Tag
-#define Ft_Esd_TouchTag_CurrentTag ESD_TouchTag_CurrentTag
-#define Ft_Esd_TouchTag_TouchX ESD_TouchTag_TouchX
-#define Ft_Esd_TouchTag_TouchY ESD_TouchTag_TouchY
-#define Ft_Esd_TouchTag_TouchXDelta ESD_TouchTag_TouchXDelta
-#define Ft_Esd_TouchTag_TouchYDelta ESD_TouchTag_TouchYDelta
-#define Ft_Esd_TouchTag_SuppressCurrentTags ESD_TouchTag_SuppressCurrentTags
+#define Ft_Esd_TouchTag__Initializer Esd_TouchTag__Initializer
+#define Ft_Esd_TouchTag_Start Esd_TouchTag_Start
+#define Ft_Esd_TouchTag_Update Esd_TouchTag_Update
+#define Ft_Esd_TouchTag_End Esd_TouchTag_End
+#define Ft_Esd_TouchTag_Touching Esd_TouchTag_Touching
+#define Ft_Esd_TouchTag_Inside Esd_TouchTag_Inside
+#define Ft_Esd_TouchTag_Hover Esd_TouchTag_Hover
+#define Ft_Esd_TouchTag_Tag Esd_TouchTag_Tag
+#define Ft_Esd_TouchTag_CurrentTag Esd_TouchTag_CurrentTag
+#define Ft_Esd_TouchTag_TouchX Esd_TouchTag_TouchX
+#define Ft_Esd_TouchTag_TouchY Esd_TouchTag_TouchY
+#define Ft_Esd_TouchTag_TouchXDelta Esd_TouchTag_TouchXDelta
+#define Ft_Esd_TouchTag_TouchYDelta Esd_TouchTag_TouchYDelta
+#define Ft_Esd_TouchTag_SuppressCurrentTags Esd_TouchTag_SuppressCurrentTags
 
 ESD_SIGNAL(Down)
 ESD_SIGNAL(Up)

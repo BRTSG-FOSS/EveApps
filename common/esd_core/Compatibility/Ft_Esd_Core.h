@@ -32,7 +32,7 @@
 #ifndef ESD_COMPATIBILITY_CORE__H
 #define ESD_COMPATIBILITY_CORE__H
 
-#include "ESD_Core.h"
+#include "Esd_Core.h"
 
 #include <FT_Platform.h>
 
@@ -43,30 +43,8 @@
 #include "Ft_Esd_BitmapHandle.h"
 #include "Ft_Esd_TouchTag.h"
 
-#define Esd_Context ESD_Context
-#define Esd_Parameters ESD_Parameters
-
-#define Esd_CurrentContext ESD_CurrentContext
-#define Ft_Esd_Host ESD_Host
-#define Ft_Esd_GAlloc ESD_GAlloc
-
-#define Esd_SetCurrent ESD_SetCurrent
-#define Esd_Defaults ESD_Defaults
-static inline void Esd_Initialize(Esd_Context *ec, Esd_Parameters *ep)
-{
-	ESD_Initialize();
-	ESD_Open(ec, ep);
-}
-#define Esd_Release ESD_Close
-#define Esd_Shutdown ESD_Release
-
-#define Esd_Loop ESD_Loop
-
-#define Esd_Start ESD_Start
-#define Esd_Update ESD_Update
-#define Esd_Render ESD_Render
-#define Esd_WaitSwap ESD_WaitSwap
-#define Esd_Stop ESD_Stop
+#define Ft_Esd_Host Esd_Host
+#define Ft_Esd_GAlloc Esd_GAlloc
 
 #endif /* #ifndef ESD_CORE__H */
 

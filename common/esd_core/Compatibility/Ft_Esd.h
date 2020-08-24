@@ -32,7 +32,7 @@
 #ifndef FT_COMPATIBILITY_ESD_H
 #define FT_COMPATIBILITY_ESD_H
 
-#include "ESD_Core.h"
+#include "Esd_Core.h"
 
 #include "FT_Platform.h"
 
@@ -88,7 +88,7 @@ ESD_TYPE(esd_classid_t, Native = UInt32, Edit = Library)
 
 ESD_FUNCTION(Ft_Esd_Noop, Category = _GroupHidden, Macro)
 ESD_PARAMETER(context, Type = void *)
-#define Ft_Esd_Noop ESD_Noop
+#define Ft_Esd_Noop Esd_Noop
 
 // TODO: This probably belongs in widgets framework, Ft_Esd.h is for core framework functionality only ->
 ESD_ENUM(Ft_AlignX_Opt, Type = ft_uint16_t)
@@ -103,9 +103,9 @@ ESD_ENUM(Ft_AlignY_Opt, Type = ft_uint16_t)
 ESD_END()
 // <-
 
-#define Ft_Esd_LogMessage ESD_LogMessage
-#define Ft_Esd_LogWarning ESD_LogWarning
-#define Ft_Esd_LogError ESD_LogError
+#define Ft_Esd_LogMessage Esd_LogMessage
+#define Ft_Esd_LogWarning Esd_LogWarning
+#define Ft_Esd_LogError Esd_LogError
 
 /* compatibility */
 
@@ -119,8 +119,8 @@ ESD_END()
 #define FT_DispWidth phost->DispWidth
 #define FT_DispHeight phost->DispHeight
 
-#define ESD_DispWidth phost->DispWidth
-#define ESD_DispHeight phost->DispHeight
+#define Esd_DispWidth phost->DispWidth
+#define Esd_DispHeight phost->DispHeight
 
 #endif /* #ifndef FT_ESD_H */
 

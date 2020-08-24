@@ -32,18 +32,10 @@
 #ifndef FT_ESD_COMPATIBILITY_UTILITY_H
 #define FT_ESD_COMPATIBILITY_UTILITY_H
 
-#include "ESD_Core.h"
+#include "Esd_Core.h"
 
 #include <FT_Platform.h>
 #include "Ft_Esd.h"
-
-#define Esd_AttachFlashFast ESD_AttachFlashFast
-
-#define Esd_ShowLogo ESD_ShowLogo
-#define Esd_BeginLogo ESD_BeginLogo
-#define Esd_EndLogo ESD_EndLogo
-
-#define Esd_Calibrate ESD_Calibrate
 
 #endif /* #ifndef FT_ESD_UTILITY_H */
 

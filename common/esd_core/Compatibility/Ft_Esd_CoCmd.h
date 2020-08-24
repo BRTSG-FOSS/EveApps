@@ -5,7 +5,7 @@
 #include "EVE_Hal.h"
 #include "Gpu_CoCmd.h"
 
-#include "ESD_CoWidget.h"
+#include "Esd_CoWidget.h"
 
 ESD_RENDER(Ft_Gpu_CoCmd_Text, Type = ft_void_t, Category = _GroupHidden)
 ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Ft_Esd_GetHost, Hidden, Internal, Static) // PHOST
@@ -215,10 +215,10 @@ ESD_PARAMETER(r, Type = ft_int16_t, Default = 40) // SCREEN_SIZE
 ESD_PARAMETER(options, Type = Ft_CoPro_Opt, Default = 0) // TODO: Option flags / Bit enum?
 ESD_PARAMETER(val, Type = ft_uint16_t, Default = 0)
 
-#define Ft_Esd_CoCmd_Spinner ESD_CoWidget_Spinner
-#define Ft_Esd_CoCmd_ScreenSaver ESD_CoWidget_ScreenSaver
-#define Ft_Esd_CoCmd_Sketch ESD_CoWidget_Sketch
-#define Ft_Esd_CoCmd_Stop ESD_CoWidget_Stop
+#define Ft_Esd_CoCmd_Spinner Esd_CoWidget_Spinner
+#define Ft_Esd_CoCmd_ScreenSaver Esd_CoWidget_ScreenSaver
+#define Ft_Esd_CoCmd_Sketch Esd_CoWidget_Sketch
+#define Ft_Esd_CoCmd_Stop Esd_CoWidget_Stop
 
 ESD_FUNCTION(Ft_Esd_CoCmd_Spinner, Type = ft_void_t, Category = _GroupHidden)
 ESD_PARAMETER(owner, Type = void *, Default = 0, Hidden, Internal)

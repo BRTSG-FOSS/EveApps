@@ -22,21 +22,21 @@ Either allocation option does not guarantee that memory will remain persistently
 #ifndef FT_ESD_COMPATIBILITY_GPUALLOC_H
 #define FT_ESD_COMPATIBILITY_GPUALLOC_H
 
-#include "ESD_GpuAlloc.h"
+#include "Esd_GpuAlloc.h"
 
-#define Ft_Esd_GpuHandle ESD_GpuHandle
-#define Ft_Esd_GpuAllocEntry ESD_GpuAllocEntry
-#define Ft_Esd_GpuAllocRef ESD_GpuAllocRef
-#define Ft_Esd_GpuAlloc ESD_GpuAlloc
+#define Ft_Esd_GpuHandle Esd_GpuHandle
+#define Ft_Esd_GpuAllocEntry Esd_GpuAllocEntry
+#define Ft_Esd_GpuAllocRef Esd_GpuAllocRef
+#define Ft_Esd_GpuAlloc Esd_GpuAlloc
 
-#define Ft_Esd_GpuAlloc_Reset ESD_GpuAlloc_Reset
-#define Ft_Esd_GpuAlloc_Update ESD_GpuAlloc_Update
-#define Ft_Esd_GpuAlloc_Alloc ESD_GpuAlloc_Alloc
-#define Ft_Esd_GpuAlloc_Free ESD_GpuAlloc_Free
-#define Ft_Esd_GpuAlloc_Get ESD_GpuAlloc_Get
-#define Ft_Esd_GpuAlloc_GetTotalUsed ESD_GpuAlloc_GetTotalUsed
-#define Ft_Esd_GpuAlloc_GetTotal ESD_GpuAlloc_GetTotal
-#define Ft_Esd_GpuAlloc_Print ESD_GpuAlloc_Print
+#define Ft_Esd_GpuAlloc_Reset Esd_GpuAlloc_Reset
+#define Ft_Esd_GpuAlloc_Update Esd_GpuAlloc_Update
+#define Ft_Esd_GpuAlloc_Alloc Esd_GpuAlloc_Alloc
+#define Ft_Esd_GpuAlloc_Free Esd_GpuAlloc_Free
+#define Ft_Esd_GpuAlloc_Get Esd_GpuAlloc_Get
+#define Ft_Esd_GpuAlloc_GetTotalUsed Esd_GpuAlloc_GetTotalUsed
+#define Ft_Esd_GpuAlloc_GetTotal Esd_GpuAlloc_GetTotal
+#define Ft_Esd_GpuAlloc_Print Esd_GpuAlloc_Print
 
 #endif /* #ifndef FT_ESD_GPUALLOC_H */
 
