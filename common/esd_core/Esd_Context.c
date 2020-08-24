@@ -175,7 +175,9 @@ ESD_CORE_EXPORT void Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 		params.CbCmdWait = cbCmdWait;
 
 #if defined(BT8XXEMU_PLATFORM) || defined(EVE_MULTI_TARGET)
+#if defined(EVE_MULTI_TARGET)
 		if (params.Host == EVE_HOST_BT8XXEMU)
+#endif
 		{
 			BT8XXEMU_defaults(BT8XXEMU_VERSION_API, &emulatorParams, chipId);
 			emulatorParams.Flags &= (~BT8XXEMU_EmulatorEnableDynamicDegrade & ~BT8XXEMU_EmulatorEnableRegPwmDutyEmulation);

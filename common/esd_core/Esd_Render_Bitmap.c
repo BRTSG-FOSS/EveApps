@@ -97,6 +97,7 @@ ESD_CORE_EXPORT void Esd_Render_Bitmap(int16_t x, int16_t y, Esd_BitmapCell bitm
 		Esd_CoDl_BitmapSizeReset(handle);
 		EVE_CoDl_colorArgb_ex(phost, c);
 		EVE_CoDl_begin(phost, BITMAPS);
+#if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 		if (EVE_CHIPID >= EVE_FT810 && bitmapInfo->Format == PALETTED8)
 		{
 			uint32_t paletteAddr;
@@ -107,6 +108,7 @@ ESD_CORE_EXPORT void Esd_Render_Bitmap(int16_t x, int16_t y, Esd_BitmapCell bitm
 				Esd_CoDl_Bitmap_Vertex_PALETTED8(x, y, additional, cell, paletteAddr);
 			EVE_CoDl_restoreContext(phost);
 		}
+#endif
 		else if (bitmapInfo->Format == DXT1 && ESD_BITMAPHANDLE_VALID(additional))
 		{
 			Esd_CoDl_BitmapWidthHeight(additional, bitmapInfo->Width, bitmapInfo->Height);
