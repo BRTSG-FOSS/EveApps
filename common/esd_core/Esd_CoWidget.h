@@ -40,11 +40,8 @@ ESD_CORE_EXPORT void Esd_CoWidget_Stop(void *owner);
 
 /* Pops up the default spinner on the next frame (the frame currently being built) until the subsequent frame is ready.
 This is useful when a blocking function will keep the system busy on the next frame. */
-ESD_FUNCTION(Esd_CoWidget_PopupSpinner, DisplayName = "Pop-up Spinner", Category = EsdUtilities, Inline)
-static inline void Esd_CoWidget_PopupSpinner()
-{
-	Esd_CurrentContext->SpinnerPopup = true;
-}
+ESD_FUNCTION(Esd_CoWidget_PopupSpinner, DisplayName = "Pop-up Spinner", Category = EsdUtilities)
+ESD_CORE_EXPORT void Esd_CoWidget_PopupSpinner();
 
 #endif /* #ifndef ESD_COWIDGET__H */
 

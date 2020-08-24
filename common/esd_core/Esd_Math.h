@@ -93,31 +93,31 @@ ESD_FUNCTION(Esd_Int16_ClampedValue, Type = int16_t, DisplayName = "Clamp Int16"
 ESD_PARAMETER(value, Type = int16_t, Default = 0)
 ESD_PARAMETER(min, Type = int16_t, Default = 0)
 ESD_PARAMETER(max, Type = int16_t, Default = 100)
-#define ESD_Int16_ClampedValue(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
+#define Esd_Int16_ClampedValue(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
 
 ESD_FUNCTION(Esd_UInt16_ClampedValue, Type = uint16_t, DisplayName = "Clamp UInt16", Category = EsdUtilities, Macro)
 ESD_PARAMETER(value, Type = uint16_t, Default = 0)
 ESD_PARAMETER(min, Type = uint16_t, Default = 0)
 ESD_PARAMETER(max, Type = uint16_t, Default = 100)
-#define ESD_UInt16_ClampedValue(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
+#define Esd_UInt16_ClampedValue(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
 
 ESD_FUNCTION(Esd_Int32_ClampedValue, Type = int32_t, DisplayName = "Clamp Int32", Category = EsdUtilities, Macro)
 ESD_PARAMETER(value, Type = int32_t, Default = 0)
 ESD_PARAMETER(min, Type = int32_t, Default = 0)
 ESD_PARAMETER(max, Type = int32_t, Default = 100)
-#define ESD_Int32_ClampedValue(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
+#define Esd_Int32_ClampedValue(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
 
 ESD_FUNCTION(Esd_UInt32_ClampedValue, Type = uint32_t, DisplayName = "Clamp UInt32", Category = EsdUtilities, Macro)
 ESD_PARAMETER(value, Type = uint32_t, Default = 0)
 ESD_PARAMETER(min, Type = uint32_t, Default = 0)
 ESD_PARAMETER(max, Type = uint32_t, Default = 100)
-#define ESD_UInt32_ClampedValue(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
+#define Esd_UInt32_ClampedValue(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
 
 ESD_FUNCTION(Esd_Float_ClampedValue, Type = float, DisplayName = "Clamp Float", Category = EsdUtilities, Macro)
 ESD_PARAMETER(value, Type = float, Default = 0)
 ESD_PARAMETER(min, Type = float, Default = 0)
 ESD_PARAMETER(max, Type = float, Default = 100)
-#define ESD_Float_ClampedValue(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
+#define Esd_Float_ClampedValue(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
 
 #endif /* Esd_MATH__H */
 

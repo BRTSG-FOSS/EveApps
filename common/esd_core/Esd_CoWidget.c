@@ -30,4 +30,9 @@ void Esd_CoWidget_Stop(void *owner)
 	}
 }
 
+void Esd_CoWidget_PopupSpinner()
+{
+	Esd_CurrentContext->SpinnerPopup = true;
+}
+
 /* end of file */

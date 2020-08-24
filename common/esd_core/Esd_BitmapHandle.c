@@ -379,9 +379,6 @@ ESD_CORE_EXPORT uint8_t Esd_CoDl_SetupFont(Esd_FontInfo *fontInfo)
 				// Set the font
 				romFontInfo->BitmapHandle = handle;
 				EVE_CoCmd_romFont(Esd_Host, handle, font);
-#if EVE_DL_OPTIMIZE
-				Esd_STATE.Handle = handle;
-#endif
 				Esd_CurrentContext->HandleState.Resized[handle] = 0;
 				Esd_CurrentContext->HandleState.Page[handle] = 0;
 			}
@@ -444,9 +441,6 @@ ESD_CORE_EXPORT uint8_t Esd_CoDl_SetupFont(Esd_FontInfo *fontInfo)
 				EVE_CoCmd_setFont2(Esd_Host, handle, addr, fontInfo->FirstChar);
 			else
 				eve_assert_ex(false, "No support yet in ESD for custom fonts");
-#if EVE_DL_OPTIMIZE
-			Esd_STATE.Handle = handle;
-#endif
 			Esd_CurrentContext->HandleState.Resized[handle] = 0;
 			Esd_CurrentContext->HandleState.Page[handle] = 0;
 		}
