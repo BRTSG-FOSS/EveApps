@@ -11,32 +11,32 @@ Font info structure
 #ifndef ESD_FONTINFO__H
 #define ESD_FONTINFO__H
 
-#include "ESD_Base.h"
-#include "ESD_GpuAlloc.h"
-#include "ESD_ResourceInfo.h"
+#include "Esd_Base.h"
+#include "Esd_GpuAlloc.h"
+#include "Esd_ResourceInfo.h"
 
-#pragma ESD_ENUM(ESD_FontType, DisplayName = "Bitmap Format")
+ESD_ENUM(Esd_FontType, DisplayName = "Bitmap Format")
 #define ESD_FONT_ROM 0
 #define ESD_FONT_LEGACY 1
 #define ESD_FONT_EXTENDED 2
-#pragma ESD_END()
+ESD_END()
 
 // Preset font formats
-#pragma ESD_ENUM(_FontResourceFormat, DisplayName = "Font Resource Format")
-// #pragma ESD_IDENTIFIER(LEGACY_L1)
-// #pragma ESD_IDENTIFIER(LEGACY_L8)
-#pragma ESD_IDENTIFIER(EXTENDED_ASTC)
-#pragma ESD_END()
+ESD_ENUM(_FontResourceFormat, DisplayName = "Font Resource Format")
+// ESD_IDENTIFIER(LEGACY_L1)
+// ESD_IDENTIFIER(LEGACY_L8)
+ESD_IDENTIFIER(EXTENDED_ASTC)
+ESD_END()
 
 // Structure providing information on how a font is loaded, as well as it's current loaded state
-#pragma ESD_TYPE(ESD_FontInfo, Native = Struct)
-typedef struct ESD_FontInfo // (40 bytes) (56 bytes on 64 bit)
+ESD_TYPE(Esd_FontInfo, Native = Struct)
+typedef struct Esd_FontInfo // (40 bytes) (56 bytes on 64 bit)
 {
 	// (Runtime) Bitmap handle that is being used
-	uint8_t BitmapHandle : 6; // Do not change. (see ESD_RomFontInfo)
+	uint8_t BitmapHandle : 6; // Do not change. (see Esd_RomFontInfo)
 
-	// Type of font to load (ESD_FontType)
-	uint8_t Type : 2; // Do not change. (see ESD_RomFontInfo)
+	// Type of font to load (Esd_FontType)
+	uint8_t Type : 2; // Do not change. (see Esd_RomFontInfo)
 
 	// First character in the glyph map (for legacy fonts)
 	uint8_t FirstChar;
@@ -54,17 +54,17 @@ typedef struct ESD_FontInfo // (40 bytes) (56 bytes on 64 bit)
 	uint32_t GlyphAddress;
 
 	// The font map
-	ESD_ResourceInfo FontResource;
+	Esd_ResourceInfo FontResource;
 
 	// Glyphs
-	ESD_ResourceInfo GlyphResource;
+	Esd_ResourceInfo GlyphResource;
 
-} ESD_FontInfo;
+} Esd_FontInfo;
 
-#pragma ESD_TYPE(ESD_FontInfo *, Native = Pointer, Edit = Library)
+ESD_TYPE(Esd_FontInfo *, Native = Pointer, Edit = Library)
 
 // Reduced ESD FontInfo structure with binary compatible type header, specific for ROM fonts
-typedef struct ESD_RomFontInfo // (8 bytes)
+typedef struct Esd_RomFontInfo // (8 bytes)
 {
 	// (Runtime) Bitmap handle that is being used
 	uint8_t BitmapHandle : 6;
@@ -84,16 +84,16 @@ typedef struct ESD_RomFontInfo // (8 bytes)
 	// (Runtime) Caps height of font, measured from baseline
 	uint16_t CapsHeight;
 
-} ESD_RomFontInfo;
+} Esd_RomFontInfo;
 
 /// A function to load font data into RAM_G (or to use the font glyphs from flash directly if so specified)
 /// Returns RAM_G address of the font information block (or GA_INVALID if the font failed to load)
-ESD_CORE_EXPORT uint32_t ESD_LoadFont(ESD_FontInfo *fontInfo);
+ESD_CORE_EXPORT uint32_t Esd_LoadFont(Esd_FontInfo *fontInfo);
 
 /// A function to make fonts persistent in memory by reloading the data if necessary, called during the Update cycle of each frame
-#pragma ESD_UPDATE(ESD_FontPersist, DisplayName = "Persist Font", Category = EsdUtilities)
-#pragma ESD_PARAMETER(fontInfo, Type = ESD_FontInfo *)
-ESD_CORE_EXPORT void ESD_FontPersist(ESD_FontInfo *fontInfo);
+ESD_UPDATE(Esd_FontPersist, DisplayName = "Persist Font", Category = EsdUtilities)
+ESD_PARAMETER(fontInfo, Type = Esd_FontInfo *)
+ESD_CORE_EXPORT void Esd_FontPersist(Esd_FontInfo *fontInfo);
 
 #endif /* #ifndef ESD_FONTINFO__H */
 

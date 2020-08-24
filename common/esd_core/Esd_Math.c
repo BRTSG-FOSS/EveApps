@@ -1,17 +1,17 @@
 
-#include "ESD_Math.h"
+#include "Esd_Math.h"
 
 // #define ESD_RECT_STRICT (1) //< Results not guaranteed for inverted rectangles when disabled (width or height negative)
 
-ESD_CORE_EXPORT bool ESD_Rect16_Intersects(ESD_Rect16 a, ESD_Rect16 b)
+ESD_CORE_EXPORT bool Esd_Rect16_Intersects(Esd_Rect16 a, Esd_Rect16 b)
 {
 	return (b.X < (a.X + a.Width)) && (a.X < (b.X + b.Width))
 	    && (b.Y < (a.Y + a.Height)) && (a.Y < (b.Y + b.Height));
 }
 
-ESD_CORE_EXPORT bool ESD_Rect16_IsInside(ESD_Rect16 subrect, ESD_Rect16 rect)
+ESD_CORE_EXPORT bool Esd_Rect16_IsInside(Esd_Rect16 subrect, Esd_Rect16 rect)
 {
-#ifdef ESD_RECT_STRICT
+#ifdef Esd_RECT_STRICT
 	return (subrect.X >= rect.X) && (subrect.X < (rect.X + rect.Width))
 	    && ((subrect.X + subrect.Width) > rect.X) && ((subrect.X + subrect.Width) <= (rect.X + rect.Width))
 	    && (subrect.Y >= rect.Y) && (subrect.Y < (rect.Y + rect.Height))
@@ -22,9 +22,9 @@ ESD_CORE_EXPORT bool ESD_Rect16_IsInside(ESD_Rect16 subrect, ESD_Rect16 rect)
 #endif
 }
 
-ESD_CORE_EXPORT bool ESD_Rect16_IsInsideHorizontal(ESD_Rect16 subrect, ESD_Rect16 rect)
+ESD_CORE_EXPORT bool Esd_Rect16_IsInsideHorizontal(Esd_Rect16 subrect, Esd_Rect16 rect)
 {
-#ifdef ESD_RECT_STRICT
+#ifdef Esd_RECT_STRICT
 	return (subrect.X >= rect.X) && (subrect.X < (rect.X + rect.Width))
 	    && ((subrect.X + subrect.Width) > rect.X) && ((subrect.X + subrect.Width) <= (rect.X + rect.Width));
 #else
@@ -32,9 +32,9 @@ ESD_CORE_EXPORT bool ESD_Rect16_IsInsideHorizontal(ESD_Rect16 subrect, ESD_Rect1
 #endif
 }
 
-ESD_CORE_EXPORT bool ESD_Rect16_IsInsideVertical(ESD_Rect16 subrect, ESD_Rect16 rect)
+ESD_CORE_EXPORT bool Esd_Rect16_IsInsideVertical(Esd_Rect16 subrect, Esd_Rect16 rect)
 {
-#ifdef ESD_RECT_STRICT
+#ifdef Esd_RECT_STRICT
 	return (subrect.Y >= rect.Y) && (subrect.Y < (rect.Y + rect.Height))
 	    && ((subrect.Y + subrect.Height) > rect.Y) && ((subrect.Y + subrect.Height) <= (rect.Y + rect.Height));
 #else
@@ -42,7 +42,7 @@ ESD_CORE_EXPORT bool ESD_Rect16_IsInsideVertical(ESD_Rect16 subrect, ESD_Rect16 
 #endif
 }
 
-ESD_CORE_EXPORT ESD_Rect16 ESD_Rect16_Crop(ESD_Rect16 rect, ESD_Rect16 crop)
+ESD_CORE_EXPORT Esd_Rect16 Esd_Rect16_Crop(Esd_Rect16 rect, Esd_Rect16 crop)
 {
 	int16_t x1diff;
 	int16_t y1diff;

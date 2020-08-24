@@ -1,13 +1,13 @@
 
-#include "ESD_Render.h"
+#include "Esd_Render.h"
 
-#include "ESD_Context.h"
-#include "ESD_Scissor.h"
-#include "ESD_BitmapHandle.h"
+#include "Esd_Context.h"
+#include "Esd_Scissor.h"
+#include "Esd_BitmapHandle.h"
 
-ESD_CORE_EXPORT void ESD_Render_LineF(esd_int32_f4_t x0, esd_int32_f4_t y0, esd_int32_f4_t x1, esd_int32_f4_t y1, esd_int32_f3_t width, esd_argb32_t color)
+ESD_CORE_EXPORT void Esd_Render_LineF(esd_int32_f4_t x0, esd_int32_f4_t y0, esd_int32_f4_t x1, esd_int32_f4_t y1, esd_int32_f3_t width, esd_argb32_t color)
 {
-	EVE_HalContext *phost = ESD_GetHost();
+	EVE_HalContext *phost = Esd_GetHost();
 	EVE_CoDl_colorArgb_ex(phost, color);
 	EVE_CoDl_lineWidth(phost, width);
 	EVE_CoDl_begin(phost, LINES);
@@ -18,7 +18,7 @@ ESD_CORE_EXPORT void ESD_Render_LineF(esd_int32_f4_t x0, esd_int32_f4_t y0, esd_
 }
 
 // Get scaled size
-ESD_CORE_EXPORT ESD_Size16 ESD_Math_GetScaledSize(ESD_Size16 boundary, ESD_Size16 original, uint8_t scaling)
+ESD_CORE_EXPORT Esd_Size16 Esd_Math_GetScaledSize(Esd_Size16 boundary, Esd_Size16 original, uint8_t scaling)
 {
 	switch (scaling)
 	{
@@ -30,7 +30,7 @@ ESD_CORE_EXPORT ESD_Size16 ESD_Math_GetScaledSize(ESD_Size16 boundary, ESD_Size1
 		esd_int32_f16_t originalRatio = (((esd_int32_f16_t)original.Width) << 16) / ((esd_int32_f16_t)original.Height);
 		bool originalWider;
 		bool wantFit;
-		ESD_Size16 res;
+		Esd_Size16 res;
 		if (boundaryRatio == originalRatio)
 			return boundary;
 		originalWider = originalRatio > boundaryRatio;
@@ -62,9 +62,9 @@ ESD_CORE_EXPORT ESD_Size16 ESD_Math_GetScaledSize(ESD_Size16 boundary, ESD_Size1
 }
 
 // Get alignment position
-ESD_CORE_EXPORT ESD_Rect16 ESD_Math_GetAlignedRect(ESD_Size16 boundary, ESD_Size16 size, uint8_t align)
+ESD_CORE_EXPORT Esd_Rect16 Esd_Math_GetAlignedRect(Esd_Size16 boundary, Esd_Size16 size, uint8_t align)
 {
-	ESD_Rect16 res;
+	Esd_Rect16 res;
 	uint8_t halign;
 	uint8_t valign;
 

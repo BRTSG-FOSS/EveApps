@@ -4,14 +4,14 @@ Allocation mechanism for RAM_G.
 
 */
 
-#include "ESD_Base.h"
-#include "ESD_GpuAlloc.h"
+#include "Esd_Base.h"
+#include "Esd_GpuAlloc.h"
 
 #ifdef ESD_SIMULATION
 static int s_ErrorGpuAllocFailed = 0;
 #endif
 
-ESD_CORE_EXPORT void ESD_GpuAlloc_Reset(ESD_GpuAlloc *ga)
+ESD_CORE_EXPORT void Esd_GpuAlloc_Reset(Esd_GpuAlloc *ga)
 {
 	int id, idx;
 
@@ -43,7 +43,7 @@ ESD_CORE_EXPORT void ESD_GpuAlloc_Reset(ESD_GpuAlloc *ga)
 	ga->NbAllocEntries = 1;
 }
 
-ESD_CORE_EXPORT void ESD_GpuAlloc_InsertFree(ESD_GpuAlloc *ga, uint32_t atidx, uint32_t size)
+ESD_CORE_EXPORT void Esd_GpuAlloc_InsertFree(Esd_GpuAlloc *ga, uint32_t atidx, uint32_t size)
 {
 	uint32_t idx;
 
@@ -69,10 +69,10 @@ ESD_CORE_EXPORT void ESD_GpuAlloc_InsertFree(ESD_GpuAlloc *ga, uint32_t atidx, u
 	++ga->NbAllocEntries;
 }
 
-ESD_CORE_EXPORT ESD_GpuHandle ESD_GpuAlloc_Alloc(ESD_GpuAlloc *ga, uint32_t size, uint16_t flags)
+ESD_CORE_EXPORT Esd_GpuHandle Esd_GpuAlloc_Alloc(Esd_GpuAlloc *ga, uint32_t size, uint16_t flags)
 {
 	uint32_t idx;
-	ESD_GpuHandle ret;
+	Esd_GpuHandle ret;
 
 	if (ga->NbAllocEntries >= MAX_NUM_ALLOCATIONS)
 	{
@@ -111,7 +111,7 @@ ESD_CORE_EXPORT ESD_GpuHandle ESD_GpuAlloc_Alloc(ESD_GpuAlloc *ga, uint32_t size
 					// Insert free space entry after
 					if (remaining)
 					{
-						ESD_GpuAlloc_InsertFree(ga, idx + 1, remaining);
+						Esd_GpuAlloc_InsertFree(ga, idx + 1, remaining);
 					}
 
 #ifdef ESD_SIMULATION
@@ -138,7 +138,7 @@ ReturnInvalidHandle:
 #ifdef ESD_SIMULATION
 	if (!s_ErrorGpuAllocFailed)
 	{
-		ESD_LogError("Unable to allocate RAM_G space");
+		Esd_LogError("Unable to allocate RAM_G space");
 		s_ErrorGpuAllocFailed = 1;
 	}
 #endif
@@ -148,7 +148,7 @@ ReturnInvalidHandle:
 	return ret;
 }
 
-ESD_CORE_EXPORT uint32_t ESD_GpuAlloc_Get(ESD_GpuAlloc *ga, ESD_GpuHandle handle)
+ESD_CORE_EXPORT uint32_t Esd_GpuAlloc_Get(Esd_GpuAlloc *ga, Esd_GpuHandle handle)
 {
 	if (handle.Id < MAX_NUM_ALLOCATIONS)
 	{
@@ -164,7 +164,7 @@ ESD_CORE_EXPORT uint32_t ESD_GpuAlloc_Get(ESD_GpuAlloc *ga, ESD_GpuHandle handle
 	return ~0;
 }
 
-ESD_CORE_EXPORT void ESD_GpuAlloc_CollapseFree(ESD_GpuAlloc *ga, uint32_t idxat)
+ESD_CORE_EXPORT void Esd_GpuAlloc_CollapseFree(Esd_GpuAlloc *ga, uint32_t idxat)
 {
 	int shift = 0;
 	if (idxat + 1 < ga->NbAllocEntries && ga->AllocEntries[idxat + 1].Id == MAX_NUM_ALLOCATIONS)
@@ -198,7 +198,7 @@ ESD_CORE_EXPORT void ESD_GpuAlloc_CollapseFree(ESD_GpuAlloc *ga, uint32_t idxat)
 	}
 }
 
-ESD_CORE_EXPORT void ESD_GpuAlloc_FreeId(ESD_GpuAlloc *ga, int id)
+ESD_CORE_EXPORT void Esd_GpuAlloc_FreeId(Esd_GpuAlloc *ga, int id)
 {
 	// eve_printf_debug("Free id %i\n", id);
 
@@ -221,20 +221,20 @@ ESD_CORE_EXPORT void ESD_GpuAlloc_FreeId(ESD_GpuAlloc *ga, int id)
 	ga->AllocEntries[idx].Flags = 0;
 
 	// Collapse neighbouring entries
-	ESD_GpuAlloc_CollapseFree(ga, idx);
+	Esd_GpuAlloc_CollapseFree(ga, idx);
 }
 
-ESD_CORE_EXPORT void ESD_GpuAlloc_Free(ESD_GpuAlloc *ga, ESD_GpuHandle handle)
+ESD_CORE_EXPORT void Esd_GpuAlloc_Free(Esd_GpuAlloc *ga, Esd_GpuHandle handle)
 {
 	int id = handle.Id;
 	if (id < MAX_NUM_ALLOCATIONS
 	    && ga->AllocRefs[id].Seq == handle.Seq)
 	{
-		ESD_GpuAlloc_FreeId(ga, id);
+		Esd_GpuAlloc_FreeId(ga, id);
 	}
 }
 
-ESD_CORE_EXPORT void ESD_GpuAlloc_Update(ESD_GpuAlloc *ga)
+ESD_CORE_EXPORT void Esd_GpuAlloc_Update(Esd_GpuAlloc *ga)
 {
 	uint32_t idx;
 	for (idx = 0; idx < ga->NbAllocEntries; ++idx)
@@ -247,7 +247,7 @@ ESD_CORE_EXPORT void ESD_GpuAlloc_Update(ESD_GpuAlloc *ga)
 			{
 				if (!(ga->AllocEntries[idx].Flags & GA_USED_FLAG))
 				{
-					ESD_GpuAlloc_FreeId(ga, ga->AllocEntries[idx].Id);
+					Esd_GpuAlloc_FreeId(ga, ga->AllocEntries[idx].Id);
 
 					// Due to free collapse, the current idx may become another allocated entry
 					--idx;
@@ -262,7 +262,7 @@ ESD_CORE_EXPORT void ESD_GpuAlloc_Update(ESD_GpuAlloc *ga)
 }
 
 // Get total used GPU RAM
-ESD_CORE_EXPORT uint32_t ESD_GpuAlloc_GetTotalUsed(ESD_GpuAlloc *ga)
+ESD_CORE_EXPORT uint32_t Esd_GpuAlloc_GetTotalUsed(Esd_GpuAlloc *ga)
 {
 	uint32_t total = 0;
 	uint32_t idx;
@@ -279,13 +279,13 @@ ESD_CORE_EXPORT uint32_t ESD_GpuAlloc_GetTotalUsed(ESD_GpuAlloc *ga)
 }
 
 // Get total GPU RAM
-ESD_CORE_EXPORT uint32_t ESD_GpuAlloc_GetTotal(ESD_GpuAlloc *ga)
+ESD_CORE_EXPORT uint32_t Esd_GpuAlloc_GetTotal(Esd_GpuAlloc *ga)
 {
 	return ga->RamGSize;
 }
 
 #ifndef NDEBUG
-ESD_CORE_EXPORT void ESD_GpuAlloc_Print(ESD_GpuAlloc *ga)
+ESD_CORE_EXPORT void Esd_GpuAlloc_Print(Esd_GpuAlloc *ga)
 {
 	uint32_t idx;
 	eve_printf_debug("GpuAlloc:\n");

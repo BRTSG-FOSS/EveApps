@@ -4,8 +4,8 @@ Copyright (C) 2018  Bridgetek Pte Lte
 Author: Jan Boon <jan.boon@kaetemi.be>
 */
 
-#include "ESD_ResourceInfo.h"
-#include "ESD_Context.h"
+#include "Esd_ResourceInfo.h"
+#include "Esd_Context.h"
 
 #ifndef NDEBUG
 #define ESD_RESOURCEINFO_DEBUG
@@ -20,12 +20,12 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 	} while (false)
 #endif
 
-extern ESD_CORE_EXPORT EVE_HalContext *ESD_Host;
-extern ESD_CORE_EXPORT ESD_GpuAlloc *ESD_GAlloc;
+extern ESD_CORE_EXPORT EVE_HalContext *Esd_Host;
+extern ESD_CORE_EXPORT Esd_GpuAlloc *Esd_GAlloc;
 
-ESD_CORE_EXPORT uint32_t ESD_LoadResource(ESD_ResourceInfo *resourceInfo, uint32_t *imageFormat)
+ESD_CORE_EXPORT uint32_t Esd_LoadResource(Esd_ResourceInfo *resourceInfo, uint32_t *imageFormat)
 {
-	EVE_HalContext *phost = ESD_GetHost();
+	EVE_HalContext *phost = Esd_GetHost();
 	uint32_t addr;
 	bool loaded;
 	(void)phost;
@@ -52,7 +52,7 @@ ESD_CORE_EXPORT uint32_t ESD_LoadResource(ESD_ResourceInfo *resourceInfo, uint32
 	}
 
 	// Get address of specified handle
-	addr = ESD_GpuAlloc_Get(ESD_GAlloc, resourceInfo->GpuHandle);
+	addr = Esd_GpuAlloc_Get(Esd_GAlloc, resourceInfo->GpuHandle);
 	if (addr != GA_INVALID)
 	{
 		return ESD_DL_RAM_G_ADDRESS(addr);
@@ -86,10 +86,10 @@ ESD_CORE_EXPORT uint32_t ESD_LoadResource(ESD_ResourceInfo *resourceInfo, uint32
 	}
 
 	// Allocate gpu memory
-	resourceInfo->GpuHandle = ESD_GpuAlloc_Alloc(ESD_GAlloc, resourceInfo->RawSize,
+	resourceInfo->GpuHandle = Esd_GpuAlloc_Alloc(Esd_GAlloc, resourceInfo->RawSize,
 	    (resourceInfo->Persistent ? 0 : GA_GC_FLAG)
 	        | ((!resourceInfo->Compressed && ESD_RESOURCE_IS_FLASH(resourceInfo->Type)) ? GA_LOW_FLAG : 0));
-	addr = ESD_GpuAlloc_Get(ESD_GAlloc, resourceInfo->GpuHandle);
+	addr = Esd_GpuAlloc_Get(Esd_GAlloc, resourceInfo->GpuHandle);
 	if (addr == GA_INVALID)
 	{
 		return GA_INVALID;
@@ -157,7 +157,7 @@ ESD_CORE_EXPORT uint32_t ESD_LoadResource(ESD_ResourceInfo *resourceInfo, uint32
 	if (!loaded)
 	{
 		// Failed to load
-		ESD_GpuAlloc_Free(ESD_GAlloc, resourceInfo->GpuHandle);
+		Esd_GpuAlloc_Free(Esd_GAlloc, resourceInfo->GpuHandle);
 		addr = GA_INVALID;
 	}
 
@@ -184,18 +184,18 @@ ESD_CORE_EXPORT uint32_t ESD_LoadResource(ESD_ResourceInfo *resourceInfo, uint32
 	return GA_INVALID;
 }
 
-ESD_CORE_EXPORT void ESD_FreeResource(ESD_ResourceInfo *resourceInfo)
+ESD_CORE_EXPORT void Esd_FreeResource(Esd_ResourceInfo *resourceInfo)
 {
 	if (!resourceInfo)
 		return;
 
-	ESD_GpuAlloc_Free(ESD_GAlloc, resourceInfo->GpuHandle);
+	Esd_GpuAlloc_Free(Esd_GAlloc, resourceInfo->GpuHandle);
 	resourceInfo->GpuHandle.Id = MAX_NUM_ALLOCATIONS;
 }
 
-ESD_CORE_EXPORT void ESD_ResourcePersist(ESD_ResourceInfo *resourceInfo)
+ESD_CORE_EXPORT void Esd_ResourcePersist(Esd_ResourceInfo *resourceInfo)
 {
-	ESD_LoadResource(resourceInfo, false);
+	Esd_LoadResource(resourceInfo, false);
 }
 
 /* end of file */

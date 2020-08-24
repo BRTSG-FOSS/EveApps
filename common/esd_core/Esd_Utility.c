@@ -1,14 +1,14 @@
 
-#include "ESD_Utility.h"
+#include "Esd_Utility.h"
 
-#include "ESD_Base.h"
-#include "ESD_Scissor.h"
-#include "ESD_GpuAlloc.h"
-#include "ESD_TouchTag.h"
-#include "ESD_Context.h"
+#include "Esd_Base.h"
+#include "Esd_Scissor.h"
+#include "Esd_GpuAlloc.h"
+#include "Esd_TouchTag.h"
+#include "Esd_Context.h"
 
-extern ESD_CORE_EXPORT EVE_HalContext *ESD_Host;
-extern ESD_CORE_EXPORT ESD_GpuAlloc *ESD_GAlloc;
+extern ESD_CORE_EXPORT EVE_HalContext *Esd_Host;
+extern ESD_CORE_EXPORT Esd_GpuAlloc *Esd_GAlloc;
 
 #if defined(EVE_FLASH_AVAILABLE)
 #ifndef NDEBUG
@@ -18,23 +18,23 @@ static uint32_t s_FlashErrorLast = ~0;
 
 #if defined(EVE_FLASH_AVAILABLE)
 #ifdef ESD_SIMULATION
-extern void ESD_SetFlashStatus__ESD(int status);
-extern void ESD_SetFlashSize__ESD(int size);
+extern void Esd_SetFlashStatus__ESD(int status);
+extern void Esd_SetFlashSize__ESD(int size);
 #else
-#define ESD_SetFlashStatus__ESD(status) \
+#define Esd_SetFlashStatus__ESD(status) \
 	do                                  \
 	{                                   \
 	} while (false)
-#define ESD_SetFlashSize__ESD(status) \
+#define Esd_SetFlashSize__ESD(status) \
 	do                                \
 	{                                 \
 	} while (false)
 #endif
 
-ESD_CORE_EXPORT void ESD_AttachFlashFast()
+ESD_CORE_EXPORT void Esd_AttachFlashFast()
 {
 	// Wait for flash status to move on from FLASH_STATUS_INIT
-	EVE_HalContext *phost = ESD_GetHost();
+	EVE_HalContext *phost = Esd_GetHost();
 	if (!EVE_Hal_supportFlash(phost))
 		return;
 
@@ -52,14 +52,14 @@ ESD_CORE_EXPORT void ESD_AttachFlashFast()
 	{
 		uint32_t error;
 
-		ESD_SetFlashStatus__ESD(flashStatus);
+		Esd_SetFlashStatus__ESD(flashStatus);
 
 		flashStatus = EVE_CoCmd_flashAttach(phost);
-		ESD_SetFlashStatus__ESD(flashStatus);
-		ESD_SetFlashSize__ESD(EVE_Hal_rd32(phost, REG_FLASH_SIZE));
+		Esd_SetFlashStatus__ESD(flashStatus);
+		Esd_SetFlashSize__ESD(EVE_Hal_rd32(phost, REG_FLASH_SIZE));
 
 		flashStatus = EVE_CoCmd_flashFast(phost, &error);
-		ESD_SetFlashStatus__ESD(flashStatus);
+		Esd_SetFlashStatus__ESD(flashStatus);
 
 #ifndef NDEBUG
 		if (error != s_FlashErrorLast)
@@ -96,11 +96,11 @@ ESD_CORE_EXPORT void ESD_AttachFlashFast()
 #define ESD_AttachFlashFast() eve_noop()
 #endif
 
-ESD_CORE_EXPORT void ESD_BeginLogo()
+ESD_CORE_EXPORT void Esd_BeginLogo()
 {
-	EVE_HalContext *phost = ESD_GetHost();
-	ESD_GpuAlloc_Reset(ESD_GAlloc);
-	ESD_GpuAlloc_Alloc(ESD_GAlloc, RAM_G_SIZE, 0); // Block allocation
+	EVE_HalContext *phost = Esd_GetHost();
+	Esd_GpuAlloc_Reset(Esd_GAlloc);
+	Esd_GpuAlloc_Alloc(Esd_GAlloc, RAM_G_SIZE, 0); // Block allocation
 	EVE_CoCmd_dlStart(phost);
 	EVE_CoCmd_dl(phost, CLEAR_COLOR_RGB(255, 255, 255));
 	EVE_CoCmd_dl(phost, CLEAR(1, 0, 0));
@@ -115,34 +115,34 @@ ESD_CORE_EXPORT void ESD_BeginLogo()
 	EVE_CoCmd_dl(phost, CLEAR_COLOR_RGB(255, 255, 255));
 	EVE_CoCmd_dl(phost, CLEAR(1, 0, 0));
 	EVE_CoCmd_dl(phost, DISPLAY());
-	// EVE_CoCmd_memSet(ESD_Host, 0, 0xFF, RAM_G_SIZE);
+	// EVE_CoCmd_memSet(Esd_Host, 0, 0xFF, RAM_G_SIZE);
 	EVE_Cmd_waitFlush(phost);
 	EVE_CoCmd_logo(phost);
 	EVE_Cmd_waitLogo(phost);
 	EVE_sleep(3000);
 }
 
-ESD_CORE_EXPORT void ESD_EndLogo()
+ESD_CORE_EXPORT void Esd_EndLogo()
 {
-	EVE_HalContext *phost = ESD_GetHost();
+	EVE_HalContext *phost = Esd_GetHost();
 	EVE_CoCmd_dlStart(phost);
 	EVE_CoCmd_dl(phost, CLEAR_COLOR_RGB(255, 255, 255));
 	EVE_CoCmd_dl(phost, CLEAR(1, 0, 0));
 	EVE_CoCmd_dl(phost, DISPLAY());
 	EVE_CoCmd_swap(phost);
 	EVE_Cmd_waitFlush(phost);
-	ESD_GpuAlloc_Reset(ESD_GAlloc);
+	Esd_GpuAlloc_Reset(Esd_GAlloc);
 }
 
-ESD_CORE_EXPORT void ESD_ShowLogo()
+ESD_CORE_EXPORT void Esd_ShowLogo()
 {
-	ESD_CurrentContext->ShowLogo = true;
+	Esd_CurrentContext->ShowLogo = true;
 }
 
 /// Run calibrate procedure
-ESD_CORE_EXPORT bool ESD_Calibrate()
+ESD_CORE_EXPORT bool Esd_Calibrate()
 {
-	EVE_HalContext *phost = ESD_GetHost();
+	EVE_HalContext *phost = Esd_GetHost();
 	uint32_t result;
 	uint32_t transMatrix[6];
 
@@ -150,18 +150,18 @@ ESD_CORE_EXPORT bool ESD_Calibrate()
 	EVE_Hal_wr8(phost, REG_CTOUCH_EXTENDED, CTOUCH_MODE_COMPATIBILITY);
 #endif
 
-	eve_printf_debug("ESD_Calibrate: Start Frame\n");
+	eve_printf_debug("Esd_Calibrate: Start Frame\n");
 
 	EVE_CoCmd_dlStart(phost);
 	EVE_CoDl_clearColorRgb(phost, 64, 64, 64);
 	EVE_CoDl_clear(phost, true, true, true);
 	EVE_CoDl_colorRgb(phost, 0xff, 0xff, 0xff);
 
-	// EVE_CoCmd_text(phost, (ESD_Host->Parameters.Display.Width / 2), (ESD_Host->Parameters.Display.Height / 2), 27, OPT_CENTER, "Please Tap on the dot");
+	// EVE_CoCmd_text(phost, (Esd_Host->Parameters.Display.Width / 2), (Esd_Host->Parameters.Display.Height / 2), 27, OPT_CENTER, "Please Tap on the dot");
 
 	result = EVE_CoCmd_calibrate(phost);
 
-	eve_printf_debug("ESD_Calibrate: End Frame\n");
+	eve_printf_debug("Esd_Calibrate: End Frame\n");
 
 	// Print the configured values
 	EVE_Hal_rdMem(phost, (uint8_t *)transMatrix, REG_TOUCH_TRANSFORM_A, 4 * 6); //read all the 6 coefficients

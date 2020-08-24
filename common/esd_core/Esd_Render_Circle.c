@@ -1,14 +1,14 @@
 
-#include "ESD_Render.h"
-#include "ESD_Context.h"
-#include "ESD_Scissor.h"
+#include "Esd_Render.h"
+#include "Esd_Context.h"
+#include "Esd_Scissor.h"
 
-ESD_CORE_EXPORT void ESD_Render_Circle_Stroke(
+ESD_CORE_EXPORT void Esd_Render_Circle_Stroke(
     esd_int32_f4_t x, esd_int32_f4_t y,
     esd_int32_f4_t radius, esd_int32_f4_t border,
     uint8_t stroke, esd_argb32_t color)
 {
-	EVE_HalContext *phost = ESD_GetHost();
+	EVE_HalContext *phost = Esd_GetHost();
 	esd_int32_f4_t r = radius;
 	esd_int32_f4_t innerRadius;
 	esd_int32_f4_t outerRadius;

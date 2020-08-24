@@ -39,7 +39,7 @@ ESD_TYPE(uint32_t, Native = UInt32, Edit = Int)
 
 ESD_TYPE(char *, Native = Latin1, Edit = String)
 
-ESD_TYPE(ESD_BitmapCell *, Native = Pointer, Edit = Library)
+ESD_TYPE(Esd_BitmapCell *, Native = Pointer, Edit = Library)
 
 typedef int32_t esd_int32_f4_t;
 ESD_TYPE(esd_int32_f4_t, Native = Int32, Edit = Fixed4)
@@ -83,7 +83,7 @@ ESD_PARAMETER(message, Type = char *)
 void testPrint(char *message);
 
 ESD_FUNCTION(EVE_CoCmd_dl, Include = "EVE_Hal.h")
-ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = "ESD_GetHost()", Hidden, Internal)
+ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = "Esd_GetHost()", Hidden, Internal)
 ESD_PARAMETER(dl, Type = uint32_t)
 
 */
@@ -114,68 +114,68 @@ ESD_PARAMETER(dl, Type = uint32_t)
 
 #include <EVE_Hal.h>
 
-#pragma ESD_TYPE(void, Native = Void)
-#pragma ESD_TYPE(char, Native = Char, Edit = String)
-#pragma ESD_TYPE(signed char, Native = Int8, Edit = Integer)
-#pragma ESD_TYPE(short, Native = Int16, Edit = Integer)
-#pragma ESD_TYPE(int, Native = Int32, Edit = Integer)
-#pragma ESD_TYPE(long, Native = Int32, Edit = Integer)
-#pragma ESD_TYPE(long long, Native = Int64, Edit = Integer)
-#pragma ESD_TYPE(unsigned char, Native = UInt8, Edit = Integer)
-#pragma ESD_TYPE(unsigned short, Native = UInt16, Edit = Integer)
-#pragma ESD_TYPE(unsigned int, Native = UInt32, Edit = Integer)
-#pragma ESD_TYPE(unsigned long, Native = UInt32, Edit = Integer)
-#pragma ESD_TYPE(unsigned long long, Native = UInt64, Edit = Integer)
-#pragma ESD_TYPE(float, Native = Float, Edit = Real)
-#pragma ESD_TYPE(double, Native = Double, Edit = Real)
-#pragma ESD_TYPE(_Bool, Native = Bool, Edit = Boolean)
-#pragma ESD_TYPE(char *, Native = Utf8, Edit = String)
-#pragma ESD_TYPE(const char *, Native = Utf8, Edit = String)
-#pragma ESD_TYPE(void *, Native = Pointer, Edit = None)
+ESD_TYPE(void, Native = Void)
+ESD_TYPE(char, Native = Char, Edit = String)
+ESD_TYPE(signed char, Native = Int8, Edit = Integer)
+ESD_TYPE(short, Native = Int16, Edit = Integer)
+ESD_TYPE(int, Native = Int32, Edit = Integer)
+ESD_TYPE(long, Native = Int32, Edit = Integer)
+ESD_TYPE(long long, Native = Int64, Edit = Integer)
+ESD_TYPE(unsigned char, Native = UInt8, Edit = Integer)
+ESD_TYPE(unsigned short, Native = UInt16, Edit = Integer)
+ESD_TYPE(unsigned int, Native = UInt32, Edit = Integer)
+ESD_TYPE(unsigned long, Native = UInt32, Edit = Integer)
+ESD_TYPE(unsigned long long, Native = UInt64, Edit = Integer)
+ESD_TYPE(float, Native = Float, Edit = Real)
+ESD_TYPE(double, Native = Double, Edit = Real)
+ESD_TYPE(_Bool, Native = Bool, Edit = Boolean)
+ESD_TYPE(char *, Native = Utf8, Edit = String)
+ESD_TYPE(const char *, Native = Utf8, Edit = String)
+ESD_TYPE(void *, Native = Pointer, Edit = None)
 
-#pragma ESD_TYPE(int8_t, Native = Int8, Edit = Integer)
-#pragma ESD_TYPE(uint8_t, Native = UInt8, Edit = Integer)
-#pragma ESD_TYPE(int16_t, Native = Int16, Edit = Integer)
-#pragma ESD_TYPE(uint16_t, Native = UInt16, Edit = Integer)
-#pragma ESD_TYPE(int32_t, Native = Int32, Edit = Integer)
-#pragma ESD_TYPE(uint32_t, Native = UInt32, Edit = Integer)
-#pragma ESD_TYPE(int64_t, Native = Int64, Edit = Integer)
-#pragma ESD_TYPE(uint64_t, Native = UInt64, Edit = Integer)
-#pragma ESD_TYPE(ptrdiff_t, Native = IntPtr, Edit = Integer)
-#pragma ESD_TYPE(size_t, Native = UIntPtr, Edit = Integer)
-#pragma ESD_TYPE(bool, Native = Bool, Edit = Boolean)
+ESD_TYPE(int8_t, Native = Int8, Edit = Integer)
+ESD_TYPE(uint8_t, Native = UInt8, Edit = Integer)
+ESD_TYPE(int16_t, Native = Int16, Edit = Integer)
+ESD_TYPE(uint16_t, Native = UInt16, Edit = Integer)
+ESD_TYPE(int32_t, Native = Int32, Edit = Integer)
+ESD_TYPE(uint32_t, Native = UInt32, Edit = Integer)
+ESD_TYPE(int64_t, Native = Int64, Edit = Integer)
+ESD_TYPE(uint64_t, Native = UInt64, Edit = Integer)
+ESD_TYPE(ptrdiff_t, Native = IntPtr, Edit = Integer)
+ESD_TYPE(size_t, Native = UIntPtr, Edit = Integer)
+ESD_TYPE(bool, Native = Bool, Edit = Boolean)
 
-#pragma ESD_TYPE(esd_int32_f16_t, Native = Int32, Edit = Fixed16)
+ESD_TYPE(esd_int32_f16_t, Native = Int32, Edit = Fixed16)
 typedef int32_t esd_int32_f16_t;
 
-#pragma ESD_TYPE(esd_int32_f8_t, Native = Int32, Edit = Fixed8)
+ESD_TYPE(esd_int32_f8_t, Native = Int32, Edit = Fixed8)
 typedef int32_t esd_int32_f8_t;
 
-#pragma ESD_TYPE(esd_int32_f4_t, Native = Int32, Edit = Fixed4)
+ESD_TYPE(esd_int32_f4_t, Native = Int32, Edit = Fixed4)
 typedef int32_t esd_int32_f4_t;
 
-#pragma ESD_TYPE(esd_int32_f3_t, Native = Int32, Edit = Fixed3)
+ESD_TYPE(esd_int32_f3_t, Native = Int32, Edit = Fixed3)
 typedef int32_t esd_int32_f3_t;
 
-#pragma ESD_TYPE(esd_int32_f2_t, Native = Int32, Edit = Fixed2)
+ESD_TYPE(esd_int32_f2_t, Native = Int32, Edit = Fixed2)
 typedef int32_t esd_int32_f2_t;
 
-#pragma ESD_TYPE(esd_int16_f8_t, Native = Int16, Edit = Fixed8)
+ESD_TYPE(esd_int16_f8_t, Native = Int16, Edit = Fixed8)
 typedef int16_t esd_int16_f8_t;
 
-#pragma ESD_TYPE(esd_int16_f4_t, Native = Int16, Edit = Fixed4)
+ESD_TYPE(esd_int16_f4_t, Native = Int16, Edit = Fixed4)
 typedef int16_t esd_int16_f4_t;
 
-#pragma ESD_TYPE(esd_int16_f2_t, Native = Int16, Edit = Fixed2)
+ESD_TYPE(esd_int16_f2_t, Native = Int16, Edit = Fixed2)
 typedef int16_t esd_int16_f2_t;
 
-#pragma ESD_TYPE(esd_argb32_t, Native = UInt32, Edit = ColorARGB)
+ESD_TYPE(esd_argb32_t, Native = UInt32, Edit = ColorARGB)
 typedef uint32_t esd_argb32_t;
 
-#pragma ESD_TYPE(esd_rgb32_t, Native = UInt32, Edit = ColorRGB)
+ESD_TYPE(esd_rgb32_t, Native = UInt32, Edit = ColorRGB)
 typedef uint32_t esd_rgb32_t;
 
-#pragma ESD_TYPE(esd_classid_t, Native = UInt32, Edit = Library)
+ESD_TYPE(esd_classid_t, Native = UInt32, Edit = Library)
 typedef uint32_t esd_classid_t;
 
 #ifdef ESD_EXTERN_LIBARY
@@ -196,18 +196,18 @@ typedef uint32_t esd_classid_t;
 #endif
 #endif
 
-#pragma ESD_TYPE(EVE_HalContext *, Native = Pointer, Edit = Library)
+ESD_TYPE(EVE_HalContext *, Native = Pointer, Edit = Library)
 
-#pragma ESD_CATEGORY(EsdUtilities, DisplayName = "ESD Utilities")
-#pragma ESD_CATEGORY(EsdRenderable, DisplayName = "ESD Render Functions")
-#pragma ESD_CATEGORY(EveRenderFunctions, DisplayName = "Display List", Category = EsdRenderable)
+ESD_CATEGORY(EsdUtilities, DisplayName = "ESD Utilities")
+ESD_CATEGORY(EsdRenderable, DisplayName = "ESD Render Functions")
+ESD_CATEGORY(EveRenderFunctions, DisplayName = "Display List", Category = EsdRenderable)
 
 /* A generic callback with context pointer */
-typedef void (*ESD_Callback)(void *context);
+typedef void (*Esd_Callback)(void *context);
 
-#pragma ESD_FUNCTION(ESD_Noop, Attributes = ESD_CORE_EXPORT, Category = _GroupHidden)
-#pragma ESD_PARAMETER(context, Type = void *)
-ESD_CORE_EXPORT void ESD_Noop(void *context);
+ESD_FUNCTION(Esd_Noop, Attributes = ESD_CORE_EXPORT, Category = _GroupHidden)
+ESD_PARAMETER(context, Type = void *)
+ESD_CORE_EXPORT void Esd_Noop(void *context);
 
 #define ESD_LOOPSTATE_NONE 0
 #define ESD_LOOPSTATE_IDLE 1
@@ -219,19 +219,19 @@ ESD_CORE_EXPORT void ESD_Noop(void *context);
 void logMessage__ESD(const char *str);
 void logWarning__ESD(const char *str);
 void logError__ESD(const char *str);
-#define ESD_LogMessage(s) logMessage__ESD(s)
-#define ESD_LogWarning(s) logWarning__ESD(s)
-#define ESD_LogError(s) logError__ESD(s)
+#define Esd_LogMessage(s) logMessage__ESD(s)
+#define Esd_LogWarning(s) logWarning__ESD(s)
+#define Esd_LogError(s) logError__ESD(s)
 #else
-#define ESD_LogMessage(s) \
+#define Esd_LogMessage(s) \
 	do                       \
 	{                        \
 	} while (0)
-#define ESD_LogWarning(s) \
+#define Esd_LogWarning(s) \
 	do                       \
 	{                        \
 	} while (0)
-#define ESD_LogError(s) \
+#define Esd_LogError(s) \
 	do                     \
 	{                      \
 	} while (0)

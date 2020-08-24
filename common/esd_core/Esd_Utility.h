@@ -32,15 +32,15 @@
 #ifndef ESD_UTILITY__H
 #define ESD_UTILITY__H
 
-#include "ESD_Base.h"
+#include "Esd_Base.h"
 
-ESD_CORE_EXPORT void ESD_AttachFlashFast();
+ESD_CORE_EXPORT void Esd_AttachFlashFast();
 
-ESD_CORE_EXPORT void ESD_ShowLogo();
-ESD_CORE_EXPORT void ESD_BeginLogo();
-ESD_CORE_EXPORT void ESD_EndLogo();
+ESD_CORE_EXPORT void Esd_ShowLogo();
+ESD_CORE_EXPORT void Esd_BeginLogo();
+ESD_CORE_EXPORT void Esd_EndLogo();
 
-ESD_CORE_EXPORT bool ESD_Calibrate();
+ESD_CORE_EXPORT bool Esd_Calibrate();
 
 #endif /* #ifndef ESD_UTILITY__H */
 

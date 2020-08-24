@@ -1,11 +1,11 @@
 
-#include "ESD_Render.h"
-#include "ESD_Context.h"
+#include "Esd_Render.h"
+#include "Esd_Context.h"
 
 // Rectangle drawing with some logic to convert from radius to line width and width height to positions to simplify usage
-ESD_CORE_EXPORT void ESD_Render_RectF(esd_int32_f4_t x, esd_int32_f4_t y, esd_int32_f4_t w, esd_int32_f4_t h, esd_int32_f4_t radius, esd_argb32_t color)
+ESD_CORE_EXPORT void Esd_Render_RectF(esd_int32_f4_t x, esd_int32_f4_t y, esd_int32_f4_t w, esd_int32_f4_t h, esd_int32_f4_t radius, esd_argb32_t color)
 {
-	EVE_HalContext *phost = ESD_GetHost();
+	EVE_HalContext *phost = Esd_GetHost();
 	int32_t width = radius + 8;
 	int32_t x0 = x + radius;
 	int32_t y0 = y + radius;
@@ -20,13 +20,13 @@ ESD_CORE_EXPORT void ESD_Render_RectF(esd_int32_f4_t x, esd_int32_f4_t y, esd_in
 	EVE_CoDl_end(phost);
 }
 
-ESD_CORE_EXPORT void ESD_Render_Rect_Stroke(
+ESD_CORE_EXPORT void Esd_Render_Rect_Stroke(
     esd_int32_f4_t x, esd_int32_f4_t y,
     esd_int32_f4_t width, esd_int32_f4_t height,
     esd_int32_f4_t radius, esd_int32_f4_t border,
     uint8_t stroke, esd_argb32_t color)
 {
-	EVE_HalContext *phost = ESD_GetHost();
+	EVE_HalContext *phost = Esd_GetHost();
 	esd_int32_f4_t r = radius;
 	esd_int32_f4_t x0 = x + radius;
 	esd_int32_f4_t y0 = y + radius;

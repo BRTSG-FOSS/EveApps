@@ -30,17 +30,17 @@
 */
 
 #if _DEBUG
-#include "ESD_Base.h"
-#include "ESD_GpuAlloc.h"
+#include "Esd_Base.h"
+#include "Esd_GpuAlloc.h"
 
-#include "ESD_FontInfo.h"
+#include "Esd_FontInfo.h"
 
-void ESD_CheckTypeSizes()
+void Esd_CheckTypeSizes()
 {
-	eve_printf("sizeof(ESD_GpuHandle): %i\n", (int)sizeof(ESD_GpuHandle));
-	eve_printf("sizeof(ESD_ResourceInfo): %i\n", (int)sizeof(ESD_ResourceInfo));
-	eve_printf("sizeof(ESD_FontInfo): %i\n", (int)sizeof(ESD_FontInfo));
-	eve_printf("sizeof(ESD_RomFontInfo): %i\n", (int)sizeof(ESD_RomFontInfo));
+	eve_printf("sizeof(Esd_GpuHandle): %i\n", (int)sizeof(Esd_GpuHandle));
+	eve_printf("sizeof(Esd_ResourceInfo): %i\n", (int)sizeof(Esd_ResourceInfo));
+	eve_printf("sizeof(Esd_FontInfo): %i\n", (int)sizeof(Esd_FontInfo));
+	eve_printf("sizeof(Esd_RomFontInfo): %i\n", (int)sizeof(Esd_RomFontInfo));
 }
 
 #endif

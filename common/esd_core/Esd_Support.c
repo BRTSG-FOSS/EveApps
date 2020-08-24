@@ -29,24 +29,24 @@
 * has no liability in relation to those amendments.
 */
 
-#include "ESD_Context.h"
+#include "Esd_Context.h"
 
 #ifdef ESD_SIMULATION
 
-int ESD_DesignerMode = 0;
+int Esd_DesignerMode = 0;
 
-uint32_t ESD_GAlloc_GetTotalUsed()
+uint32_t Esd_GAlloc_GetTotalUsed()
 {
-	if (!ESD_GAlloc)
+	if (!Esd_GAlloc)
 		return 0;
-	return ESD_GpuAlloc_GetTotalUsed(ESD_GAlloc);
+	return Esd_GpuAlloc_GetTotalUsed(Esd_GAlloc);
 }
 
-uint32_t ESD_GAlloc_GetTotal()
+uint32_t Esd_GAlloc_GetTotal()
 {
-	if (!ESD_GAlloc)
+	if (!Esd_GAlloc)
 		return 0;
-	return ESD_GpuAlloc_GetTotal(ESD_GAlloc);
+	return Esd_GpuAlloc_GetTotal(Esd_GAlloc);
 }
 
 #endif

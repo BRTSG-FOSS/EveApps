@@ -32,11 +32,11 @@
 #ifndef ESD_CORE__H
 #define ESD_CORE__H
 
-#include "ESD_Base.h"
-#include "ESD_Context.h"
-#include "ESD_Render.h"
-#include "ESD_Utility.h"
-#include "ESD_CoWidget.h"
+#include "Esd_Base.h"
+#include "Esd_Context.h"
+#include "Esd_Render.h"
+#include "Esd_Utility.h"
+#include "Esd_CoWidget.h"
 
 #endif /* #ifndef ESD_CORE__H */
 

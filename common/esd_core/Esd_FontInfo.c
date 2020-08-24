@@ -4,7 +4,7 @@ Copyright (C) 2018  Bridgetek Pte Lte
 Author: Jan Boon <jan.boon@kaetemi.be>
 */
 
-#include "ESD_FontInfo.h"
+#include "Esd_FontInfo.h"
 
 #ifndef NDEBUG
 #define ESD_FONTINFO_DEBUG
@@ -16,10 +16,10 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 #define esd_resourceinfo_printf(fmt, ...) eve_noop()
 #endif
 
-extern ESD_CORE_EXPORT EVE_HalContext *ESD_Host;
-extern ESD_CORE_EXPORT ESD_GpuAlloc *ESD_GAlloc;
+extern ESD_CORE_EXPORT EVE_HalContext *Esd_Host;
+extern ESD_CORE_EXPORT Esd_GpuAlloc *Esd_GAlloc;
 
-ESD_CORE_EXPORT uint32_t ESD_LoadFont(ESD_FontInfo *fontInfo)
+ESD_CORE_EXPORT uint32_t Esd_LoadFont(Esd_FontInfo *fontInfo)
 {
 	uint32_t glyphAddr;
 
@@ -29,7 +29,7 @@ ESD_CORE_EXPORT uint32_t ESD_LoadFont(ESD_FontInfo *fontInfo)
 	}
 
 	// Load glyphs
-	glyphAddr = ESD_LoadResource(&fontInfo->GlyphResource, NULL);
+	glyphAddr = Esd_LoadResource(&fontInfo->GlyphResource, NULL);
 	if (glyphAddr != GA_INVALID)
 	{
 		// Load map
@@ -40,10 +40,10 @@ ESD_CORE_EXPORT uint32_t ESD_LoadFont(ESD_FontInfo *fontInfo)
 		if (fontInfo->FontResource.Type == ESD_RESOURCE_DIRECTFLASH)
 			fontInfo->FontResource.Type = ESD_RESOURCE_FLASH;
 #endif
-		fontAddr = ESD_GpuAlloc_Get(ESD_GAlloc, fontInfo->FontResource.GpuHandle);
+		fontAddr = Esd_GpuAlloc_Get(Esd_GAlloc, fontInfo->FontResource.GpuHandle);
 		if (fontAddr == GA_INVALID)
 		{
-			fontAddr = ESD_LoadResource(&fontInfo->FontResource, NULL);
+			fontAddr = Esd_LoadResource(&fontInfo->FontResource, NULL);
 			rewriteAddr = true;
 		}
 		else
@@ -55,7 +55,7 @@ ESD_CORE_EXPORT uint32_t ESD_LoadFont(ESD_FontInfo *fontInfo)
 		{
 			// Failed to load font block, unload glyphs
 			esd_resourceinfo_printf("Failed to load font block, free glyphs\n");
-			ESD_FreeResource(&fontInfo->GlyphResource);
+			Esd_FreeResource(&fontInfo->GlyphResource);
 			return GA_INVALID;
 		}
 
@@ -68,19 +68,19 @@ ESD_CORE_EXPORT uint32_t ESD_LoadFont(ESD_FontInfo *fontInfo)
 			{
 			case ESD_FONT_LEGACY:
 			{
-				format = EVE_Hal_rd32(ESD_Host, fontAddr + 128);
-				fontInfo->FontHeight = EVE_Hal_rd32(ESD_Host, fontAddr + 140);
+				format = EVE_Hal_rd32(Esd_Host, fontAddr + 128);
+				fontInfo->FontHeight = EVE_Hal_rd32(Esd_Host, fontAddr + 140);
 				esd_resourceinfo_printf("Set legacy glyph address to %i\n", (int)glyphAddr);
-				EVE_Hal_wr32(ESD_Host, fontAddr + 144, glyphAddr);
+				EVE_Hal_wr32(Esd_Host, fontAddr + 144, glyphAddr);
 				fontInfo->BitmapHandle = ESD_BITMAPHANDLE_INVALID;
 				break;
 			}
 			case ESD_FONT_EXTENDED:
 			{
-				format = EVE_Hal_rd32(ESD_Host, fontAddr + 8);
-				fontInfo->FontHeight = EVE_Hal_rd32(ESD_Host, fontAddr + 28);
+				format = EVE_Hal_rd32(Esd_Host, fontAddr + 8);
+				fontInfo->FontHeight = EVE_Hal_rd32(Esd_Host, fontAddr + 28);
 				esd_resourceinfo_printf("Set extended glyph address to %i\n", (int)glyphAddr);
-				EVE_Hal_wr32(ESD_Host, fontAddr + 32, glyphAddr);
+				EVE_Hal_wr32(Esd_Host, fontAddr + 32, glyphAddr);
 				fontInfo->BitmapHandle = ESD_BITMAPHANDLE_INVALID;
 				break;
 			}
@@ -98,12 +98,12 @@ ESD_CORE_EXPORT uint32_t ESD_LoadFont(ESD_FontInfo *fontInfo)
 				// In case the glyph resource was set to direct flash but is not in ASTC format, reload it
 				esd_resourceinfo_printf("Glyph resource set to Direct Flash but is not in ASTC format, reload\n");
 				fontInfo->GlyphResource.Type = ESD_RESOURCE_FLASH;
-				glyphAddr = ESD_LoadResource(&fontInfo->GlyphResource, NULL);
+				glyphAddr = Esd_LoadResource(&fontInfo->GlyphResource, NULL);
 				if (glyphAddr == GA_INVALID)
 				{
 					// Failed to reload glyph, free font block resource
 					esd_resourceinfo_printf("Failed to reload glyph, free font block resource\n");
-					ESD_FreeResource(&fontInfo->FontResource);
+					Esd_FreeResource(&fontInfo->FontResource);
 					return GA_INVALID;
 				}
 			}
@@ -116,9 +116,9 @@ ESD_CORE_EXPORT uint32_t ESD_LoadFont(ESD_FontInfo *fontInfo)
 	return GA_INVALID;
 }
 
-ESD_CORE_EXPORT void ESD_FontPersist(ESD_FontInfo *fontInfo)
+ESD_CORE_EXPORT void Esd_FontPersist(Esd_FontInfo *fontInfo)
 {
-	ESD_LoadFont(fontInfo);
+	Esd_LoadFont(fontInfo);
 }
 
 /* end of file */
