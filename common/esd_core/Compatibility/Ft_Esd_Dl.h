@@ -4,8 +4,8 @@
 
 #include "Esd_Core.h"
 
-#include <FT_Platform.h>
-#include <FT_CoPro_Cmds.h>
+#include <Ft_Platform.h>
+#include "Ft_CoPro_Cmds.h"
 
 #include "Ft_Esd.h"
 #include "FT_Gpu.h"

@@ -116,11 +116,21 @@ ESD_END()
 #undef FT_DispHeight
 #endif
 
-#define FT_DispWidth phost->DispWidth
-#define FT_DispHeight phost->DispHeight
+#define FT_DispWidth phost->Width
+#define FT_DispHeight phost->Height
 
-#define Esd_DispWidth phost->DispWidth
-#define Esd_DispHeight phost->DispHeight
+#define Esd_DispWidth phost->Width
+#define Esd_DispHeight phost->Height
+
+#define ESD_DispWidth phost->Width
+#define ESD_DispHeight phost->Height
+
+#define Ft_Esd_Host Esd_Host
+#define Ft_Esd_GAlloc Esd_GAlloc
+
+ft_uint32_t Ft_Esd_GetMillis();
+ft_uint32_t Ft_Esd_GetDeltaMs();
+EVE_HalContext *Ft_Esd_GetHost();
 
 #endif /* #ifndef FT_ESD_H */
 

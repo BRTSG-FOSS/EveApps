@@ -43,9 +43,6 @@
 #include "Ft_Esd_BitmapHandle.h"
 #include "Ft_Esd_TouchTag.h"
 
-#define Ft_Esd_Host Esd_Host
-#define Ft_Esd_GAlloc Esd_GAlloc
-
 #endif /* #ifndef ESD_CORE__H */
 
 /* end of file */
