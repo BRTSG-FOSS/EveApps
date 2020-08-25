@@ -216,12 +216,12 @@ ESD_CORE_EXPORT void Esd_Noop(void *context);
 
 #ifdef ESD_SIMULATION
 // Functions provided by ESD environment
-void logMessage__ESD(const char *str);
-void logWarning__ESD(const char *str);
-void logError__ESD(const char *str);
-#define Esd_LogMessage(s) logMessage__ESD(s)
-#define Esd_LogWarning(s) logWarning__ESD(s)
-#define Esd_LogError(s) logError__ESD(s)
+void LogMessage__ESD(const char *str);
+void LogWarning__ESD(const char *str);
+void LogError__ESD(const char *str);
+#define Esd_LogMessage(s) LogMessage__ESD(s)
+#define Esd_LogWarning(s) LogWarning__ESD(s)
+#define Esd_LogError(s) LogError__ESD(s)
 #else
 #define Esd_LogMessage(s) \
 	do                       \

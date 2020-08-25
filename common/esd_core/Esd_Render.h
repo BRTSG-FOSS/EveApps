@@ -20,7 +20,7 @@ ESD_CATEGORY(EsdPrimitives, DisplayName = "Primitives", Category = EsdRenderable
 ESD_CATEGORY(EsdBasicWidgets, DisplayName = "Basics", Category = EsdWidgets)
 
 // A function to combine RGB channel with 8 bit Alpha channel data into 32 bit integer data
-ESD_FUNCTION(ESD_COMPOSE_RGB_ALPHA, Type = esd_argb32_t, DisplayName = "Color A+RGB Combine", Category = EsdUtilities, Macro)
+ESD_FUNCTION(ESD_COMPOSE_RGB_ALPHA, Type = esd_argb32_t, DisplayName = "Color A+RGB Combine", Category = EsdUtilities, Macro, Include = "Esd_Core.h")
 ESD_PARAMETER(rgb, Type = esd_rgb32_t, Default = #FFFFFF)
 ESD_PARAMETER(a, Type = uint8_t, Default = 255)
 #define ESD_COMPOSE_RGB_ALPHA(rgb, a) (((esd_argb32_t)rgb & 0xFFFFFF) | (((esd_argb32_t)a) << 24))
@@ -43,7 +43,7 @@ ESD_PARAMETER(a, Type = uint8_t, Default = 255)
 #define ESD_ARGB_BLACK 0xFF000000
 
 // Rectangular gradient with four colored corners
-ESD_RENDER(Esd_Render_MultiGradient, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Multi Gradient", Include = "Esd_Render.h", Category = EsdPrimitives)
+ESD_RENDER(Esd_Render_MultiGradient, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Multi Gradient", Include = "Esd_Core.h", Category = EsdPrimitives)
 ESD_PARAMETER(x, Type = int16_t, Default = 0)
 ESD_PARAMETER(y, Type = int16_t, Default = 0)
 ESD_PARAMETER(width, Type = int16_t, Default = 0)
@@ -55,7 +55,7 @@ ESD_PARAMETER(bottomRight, Type = esd_argb32_t, DisplayName = "Bottom Right", De
 ESD_CORE_EXPORT void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t width, int16_t height, esd_argb32_t topLeft, esd_argb32_t topRight, esd_argb32_t bottomLeft, esd_argb32_t bottomRight);
 
 // Rounded rectangular gradient with four colored corners
-ESD_RENDER(Esd_Render_MultiGradient_Rounded, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Multi Gradient (Rounded)", Include = "Esd_Render.h", Category = EsdPrimitives)
+ESD_RENDER(Esd_Render_MultiGradient_Rounded, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Multi Gradient (Rounded)", Include = "Esd_Core.h", Category = EsdPrimitives)
 ESD_PARAMETER(x, Type = int16_t, Default = 0)
 ESD_PARAMETER(y, Type = int16_t, Default = 0)
 ESD_PARAMETER(width, Type = int16_t, Default = 0)
@@ -82,7 +82,7 @@ ESD_CORE_EXPORT void Esd_Render_Rect_Stroke(
     uint8_t stroke, esd_argb32_t color);
 
 // Basic bitmap rendering
-ESD_RENDER(Esd_Render_Bitmap, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Bitmap", Category = EsdPrimitives, Icon = ":/icons/image.png", Include = "Esd_Render.h")
+ESD_RENDER(Esd_Render_Bitmap, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Bitmap", Category = EsdPrimitives, Icon = ":/icons/image.png", Include = "Esd_Core.h")
 ESD_PARAMETER(x, Type = int16_t, Default = 0)
 ESD_PARAMETER(y, Type = int16_t, Default = 0)
 ESD_PARAMETER(bitmapCell, Type = Esd_BitmapCell, DisplayName = "Bitmap Cell")
@@ -91,7 +91,7 @@ ESD_PARAMETER(c, Type = esd_argb32_t, DisplayName = "Color", Default = #FFFFFFFF
 ESD_CORE_EXPORT void Esd_Render_Bitmap(int16_t x, int16_t y, Esd_BitmapCell bitmapCell, esd_argb32_t c);
 
 // Scaled bitmap rendering
-ESD_RENDER(Esd_Render_Bitmap_Scaled, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Bitmap Scaled", Category = EsdPrimitives, Icon = ":/icons/image.png", Include = "Esd_Render.h")
+ESD_RENDER(Esd_Render_Bitmap_Scaled, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Bitmap Scaled", Category = EsdPrimitives, Icon = ":/icons/image.png", Include = "Esd_Core.h")
 ESD_PARAMETER(x, Type = int16_t, Default = 0)
 ESD_PARAMETER(y, Type = int16_t, Default = 0)
 ESD_PARAMETER(bitmapCell, Type = Esd_BitmapCell, DisplayName = "Bitmap Cell")
@@ -119,7 +119,7 @@ ESD_CORE_EXPORT void Esd_Render_Bitmap_RotateScaled(Esd_BitmapCell bitmapCell, e
 ESD_CORE_EXPORT void Esd_Render_Bitmap_Rotate(Esd_BitmapCell bitmapCell, esd_argb32_t c, Esd_Rect16 globalRect, int32_t rotateAngle);
 
 // Basic rectangle rendering with fixed point precision
-ESD_RENDER(Esd_Render_RectF, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Rectangle (Fixed Point)", Include = "Esd_Render.h", Category = EsdPrimitives)
+ESD_RENDER(Esd_Render_RectF, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Rectangle (Fixed Point)", Include = "Esd_Core.h", Category = EsdPrimitives)
 ESD_PARAMETER(x, Type = esd_int32_f4_t, Default = 0)
 ESD_PARAMETER(y, Type = esd_int32_f4_t, Default = 0)
 ESD_PARAMETER(width, Type = esd_int32_f4_t, Default = 60)
@@ -129,7 +129,7 @@ ESD_PARAMETER(color, Type = esd_argb32_t, DisplayName = "Color", Default = #FFFF
 ESD_CORE_EXPORT void Esd_Render_RectF(esd_int32_f4_t x, esd_int32_f4_t y, esd_int32_f4_t w, esd_int32_f4_t h, esd_int32_f4_t radius, esd_argb32_t color);
 
 // Basic rectangle rendering
-ESD_RENDER(Esd_Render_Rect, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Rectangle (Integer)", Include = "Esd_Render.h", Category = EsdPrimitives, Inline)
+ESD_RENDER(Esd_Render_Rect, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Rectangle (Integer)", Include = "Esd_Core.h", Category = EsdPrimitives, Inline)
 ESD_PARAMETER(x, Type = int32_t, Default = 0)
 ESD_PARAMETER(y, Type = int32_t, Default = 0)
 ESD_PARAMETER(width, Type = int32_t, Default = 60)
@@ -142,7 +142,7 @@ static inline void Esd_Render_Rect(int32_t x, int32_t y, int32_t w, int32_t h, i
 }
 
 // Basic line rendering with fixed point precision
-ESD_RENDER(Esd_Render_LineF, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Line (Fixed Point)", Include = "Esd_Render.h", Category = EsdPrimitives)
+ESD_RENDER(Esd_Render_LineF, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Line (Fixed Point)", Include = "Esd_Core.h", Category = EsdPrimitives)
 ESD_PARAMETER(x0, Type = esd_int32_f4_t, Default = 0)
 ESD_PARAMETER(y0, Type = esd_int32_f4_t, Default = 0)
 ESD_PARAMETER(x1, Type = esd_int32_f4_t, Default = 60)
@@ -152,7 +152,7 @@ ESD_PARAMETER(color, Type = esd_argb32_t, DisplayName = "Color", Default = #FFFF
 ESD_CORE_EXPORT void Esd_Render_LineF(esd_int32_f4_t x0, esd_int32_f4_t y0, esd_int32_f4_t x1, esd_int32_f4_t y1, esd_int32_f3_t width, esd_argb32_t color);
 
 // Basic line rendering
-ESD_RENDER(Esd_Render_Line, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Line (Integer)", Include = "Esd_Render.h", Category = EsdPrimitives, Inline)
+ESD_RENDER(Esd_Render_Line, Type = void, Attributes = ESD_CORE_EXPORT, DisplayName = "ESD Line (Integer)", Include = "Esd_Core.h", Category = EsdPrimitives, Inline)
 ESD_PARAMETER(x0, Type = int32_t, Default = 0)
 ESD_PARAMETER(y0, Type = int32_t, Default = 0)
 ESD_PARAMETER(x1, Type = int32_t, Default = 60)
@@ -170,33 +170,33 @@ ESD_CORE_EXPORT Esd_Size16 Esd_Math_GetScaledSize(Esd_Size16 boundary, Esd_Size1
 // Get alignment position
 ESD_CORE_EXPORT Esd_Rect16 Esd_Math_GetAlignedRect(Esd_Size16 boundary, Esd_Size16 size, uint8_t align);
 
-ESD_ENUM(Esd_Orientation, Type = uint8_t)
+ESD_ENUM(Esd_Orientation, Type = uint8_t, Include = "Esd_Core.h")
 #define ESD_ORIENTATION_HORIZONTAL (1)
 #define ESD_ORIENTATION_VERTICAL (2)
 ESD_END()
 
-ESD_ENUM(Esd_Direction, Type = uint8_t)
+ESD_ENUM(Esd_Direction, Type = uint8_t, Include = "Esd_Core.h")
 #define ESD_DIRECTION_NONE (0)
 #define ESD_DIRECTION_HORIZONTAL (1)
 #define ESD_DIRECTION_VERTICAL (2)
 #define ESD_DIRECTION_BOTH (Esd_DIRECTION_HORIZONTAL | Esd_DIRECTION_VERTICAL)
 ESD_END()
 
-ESD_ENUM(Esd_AlignHorizontal, Type = uint8_t)
+ESD_ENUM(Esd_AlignHorizontal, Type = uint8_t, Include = "Esd_Core.h")
 #define ESD_ALIGN_LEFTX (0)
 #define ESD_ALIGN_CENTERX (1)
 #define ESD_ALIGN_RIGHTX (2)
 #define ESD_ALIGN_FILLX (3)
 ESD_END()
 
-ESD_ENUM(Esd_AlignVertical, Type = uint8_t)
+ESD_ENUM(Esd_AlignVertical, Type = uint8_t, Include = "Esd_Core.h")
 #define ESD_ALIGN_TOPY (0)
 #define ESD_ALIGN_CENTERY (4)
 #define ESD_ALIGN_BOTTOMY (8)
 #define ESD_ALIGN_FILLY (12)
 ESD_END()
 
-ESD_ENUM(Esd_Align, Type = uint8_t)
+ESD_ENUM(Esd_Align, Type = uint8_t, Include = "Esd_Core.h")
 #define ESD_ALIGN_TOPLEFT (ESD_ALIGN_TOPY | ESD_ALIGN_LEFTX)
 #define ESD_ALIGN_TOPCENTER (ESD_ALIGN_TOPY | ESD_ALIGN_CENTERX)
 #define ESD_ALIGN_TOPRIGHT (ESD_ALIGN_TOPY | ESD_ALIGN_RIGHTX)
@@ -215,22 +215,22 @@ ESD_ENUM(Esd_Align, Type = uint8_t)
 #define ESD_ALIGN_FILLFILL (ESD_ALIGN_FILLY | ESD_ALIGN_FILLX)
 ESD_END()
 
-ESD_FUNCTION(ESD_ALIGN_HORIZONTAL, Type = Esd_AlignHorizontal, DisplayName = "Get Horizontal Align", Category = EsdLayoutUtilities, Macro)
+ESD_FUNCTION(ESD_ALIGN_HORIZONTAL, Type = Esd_AlignHorizontal, DisplayName = "Get Horizontal Align", Category = EsdLayoutUtilities, Macro, Include = "Esd_Core.h")
 ESD_PARAMETER(align, Type = Esd_Align)
 #define ESD_ALIGN_HORIZONTAL(align) (align & 3)
 
-ESD_FUNCTION(ESD_ALIGN_VERTICAL, Type = Esd_AlignVertical, DisplayName = "Get Vertical Align", Category = EsdLayoutUtilities, Macro)
+ESD_FUNCTION(ESD_ALIGN_VERTICAL, Type = Esd_AlignVertical, DisplayName = "Get Vertical Align", Category = EsdLayoutUtilities, Macro, Include = "Esd_Core.h")
 ESD_PARAMETER(align, Type = Esd_Align)
 #define ESD_ALIGN_VERTICAL(align) (align & 12)
 
-ESD_ENUM(Esd_Scaling, Type = uint8_t)
+ESD_ENUM(Esd_Scaling, Type = uint8_t, Include = "Esd_Core.h")
 #define ESD_SCALING_ORIGINAL (0)
 #define ESD_SCALING_FILL (1) // Keep Aspect ratio, extend outside rect
 #define ESD_SCALING_FIT (2) // Keep Aspect ratio, stay inside rect
 #define ESD_SCALING_STRETCH (3)
 ESD_END()
 
-ESD_ENUM(Esd_Stroke, Type = uint8_t)
+ESD_ENUM(Esd_Stroke, Type = uint8_t, Include = "Esd_Core.h")
 #define ESD_STROKE_NONE (0)
 #define ESD_STROKE_INNER (1)
 #define ESD_STROKE_OUTER (2)

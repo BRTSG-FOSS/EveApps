@@ -122,11 +122,11 @@ ESD_CORE_EXPORT void Esd_Initialize()
 void Esd_HookOpen__ESD(Esd_Context *ec);
 void Esd_HookClose__ESD(Esd_Context *ec);
 
-Esd_Callback Esd_HookStart__ESD(Esd_Context *ec, Esd_Callback start);
-Esd_Callback Esd_HookUpdate__ESD(Esd_Context *ec, Esd_Callback update);
-Esd_Callback Esd_HookRender__ESD(Esd_Context *ec, Esd_Callback render);
-Esd_Callback Esd_HookIdle__ESD(Esd_Context *ec, Esd_Callback idle);
-Esd_Callback Esd_HookEnd__ESD(Esd_Context *ec, Esd_Callback end);
+Esd_Callback Esd_HookStart__ESD(void *ec, Esd_Callback start);
+Esd_Callback Esd_HookUpdate__ESD(void *ec, Esd_Callback update);
+Esd_Callback Esd_HookRender__ESD(void *ec, Esd_Callback render);
+Esd_Callback Esd_HookIdle__ESD(void *ec, Esd_Callback idle);
+Esd_Callback Esd_HookEnd__ESD(void *ec, Esd_Callback end);
 
 #endif
 
@@ -149,10 +149,10 @@ ESD_CORE_EXPORT void Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 #ifdef ESD_SIMULATION
 	Esd_HookOpen__ESD(ec);
 	ec->Start = Esd_HookStart__ESD(ec, ec->Start);
-	ec->Update = Esd_HookStart__ESD(ec, ec->Update);
-	ec->Render = Esd_HookStart__ESD(ec, ec->Render);
-	ec->Idle = Esd_HookStart__ESD(ec, ec->Idle);
-	ec->End = Esd_HookStart__ESD(ec, ec->End);
+	ec->Update = Esd_HookUpdate__ESD(ec, ec->Update);
+	ec->Render = Esd_HookRender__ESD(ec, ec->Render);
+	ec->Idle = Esd_HookIdle__ESD(ec, ec->Idle);
+	ec->End = Esd_HookEnd__ESD(ec, ec->End);
 #endif
 
 #ifdef ESD_SIMULATION
