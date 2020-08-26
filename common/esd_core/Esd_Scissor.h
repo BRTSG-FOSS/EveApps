@@ -5,14 +5,6 @@
 #include "Esd_Base.h"
 #include "Esd_Math.h"
 
-//
-// Globals
-//
-extern ESD_CORE_EXPORT Esd_Rect16 Esd_ScissorRect;
-
-// Reset any cached state
-void Esd_Scissor_DlStart();
-
 // Returns the current scissor area
 ESD_FUNCTION(Esd_Scissor_Get, Type = Esd_Rect16, Attributes = ESD_CORE_EXPORT, Category = EveRenderFunctions, Include = "Esd_Core.h")
 ESD_CORE_EXPORT Esd_Rect16 Esd_Scissor_Get();

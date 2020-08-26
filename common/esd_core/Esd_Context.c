@@ -66,13 +66,6 @@ void Esd_CheckTypeSizes();
 int Esd_IsRunning__ESD();
 #endif
 
-void Esd_Scissor_DlStart();
-
-// extern void Esd_Widget_ProcessFree(); // TODO: Bind from widgets
-
-// extern void Esd_Timer_CancelGlobal(); // TODO: Bind from widgets
-// extern void Esd_Timer_UpdateGlobal(); // TODO: Bind from widgets
-
 //
 // Constants
 //
@@ -224,7 +217,7 @@ ESD_CORE_EXPORT void Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 
 ESD_CORE_EXPORT void Esd_Close(Esd_Context *ec)
 {
-	// Esd_Widget_ProcessFree(); // TODO: Link this back up (add Esd_Framework_Initialize and Esd_Framework_Release)
+	Esd_ProcessFree();
 	EVE_Hal_close(&ec->HalContext);
 	memset(ec, 0, sizeof(Esd_Context));
 
@@ -268,10 +261,8 @@ ESD_CORE_EXPORT void Esd_Start(Esd_Context *ec)
 	Esd_SetCurrent(ec);
 
 	// Initialize framework
-	Esd_Scissor_DlStart();
 	ec->Frame = 0;
 	ec->Millis = EVE_millis();
-	// Esd_Timer_CancelGlobal(); // TODO (in Esd_Framework_Initialize)
 
 	// Initialize storage
 	EVE_Util_loadSdCard(&ec->HalContext);
@@ -293,8 +284,7 @@ ESD_CORE_EXPORT void Esd_Update(Esd_Context *ec)
 
 	// Restore initial frame values
 	// EVE_CoCmd_loadIdentity(phost); // ?
-	Esd_Scissor_DlStart();
-	// Esd_Widget_ProcessFree(); // TODO: Link this back up!!!
+	Esd_ProcessFree();
 	Esd_BitmapHandle_FrameStart(&ec->HandleState);
 
 	if (ec->ShowLogo)

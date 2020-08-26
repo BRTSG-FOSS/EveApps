@@ -42,6 +42,9 @@ ESD_CORE_EXPORT void Esd_EndLogo();
 
 ESD_CORE_EXPORT bool Esd_Calibrate();
 
+ESD_CORE_EXPORT void Esd_DeferredFree(void *ptr);
+ESD_CORE_EXPORT void Esd_ProcessFree();
+
 #endif /* #ifndef ESD_UTILITY__H */
 
 /* end of file */

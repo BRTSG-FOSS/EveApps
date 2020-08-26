@@ -59,6 +59,8 @@ typedef struct
 	bool ShowingLogo; //< Logo is currently showing (animation already finished)
 	void *CmdOwner; //< Owner of currently long-running coprocessor function (sketch, spinner, etc.)
 
+	void *DeferredFree;
+
 	Esd_HandleState HandleState;
 
 	/* Callbacks called by Esd_Loop */

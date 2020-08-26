@@ -171,4 +171,24 @@ ESD_CORE_EXPORT bool Esd_Calibrate()
 	return result != 0;
 }
 
+ESD_CORE_EXPORT void Esd_DeferredFree(void *ptr)
+{
+	// eve_printf_debug("Request free\n");
+	(*(void **)ptr) = Esd_CurrentContext->DeferredFree;
+	Esd_CurrentContext->DeferredFree = ptr;
+}
+
+ESD_CORE_EXPORT void Esd_ProcessFree()
+{
+	void *current = Esd_CurrentContext->DeferredFree;
+	Esd_CurrentContext->DeferredFree = NULL;
+	while (current)
+	{
+		void *next = (*(void **)current);
+		// eve_printf_debug("Free deferred\n");
+		free(current);
+		current = next;
+	}
+}
+
 /* end of file */
