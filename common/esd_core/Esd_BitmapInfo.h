@@ -75,6 +75,11 @@ typedef struct Esd_BitmapInfo
 	// Load image using coprocessor (for JPEG and PNG)
 	bool CoLoad : 1;
 
+#if defined(EVE_SUPPORT_VIDEO)
+	// This is a video (for AVI)
+	bool Video : 1;
+#endif
+
 } Esd_BitmapInfo;
 
 ESD_TYPE(Esd_BitmapInfo *, Native = Pointer, Edit = Library)
@@ -116,6 +121,7 @@ ESD_IDENTIFIER(PALETTED8)
 #define DXT1 0x81
 #define JPEG 0x91
 #define PNG 0x92
+#define AVI 0x93
 #if (EVE_SUPPORT_CHIPID >= EVE_BT815)
 ESD_IDENTIFIER(COMPRESSED_RGBA_ASTC_4x4_KHR)
 ESD_IDENTIFIER(COMPRESSED_RGBA_ASTC_5x4_KHR)

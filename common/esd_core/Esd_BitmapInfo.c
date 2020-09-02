@@ -37,6 +37,24 @@ static bool Esd_LoadFromFlash(uint32_t *imageFormat, bool deflate, uint32_t dst,
 
 #endif
 
+#ifdef EVE_SUPPORT_VIDEO
+
+static bool Esd_LoadVideoFrameFromFile(uint32_t *imageFormat, uint32_t dst, const char *file)
+{
+	return false;
+}
+
+#ifdef EVE_FLASH_AVAILABLE
+
+static bool Esd_LoadVideoFrameFromFlash(uint32_t *imageFormat, uint32_t dst, uint32_t src)
+{
+	return false;
+}
+
+#endif
+
+#endif
+
 ESD_CORE_EXPORT uint32_t Esd_LoadBitmap(Esd_BitmapInfo *bitmapInfo)
 {
 	EVE_HalContext *phost = Esd_GetHost();
@@ -90,8 +108,13 @@ ESD_CORE_EXPORT uint32_t Esd_LoadBitmap(Esd_BitmapInfo *bitmapInfo)
 		addr = Esd_GpuAlloc_Get(Esd_GAlloc, bitmapInfo->GpuHandle);
 		if (addr != GA_INVALID)
 		{
-			bool coLoad = bitmapInfo->CoLoad || bitmapInfo->Format == JPEG || bitmapInfo->Format == PNG;
+			bool coLoad = bitmapInfo->CoLoad || bitmapInfo->Format == JPEG || bitmapInfo->Format == PNG || bitmapInfo->Format == AVI;
 			bitmapInfo->CoLoad = coLoad;
+
+#if defined(EVE_SUPPORT_VIDEO)
+			bool video = bitmapInfo->Video || bitmapInfo->Format == AVI;
+			bitmapInfo->Video = video;
+#endif
 
 #ifdef ESD_BITMAPINFO_DEBUG
 			eve_printf_debug("Allocated space for bitmap\n");
@@ -99,10 +122,21 @@ ESD_CORE_EXPORT uint32_t Esd_LoadBitmap(Esd_BitmapInfo *bitmapInfo)
 
 			// Allocation space OK
 			if (
+#if defined(EVE_SUPPORT_VIDEO)
+				video ? 
+				(
+#ifdef EVE_FLASH_AVAILABLE
+					bitmapInfo->Flash ? !Esd_LoadVideoFrameFromFlash(&bitmapInfo->Format, addr, bitmapInfo->FlashAddress) :
+#endif
+					!Esd_LoadVideoFrameFromFile(&bitmapInfo->Format, addr, bitmapInfo->File)
+				) :
+#endif
+				(
 #ifdef EVE_FLASH_AVAILABLE
 			    bitmapInfo->Flash ? !Esd_LoadFromFlash(coLoad ? &bitmapInfo->Format : NULL, bitmapInfo->Compressed, addr, bitmapInfo->FlashAddress, bitmapInfo->Size) :
 #endif
-			                      !Esd_LoadFromFile(coLoad ? &bitmapInfo->Format : NULL, bitmapInfo->Compressed, addr, bitmapInfo->File))
+			                      !Esd_LoadFromFile(coLoad ? &bitmapInfo->Format : NULL, bitmapInfo->Compressed, addr, bitmapInfo->File)
+				))
 			{
 #ifdef ESD_BITMAPINFO_DEBUG
 				eve_printf_debug(bitmapInfo->Flash ? "Failed to load bitmap from flash\n" : "Failed to load bitmap from file\n");
