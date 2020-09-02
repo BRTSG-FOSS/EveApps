@@ -44,7 +44,7 @@ static bool Esd_LoadVideoFrameFromFile(uint32_t *imageFormat, uint32_t dst, cons
 	EVE_HalContext *phost = Esd_GetHost();
 
 	/* Allocate RAM_G space for FIFO and completion pointer */
-	uint32_t fifoSize = 128 * 1024;
+	uint32_t fifoSize = 16 * 1024; /* TODO: What's an ideal FIFO size? */
 	Esd_GpuHandle fifoHandle = Esd_GpuAlloc_Alloc(Esd_GAlloc, fifoSize + 4, 0);
 	uint32_t fifoAddr = Esd_GpuAlloc_Get(Esd_GAlloc, fifoHandle);
 	if (fifoAddr == GA_INVALID)
