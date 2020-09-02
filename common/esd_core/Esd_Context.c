@@ -56,6 +56,8 @@ ESD_CORE_EXPORT Esd_GpuAlloc *Esd_GAlloc = NULL; // Pointer to current s_GAlloc
 void Esd_CheckTypeSizes();
 #endif
 
+void Esd_CoWidget_Update();
+
 // When not in the simulation, use the Esd_Main__Start etc symbols
 // as exported by the single Application logic document included
 #ifndef ESD_SIMULATION
@@ -363,6 +365,7 @@ ESD_CORE_EXPORT void Esd_Update(Esd_Context *ec)
 	ec->Millis = ms;
 	Esd_GpuAlloc_Update(Esd_GAlloc); // Run GC
 	Esd_TouchTag_Update(NULL); // Update touch
+	Esd_CoWidget_Update();
 	if (ec->Update)
 		ec->Update(ec->UserContext);
 	// Esd_Timer_UpdateGlobal(); // TODO

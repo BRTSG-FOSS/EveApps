@@ -35,4 +35,18 @@ void Esd_CoWidget_PopupSpinner()
 	Esd_CurrentContext->SpinnerPopup = true;
 }
 
+void Esd_CoWidget_Update()
+{
+	// ...
+}
+
+/* Plays the specified Esd_BitmapInfo video in the background.
+Video only, not applicable to bitmap cell animation. 
+Only one video can play in the background at a time. 
+Background play will be interrupted when any other video is started, and cannot be resumed. */
+bool Esd_CoWidget_PlayBgVideo(Esd_BitmapInfo *info)
+{
+
+}
+
 /* end of file */

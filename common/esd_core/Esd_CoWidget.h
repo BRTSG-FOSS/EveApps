@@ -40,8 +40,16 @@ ESD_CORE_EXPORT void Esd_CoWidget_Stop(void *owner);
 
 /* Pops up the default spinner on the next frame (the frame currently being built) until the subsequent frame is ready.
 This is useful when a blocking function will keep the system busy on the next frame. */
-ESD_FUNCTION(Esd_CoWidget_PopupSpinner, DisplayName = "Pop-up Spinner", Category = EsdUtilities, Include = "Esd_Core.h")
+ESD_FUNCTION(Esd_CoWidget_PopupSpinner, DisplayName = "Pop-up Spinner", Type = void, Attributes = ESD_CORE_EXPORT, Category = EsdUtilities, Include = "Esd_Core.h")
 ESD_CORE_EXPORT void Esd_CoWidget_PopupSpinner();
+
+/* Plays the specified Esd_BitmapInfo video in the background.
+Video only, not applicable to bitmap cell animation. 
+Only one video can play in the background at a time. 
+Background play will be interrupted when any other video is started, and cannot be resumed. */
+ESD_FUNCTION(Esd_CoWidget_PlayBgVideo, Type = bool, Attributes = ESD_CORE_EXPORT, Category = EsdUtilities, Include = "Esd_Core.h")
+ESD_PARAMETER(info, Type = Esd_BitmapInfo *)
+ESD_CORE_EXPORT bool Esd_CoWidget_PlayBgVideo(Esd_BitmapInfo *info);
 
 #endif /* #ifndef ESD_COWIDGET__H */
 

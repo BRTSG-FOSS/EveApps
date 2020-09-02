@@ -65,6 +65,7 @@ static bool Esd_LoadVideoFrameFromFile(uint32_t *imageFormat, uint32_t dst, cons
 	EVE_CoCmd_videoStart(phost);
 	EVE_CoCmd_videoFrame(phost, dst, ptr);
 	bool res = EVE_Util_loadMediaFile(phost, file, &transfered);
+	EVE_Util_closeFile(phost);
 
 	/* Release */
 	EVE_MediaFifo_close(phost);
