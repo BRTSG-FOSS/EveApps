@@ -84,6 +84,9 @@ typedef struct
 	Esd_Callback End;
 	void *UserContext;
 
+	/* Flash file path */
+	eve_tchar_t FlashFilePath[260];
+
 } Esd_Parameters;
 
 extern ESD_CORE_EXPORT Esd_Context *Esd_CurrentContext; //< Pointer to current ESD context
@@ -102,7 +105,7 @@ ESD_CORE_EXPORT void Esd_Initialize();
 ESD_CORE_EXPORT void Esd_Release();
 
 ESD_CORE_EXPORT void Esd_Defaults(Esd_Parameters *ep);
-ESD_CORE_EXPORT void Esd_Open(Esd_Context *ec, Esd_Parameters *ep);
+ESD_CORE_EXPORT bool Esd_Open(Esd_Context *ec, Esd_Parameters *ep);
 ESD_CORE_EXPORT void Esd_Close(Esd_Context *ec);
 
 /* Main loop, calls Esd_Start, Esd_Update, Esd_WaitSwap, and Esd_Stop */

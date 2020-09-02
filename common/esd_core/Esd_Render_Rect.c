@@ -93,11 +93,7 @@ ESD_CORE_EXPORT void Esd_Render_Rect_Stroke(
 	EVE_CoDl_begin(phost, RECTS);
 	EVE_CoDl_colorArgb_ex(phost, color);
 	int vertexFormat = 4;
-	while (vertexFormat > 0 && (
-		x0 < EVE_VERTEX2F_MIN || x0 > EVE_VERTEX2F_MAX
-		|| x1 < EVE_VERTEX2F_MIN || x1 > EVE_VERTEX2F_MAX
-		|| x0 < EVE_VERTEX2F_MIN || x0 > EVE_VERTEX2F_MAX
-		|| y1 < EVE_VERTEX2F_MIN || y1 > EVE_VERTEX2F_MAX))
+	while (vertexFormat > 0 && (x0 < EVE_VERTEX2F_MIN || x0 > EVE_VERTEX2F_MAX || x1 < EVE_VERTEX2F_MIN || x1 > EVE_VERTEX2F_MAX || x0 < EVE_VERTEX2F_MIN || x0 > EVE_VERTEX2F_MAX || y1 < EVE_VERTEX2F_MIN || y1 > EVE_VERTEX2F_MAX))
 	{
 		--vertexFormat;
 		x0 >>= 1;

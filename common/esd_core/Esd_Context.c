@@ -38,6 +38,10 @@
 #include "Esd_TouchTag.h"
 #include "Esd_CoWidget.h"
 
+#if defined(BT8XXEMU_PLATFORM) && !defined(EVE_FLASH_SIZE)
+#include <stdio.h>
+#endif
+
 //
 // Globals
 //
@@ -81,6 +85,11 @@ ESD_CORE_EXPORT void Esd_SetCurrent(Esd_Context *ec)
 ESD_CORE_EXPORT void Esd_Defaults(Esd_Parameters *ep)
 {
 	memset(ep, 0, sizeof(Esd_Parameters));
+#ifdef _WIN32
+	wcscpy_s(ep->FlashFilePath, _countof(ep->FlashFilePath), L"__Flash.bin");
+#else
+	strcpy(ep->FlashFilePath, "__Flash.bin");
+#endif
 }
 
 bool cbCmdWait(struct EVE_HalContext *phost)
@@ -121,9 +130,13 @@ Esd_Callback Esd_HookRender__ESD(void *ec, Esd_Callback render);
 Esd_Callback Esd_HookIdle__ESD(void *ec, Esd_Callback idle);
 Esd_Callback Esd_HookEnd__ESD(void *ec, Esd_Callback end);
 
+#if defined(EVE_FLASH_AVAILABLE)
+extern void Esd_SetFlashFirmware__ESD(const eve_tchar_t *path);
 #endif
 
-ESD_CORE_EXPORT void Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
+#endif
+
+ESD_CORE_EXPORT bool Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 {
 	EVE_HalContext *phost;
 	EVE_CHIPID_T chipId;
@@ -167,7 +180,7 @@ ESD_CORE_EXPORT void Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 		params.UserContext = ec;
 		params.CbCmdWait = cbCmdWait;
 
-#if defined(BT8XXEMU_PLATFORM) || defined(EVE_MULTI_TARGET)
+#if defined(BT8XXEMU_PLATFORM)
 #if defined(EVE_MULTI_TARGET)
 		if (params.Host == EVE_HOST_BT8XXEMU)
 #endif
@@ -176,30 +189,59 @@ ESD_CORE_EXPORT void Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 			emulatorParams.Flags &= (~BT8XXEMU_EmulatorEnableDynamicDegrade & ~BT8XXEMU_EmulatorEnableRegPwmDutyEmulation);
 			// TODO: emulatorParams.Log
 			params.EmulatorParameters = &emulatorParams;
-			/*
-			if (flashFile)
+#if defined(EVE_FLASH_AVAILABLE)
+			if (chipId >= EVE_BT815 && ep->FlashFilePath[0])
 			{
 				BT8XXEMU_Flash_defaults(BT8XXEMU_VERSION_API, &flashParams);
-				wcscpy_s(flashParams.DataFilePath, _countof(flashParams.DataFilePath), flashPath[0] ? flashPath : flashFile);
+				wcscpy_s(flashParams.DataFilePath, _countof(flashParams.DataFilePath), ep->FlashFilePath);
+
+#ifdef EVE_FLASH_FIRMWARE
+				Esd_SetFlashFirmware__ESD(EVE_FLASH_FIRMWARE);
+#endif
+
+#ifdef EVE_FLASH_SIZE
+				flashParams.SizeBytes = EVE_FLASH_SIZE * 1024 * 1024;
+#else
 				flashParams.SizeBytes = 2 * 1024 * 1024;
-				while (flashParams.SizeBytes < flashSize)
-					flashParams.SizeBytes *= 2;
+#pragma warning(push)
+#pragma warning(disable : 4996)
+#ifdef _WIN32
+				FILE *f = _wfopen(ep->FlashFilePath, L"rb");
+#else
+				FILE *f = fopen(ep->FlashFilePath, "rb");
+#endif
+#pragma warning(pop)
+				if (f)
+				{
+					fseek(f, 0, SEEK_END);
+					int64_t flashSize = ftell(f);
+					fclose(f);
+					while (flashParams.SizeBytes < flashSize)
+						flashParams.SizeBytes *= 2;
+				}
+#endif
+
 				// TODO: flashParams.Log
 				params.EmulatorFlashParameters = &flashParams;
 			}
-			*/
+#endif
 		}
 #endif
 
-		eve_assert_do(EVE_Hal_open(&ec->HalContext, &params));
+		if (!EVE_Hal_open(&ec->HalContext, &params))
+			return false;
 	}
 
 	phost = &ec->HalContext;
 #if ESD_SIMULATION
-	eve_assert_do(EVE_Util_bootupConfig(phost));
+	if (!(EVE_Util_bootupConfig(phost)))
 #else
-	eve_assert_do(EVE_Util_bootupConfigInteractive(phost, EVE_DISPLAY_DEFAULT));
+	if (!(EVE_Util_bootupConfigInteractive(phost, EVE_DISPLAY_DEFAULT)))
 #endif
+	{
+		EVE_Hal_close(&ec->HalContext);
+		return false;
+	}
 
 #ifndef ESD_SIMULATION
 	// TODO: Store calibration somewhere
@@ -213,6 +255,8 @@ ESD_CORE_EXPORT void Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 	Esd_GpuAlloc_Reset(&ec->GpuAlloc);
 
 	Esd_BitmapHandle_Initialize();
+
+	return true;
 }
 
 ESD_CORE_EXPORT void Esd_Close(Esd_Context *ec)
