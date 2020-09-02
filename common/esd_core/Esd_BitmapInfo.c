@@ -41,7 +41,46 @@ static bool Esd_LoadFromFlash(uint32_t *imageFormat, bool deflate, uint32_t dst,
 
 static bool Esd_LoadVideoFrameFromFile(uint32_t *imageFormat, uint32_t dst, const char *file)
 {
-	return false;
+	EVE_HalContext *phost = Esd_GetHost();
+
+	/* Allocate space for FIFO and completion pointer */
+	uint32_t fifoSize = 128 * 1024;
+	Esd_GpuHandle fifoHandle = Esd_GpuAlloc_Alloc(Esd_GAlloc, fifoSize + 4, 0);
+	uint32_t fifoAddr = Esd_GpuAlloc_Get(Esd_GAlloc, fifoHandle);
+	if (fifoAddr == GA_INVALID)
+	{
+		return false;
+	}
+
+	/* Setup media FIFO */
+	if (!EVE_MediaFifo_set(phost, fifoAddr, fifoSize))
+	{
+		Esd_GpuAlloc_Free(Esd_GAlloc, fifoHandle);
+		return false;
+	}
+
+	uint32_t transfered = 0;
+	// bool res = EVE_Util_loadMediaFile(phost, file, &transfered); // TODO: Call after CoCmd, since it also flushes
+
+	if (res)
+	{
+		EVE_CoCmd_videoStart(phost);
+		EVE_Cmd_waitFlush(phost);
+		// res = EVE_Util_loadMediaFile(phost, file, &transfered); // FIXME: This hangs at coprocessor, but should be the same effect as EVE_Cmd_waitFlush
+	}
+
+	if (res)
+	{
+		uint32_t ptr = fifoAddr + fifoSize;
+		EVE_CoCmd_videoFrame(phost, dst, ptr);
+		EVE_Cmd_waitFlush(phost);
+		// res = EVE_Util_loadMediaFile(phost, file, &transfered); // FIXME: This hangs at coprocessor, but should be the same effect as EVE_Cmd_waitFlush
+	}
+
+	EVE_MediaFifo_close(phost);
+	Esd_GpuAlloc_Free(Esd_GAlloc, fifoHandle);
+	*imageFormat = RGB565;
+	return res;
 }
 
 #ifdef EVE_FLASH_AVAILABLE

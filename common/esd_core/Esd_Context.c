@@ -243,11 +243,16 @@ ESD_CORE_EXPORT bool Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 		return false;
 	}
 
-#ifndef ESD_SIMULATION
-	// TODO: Store calibration somewhere
-	if (!Esd_Calibrate())
+#if !defined(ESD_SIMULATION) && (!defined(BT8XXEMU_PLATFORM) || defined(EVE_MULTI_TARGET))
+#if defined(EVE_MULTI_TARGET)
+	if (phost->Host != EVE_HOST_BT8XXEMU)
+#endif
 	{
-		eve_printf_debug("Calibrate failed\n");
+		// TODO: Store calibration somewhere
+		if (!Esd_Calibrate())
+		{
+			eve_printf_debug("Calibrate failed\n");
+		}
 	}
 #endif
 
