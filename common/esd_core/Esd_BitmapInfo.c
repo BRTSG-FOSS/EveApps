@@ -43,7 +43,7 @@ static bool Esd_LoadVideoFrameFromFile(uint32_t *imageFormat, uint32_t dst, cons
 {
 	EVE_HalContext *phost = Esd_GetHost();
 
-	/* Allocate space for FIFO and completion pointer */
+	/* Allocate RAM_G space for FIFO and completion pointer */
 	uint32_t fifoSize = 128 * 1024;
 	Esd_GpuHandle fifoHandle = Esd_GpuAlloc_Alloc(Esd_GAlloc, fifoSize + 4, 0);
 	uint32_t fifoAddr = Esd_GpuAlloc_Get(Esd_GAlloc, fifoHandle);
@@ -59,24 +59,14 @@ static bool Esd_LoadVideoFrameFromFile(uint32_t *imageFormat, uint32_t dst, cons
 		return false;
 	}
 
+	/* Load the first video frame */
 	uint32_t transfered = 0;
-	// bool res = EVE_Util_loadMediaFile(phost, file, &transfered); // TODO: Call after CoCmd, since it also flushes
+	uint32_t ptr = fifoAddr + fifoSize;
+	EVE_CoCmd_videoStart(phost);
+	EVE_CoCmd_videoFrame(phost, dst, ptr);
+	bool res = EVE_Util_loadMediaFile(phost, file, &transfered);
 
-	if (res)
-	{
-		EVE_CoCmd_videoStart(phost);
-		EVE_Cmd_waitFlush(phost);
-		// res = EVE_Util_loadMediaFile(phost, file, &transfered); // FIXME: This hangs at coprocessor, but should be the same effect as EVE_Cmd_waitFlush
-	}
-
-	if (res)
-	{
-		uint32_t ptr = fifoAddr + fifoSize;
-		EVE_CoCmd_videoFrame(phost, dst, ptr);
-		EVE_Cmd_waitFlush(phost);
-		// res = EVE_Util_loadMediaFile(phost, file, &transfered); // FIXME: This hangs at coprocessor, but should be the same effect as EVE_Cmd_waitFlush
-	}
-
+	/* Release */
 	EVE_MediaFifo_close(phost);
 	Esd_GpuAlloc_Free(Esd_GAlloc, fifoHandle);
 	*imageFormat = RGB565;
@@ -87,7 +77,26 @@ static bool Esd_LoadVideoFrameFromFile(uint32_t *imageFormat, uint32_t dst, cons
 
 static bool Esd_LoadVideoFrameFromFlash(uint32_t *imageFormat, uint32_t dst, uint32_t src)
 {
-	return false;
+	EVE_HalContext *phost = Esd_GetHost();
+
+	/* Allocate RAM_G space for ompletion pointer */
+	Esd_GpuHandle ptrHandle = Esd_GpuAlloc_Alloc(Esd_GAlloc, 4, 0);
+	uint32_t ptr = Esd_GpuAlloc_Get(Esd_GAlloc, ptrHandle);
+	if (ptr == GA_INVALID)
+	{
+		return false;
+	}
+
+	/* Load the first video frame */
+	EVE_CoCmd_flashSource(phost, src);
+	EVE_CoCmd_videoStartF(phost);
+	EVE_CoCmd_videoFrame(phost, dst, ptr);
+	bool res = EVE_Cmd_waitFlush(phost);
+
+	/* Release */
+	Esd_GpuAlloc_Free(Esd_GAlloc, ptrHandle);
+	*imageFormat = RGB565;
+	return res;
 }
 
 #endif
