@@ -332,6 +332,9 @@ ESD_CORE_EXPORT uint8_t Esd_CoDl_SetupFont(Esd_FontInfo *fontInfo)
 	EVE_HalContext *phost = Esd_GetHost();
 	eve_assert(phost);
 
+	if (!fontInfo)
+		return ESD_BITMAPHANDLE_INVALID;
+
 	uint32_t handle = fontInfo->BitmapHandle;
 	if (fontInfo->Type == ESD_FONT_ROM)
 	{

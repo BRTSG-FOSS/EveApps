@@ -180,6 +180,12 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 	EVE_HalContext *phost = Esd_GetHost();
 	Esd_GpuAlloc *ga = Esd_GAlloc;
 
+	if (!EVE_Hal_supportVideo(phost))
+	{
+		eve_assert_ex(false, "Esd_CoWidget_PlayBgVideo is not available on the current graphics platform\n");
+		return false;
+	}
+
 	if (phost->CmdFault)
 		return false;
 
@@ -313,9 +319,16 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 
 bool Esd_CoWidget_PlayVideoFile(const char *filename, uint32_t options)
 {
+#ifdef EVE_SUPPORT_VIDEO
 	Esd_Context *ec = Esd_CurrentContext;
 	EVE_HalContext *phost = Esd_GetHost();
 	Esd_GpuAlloc *ga = &ec->GpuAlloc;
+
+	if (!EVE_Hal_supportVideo(phost))
+	{
+		eve_assert_ex(false, "Esd_CoWidget_PlayVideoFile is not available on the current graphics platform\n");
+		return false;
+	}
 
 	if (phost->CmdFault)
 		return false;
@@ -344,6 +357,7 @@ bool Esd_CoWidget_PlayVideoFile(const char *filename, uint32_t options)
 	EVE_MediaFifo_close(phost);
 
 	return res;
+#endif
 }
 
 /* end of file */

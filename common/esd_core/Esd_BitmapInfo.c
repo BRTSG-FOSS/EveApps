@@ -45,6 +45,12 @@ static bool Esd_LoadVideoFrameFromFile(uint32_t *imageFormat, uint32_t dst, cons
 	if (phost->CmdFault)
 		return false;
 
+	if (!EVE_Hal_supportVideo(phost))
+	{
+		eve_assert_ex(false, "Esd_LoadVideoFrameFromFile is not available on the current graphics platform\n");
+		return false;
+	}
+
 	/* Allocate RAM_G space for FIFO and completion pointer */
 	uint32_t fifoSize = 16 * 1024; /* TODO: What's an ideal FIFO size? */
 	Esd_GpuHandle fifoHandle = Esd_GpuAlloc_Alloc(Esd_GAlloc, fifoSize + 4, 0);
