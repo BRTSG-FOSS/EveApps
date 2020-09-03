@@ -82,6 +82,22 @@ typedef struct
 
 } Esd_Context;
 
+#if defined(EVE_FLASH_AVAILABLE) && (defined(EVE_MULTI_TARGET) || (defined(BT8XXEMU_PLATFORM) && !defined(ESD_SIMULATION)))
+#define ESD_FLASH_FILES
+#endif
+
+#ifdef ESD_FLASH_FILES
+#define ESD_FLASH_BT815 (EVE3 - EVE3)
+#define ESD_FLASH_BT816 (EVE3 - EVE3)
+#if (EVE_SUPPORT_CHIPID >= EVE_BT817)
+#define ESD_FLASH_BT817 (EVE4 - EVE3)
+#define ESD_FLASH_BT818 (EVE4 - EVE3)
+#define ESD_FLASH_NB 2
+#else
+#define ESD_FLASH_NB 1
+#endif
+#endif
+
 /// Parameters for initializing an ESD context
 typedef struct
 {
@@ -93,8 +109,10 @@ typedef struct
 	Esd_Callback End;
 	void *UserContext;
 
+#ifdef ESD_FLASH_FILES
 	/* Flash file path */
-	eve_tchar_t FlashFilePath[260];
+	eve_tchar_t FlashFilePaths[ESD_FLASH_NB][260];
+#endif
 
 } Esd_Parameters;
 

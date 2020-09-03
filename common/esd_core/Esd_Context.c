@@ -87,10 +87,18 @@ ESD_CORE_EXPORT void Esd_SetCurrent(Esd_Context *ec)
 ESD_CORE_EXPORT void Esd_Defaults(Esd_Parameters *ep)
 {
 	memset(ep, 0, sizeof(Esd_Parameters));
+#ifdef ESD_FLASH_FILES
 #ifdef _WIN32
-	wcscpy_s(ep->FlashFilePath, _countof(ep->FlashFilePath), L"__Flash.bin");
+	wcscpy_s(ep->FlashFilePaths[ESD_FLASH_BT815], _countof(ep->FlashFilePaths[ESD_FLASH_BT815]), L"__Flash.bin");
+#if (EVE_SUPPORT_CHIPID >= EVE_BT817)
+	wcscpy_s(ep->FlashFilePaths[ESD_FLASH_BT817], _countof(ep->FlashFilePaths[ESD_FLASH_BT817]), L"__Flash.bin");
+#endif
 #else
-	strcpy(ep->FlashFilePath, "__Flash.bin");
+	strcpy(ep->FlashFilePaths[ESD_FLASH_BT815], _countof(ep->FlashFilePaths[ESD_FLASH_BT815]), "__Flash.bin");
+#if (EVE_SUPPORT_CHIPID >= EVE_BT817)
+	strcpy(ep->FlashFilePaths[ESD_FLASH_BT817], _countof(ep->FlashFilePaths[ESD_FLASH_BT817]), "__Flash.bin");
+#endif
+#endif
 #endif
 }
 
@@ -192,11 +200,11 @@ ESD_CORE_EXPORT bool Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 			emulatorParams.Flags &= (~BT8XXEMU_EmulatorEnableDynamicDegrade & ~BT8XXEMU_EmulatorEnableRegPwmDutyEmulation);
 			// TODO: emulatorParams.Log
 			params.EmulatorParameters = &emulatorParams;
-#if defined(EVE_FLASH_AVAILABLE)
-			if (chipId >= EVE_BT815 && ep->FlashFilePath[0])
+#ifdef ESD_FLASH_FILES
+			if (chipId >= EVE_BT815 && ep->FlashFilePaths[EVE_gen(chipId)][0])
 			{
 				BT8XXEMU_Flash_defaults(BT8XXEMU_VERSION_API, &flashParams);
-				wcscpy_s(flashParams.DataFilePath, _countof(flashParams.DataFilePath), ep->FlashFilePath);
+				wcscpy_s(flashParams.DataFilePath, _countof(flashParams.DataFilePath), ep->FlashFilePaths[EVE_gen(chipId)]);
 
 #ifdef EVE_FLASH_FIRMWARE
 				Esd_SetFlashFirmware__ESD(EVE_FLASH_FIRMWARE);
@@ -209,9 +217,9 @@ ESD_CORE_EXPORT bool Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 #pragma warning(push)
 #pragma warning(disable : 4996)
 #ifdef _WIN32
-				FILE *f = _wfopen(ep->FlashFilePath, L"rb");
+				FILE *f = _wfopen(ep->FlashFilePaths[EVE_gen(chipId)], L"rb");
 #else
-				FILE *f = fopen(ep->FlashFilePath, "rb");
+				FILE *f = fopen(ep->FlashFilePaths[EVE_gen(chipId)], "rb");
 #endif
 #pragma warning(pop)
 				if (f)
