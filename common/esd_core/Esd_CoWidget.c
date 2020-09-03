@@ -235,6 +235,25 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 	EVE_Cmd_waitFlush(phost);
 	uint32_t dl0 = EVE_Hal_rd32(phost, REG_CMD_DL);
 #endif
+
+	uint16_t bkpCmdDl;
+	uint32_t bkpDl[10];
+
+	if (EVE_CHIPID < EVE_BT815)
+	{
+		if (EVE_Cmd_waitFlush(phost))
+		{
+			/* Save */
+			bkpCmdDl = EVE_Hal_rd16(phost, REG_CMD_DL);
+			for (int i = 0; i < 10; ++i)
+				bkpDl[i] = EVE_Hal_rd32(phost, RAM_DL + 4 * i);
+		}
+		else
+		{
+			bkpCmdDl = 0;
+		}
+	}
+
 	EVE_CoCmd_videoStart(phost);
 	EVE_CoCmd_videoFrame(phost, addr, ptr);
 	bool res = EVE_Util_loadMediaFile(phost, info->File, &transfered);
@@ -263,6 +282,18 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 			EVE_Util_forceFault(phost, "ESD Core: CMD_VIDEOSTART and CMD_VIDEOFRAME aborted");
 		}
 	}
+
+	if (EVE_CHIPID < EVE_BT815)
+	{
+		if (bkpCmdDl && EVE_Cmd_waitFlush(phost))
+		{
+			/* Restore */
+			EVE_Hal_wr16(phost, REG_CMD_DL, bkpCmdDl);
+			for (int i = 0; i < 10; ++i)
+				EVE_Hal_wr32(phost, RAM_DL + 4 * i, bkpDl[i]);
+		}
+	}
+
 #if defined(_DEBUG) && 1 // DEBUG WORKAROUND CMD_VIDEOFRAME
 	EVE_Cmd_waitFlush(phost);
 	uint32_t dl1 = EVE_Hal_rd32(phost, REG_CMD_DL);
@@ -270,6 +301,7 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 	regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
 	eve_assert(regDlSwap == 0);
 #endif
+
 	return res;
 #else
 	return false;
