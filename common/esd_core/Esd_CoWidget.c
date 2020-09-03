@@ -117,6 +117,9 @@ static void Esd_CoWidget_LoadBgVideoFrame()
 			return;
 		}
 #if _DEBUG
+		uint32_t lastCmdA = EVE_Hal_rd32(phost, RAM_CMD + ((EVE_Cmd_wp(phost) - 12) & EVE_CMD_FIFO_MASK));
+		uint32_t lastCmdB = EVE_Hal_rd32(phost, RAM_CMD + ((EVE_Cmd_wp(phost) - 8) & EVE_CMD_FIFO_MASK));
+		uint32_t lastCmdC = EVE_Hal_rd32(phost, RAM_CMD + ((EVE_Cmd_wp(phost) - 4) & EVE_CMD_FIFO_MASK));
 		regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
 		eve_assert(regDlSwap == 0);
 #endif
