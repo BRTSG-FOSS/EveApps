@@ -329,11 +329,7 @@ bool Esd_CoWidget_PlayVideoFile(const char *filename, uint32_t options)
 	uint32_t fifoAddr = RAM_G_SIZE - fifoSize;
 
 	EVE_MediaFifo_set(phost, fifoAddr, fifoSize);
-	EVE_CoCmd_playVideo(phost, options | OPT_MEDIAFIFO /*| OPT_FULLSCREEN*/);
-
-	//uint32_t transfered = 0;
-	//bool res = EVE_Util_loadMediaFile(phost, filename, &transfered);
-	//EVE_Util_closeFile(phost);
+	EVE_CoCmd_playVideo(phost, options | OPT_MEDIAFIFO);
 
 	bool res = EVE_Util_loadMediaFile(phost, filename, NULL);
 

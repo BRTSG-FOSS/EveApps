@@ -393,6 +393,12 @@ ESD_CORE_EXPORT void Esd_Render(Esd_Context *ec)
 		Esd_EndLogo();
 	}
 
+	if (ec->HalContext.CmdFault)
+	{
+		/* Don't process render if update faulted */
+		return;
+	}
+
 	// Process all coprocessor commands
 	ec->LoopState = ESD_LOOPSTATE_RENDER;
 #if defined(_DEBUG) && 1 // DEBUG WORKAROUND CMD_VIDEOFRAME
