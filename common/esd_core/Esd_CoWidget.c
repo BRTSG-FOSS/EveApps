@@ -37,6 +37,7 @@ void Esd_CoWidget_PopupSpinner()
 
 void Esd_CoWidget_StopBgVideo()
 {
+#ifdef EVE_SUPPORT_VIDEO
 	Esd_Context *ec = Esd_CurrentContext;
 
 	if (ec->BgVideoInfo)
@@ -52,10 +53,12 @@ void Esd_CoWidget_StopBgVideo()
 		Esd_GpuAlloc_Free(ga, ec->MediaFifoHandle);
 		ec->MediaFifoHandle = GA_HANDLE_INVALID;
 	}
+#endif
 }
 
 static void Esd_CoWidget_LoadBgVideoFrame()
 {
+#ifdef EVE_SUPPORT_VIDEO
 	Esd_Context *ec = Esd_CurrentContext;
 	EVE_HalContext *phost = Esd_GetHost();
 	Esd_GpuAlloc *ga = Esd_GAlloc;
@@ -112,6 +115,7 @@ static void Esd_CoWidget_LoadBgVideoFrame()
 			Esd_CoWidget_StopBgVideo();
 		}
 	}
+#endif
 }
 
 void Esd_CoWidget_Render()
@@ -125,6 +129,7 @@ Only one video can play in the background at a time.
 Background play will be interrupted when any other video is started, and cannot be resumed. */
 bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 {
+#ifdef EVE_SUPPORT_VIDEO
 	Esd_CoWidget_StopBgVideo();
 
 	/* TODO: Flash BgVideo */
@@ -207,6 +212,7 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 		}
 		return false;
 	}
+#endif
 }
 
 /* end of file */

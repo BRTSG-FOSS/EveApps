@@ -62,10 +62,15 @@ typedef struct
 	void *DeferredFree;
 
 	Esd_HandleState HandleState;
-	Esd_BitmapInfo *BgVideoInfo;
-	uint32_t BgVideoTransfered;
 
-	Esd_GpuHandle MediaFifoHandle;
+#ifdef EVE_SUPPORT_VIDEO
+	Esd_BitmapInfo *BgVideoInfo; //< Currently playing background video
+	uint32_t BgVideoTransfered;
+#endif
+
+#ifdef EVE_SUPPORT_MEDIAFIFO
+	Esd_GpuHandle MediaFifoHandle; //< Media fifo used for background video playback
+#endif
 
 	/* Callbacks called by Esd_Loop */
 	Esd_Callback Start;

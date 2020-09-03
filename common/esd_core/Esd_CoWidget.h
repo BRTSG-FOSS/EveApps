@@ -51,6 +51,9 @@ ESD_FUNCTION(Esd_CoWidget_PlayBgVideo, Type = bool, Attributes = ESD_CORE_EXPORT
 ESD_PARAMETER(video, Type = Esd_BitmapCell)
 ESD_CORE_EXPORT bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video);
 
+ESD_FUNCTION(Esd_CoWidget_StopBgVideo, Type = void, Attributes = ESD_CORE_EXPORT, Category = EsdUtilities, Include = "Esd_Core.h")
+ESD_CORE_EXPORT void Esd_CoWidget_StopBgVideo();
+
 #endif /* #ifndef ESD_COWIDGET__H */
 
 /* end of file */
