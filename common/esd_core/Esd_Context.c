@@ -395,7 +395,7 @@ ESD_CORE_EXPORT void Esd_Render(Esd_Context *ec)
 
 	// Process all coprocessor commands
 	ec->LoopState = ESD_LOOPSTATE_RENDER;
-#if 1 /* Safety check */
+#if defined(_DEBUG) && 1 // DEBUG WORKAROUND CMD_VIDEOFRAME
 	eve_assert(EVE_Hal_rd8(phost, REG_DLSWAP) == 0);
 	EVE_Hal_startTransfer(phost, EVE_TRANSFER_WRITE, RAM_DL);
 	EVE_Hal_transfer32(phost, CLEAR_COLOR_RGB(0x40, 0x00, 0x20));
@@ -405,7 +405,7 @@ ESD_CORE_EXPORT void Esd_Render(Esd_Context *ec)
 #endif
 	EVE_CoCmd_dlStart(phost);
 	Esd_CoWidget_Render();
-#if 1 /* Safety check */
+#if defined(_DEBUG) && 1 // DEBUG WORKAROUND CMD_VIDEOFRAME
 	uint8_t regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
 	eve_assert(regDlSwap == 0);
 	uint32_t testDl[32];

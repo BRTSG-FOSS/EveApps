@@ -96,7 +96,7 @@ static void Esd_CoWidget_LoadBgVideoFrame()
 
 		/* Load the next frame */
 		uint32_t ptr = fifoAddr + phost->MediaFifoSize;
-#if _DEBUG
+#if defined(_DEBUG) && 1 // DEBUG DEBUG WORKAROUND CMD_VIDEOFRAME
 		uint8_t regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
 		eve_assert(regDlSwap == 0);
 		eve_assert(addr < RAM_G_SIZE);
@@ -104,6 +104,10 @@ static void Esd_CoWidget_LoadBgVideoFrame()
 		EVE_Cmd_waitFlush(phost);
 		uint32_t dl0 = EVE_Hal_rd32(phost, REG_CMD_DL);
 #endif
+		// if (EVE_CHIPID >= EVE_BT815 && EVE_CHIPID <= EVE_BT816)
+		// 	EVE_Hal_wr32(phost, 3182934, OPT_NODL); // WORKAROUND CMD_VIDEOFRAME
+		// else if (EVE_CHIPID >= EVE_BT817 && EVE_CHIPID <= EVE_BT818)
+		// 	EVE_Hal_wr32(phost, 3182920, OPT_NODL); // WORKAROUND CMD_VIDEOFRAME
 		EVE_CoCmd_videoFrame(phost, addr, ptr);
 		bool loadRes = EVE_Util_loadMediaFile(phost, NULL, &ec->BgVideoTransfered);
 		if (!loadRes)
@@ -118,7 +122,7 @@ static void Esd_CoWidget_LoadBgVideoFrame()
 			}
 			return;
 		}
-#if _DEBUG
+#if defined(_DEBUG) && 1 // DEBUG WORKAROUND CMD_VIDEOFRAME
 		uint32_t lastCmdA = EVE_Hal_rd32(phost, RAM_CMD + ((EVE_Cmd_wp(phost) - 12) & EVE_CMD_FIFO_MASK));
 		uint32_t lastCmdB = EVE_Hal_rd32(phost, RAM_CMD + ((EVE_Cmd_wp(phost) - 8) & EVE_CMD_FIFO_MASK));
 		uint32_t lastCmdC = EVE_Hal_rd32(phost, RAM_CMD + ((EVE_Cmd_wp(phost) - 4) & EVE_CMD_FIFO_MASK));
@@ -223,7 +227,7 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 	/* Load the first video frame */
 	uint32_t transfered = 0;
 	uint32_t ptr = fifoAddr + fifoSize;
-#if _DEBUG
+#if defined(_DEBUG) && 1 // DEBUG WORKAROUND CMD_VIDEOFRAME
 	uint8_t regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
 	eve_assert(regDlSwap == 0);
 	eve_assert(addr < RAM_G_SIZE);
@@ -259,7 +263,7 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 			EVE_Util_forceFault(phost, "ESD Core: CMD_VIDEOSTART and CMD_VIDEOFRAME aborted");
 		}
 	}
-#if _DEBUG
+#if defined(_DEBUG) && 1 // DEBUG WORKAROUND CMD_VIDEOFRAME
 	EVE_Cmd_waitFlush(phost);
 	uint32_t dl1 = EVE_Hal_rd32(phost, REG_CMD_DL);
 	eve_assert(dl0 == dl1);
