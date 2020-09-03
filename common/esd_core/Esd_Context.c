@@ -395,12 +395,24 @@ ESD_CORE_EXPORT void Esd_Render(Esd_Context *ec)
 
 	// Process all coprocessor commands
 	ec->LoopState = ESD_LOOPSTATE_RENDER;
-
+#if 1 /* Safety check */
+	eve_assert(EVE_Hal_rd8(phost, REG_DLSWAP) == 0);
+	EVE_Hal_startTransfer(phost, EVE_TRANSFER_WRITE, RAM_DL);
+	EVE_Hal_transfer32(phost, CLEAR_COLOR_RGB(0x40, 0x00, 0x20));
+	EVE_Hal_transfer32(phost, CLEAR(1, 1, 1));
+	EVE_Hal_transfer32(phost, DISPLAY());
+	EVE_Hal_endTransfer(phost);
+#endif
 	EVE_CoCmd_dlStart(phost);
+	Esd_CoWidget_Render();
+#if 1 /* Safety check */
+	uint8_t regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
+	eve_assert(regDlSwap == 0);
+	eve_assert(EVE_Hal_rd32(phost, RAM_DL) == CLEAR_COLOR_RGB(0x40, 0x00, 0x20));
+#endif
 	EVE_CoDl_clearColorRgb_ex(phost, ec->ClearColor); // Set CLEAR_COLOR_RGB from user var
 	EVE_CoDl_clearTag(phost, 255); // Always default to 255, so no touch = 0, touch non-tag = 255
 	EVE_CoDl_clear(phost, true, true, true);
-	Esd_CoWidget_Render();
 	if (ec->Render)
 		ec->Render(ec->UserContext);
 
@@ -451,6 +463,8 @@ ESD_CORE_EXPORT bool Esd_WaitSwap(Esd_Context *ec)
 
 		return false;
 	}
+
+	while (EVE_Hal_rd8(phost, REG_DLSWAP) != 0); // TODO: Handle wait abort
 
 	return true;
 }

@@ -96,8 +96,15 @@ static void Esd_CoWidget_LoadBgVideoFrame()
 
 		/* Load the next frame */
 		uint32_t ptr = fifoAddr + phost->MediaFifoSize;
+#if _DEBUG
+		uint8_t regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
+		eve_assert(regDlSwap == 0);
+		eve_assert(addr < RAM_G_SIZE);
+		eve_assert(ptr < RAM_G_SIZE);
+#endif
 		EVE_CoCmd_videoFrame(phost, addr, ptr);
-		if (!EVE_Util_loadMediaFile(phost, NULL, &ec->BgVideoTransfered))
+		bool loadRes = EVE_Util_loadMediaFile(phost, NULL, &ec->BgVideoTransfered);
+		if (!loadRes)
 		{
 			/* Video frame failed, stop the video. */
 			eve_printf_debug("Video frame failed, stopping background video\n");
@@ -109,6 +116,10 @@ static void Esd_CoWidget_LoadBgVideoFrame()
 			}
 			return;
 		}
+#if _DEBUG
+		regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
+		eve_assert(regDlSwap == 0);
+#endif
 
 		uint32_t moreFrames = EVE_Hal_rd32(phost, ptr);
 		if (!moreFrames)
@@ -204,6 +215,12 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 	/* Load the first video frame */
 	uint32_t transfered = 0;
 	uint32_t ptr = fifoAddr + fifoSize;
+#if _DEBUG
+	uint8_t regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
+	eve_assert(regDlSwap == 0);
+	eve_assert(addr < RAM_G_SIZE);
+	eve_assert(ptr < RAM_G_SIZE);
+#endif
 	EVE_CoCmd_videoStart(phost);
 	EVE_CoCmd_videoFrame(phost, addr, ptr);
 	if (EVE_Util_loadMediaFile(phost, info->File, &transfered))
@@ -212,6 +229,10 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 		ec->BgVideoInfo = info;
 		ec->BgVideoTransfered = transfered;
 		ec->MediaFifoHandle = fifoHandle;
+#if _DEBUG
+		regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
+		eve_assert(regDlSwap == 0);
+#endif
 		return true;
 	}
 	else
@@ -230,6 +251,10 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 			eve_printf_debug("Coprocessor did not complete command, force fault\n");
 			EVE_Util_forceFault(phost, "ESD Core: CMD_VIDEOSTART and CMD_VIDEOFRAME aborted");
 		}
+#if _DEBUG
+		regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
+		eve_assert(regDlSwap == 0);
+#endif
 		return false;
 	}
 #endif
