@@ -56,7 +56,7 @@ ESD_CORE_EXPORT Esd_GpuAlloc *Esd_GAlloc = NULL; // Pointer to current s_GAlloc
 void Esd_CheckTypeSizes();
 #endif
 
-void Esd_CoWidget_Update();
+void Esd_CoWidget_Render();
 
 // When not in the simulation, use the Esd_Main__Start etc symbols
 // as exported by the single Application logic document included
@@ -152,6 +152,7 @@ ESD_CORE_EXPORT bool Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 	ec->Idle = ep->Idle;
 	ec->End = ep->End;
 	ec->UserContext = ep->UserContext;
+	ec->MediaFifoHandle = GA_HANDLE_INVALID;
 	Esd_SetCurrent(ec);
 
 #ifdef ESD_SIMULATION
@@ -365,7 +366,6 @@ ESD_CORE_EXPORT void Esd_Update(Esd_Context *ec)
 	ec->Millis = ms;
 	Esd_GpuAlloc_Update(Esd_GAlloc); // Run GC
 	Esd_TouchTag_Update(NULL); // Update touch
-	Esd_CoWidget_Update();
 	if (ec->Update)
 		ec->Update(ec->UserContext);
 	// Esd_Timer_UpdateGlobal(); // TODO
@@ -400,6 +400,7 @@ ESD_CORE_EXPORT void Esd_Render(Esd_Context *ec)
 	EVE_CoDl_clearColorRgb_ex(phost, ec->ClearColor); // Set CLEAR_COLOR_RGB from user var
 	EVE_CoDl_clearTag(phost, 255); // Always default to 255, so no touch = 0, touch non-tag = 255
 	EVE_CoDl_clear(phost, true, true, true);
+	Esd_CoWidget_Render();
 	if (ec->Render)
 		ec->Render(ec->UserContext);
 

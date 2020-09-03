@@ -62,6 +62,10 @@ typedef struct
 	void *DeferredFree;
 
 	Esd_HandleState HandleState;
+	Esd_BitmapInfo *BgVideoInfo;
+	uint32_t BgVideoTransfered;
+
+	Esd_GpuHandle MediaFifoHandle;
 
 	/* Callbacks called by Esd_Loop */
 	Esd_Callback Start;

@@ -48,8 +48,8 @@ Video only, not applicable to bitmap cell animation.
 Only one video can play in the background at a time. 
 Background play will be interrupted when any other video is started, and cannot be resumed. */
 ESD_FUNCTION(Esd_CoWidget_PlayBgVideo, Type = bool, Attributes = ESD_CORE_EXPORT, Category = EsdUtilities, Include = "Esd_Core.h")
-ESD_PARAMETER(info, Type = Esd_BitmapInfo *)
-ESD_CORE_EXPORT bool Esd_CoWidget_PlayBgVideo(Esd_BitmapInfo *info);
+ESD_PARAMETER(video, Type = Esd_BitmapCell)
+ESD_CORE_EXPORT bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video);
 
 #endif /* #ifndef ESD_COWIDGET__H */
 

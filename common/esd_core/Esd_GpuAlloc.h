@@ -36,6 +36,9 @@ Either allocation option does not guarantee that memory will remain persistently
 // Low priority flag is set when the allocation may be discarded when low on RAM (not yet implemented).
 #define GA_LOW_FLAG 4
 
+// Fixed address flag is used to specify that the allocation cannot be moved during defragmentation (not yet implemented).
+#define GA_FIXED_FLAG 8
+
 // Address which is returned when the allocation is invalid (~0).
 #define GA_INVALID ~0UL
 
@@ -48,6 +51,9 @@ typedef struct
 	uint32_t Seq : 24;
 
 } Esd_GpuHandle;
+
+#define GA_HANDLE_INIT { MAX_NUM_ALLOCATIONS, 0 }
+#define GA_HANDLE_INVALID (Esd_GpuHandle)GA_HANDLE_INIT
 
 // Internal information about a gpu memory allocation handle
 typedef struct

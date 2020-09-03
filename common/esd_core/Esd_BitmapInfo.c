@@ -80,7 +80,7 @@ static bool Esd_LoadVideoFrameFromFlash(uint32_t *imageFormat, uint32_t dst, uin
 {
 	EVE_HalContext *phost = Esd_GetHost();
 
-	/* Allocate RAM_G space for ompletion pointer */
+	/* Allocate RAM_G space for completion pointer */
 	Esd_GpuHandle ptrHandle = Esd_GpuAlloc_Alloc(Esd_GAlloc, 4, 0);
 	uint32_t ptr = Esd_GpuAlloc_Get(Esd_GAlloc, ptrHandle);
 	if (ptr == GA_INVALID)
