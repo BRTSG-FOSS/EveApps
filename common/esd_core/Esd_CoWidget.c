@@ -239,13 +239,14 @@ bool Esd_CoWidget_PlayVideoFile(const char *filename, uint32_t options)
 {
 	Esd_Context *ec = Esd_CurrentContext;
 	EVE_HalContext *phost = Esd_GetHost();
-	Esd_GpuAlloc *ga = Esd_GAlloc;
+	Esd_GpuAlloc *ga = &ec->GpuAlloc;
 
 	if (phost->CmdFault)
 		return false;
 
 	/* Trash all memory */
 	Esd_GpuAlloc_Reset(ga);
+	Esd_BitmapHandle_Reset(&ec->HandleState);
 
 	/* FIFO at end of RAM_G */
 	uint32_t fifoSize = 16 * 1024; /* TODO: What's an ideal FIFO size? */
