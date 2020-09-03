@@ -61,6 +61,34 @@ static bool Esd_LoadVideoFrameFromFile(uint32_t *imageFormat, uint32_t dst, cons
 		return false;
 	}
 
+#if defined(_DEBUG) && 1 // DEBUG DEBUG WORKAROUND CMD_VIDEOFRAME
+	uint8_t regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
+	eve_assert(regDlSwap == 0);
+	EVE_Cmd_waitFlush(phost);
+	uint32_t dl0 = EVE_Hal_rd32(phost, REG_CMD_DL);
+	uint32_t testDl0[40];
+	for (int i = 0; i < 40; ++i)
+		testDl0[i] = EVE_Hal_rd32(phost, RAM_DL + 4 * i);
+#endif
+
+	uint16_t bkpCmdDl;
+	uint32_t bkpDl[10];
+
+	if (EVE_CHIPID < EVE_BT815)
+	{
+		if (EVE_Cmd_waitFlush(phost))
+		{
+			/* Save */
+			bkpCmdDl = EVE_Hal_rd16(phost, REG_CMD_DL);
+			for (int i = 0; i < 10; ++i)
+				bkpDl[i] = EVE_Hal_rd32(phost, RAM_DL + 4 * i);
+		}
+		else
+		{
+			bkpCmdDl = 0;
+		}
+	}
+
 	/* Load the first video frame */
 	uint32_t transfered = 0;
 	uint32_t ptr = fifoAddr + fifoSize;
@@ -68,6 +96,33 @@ static bool Esd_LoadVideoFrameFromFile(uint32_t *imageFormat, uint32_t dst, cons
 	EVE_CoCmd_videoFrame(phost, dst, ptr);
 	bool res = EVE_Util_loadMediaFile(phost, file, &transfered);
 	EVE_Util_closeFile(phost);
+
+	if (EVE_CHIPID < EVE_BT815)
+	{
+		if (bkpCmdDl && EVE_Cmd_waitFlush(phost))
+		{
+			/* Restore */
+			EVE_Hal_wr16(phost, REG_CMD_DL, bkpCmdDl);
+			for (int i = 0; i < 10; ++i)
+				EVE_Hal_wr32(phost, RAM_DL + 4 * i, bkpDl[i]);
+		}
+	}
+
+	// EVE_DL_STATE.Handle = 0x3F;
+
+#if defined(_DEBUG) && 1 // DEBUG WORKAROUND CMD_VIDEOFRAME
+	uint32_t lastCmdA = EVE_Hal_rd32(phost, RAM_CMD + ((EVE_Cmd_wp(phost) - 12) & EVE_CMD_FIFO_MASK));
+	uint32_t lastCmdB = EVE_Hal_rd32(phost, RAM_CMD + ((EVE_Cmd_wp(phost) - 8) & EVE_CMD_FIFO_MASK));
+	uint32_t lastCmdC = EVE_Hal_rd32(phost, RAM_CMD + ((EVE_Cmd_wp(phost) - 4) & EVE_CMD_FIFO_MASK));
+	EVE_Cmd_waitFlush(phost);
+	uint32_t dl1 = EVE_Hal_rd32(phost, REG_CMD_DL);
+	uint32_t testDl1[40];
+	for (int i = 0; i < 40; ++i)
+		testDl1[i] = EVE_Hal_rd32(phost, RAM_DL + 4 * i);
+	eve_assert(dl0 == dl1);
+	regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
+	eve_assert(regDlSwap == 0);
+#endif
 
 	/* Release */
 	EVE_MediaFifo_close(phost);

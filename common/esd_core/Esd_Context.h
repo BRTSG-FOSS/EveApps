@@ -102,11 +102,7 @@ extern ESD_CORE_EXPORT Esd_Context *Esd_CurrentContext; //< Pointer to current E
 extern ESD_CORE_EXPORT EVE_HalContext *Esd_Host; //< Pointer to current EVE hal context
 extern ESD_CORE_EXPORT Esd_GpuAlloc *Esd_GAlloc; //< Pointer to current allocator
 
-#if (EVE_SUPPORT_CHIPID >= EVE_FT810)
-#define ESD_CO_SCRATCH_HANDLE (EVE_CHIPID >= EVE_FT810 ? Esd_Host->CoScratchHandle : 15)
-#else
-#define ESD_CO_SCRATCH_HANDLE (15)
-#endif
+#define ESD_CO_SCRATCH_HANDLE EVE_CO_SCRATCH_HANDLE
 
 ESD_CORE_EXPORT void Esd_SetCurrent(Esd_Context *ec);
 

@@ -105,9 +105,9 @@ static void Esd_CoWidget_LoadBgVideoFrame()
 		uint32_t dl0 = EVE_Hal_rd32(phost, REG_CMD_DL);
 #endif
 		// if (EVE_CHIPID >= EVE_BT815 && EVE_CHIPID <= EVE_BT816)
-		// 	EVE_Hal_wr32(phost, 3182934, OPT_NODL); // WORKAROUND CMD_VIDEOFRAME
+		// 	EVE_Hal_wr32(phost, 3182934, OPT_NODL); // TEST WORKAROUND CMD_VIDEOFRAME
 		// else if (EVE_CHIPID >= EVE_BT817 && EVE_CHIPID <= EVE_BT818)
-		// 	EVE_Hal_wr32(phost, 3182920, OPT_NODL); // WORKAROUND CMD_VIDEOFRAME
+		// 	EVE_Hal_wr32(phost, 3182920, OPT_NODL); // TEST WORKAROUND CMD_VIDEOFRAME
 		EVE_CoCmd_videoFrame(phost, addr, ptr);
 		bool loadRes = EVE_Util_loadMediaFile(phost, NULL, &ec->BgVideoTransfered);
 		if (!loadRes)
@@ -272,7 +272,7 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 #endif
 	return res;
 #else
-return false;
+	return false;
 #endif
 }
 
