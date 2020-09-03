@@ -63,9 +63,16 @@ static void Esd_CoWidget_LoadBgVideoFrame()
 	EVE_HalContext *phost = Esd_GetHost();
 	Esd_GpuAlloc *ga = Esd_GAlloc;
 
+	if (phost->CmdFault)
+	{
+		eve_printf_debug("Coprocessor fault, stopping background video\n");
+		Esd_CoWidget_StopBgVideo();
+		return;
+	}
+
 	if (ec->BgVideoInfo)
 	{
-		eve_assert(phost->LoadFileRemaining);
+		// eve_assert(phost->LoadFileRemaining);
 
 		/* Get media FIFO address */
 		uint32_t fifoAddr = Esd_GpuAlloc_Get(ga, ec->MediaFifoHandle);
@@ -95,6 +102,11 @@ static void Esd_CoWidget_LoadBgVideoFrame()
 			/* Video frame failed, stop the video. */
 			eve_printf_debug("Video frame failed, stopping background video\n");
 			Esd_CoWidget_StopBgVideo();
+			if (EVE_Cmd_rp(phost) != EVE_Cmd_wp(phost))
+			{
+				eve_printf_debug("Coprocessor did not complete command, force fault\n");
+				EVE_Util_forceFault(phost, "ESD Core: CMD_VIDEOFRAME aborted");
+			}
 			return;
 		}
 
@@ -144,6 +156,9 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 	Esd_Context *ec = Esd_CurrentContext;
 	EVE_HalContext *phost = Esd_GetHost();
 	Esd_GpuAlloc *ga = Esd_GAlloc;
+
+	if (phost->CmdFault)
+		return false;
 
 	/* Allocate RAM_G space for the bitmap, if necessary */
 	uint32_t addr = Esd_GpuAlloc_Get(ga, info->GpuHandle);
@@ -210,9 +225,52 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 			Esd_GpuAlloc_Free(ga, info->GpuHandle);
 			info->GpuHandle = GA_HANDLE_INVALID;
 		}
+		if (EVE_Cmd_rp(phost) != EVE_Cmd_wp(phost))
+		{
+			eve_printf_debug("Coprocessor did not complete command, force fault\n");
+			EVE_Util_forceFault(phost, "ESD Core: CMD_VIDEOSTART and CMD_VIDEOFRAME aborted");
+		}
 		return false;
 	}
 #endif
+}
+
+bool Esd_CoWidget_PlayVideoFile(const char *filename, uint32_t options)
+{
+	Esd_Context *ec = Esd_CurrentContext;
+	EVE_HalContext *phost = Esd_GetHost();
+	Esd_GpuAlloc *ga = Esd_GAlloc;
+
+	if (phost->CmdFault)
+		return false;
+
+	/* Trash all memory */
+	Esd_GpuAlloc_Reset(ga);
+
+	/* FIFO at end of RAM_G */
+	uint32_t fifoSize = 16 * 1024; /* TODO: What's an ideal FIFO size? */
+	uint32_t fifoAddr = RAM_G_SIZE - fifoSize;
+
+	EVE_MediaFifo_set(phost, fifoAddr, fifoSize);
+	EVE_CoCmd_playVideo(phost, options | OPT_MEDIAFIFO /*| OPT_FULLSCREEN*/);
+
+	//uint32_t transfered = 0;
+	//bool res = EVE_Util_loadMediaFile(phost, filename, &transfered);
+	//EVE_Util_closeFile(phost);
+
+	bool res = EVE_Util_loadMediaFile(phost, filename, NULL);
+
+	if (EVE_Cmd_rp(phost) != EVE_Cmd_wp(phost))
+	{
+		eve_printf_debug("Coprocessor did not complete command, force fault\n");
+		EVE_Util_forceFault(phost, "ESD Core: CMD_PLAYVIDEO aborted");
+		res = false;
+	}
+
+	EVE_CoCmd_stop(phost);
+	EVE_MediaFifo_close(phost);
+
+	return res;
 }
 
 /* end of file */

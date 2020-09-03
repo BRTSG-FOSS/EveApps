@@ -42,6 +42,8 @@ static bool Esd_LoadFromFlash(uint32_t *imageFormat, bool deflate, uint32_t dst,
 static bool Esd_LoadVideoFrameFromFile(uint32_t *imageFormat, uint32_t dst, const char *file)
 {
 	EVE_HalContext *phost = Esd_GetHost();
+	if (phost->CmdFault)
+		return false;
 
 	/* Allocate RAM_G space for FIFO and completion pointer */
 	uint32_t fifoSize = 16 * 1024; /* TODO: What's an ideal FIFO size? */
@@ -71,6 +73,13 @@ static bool Esd_LoadVideoFrameFromFile(uint32_t *imageFormat, uint32_t dst, cons
 	EVE_MediaFifo_close(phost);
 	Esd_GpuAlloc_Free(Esd_GAlloc, fifoHandle);
 	*imageFormat = RGB565;
+
+	if (EVE_Cmd_rp(phost) != EVE_Cmd_wp(phost))
+	{
+		eve_printf_debug("Coprocessor did not complete command, force fault\n");
+		EVE_Util_forceFault(phost, "ESD Core: CMD_VIDEOSTART and CMD_VIDEOFRAME aborted");
+	}
+
 	return res;
 }
 

@@ -440,14 +440,14 @@ ESD_CORE_EXPORT bool Esd_WaitSwap(Esd_Context *ec)
 	/* Reset the coprocessor in case of fault */
 	if (ec->HalContext.CmdFault)
 	{
-		/* TODO: Create a utility function that resets the coprocessor and all cached state */
-		EVE_Util_resetCoprocessor(&ec->HalContext);
-		Esd_BitmapHandle_Reset(&ec->HandleState);
-
 #if _DEBUG
 		/* Show error for a while */
 		EVE_sleep(1000);
 #endif
+
+		/* TODO: Create a utility function that resets the coprocessor and all cached state */
+		EVE_Util_resetCoprocessor(&ec->HalContext);
+		Esd_BitmapHandle_Reset(&ec->HandleState);
 
 		return false;
 	}

@@ -54,6 +54,11 @@ ESD_CORE_EXPORT bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video);
 ESD_FUNCTION(Esd_CoWidget_StopBgVideo, Type = void, Attributes = ESD_CORE_EXPORT, Category = EsdUtilities, Include = "Esd_Core.h")
 ESD_CORE_EXPORT void Esd_CoWidget_StopBgVideo();
 
+ESD_FUNCTION(Esd_CoWidget_PlayVideoFile, Type = bool, Attributes = ESD_CORE_EXPORT, Category = EsdUtilities, Include = "Esd_Core.h")
+ESD_PARAMETER(filename, Type = const char *)
+ESD_PARAMETER(options, Type = uint32_t, Default = 0)
+ESD_CORE_EXPORT bool Esd_CoWidget_PlayVideoFile(const char *, uint32_t options);
+
 #endif /* #ifndef ESD_COWIDGET__H */
 
 /* end of file */
