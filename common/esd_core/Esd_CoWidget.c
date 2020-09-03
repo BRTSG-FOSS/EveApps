@@ -76,7 +76,7 @@ static void Esd_CoWidget_LoadBgVideoFrame()
 
 		/* Get media FIFO address */
 		uint32_t fifoAddr = Esd_GpuAlloc_Get(ga, ec->MediaFifoHandle);
-		if (fifoAddr == GA_INVALID)
+		if (fifoAddr == GA_INVALID || fifoAddr != phost->MediaFifoAddress)
 		{
 			/* Media fifo memory allocation lost, stop the video. */
 			eve_printf_debug("Media FIFO lost, stopping background video\n");
