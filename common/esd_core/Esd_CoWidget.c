@@ -245,8 +245,11 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 		{
 			/* Save */
 			bkpCmdDl = EVE_Hal_rd16(phost, REG_CMD_DL);
-			for (int i = 0; i < 10; ++i)
-				bkpDl[i] = EVE_Hal_rd32(phost, RAM_DL + 4 * i);
+			if (bkpCmdDl)
+			{
+				for (int i = 0; i < 10; ++i)
+					bkpDl[i] = EVE_Hal_rd32(phost, RAM_DL + 4 * i);
+			}
 		}
 		else
 		{
