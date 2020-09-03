@@ -101,6 +101,8 @@ static void Esd_CoWidget_LoadBgVideoFrame()
 		eve_assert(regDlSwap == 0);
 		eve_assert(addr < RAM_G_SIZE);
 		eve_assert(ptr < RAM_G_SIZE);
+		EVE_Cmd_waitFlush(phost);
+		uint32_t dl0 = EVE_Hal_rd32(phost, REG_CMD_DL);
 #endif
 		EVE_CoCmd_videoFrame(phost, addr, ptr);
 		bool loadRes = EVE_Util_loadMediaFile(phost, NULL, &ec->BgVideoTransfered);
@@ -120,6 +122,9 @@ static void Esd_CoWidget_LoadBgVideoFrame()
 		uint32_t lastCmdA = EVE_Hal_rd32(phost, RAM_CMD + ((EVE_Cmd_wp(phost) - 12) & EVE_CMD_FIFO_MASK));
 		uint32_t lastCmdB = EVE_Hal_rd32(phost, RAM_CMD + ((EVE_Cmd_wp(phost) - 8) & EVE_CMD_FIFO_MASK));
 		uint32_t lastCmdC = EVE_Hal_rd32(phost, RAM_CMD + ((EVE_Cmd_wp(phost) - 4) & EVE_CMD_FIFO_MASK));
+		EVE_Cmd_waitFlush(phost);
+		uint32_t dl1 = EVE_Hal_rd32(phost, REG_CMD_DL);
+		eve_assert(dl0 == dl1);
 		regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
 		eve_assert(regDlSwap == 0);
 #endif
@@ -223,19 +228,18 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 	eve_assert(regDlSwap == 0);
 	eve_assert(addr < RAM_G_SIZE);
 	eve_assert(ptr < RAM_G_SIZE);
+	EVE_Cmd_waitFlush(phost);
+	uint32_t dl0 = EVE_Hal_rd32(phost, REG_CMD_DL);
 #endif
 	EVE_CoCmd_videoStart(phost);
 	EVE_CoCmd_videoFrame(phost, addr, ptr);
-	if (EVE_Util_loadMediaFile(phost, info->File, &transfered))
+	bool res = EVE_Util_loadMediaFile(phost, info->File, &transfered);
+	if (res)
 	{
 		/* Store */
 		ec->BgVideoInfo = info;
 		ec->BgVideoTransfered = transfered;
 		ec->MediaFifoHandle = fifoHandle;
-#if _DEBUG
-		regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
-		eve_assert(regDlSwap == 0);
-#endif
 		return true;
 	}
 	else
@@ -254,12 +258,17 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 			eve_printf_debug("Coprocessor did not complete command, force fault\n");
 			EVE_Util_forceFault(phost, "ESD Core: CMD_VIDEOSTART and CMD_VIDEOFRAME aborted");
 		}
-#if _DEBUG
-		regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
-		eve_assert(regDlSwap == 0);
-#endif
-		return false;
 	}
+#if _DEBUG
+	EVE_Cmd_waitFlush(phost);
+	uint32_t dl1 = EVE_Hal_rd32(phost, REG_CMD_DL);
+	eve_assert(dl0 == dl1);
+	regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
+	eve_assert(regDlSwap == 0);
+#endif
+	return res;
+#else
+return false;
 #endif
 }
 
