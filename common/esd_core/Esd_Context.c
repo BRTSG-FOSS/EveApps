@@ -195,7 +195,7 @@ ESD_CORE_EXPORT bool Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 
 #ifdef ESD_FLASH_FILES
 		if (chipId >= EVE_BT815)
-			EVE_Util_selectFlashFileInteractive(flashPath, &updateFlash, &updateFlashFirmware, &params, ep->FlashFilePaths[EVE_gen(chipId)]);
+			EVE_Util_selectFlashFileInteractive(flashPath, &updateFlash, &updateFlashFirmware, &params, ep->FlashFilePaths[EVE_gen(chipId) - EVE3]);
 #endif
 
 #ifdef BT8XXEMU_PLATFORM

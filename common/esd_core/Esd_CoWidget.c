@@ -63,6 +63,9 @@ static void Esd_CoWidget_LoadBgVideoFrame()
 	EVE_HalContext *phost = Esd_GetHost();
 	Esd_GpuAlloc *ga = Esd_GAlloc;
 
+	if (!ec->BgVideoInfo)
+		return;
+
 	if (phost->CmdFault)
 	{
 		eve_printf_debug("Coprocessor fault, stopping background video\n");
@@ -70,7 +73,44 @@ static void Esd_CoWidget_LoadBgVideoFrame()
 		return;
 	}
 
-	if (ec->BgVideoInfo)
+	if (ec->BgVideoInfo->Flash)
+	{
+#ifdef EVE_FLASH_AVAILABLE
+		/* Get completion pointer address */
+		uint32_t ptr = Esd_GpuAlloc_Get(ga, ec->MediaFifoHandle);
+		if (ptr == GA_INVALID)
+		{
+			/* Completion pointer lost, stop the video. */
+			eve_printf_debug("Completion pointer lost, stopping background video\n");
+			Esd_CoWidget_StopBgVideo();
+			return;
+		}
+
+		/* Check previous completion */
+		uint32_t moreFrames = EVE_Hal_rd32(phost, ptr);
+		if (!moreFrames)
+		{
+			/* End of video, stop */
+			eve_printf_debug("Background video completed\n");
+			Esd_CoWidget_StopBgVideo();
+			return;
+		}
+
+		/* Get destination bitmap address */
+		uint32_t addr = Esd_GpuAlloc_Get(ga, ec->BgVideoInfo->GpuHandle);
+		if (addr == GA_INVALID)
+		{
+			/* Bitmap memory allocation lost, stop the video. */
+			eve_printf_debug("Bitmap lost, stopping background video\n");
+			Esd_CoWidget_StopBgVideo();
+			return;
+		}
+
+		/* Video frame, no need to wait for completion pointer */
+		EVE_CoCmd_videoFrame(phost, addr, ptr);
+#endif
+	}
+	else
 	{
 		// eve_assert(phost->LoadFileRemaining);
 
@@ -141,6 +181,7 @@ static void Esd_CoWidget_LoadBgVideoFrame()
 			/* TODO: Add a media fifo lock flag to avoid background video interruption? */
 			eve_printf_debug("Background video completed\n");
 			Esd_CoWidget_StopBgVideo();
+			return;
 		}
 
 		if (!phost->LoadFileRemaining)
@@ -148,6 +189,7 @@ static void Esd_CoWidget_LoadBgVideoFrame()
 			/* End of video, stop */
 			eve_printf_debug("Background video completed, end of file\n");
 			Esd_CoWidget_StopBgVideo();
+			return;
 		}
 	}
 #endif
@@ -166,8 +208,6 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 {
 #ifdef EVE_SUPPORT_VIDEO
 	Esd_CoWidget_StopBgVideo();
-
-	/* TODO: Flash BgVideo */
 
 	Esd_BitmapInfo *info = video.Info;
 	if (!info->Video && info->Format != AVI)
@@ -203,36 +243,60 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 		}
 	}
 
-	/* Allocate RAM_G space for FIFO and completion pointer */
-	uint32_t fifoSize = 16 * 1024; /* TODO: What's an ideal FIFO size? */
-	Esd_GpuHandle fifoHandle = Esd_GpuAlloc_Alloc(Esd_GAlloc, fifoSize + 4, GA_FIXED_FLAG);
-	uint32_t fifoAddr = Esd_GpuAlloc_Get(Esd_GAlloc, fifoHandle);
-	if (fifoAddr == GA_INVALID)
+	uint32_t ptr;
+	uint32_t fifoAddr;
+	Esd_GpuHandle fifoHandle;
+	if (info->Flash)
 	{
-		eve_printf_debug("Not enough RAM_G available to allocate media FIFO for video\n");
-		if (addrAllocated)
+#ifdef EVE_FLASH_AVAILABLE
+		if (!EVE_Hal_supportFlash(phost))
 		{
-			Esd_GpuAlloc_Free(ga, info->GpuHandle);
-			info->GpuHandle = GA_HANDLE_INVALID;
+			eve_printf_debug("This device doesn't support flash for video playback\n");
+			return false;
 		}
-		return false;
-	}
+#endif
 
-	/* Setup media FIFO */
-	if (!EVE_MediaFifo_set(phost, fifoAddr, fifoSize))
-	{
-		if (addrAllocated)
+		/* Allocate RAM_G space for completion pointer */
+		fifoHandle = Esd_GpuAlloc_Alloc(Esd_GAlloc, 4, 0);
+		ptr = Esd_GpuAlloc_Get(Esd_GAlloc, fifoHandle);
+		if (ptr == GA_INVALID)
 		{
-			Esd_GpuAlloc_Free(ga, info->GpuHandle);
-			info->GpuHandle = GA_HANDLE_INVALID;
+			return false;
 		}
-		Esd_GpuAlloc_Free(Esd_GAlloc, fifoHandle);
-		return false;
+	}
+	else
+	{
+		/* Allocate RAM_G space for FIFO and completion pointer */
+		uint32_t fifoSize = 16 * 1024; /* TODO: What's an ideal FIFO size? */
+		fifoHandle = Esd_GpuAlloc_Alloc(Esd_GAlloc, fifoSize + 4, GA_FIXED_FLAG);
+		fifoAddr = Esd_GpuAlloc_Get(Esd_GAlloc, fifoHandle);
+		if (fifoAddr == GA_INVALID)
+		{
+			eve_printf_debug("Not enough RAM_G available to allocate media FIFO for video\n");
+			if (addrAllocated)
+			{
+				Esd_GpuAlloc_Free(ga, info->GpuHandle);
+				info->GpuHandle = GA_HANDLE_INVALID;
+			}
+			return false;
+		}
+
+		/* Setup media FIFO */
+		if (!EVE_MediaFifo_set(phost, fifoAddr, fifoSize))
+		{
+			if (addrAllocated)
+			{
+				Esd_GpuAlloc_Free(ga, info->GpuHandle);
+				info->GpuHandle = GA_HANDLE_INVALID;
+			}
+			Esd_GpuAlloc_Free(Esd_GAlloc, fifoHandle);
+			return false;
+		}
+
+		ptr = fifoAddr + fifoSize;
 	}
 
 	/* Load the first video frame */
-	uint32_t transfered = 0;
-	uint32_t ptr = fifoAddr + fifoSize;
 #if defined(_DEBUG) && 1 // DEBUG WORKAROUND CMD_VIDEOFRAME
 	uint8_t regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
 	eve_assert(regDlSwap == 0);
@@ -263,21 +327,38 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 		}
 	}
 
-	EVE_CoCmd_videoStart(phost);
-	EVE_CoCmd_videoFrame(phost, addr, ptr);
-	bool res = EVE_Util_loadMediaFile(phost, info->File, &transfered);
+	bool res;
+	if (info->Flash)
+	{
+#ifdef EVE_FLASH_AVAILABLE
+		EVE_CoCmd_flashSource(phost, info->FlashAddress);
+		EVE_CoCmd_videoStartF(phost);
+		EVE_CoCmd_videoFrame(phost, addr, ptr);
+		res = EVE_Cmd_waitFlush(phost);
+#endif
+	}
+	else
+	{
+		uint32_t transfered = 0;
+		EVE_CoCmd_videoStart(phost);
+		EVE_CoCmd_videoFrame(phost, addr, ptr);
+		res = EVE_Util_loadMediaFile(phost, info->File, &transfered);
+		if (res)
+			ec->BgVideoTransfered = transfered;
+		else
+			EVE_Util_closeFile(phost);
+	}
+
 	if (res)
 	{
 		/* Store */
 		ec->BgVideoInfo = info;
-		ec->BgVideoTransfered = transfered;
 		ec->MediaFifoHandle = fifoHandle;
 		return true;
 	}
 	else
 	{
 		/* Release */
-		EVE_Util_closeFile(phost);
 		EVE_MediaFifo_close(phost);
 		Esd_GpuAlloc_Free(Esd_GAlloc, fifoHandle);
 		if (addrAllocated)
