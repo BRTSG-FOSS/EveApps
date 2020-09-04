@@ -475,7 +475,6 @@ bool Esd_CoWidget_PlayVideoFlash(uint32_t addr, uint16_t options)
 	// EVE_MediaFifo_set(phost, fifoAddr, fifoSize);
 	EVE_CoCmd_flashSource(phost, addr);
 	EVE_CoCmd_playVideo(phost, (options | OPT_FLASH) & ~(OPT_MEDIAFIFO | OPT_OVERLAY | OPT_NODL));
-	EVE_CoCmd_nop(phost); /* NOTE: CMD_PLAYVIDEO completes immediately, but the following command does not, use to detect! */
 
 	bool res = EVE_Cmd_waitFlush(phost);
 
