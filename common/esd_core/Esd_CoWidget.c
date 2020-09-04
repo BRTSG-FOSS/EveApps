@@ -317,7 +317,7 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 #endif
 }
 
-bool Esd_CoWidget_PlayVideoFile(const char *filename, uint32_t options)
+bool Esd_CoWidget_PlayVideoFile(const char *filename, uint16_t options)
 {
 #ifdef EVE_SUPPORT_VIDEO
 	Esd_Context *ec = Esd_CurrentContext;
@@ -342,7 +342,7 @@ bool Esd_CoWidget_PlayVideoFile(const char *filename, uint32_t options)
 	uint32_t fifoAddr = RAM_G_SIZE - fifoSize;
 
 	EVE_MediaFifo_set(phost, fifoAddr, fifoSize);
-	EVE_CoCmd_playVideo(phost, options | OPT_MEDIAFIFO);
+	EVE_CoCmd_playVideo(phost, (options | OPT_MEDIAFIFO) & ~(OPT_FLASH | OPT_OVERLAY | OPT_NODL));
 
 	bool res = EVE_Util_loadMediaFile(phost, filename, NULL);
 
