@@ -140,10 +140,6 @@ Esd_Callback Esd_HookRender__ESD(void *ec, Esd_Callback render);
 Esd_Callback Esd_HookIdle__ESD(void *ec, Esd_Callback idle);
 Esd_Callback Esd_HookEnd__ESD(void *ec, Esd_Callback end);
 
-#if defined(EVE_FLASH_AVAILABLE)
-extern void Esd_SetFlashFirmware__ESD(const eve_tchar_t *path);
-#endif
-
 #endif
 
 ESD_CORE_EXPORT bool Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
@@ -182,61 +178,31 @@ ESD_CORE_EXPORT bool Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 
 	{
 		EVE_HalParameters params;
-#if defined(BT8XXEMU_PLATFORM) || defined(EVE_MULTI_TARGET)
+#if defined(BT8XXEMU_PLATFORM)
 		BT8XXEMU_EmulatorParameters emulatorParams;
 		BT8XXEMU_FlashParameters flashParams;
+#endif
+#ifdef ESD_FLASH_FILES
+		bool updateFlash = false;
+		bool updateFlashFirmware = false;
+		eve_tchar_t flashPath[260];
+		flashPath[0] = '\0';
 #endif
 
 		EVE_Hal_defaultsEx(&params, deviceIdx);
 		params.UserContext = ec;
 		params.CbCmdWait = cbCmdWait;
 
-#if defined(BT8XXEMU_PLATFORM)
-#if defined(EVE_MULTI_TARGET)
-		if (params.Host == EVE_HOST_BT8XXEMU)
-#endif
-		{
-			BT8XXEMU_defaults(BT8XXEMU_VERSION_API, &emulatorParams, chipId);
-			emulatorParams.Flags &= (~BT8XXEMU_EmulatorEnableDynamicDegrade & ~BT8XXEMU_EmulatorEnableRegPwmDutyEmulation);
-			// TODO: emulatorParams.Log
-			params.EmulatorParameters = &emulatorParams;
 #ifdef ESD_FLASH_FILES
-			if (chipId >= EVE_BT815 && ep->FlashFilePaths[EVE_gen(chipId)][0])
-			{
-				BT8XXEMU_Flash_defaults(BT8XXEMU_VERSION_API, &flashParams);
-				wcscpy_s(flashParams.DataFilePath, _countof(flashParams.DataFilePath), ep->FlashFilePaths[EVE_gen(chipId)]);
-
-#ifdef EVE_FLASH_FIRMWARE
-				Esd_SetFlashFirmware__ESD(EVE_FLASH_FIRMWARE);
+		if (chipId >= EVE_BT815)
+			EVE_Util_selectFlashFileInteractive(flashPath, &updateFlash, &updateFlashFirmware, &params, ep->FlashFilePaths[EVE_gen(chipId)]);
 #endif
 
-#ifdef EVE_FLASH_SIZE
-				flashParams.SizeBytes = EVE_FLASH_SIZE * 1024 * 1024;
-#else
-				flashParams.SizeBytes = 2 * 1024 * 1024;
-#pragma warning(push)
-#pragma warning(disable : 4996)
-#ifdef _WIN32
-				FILE *f = _wfopen(ep->FlashFilePaths[EVE_gen(chipId)], L"rb");
-#else
-				FILE *f = fopen(ep->FlashFilePaths[EVE_gen(chipId)], "rb");
+#ifdef BT8XXEMU_PLATFORM
+		EVE_Util_emulatorDefaults(&params, &emulatorParams, chipId);
+#ifdef ESD_FLASH_FILES
+		EVE_Util_emulatorFlashDefaults(&params, &emulatorParams, &flashParams, flashPath);
 #endif
-#pragma warning(pop)
-				if (f)
-				{
-					fseek(f, 0, SEEK_END);
-					int64_t flashSize = ftell(f);
-					fclose(f);
-					while (flashParams.SizeBytes < flashSize)
-						flashParams.SizeBytes *= 2;
-				}
-#endif
-
-				// TODO: flashParams.Log
-				params.EmulatorFlashParameters = &flashParams;
-			}
-#endif
-		}
 #endif
 
 		if (!EVE_Hal_open(&ec->HalContext, &params))
