@@ -76,6 +76,12 @@ ESD_PARAMETER(filename, Type = const char *)
 ESD_PARAMETER(options, Type = Esd_Opt_PlayVideoEx, Default = OPT_FULLSCREEN | OPT_SOUND)
 ESD_CORE_EXPORT bool Esd_CoWidget_PlayVideoFile(const char *filename, uint16_t options);
 
+/* Play video fullscreen, returns when the video is done playing. No interactivity */
+ESD_FUNCTION(Esd_CoWidget_PlayVideoFlash, Type = bool, Attributes = ESD_CORE_EXPORT, Category = EsdUtilities, Include = "Esd_Core.h")
+ESD_PARAMETER(addr, Type = uint32_t)
+ESD_PARAMETER(options, Type = Esd_Opt_PlayVideoEx, Default = OPT_FULLSCREEN | OPT_SOUND)
+ESD_CORE_EXPORT bool Esd_CoWidget_PlayVideoFlash(uint32_t addr, uint16_t options);
+
 #endif /* #ifndef ESD_COWIDGET__H */
 
 /* end of file */

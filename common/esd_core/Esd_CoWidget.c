@@ -441,4 +441,57 @@ bool Esd_CoWidget_PlayVideoFile(const char *filename, uint16_t options)
 #endif
 }
 
+bool Esd_CoWidget_PlayVideoFlash(uint32_t addr, uint16_t options)
+{
+#ifdef EVE_SUPPORT_VIDEO
+#ifdef EVE_FLASH_AVAILABLE
+	Esd_Context *ec = Esd_CurrentContext;
+	EVE_HalContext *phost = Esd_GetHost();
+	Esd_GpuAlloc *ga = &ec->GpuAlloc;
+
+	if (!EVE_Hal_supportVideo(phost))
+	{
+		eve_assert_ex(false, "Esd_CoWidget_PlayVideoFlash is not available on the current graphics platform\n");
+		return false;
+	}
+
+	if (!EVE_Hal_supportFlash(phost))
+	{
+		eve_printf_debug("This device doesn't support flash for video playback\n");
+		return false;
+	}
+
+	if (phost->CmdFault)
+		return false;
+
+	/* Trash all memory */
+	Esd_GpuAlloc_Reset(ga);
+	Esd_BitmapHandle_Reset(&ec->HandleState);
+
+	/* FIFO at end of RAM_G */
+	uint32_t fifoSize = 16 * 1024; /* TODO: What's an ideal FIFO size? */
+	uint32_t fifoAddr = RAM_G_SIZE - fifoSize;
+
+	// EVE_MediaFifo_set(phost, fifoAddr, fifoSize);
+	EVE_CoCmd_flashSource(phost, addr);
+	EVE_CoCmd_playVideo(phost, (options | OPT_FLASH) & ~(OPT_MEDIAFIFO | OPT_OVERLAY | OPT_NODL));
+	EVE_CoCmd_nop(phost); /* NOTE: CMD_PLAYVIDEO completes immediately, but the following command does not, use to detect! */
+
+	bool res = EVE_Cmd_waitFlush(phost);
+
+	if (EVE_Cmd_rp(phost) != EVE_Cmd_wp(phost))
+	{
+		eve_printf_debug("Coprocessor did not complete command, force fault\n");
+		EVE_Util_forceFault(phost, "ESD Core: CMD_PLAYVIDEO aborted");
+		res = false;
+	}
+
+	EVE_CoCmd_stop(phost);
+	EVE_MediaFifo_close(phost);
+
+	return res;
+#endif
+#endif
+}
+
 /* end of file */
