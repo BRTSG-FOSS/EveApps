@@ -156,7 +156,10 @@ ESD_CORE_EXPORT bool Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 	ec->Idle = ep->Idle;
 	ec->End = ep->End;
 	ec->UserContext = ep->UserContext;
+
+#ifdef EVE_SUPPORT_MEDIAFIFO
 	ec->MediaFifoHandle = GA_HANDLE_INVALID;
+#endif
 	Esd_SetCurrent(ec);
 
 #ifdef ESD_SIMULATION
@@ -180,7 +183,9 @@ ESD_CORE_EXPORT bool Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 		EVE_HalParameters params;
 #if defined(BT8XXEMU_PLATFORM)
 		BT8XXEMU_EmulatorParameters emulatorParams;
+#if defined(EVE_FLASH_AVAILABLE)
 		BT8XXEMU_FlashParameters flashParams;
+#endif
 #endif
 #ifdef ESD_FLASH_FILES
 		bool updateFlash = false;
@@ -208,8 +213,10 @@ ESD_CORE_EXPORT bool Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 		if (!EVE_Hal_open(&ec->HalContext, &params))
 			return false;
 
+#ifdef ESD_FLASH_FILES
 		if (updateFlash && flashPath[0])
 			EVE_Util_uploadFlashFileInteractive(&ec->HalContext, flashPath, updateFlash);
+#endif
 	}
 
 	phost = &ec->HalContext;

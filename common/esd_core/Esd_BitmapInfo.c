@@ -233,10 +233,19 @@ ESD_CORE_EXPORT uint32_t Esd_LoadBitmap(Esd_BitmapInfo *bitmapInfo)
 			bool coLoad = bitmapInfo->CoLoad || bitmapInfo->Format == JPEG || bitmapInfo->Format == PNG || bitmapInfo->Format == AVI;
 			bitmapInfo->CoLoad = coLoad;
 
-#if defined(EVE_SUPPORT_VIDEO)
 			bool video = bitmapInfo->Video || bitmapInfo->Format == AVI;
 			bitmapInfo->Video = video;
+
+			if (video && !EVE_Hal_supportVideo(phost))
+			{
+#ifdef ESD_BITMAPINFO_DEBUG
+				eve_printf_debug_once("Video is not supported\n");
 #endif
+				/* Video not supported */
+				/* TODO: We *could* do a software AVI parse, and submit it as JPG */
+				Esd_GpuAlloc_Free(Esd_GAlloc, bitmapInfo->GpuHandle);
+				return GA_INVALID; 
+			}
 
 #ifdef ESD_BITMAPINFO_DEBUG
 			eve_printf_debug("Allocated space for bitmap\n");

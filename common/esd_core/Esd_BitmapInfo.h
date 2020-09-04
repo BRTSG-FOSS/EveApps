@@ -75,10 +75,8 @@ typedef struct Esd_BitmapInfo
 	// Load image using coprocessor (for JPEG and PNG)
 	bool CoLoad : 1;
 
-#if defined(EVE_SUPPORT_VIDEO)
 	// This is a video (for AVI)
 	bool Video : 1;
-#endif
 
 } Esd_BitmapInfo;
 

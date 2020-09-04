@@ -275,9 +275,11 @@ ESD_CORE_EXPORT uint8_t Esd_CoDl_SetupBitmap(Esd_BitmapInfo *bitmapInfo)
 		else if (format == PNG)
 			format = RGB565; // TODO: Support for other PNG formats
 
+#if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 		if (EVE_CHIPID >= EVE_FT810)
 			EVE_CoCmd_setBitmap(phost, addr, format, bitmapInfo->Width, bitmapInfo->Height); // TODO: What with stride?
 		else
+#endif
 			eve_assert_ex(false, "No support yet in ESD for bitmaps for FT800 target");
 
 #if (EVE_SUPPORT_CHIPID >= EVE_BT815)
@@ -341,6 +343,7 @@ ESD_CORE_EXPORT uint8_t Esd_CoDl_SetupFont(Esd_FontInfo *fontInfo)
 		// Get rom font
 		Esd_RomFontInfo *romFontInfo = (Esd_RomFontInfo *)(void *)fontInfo;
 		uint8_t font = romFontInfo->RomFont;
+#if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 		if (EVE_CHIPID >= EVE_FT810)
 		{
 			if (!(font >= ESD_ROMFONT_MIN && font < ESD_ROMFONT_MAX))
@@ -391,6 +394,7 @@ ESD_CORE_EXPORT uint8_t Esd_CoDl_SetupFont(Esd_FontInfo *fontInfo)
 			}
 		}
 		else
+#endif
 		{
 			romFontInfo->BitmapHandle = font;
 			return font;
@@ -444,10 +448,12 @@ ESD_CORE_EXPORT uint8_t Esd_CoDl_SetupFont(Esd_FontInfo *fontInfo)
 
 			// Set the font
 			fontInfo->BitmapHandle = handle;
+#if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 			if (EVE_CHIPID >= EVE_FT810)
 				EVE_CoCmd_setFont2(Esd_Host, handle, addr, fontInfo->FirstChar);
 			else
-				eve_assert_ex(false, "No support yet in ESD for custom fonts");
+#endif
+				eve_assert_ex(false, "No support yet in ESD for custom fonts for FT800 target");
 
 			eve_assert(handle < ESD_BITMAPHANDLE_CAP); // FIXME: Remove this, C6386 false positive
 			Esd_CurrentContext->HandleState.Resized[handle] = 0;

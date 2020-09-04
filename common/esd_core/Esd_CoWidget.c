@@ -335,6 +335,8 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 		EVE_CoCmd_videoStartF(phost);
 		EVE_CoCmd_videoFrame(phost, addr, ptr);
 		res = EVE_Cmd_waitFlush(phost);
+#else
+		res = false;
 #endif
 	}
 	else
@@ -394,6 +396,7 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 
 	return res;
 #else
+	eve_printf_debug("Video is not supported\n");
 	return false;
 #endif
 }
@@ -416,6 +419,7 @@ bool Esd_CoWidget_PlayVideoFile(const char *filename, uint16_t options)
 
 	/* Trash all memory */
 	Esd_GpuAlloc_Reset(ga);
+	Esd_GpuAlloc_Alloc(Esd_GAlloc, RAM_G_SIZE, GA_GC_FLAG); /* Block allocation */
 	Esd_BitmapHandle_Reset(&ec->HandleState);
 
 	/* FIFO at end of RAM_G */
@@ -438,13 +442,15 @@ bool Esd_CoWidget_PlayVideoFile(const char *filename, uint16_t options)
 	EVE_MediaFifo_close(phost);
 
 	return res;
+#else
+	eve_printf_debug("Video is not supported\n");
+	return false;
 #endif
 }
 
 bool Esd_CoWidget_PlayVideoFlash(uint32_t addr, uint16_t options)
 {
-#ifdef EVE_SUPPORT_VIDEO
-#ifdef EVE_FLASH_AVAILABLE
+#if defined(EVE_SUPPORT_VIDEO) && defined(EVE_FLASH_AVAILABLE)
 	Esd_Context *ec = Esd_CurrentContext;
 	EVE_HalContext *phost = Esd_GetHost();
 	Esd_GpuAlloc *ga = &ec->GpuAlloc;
@@ -466,6 +472,7 @@ bool Esd_CoWidget_PlayVideoFlash(uint32_t addr, uint16_t options)
 
 	/* Trash all memory */
 	Esd_GpuAlloc_Reset(ga);
+	Esd_GpuAlloc_Alloc(Esd_GAlloc, RAM_G_SIZE, GA_GC_FLAG); /* Block allocation */
 	Esd_BitmapHandle_Reset(&ec->HandleState);
 
 	/* FIFO at end of RAM_G */
@@ -489,7 +496,9 @@ bool Esd_CoWidget_PlayVideoFlash(uint32_t addr, uint16_t options)
 	EVE_MediaFifo_close(phost);
 
 	return res;
-#endif
+#else
+	eve_printf_debug("Video from flash storage is not supported\n");
+	return false;
 #endif
 }
 
