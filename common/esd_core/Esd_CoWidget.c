@@ -136,18 +136,6 @@ static void Esd_CoWidget_LoadBgVideoFrame()
 
 		/* Load the next frame */
 		uint32_t ptr = fifoAddr + phost->MediaFifoSize;
-#if defined(_DEBUG) && 1 // DEBUG DEBUG WORKAROUND CMD_VIDEOFRAME
-		uint8_t regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
-		eve_assert(regDlSwap == 0);
-		eve_assert(addr < RAM_G_SIZE);
-		eve_assert(ptr < RAM_G_SIZE);
-		EVE_Cmd_waitFlush(phost);
-		uint32_t dl0 = EVE_Hal_rd32(phost, REG_CMD_DL);
-#endif
-		// if (EVE_CHIPID >= EVE_BT815 && EVE_CHIPID <= EVE_BT816)
-		// 	EVE_Hal_wr32(phost, 3182934, OPT_NODL); // TEST WORKAROUND CMD_VIDEOFRAME
-		// else if (EVE_CHIPID >= EVE_BT817 && EVE_CHIPID <= EVE_BT818)
-		// 	EVE_Hal_wr32(phost, 3182920, OPT_NODL); // TEST WORKAROUND CMD_VIDEOFRAME
 		EVE_CoCmd_videoFrame(phost, addr, ptr);
 		bool loadRes = EVE_Util_loadMediaFile(phost, NULL, &ec->BgVideoTransfered);
 		if (!loadRes)
@@ -162,16 +150,6 @@ static void Esd_CoWidget_LoadBgVideoFrame()
 			}
 			return;
 		}
-#if defined(_DEBUG) && 1 // DEBUG WORKAROUND CMD_VIDEOFRAME
-		uint32_t lastCmdA = EVE_Hal_rd32(phost, RAM_CMD + ((EVE_Cmd_wp(phost) - 12) & EVE_CMD_FIFO_MASK));
-		uint32_t lastCmdB = EVE_Hal_rd32(phost, RAM_CMD + ((EVE_Cmd_wp(phost) - 8) & EVE_CMD_FIFO_MASK));
-		uint32_t lastCmdC = EVE_Hal_rd32(phost, RAM_CMD + ((EVE_Cmd_wp(phost) - 4) & EVE_CMD_FIFO_MASK));
-		EVE_Cmd_waitFlush(phost);
-		uint32_t dl1 = EVE_Hal_rd32(phost, REG_CMD_DL);
-		eve_assert(dl0 == dl1);
-		regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
-		eve_assert(regDlSwap == 0);
-#endif
 
 		uint32_t moreFrames = EVE_Hal_rd32(phost, ptr);
 		if (!moreFrames)
@@ -223,6 +201,12 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 	if (!EVE_Hal_supportVideo(phost))
 	{
 		eve_assert_ex(false, "Esd_CoWidget_PlayBgVideo is not available on the current graphics platform\n");
+		return false;
+	}
+
+	if (!info->Flash && !EVE_Util_sdCardReady(phost))
+	{
+		eve_printf_debug("SD card not ready\n");
 		return false;
 	}
 
@@ -414,6 +398,12 @@ bool Esd_CoWidget_PlayVideoFile(const char *filename, uint16_t options)
 		return false;
 	}
 
+	if (!EVE_Util_sdCardReady(phost))
+	{
+		eve_printf_debug("SD card not ready\n");
+		return false;
+	}
+
 	if (phost->CmdFault)
 		return false;
 
@@ -475,11 +465,7 @@ bool Esd_CoWidget_PlayVideoFlash(uint32_t addr, uint16_t options)
 	Esd_GpuAlloc_Alloc(Esd_GAlloc, RAM_G_SIZE, GA_GC_FLAG); /* Block allocation */
 	Esd_BitmapHandle_Reset(&ec->HandleState);
 
-	/* FIFO at end of RAM_G */
-	uint32_t fifoSize = 16 * 1024; /* TODO: What's an ideal FIFO size? */
-	uint32_t fifoAddr = RAM_G_SIZE - fifoSize;
-
-	// EVE_MediaFifo_set(phost, fifoAddr, fifoSize);
+	/* Play from flash */
 	EVE_CoCmd_flashSource(phost, addr);
 	EVE_CoCmd_playVideo(phost, (options | OPT_FLASH) & ~(OPT_MEDIAFIFO | OPT_OVERLAY | OPT_NODL));
 

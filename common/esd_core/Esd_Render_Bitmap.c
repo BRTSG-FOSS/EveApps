@@ -50,7 +50,6 @@ void Esd_CoDl_Bitmap_Vertex_PALETTED8(int16_t x, int16_t y, uint8_t handle, uint
 	EVE_HalContext *phost = Esd_GetHost();
 	if (EVE_CHIPID >= EVE_FT810)
 	{
-		EVE_HalContext *phost = Esd_GetHost();
 		EVE_CoDl_alphaFunc(phost, ALWAYS, 0);
 		EVE_CoCmd_dl(phost, BLEND_FUNC(ONE, ZERO));
 		EVE_CoCmd_dl(phost, COLOR_MASK(0, 0, 0, 1));

@@ -84,6 +84,11 @@ ESD_CORE_EXPORT uint32_t Esd_LoadFont(Esd_FontInfo *fontInfo)
 				fontInfo->BitmapHandle = ESD_BITMAPHANDLE_INVALID;
 				break;
 			}
+			default:
+			{
+				format = 0;
+				break;
+			}
 			}
 			if (!fontInfo->BaseLine)
 				fontInfo->BaseLine = fontInfo->FontHeight;

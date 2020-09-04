@@ -51,6 +51,12 @@ static bool Esd_LoadVideoFrameFromFile(uint32_t *imageFormat, uint32_t dst, cons
 		return false;
 	}
 
+	if (!EVE_Util_sdCardReady(phost))
+	{
+		eve_printf_debug("SD card not ready\n");
+		return false;
+	}
+
 	/* Allocate RAM_G space for FIFO and completion pointer */
 	uint32_t fifoSize = 16 * 1024; /* TODO: What's an ideal FIFO size? */
 	Esd_GpuHandle fifoHandle = Esd_GpuAlloc_Alloc(Esd_GAlloc, fifoSize + 4, 0);
@@ -66,16 +72,6 @@ static bool Esd_LoadVideoFrameFromFile(uint32_t *imageFormat, uint32_t dst, cons
 		Esd_GpuAlloc_Free(Esd_GAlloc, fifoHandle);
 		return false;
 	}
-
-#if defined(_DEBUG) && 1 // DEBUG DEBUG WORKAROUND CMD_VIDEOFRAME
-	uint8_t regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
-	eve_assert(regDlSwap == 0);
-	EVE_Cmd_waitFlush(phost);
-	uint32_t dl0 = EVE_Hal_rd32(phost, REG_CMD_DL);
-	uint32_t testDl0[40];
-	for (int i = 0; i < 40; ++i)
-		testDl0[i] = EVE_Hal_rd32(phost, RAM_DL + 4 * i);
-#endif
 
 	uint16_t bkpCmdDl;
 	uint32_t bkpDl[10];
@@ -116,22 +112,6 @@ static bool Esd_LoadVideoFrameFromFile(uint32_t *imageFormat, uint32_t dst, cons
 				EVE_Hal_wr32(phost, RAM_DL + 4 * i, bkpDl[i]);
 		}
 	}
-
-	// EVE_DL_STATE.Handle = 0x3F;
-
-#if defined(_DEBUG) && 1 // DEBUG WORKAROUND CMD_VIDEOFRAME
-	uint32_t lastCmdA = EVE_Hal_rd32(phost, RAM_CMD + ((EVE_Cmd_wp(phost) - 12) & EVE_CMD_FIFO_MASK));
-	uint32_t lastCmdB = EVE_Hal_rd32(phost, RAM_CMD + ((EVE_Cmd_wp(phost) - 8) & EVE_CMD_FIFO_MASK));
-	uint32_t lastCmdC = EVE_Hal_rd32(phost, RAM_CMD + ((EVE_Cmd_wp(phost) - 4) & EVE_CMD_FIFO_MASK));
-	EVE_Cmd_waitFlush(phost);
-	uint32_t dl1 = EVE_Hal_rd32(phost, REG_CMD_DL);
-	uint32_t testDl1[40];
-	for (int i = 0; i < 40; ++i)
-		testDl1[i] = EVE_Hal_rd32(phost, RAM_DL + 4 * i);
-	eve_assert(dl0 == dl1);
-	regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
-	eve_assert(regDlSwap == 0);
-#endif
 
 	/* Release */
 	EVE_MediaFifo_close(phost);

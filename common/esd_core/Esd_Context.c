@@ -398,9 +398,6 @@ ESD_CORE_EXPORT void Esd_Render(Esd_Context *ec)
 #if defined(_DEBUG) && 1 // DEBUG WORKAROUND CMD_VIDEOFRAME
 	uint8_t regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
 	eve_assert(regDlSwap == 0);
-	uint32_t testDl[32];
-	for (int i = 0; i < 32; ++i)
-		testDl[i] = EVE_Hal_rd32(phost, RAM_DL + 4 * i);
 	eve_assert(EVE_Hal_rd32(phost, RAM_DL) == CLEAR_COLOR_RGB(0x40, 0x00, 0x20));
 #endif
 	EVE_CoDl_clearColorRgb_ex(phost, ec->ClearColor); // Set CLEAR_COLOR_RGB from user var

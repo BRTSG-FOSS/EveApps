@@ -7,7 +7,6 @@
 #include "Esd_TouchTag.h"
 #include "Esd_Context.h"
 
-extern ESD_CORE_EXPORT EVE_HalContext *Esd_Host;
 extern ESD_CORE_EXPORT Esd_GpuAlloc *Esd_GAlloc;
 
 #if defined(EVE_FLASH_AVAILABLE)
@@ -42,7 +41,7 @@ ESD_CORE_EXPORT void Esd_AttachFlashFast()
 	while (!(flashStatus = EVE_Hal_rd32(phost, REG_FLASH_STATUS)))
 	{
 #ifndef NDEBUG
-		eve_printf_debug("Waiting for REG_FLASH_STATUS (%u)\n", flashStatus);
+		eve_printf_debug("Waiting for REG_FLASH_STATUS (%u)\n", (unsigned int)flashStatus);
 #endif
 		EVE_sleep(100);
 	}
@@ -86,7 +85,7 @@ ESD_CORE_EXPORT void Esd_AttachFlashFast()
 				eve_printf_debug("Failed full-speed flash test. Check board wiring\n");
 				break;
 			default:
-				eve_printf_debug("Unknown flash error (%u)\n", error);
+				eve_printf_debug("Unknown flash error (%u)\n", (unsigned int)error);
 			}
 		}
 #endif
