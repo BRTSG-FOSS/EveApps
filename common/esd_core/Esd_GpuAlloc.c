@@ -48,6 +48,7 @@ ESD_CORE_EXPORT void Esd_GpuAlloc_InsertFree(Esd_GpuAlloc *ga, uint32_t atidx, u
 	uint32_t idx;
 
 	eve_assert(ga->NbAllocEntries >= 1);
+	eve_assert(atidx < MAX_NUM_ALLOCATIONS);
 
 	// First move entries one step forward
 	for (idx = (ga->NbAllocEntries - 1); idx >= atidx; --idx)
