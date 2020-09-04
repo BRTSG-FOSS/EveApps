@@ -74,7 +74,7 @@ ESD_END()
 ESD_FUNCTION(Esd_CoWidget_PlayVideoFile, Type = bool, Attributes = ESD_CORE_EXPORT, Category = EsdUtilities, Include = "Esd_Core.h")
 ESD_PARAMETER(filename, Type = const char *)
 ESD_PARAMETER(options, Type = Esd_Opt_PlayVideoEx, Default = OPT_FULLSCREEN | OPT_SOUND)
-ESD_CORE_EXPORT bool Esd_CoWidget_PlayVideoFile(const char *, uint16_t options);
+ESD_CORE_EXPORT bool Esd_CoWidget_PlayVideoFile(const char *filename, uint16_t options);
 
 #endif /* #ifndef ESD_COWIDGET__H */
 
