@@ -64,9 +64,16 @@ ESD_IDENTIFIER(OPT_OVERLAY) /* BT815+ */
 ESD_IDENTIFIER(OPT_NODL) /* BT815+ */
 ESD_END()
 
+ESD_ENUM(Esd_Opt_PlayVideoEx, Type = uint16_t, Include = "Esd_Core.h", Flags)
+ESD_IDENTIFIER(OPT_FULLSCREEN)
+ESD_IDENTIFIER(OPT_NOTEAR)
+ESD_IDENTIFIER(OPT_SOUND)
+ESD_END()
+
+/* Play video fullscreen, returns when the video is done playing. No interactivity */
 ESD_FUNCTION(Esd_CoWidget_PlayVideoFile, Type = bool, Attributes = ESD_CORE_EXPORT, Category = EsdUtilities, Include = "Esd_Core.h")
 ESD_PARAMETER(filename, Type = const char *)
-ESD_PARAMETER(options, Type = Esd_Opt_PlayVideo, Default = 0)
+ESD_PARAMETER(options, Type = Esd_Opt_PlayVideoEx, Default = OPT_FULLSCREEN | OPT_SOUND)
 ESD_CORE_EXPORT bool Esd_CoWidget_PlayVideoFile(const char *, uint16_t options);
 
 #endif /* #ifndef ESD_COWIDGET__H */
