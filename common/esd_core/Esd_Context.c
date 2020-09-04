@@ -209,7 +209,7 @@ ESD_CORE_EXPORT bool Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 			return false;
 
 		if (updateFlash && flashPath[0])
-			EVE_Util_uploadFlashFileInteractive(phost, flashPath, updateFlash);
+			EVE_Util_uploadFlashFileInteractive(&ec->HalContext, flashPath, updateFlash);
 	}
 
 	phost = &ec->HalContext;
