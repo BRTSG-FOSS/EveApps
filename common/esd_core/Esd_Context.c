@@ -199,8 +199,8 @@ ESD_CORE_EXPORT bool Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 		params.CbCmdWait = cbCmdWait;
 
 #ifdef ESD_FLASH_FILES
-		if (chipId >= EVE_BT815)
-			EVE_Util_selectFlashFileInteractive(flashPath, &updateFlash, &updateFlashFirmware, &params, ep->FlashFilePaths[EVE_gen(chipId) - EVE3]);
+		if (chipId >= EVE_BT815 || (chipId <= 0 && ep->FlashFilePaths[EVE_gen(chipId) - EVE3][0]))
+			EVE_Util_selectFlashFileInteractive(flashPath, &updateFlash, &updateFlashFirmware, &params, ep->FlashFilePaths[(chipId > 0) ? (EVE_gen(chipId) - EVE3) : 0]); /* FIXME: EVE_Util_selectFlashFileInteractive needs to take all the options, as it detects chipId as well */
 #endif
 
 #ifdef BT8XXEMU_PLATFORM
@@ -215,7 +215,7 @@ ESD_CORE_EXPORT bool Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 
 #ifdef ESD_FLASH_FILES
 		if (updateFlash && flashPath[0])
-			EVE_Util_uploadFlashFileInteractive(&ec->HalContext, flashPath, updateFlash);
+			EVE_Util_uploadFlashFileInteractive(&ec->HalContext, flashPath, updateFlashFirmware);
 #endif
 	}
 
