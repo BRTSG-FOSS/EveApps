@@ -385,8 +385,8 @@ ESD_CORE_EXPORT void Esd_Render(Esd_Context *ec)
 
 	// Process all coprocessor commands
 	ec->LoopState = ESD_LOOPSTATE_RENDER;
-#if defined(_DEBUG) && 1 // DEBUG WORKAROUND CMD_VIDEOFRAME
-	eve_assert(EVE_Hal_rd8(phost, REG_DLSWAP) == 0);
+#if defined(_DEBUG)
+	// This will cause a dark red screen in case background video incorrectly swaps the display
 	EVE_Hal_startTransfer(phost, EVE_TRANSFER_WRITE, RAM_DL);
 	EVE_Hal_transfer32(phost, CLEAR_COLOR_RGB(0x40, 0x00, 0x20));
 	EVE_Hal_transfer32(phost, CLEAR(1, 1, 1));
@@ -395,11 +395,6 @@ ESD_CORE_EXPORT void Esd_Render(Esd_Context *ec)
 #endif
 	EVE_CoCmd_dlStart(phost);
 	Esd_CoWidget_Render();
-#if defined(_DEBUG) && 1 // DEBUG WORKAROUND CMD_VIDEOFRAME
-	uint8_t regDlSwap = EVE_Hal_rd8(phost, REG_DLSWAP);
-	eve_assert(regDlSwap == 0);
-	eve_assert(EVE_Hal_rd32(phost, RAM_DL) == CLEAR_COLOR_RGB(0x40, 0x00, 0x20));
-#endif
 	EVE_CoDl_clearColorRgb_ex(phost, ec->ClearColor); // Set CLEAR_COLOR_RGB from user var
 	EVE_CoDl_clearTag(phost, 255); // Always default to 255, so no touch = 0, touch non-tag = 255
 	EVE_CoDl_clear(phost, true, true, true);
