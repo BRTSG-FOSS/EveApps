@@ -16,15 +16,15 @@ typedef struct
 	//
 
 	// Called when the touch interaction is started on this tag.
-ESD_SIGNAL(Down)
+	ESD_SIGNAL(Down)
 	void (*Down)(void *context);
 
 	// Up is called when the touch ends, even if the touch ended outside the tag. One Up is guaranteed to be called for every Down.
-ESD_SIGNAL(Up)
+	ESD_SIGNAL(Up)
 	void (*Up)(void *context);
 
 	// Tap is called when both Down and Up events were called while on the tag.
-ESD_SIGNAL(Tap)
+	ESD_SIGNAL(Tap)
 	void (*Tap)(void *context);
 
 	//

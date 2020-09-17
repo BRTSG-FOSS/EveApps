@@ -52,8 +52,11 @@ typedef struct
 
 } Esd_GpuHandle;
 
-#define GA_HANDLE_INIT { MAX_NUM_ALLOCATIONS, 0 }
-#define GA_HANDLE_INVALID (Esd_GpuHandle)GA_HANDLE_INIT
+#define GA_HANDLE_INIT         \
+	{                          \
+		MAX_NUM_ALLOCATIONS, 0 \
+	}
+#define GA_HANDLE_INVALID (Esd_GpuHandle) GA_HANDLE_INIT
 
 // Internal information about a gpu memory allocation handle
 typedef struct
@@ -111,8 +114,8 @@ ESD_CORE_EXPORT uint32_t Esd_GpuAlloc_GetTotal(Esd_GpuAlloc *ga);
 ESD_CORE_EXPORT void Esd_GpuAlloc_Print(Esd_GpuAlloc *ga);
 #else
 #define ESD_GpuAlloc_Print(ga) \
-	do                            \
-	{                             \
+	do                         \
+	{                          \
 	} while (0)
 #endif
 

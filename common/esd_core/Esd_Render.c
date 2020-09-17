@@ -36,7 +36,7 @@ ESD_CORE_EXPORT Esd_Size16 Esd_Math_GetScaledSize(Esd_Size16 boundary, Esd_Size1
 		originalWider = originalRatio > boundaryRatio;
 		wantFit = scaling == ESD_SCALING_FIT;
 		if (originalWider ^ wantFit) // (boundary higher && want fill) || (original higher && want fit)
-			//                          (original wider && want fill)  || (boundary wider && want fit)
+		    //                          (original wider && want fill)  || (boundary wider && want fit)
 		{
 			// Scale to height
 			esd_int32_f16_t scale;
@@ -58,7 +58,7 @@ ESD_CORE_EXPORT Esd_Size16 Esd_Math_GetScaledSize(Esd_Size16 boundary, Esd_Size1
 			// Solution is worse, return existing solution
 			return boundary;
 		}
-		return res;    
+		return res;
 	}
 	case ESD_SCALING_STRETCH:
 		return boundary;

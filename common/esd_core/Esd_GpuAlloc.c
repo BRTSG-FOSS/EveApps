@@ -293,7 +293,7 @@ ESD_CORE_EXPORT void Esd_GpuAlloc_Print(Esd_GpuAlloc *ga)
 	for (idx = 0; idx < ga->NbAllocEntries; ++idx)
 	{
 		eve_printf_debug("%i: id: %i, addr: %li, len: %li, flags: %i\n",
-			(int)idx,
+		    (int)idx,
 		    (int)ga->AllocEntries[idx].Id,
 		    (long int)ga->AllocEntries[idx].Address,
 		    (long int)ga->AllocEntries[idx].Length,

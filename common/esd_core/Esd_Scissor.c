@@ -11,8 +11,8 @@ ESD_CORE_EXPORT Esd_Rect16 Esd_Scissor_Get()
 {
 	EVE_HalContext *phost = Esd_GetHost();
 
-	return (Esd_Rect16) { { { EVE_DL_STATE.ScissorX,
-		                      EVE_DL_STATE.ScissorY } },
+	return (Esd_Rect16){ { { EVE_DL_STATE.ScissorX,
+		                     EVE_DL_STATE.ScissorY } },
 		{ { EVE_DL_STATE.ScissorWidth,
 		    EVE_DL_STATE.ScissorHeight } } };
 }

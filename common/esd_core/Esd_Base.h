@@ -224,16 +224,16 @@ void LogError__ESD(const char *str);
 #define Esd_LogError(s) LogError__ESD(s)
 #else
 #define Esd_LogMessage(s) \
-	do                       \
-	{                        \
+	do                    \
+	{                     \
 	} while (0)
 #define Esd_LogWarning(s) \
-	do                       \
-	{                        \
+	do                    \
+	{                     \
 	} while (0)
 #define Esd_LogError(s) \
-	do                     \
-	{                      \
+	do                  \
+	{                   \
 	} while (0)
 #endif
 

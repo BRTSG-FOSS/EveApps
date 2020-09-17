@@ -107,9 +107,9 @@ ESD_CORE_EXPORT void Esd_Render_Bitmap(int16_t x, int16_t y, Esd_BitmapCell bitm
 				Esd_CoDl_Bitmap_Vertex_PALETTED8(x, y, additional, cell, paletteAddr);
 			EVE_CoDl_restoreContext(phost);
 		}
-		else 
+		else
 #endif
-		if (bitmapInfo->Format == DXT1 && ESD_BITMAPHANDLE_VALID(additional))
+		    if (bitmapInfo->Format == DXT1 && ESD_BITMAPHANDLE_VALID(additional))
 		{
 			Esd_CoDl_BitmapWidthHeight(additional, bitmapInfo->Width, bitmapInfo->Height);
 			EVE_CoDl_saveContext(phost);
@@ -166,9 +166,9 @@ ESD_CORE_EXPORT void Esd_Render_Bitmap_Scaled(int16_t x, int16_t y, Esd_BitmapCe
 			if (ESD_BITMAPHANDLE_VALID(additional))
 				Esd_CoDl_Bitmap_Vertex_PALETTED8(x, y, additional, cell, paletteAddr);
 		}
-		else 
+		else
 #endif
-			if (bitmapInfo->Format == DXT1 && ESD_BITMAPHANDLE_VALID(additional))
+		    if (bitmapInfo->Format == DXT1 && ESD_BITMAPHANDLE_VALID(additional))
 		{
 			Esd_CoDl_BitmapWidthHeight(additional, width, height);
 			Esd_CoDl_Bitmap_Vertex_DXT1(x, y, handle, additional, cell, bitmapInfo->Cells);
@@ -295,7 +295,7 @@ ESD_CORE_EXPORT void Esd_Render_Bitmap_Rotate(Esd_BitmapCell bitmapCell, esd_arg
 		int16_t y = globalRect.Y + y_center;
 
 		int16_t radius = bitmapInfo->Width / 2;
-		
+
 		//eve_printf_debug("x=%d,y=%d,x_center_x=%d,certer_y = %d, radius = %d\n",x,y,x_center,y_center,radius);
 
 		int tilenumber = 0;

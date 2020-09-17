@@ -449,7 +449,8 @@ ESD_CORE_EXPORT bool Esd_WaitSwap(Esd_Context *ec)
 		return false;
 	}
 
-	while (EVE_Hal_rd8(phost, REG_DLSWAP) != 0); // TODO: Handle wait abort
+	while (EVE_Hal_rd8(phost, REG_DLSWAP) != 0)
+		; // TODO: Handle wait abort
 
 	return true;
 }

@@ -224,7 +224,7 @@ ESD_CORE_EXPORT uint32_t Esd_LoadBitmap(Esd_BitmapInfo *bitmapInfo)
 				/* Video not supported */
 				/* TODO: We *could* do a software AVI parse, and submit it as JPG */
 				Esd_GpuAlloc_Free(Esd_GAlloc, bitmapInfo->GpuHandle);
-				return GA_INVALID; 
+				return GA_INVALID;
 			}
 
 #ifdef ESD_BITMAPINFO_DEBUG
@@ -234,20 +234,18 @@ ESD_CORE_EXPORT uint32_t Esd_LoadBitmap(Esd_BitmapInfo *bitmapInfo)
 			// Allocation space OK
 			if (
 #if defined(EVE_SUPPORT_VIDEO)
-				video ? 
-				(
+			    video ? (
 #ifdef EVE_FLASH_AVAILABLE
-					bitmapInfo->Flash ? !Esd_LoadVideoFrameFromFlash(&bitmapInfo->Format, addr, bitmapInfo->FlashAddress) :
+			                bitmapInfo->Flash ? !Esd_LoadVideoFrameFromFlash(&bitmapInfo->Format, addr, bitmapInfo->FlashAddress) :
 #endif
-					!Esd_LoadVideoFrameFromFile(&bitmapInfo->Format, addr, bitmapInfo->File)
-				) :
+			                                  !Esd_LoadVideoFrameFromFile(&bitmapInfo->Format, addr, bitmapInfo->File))
+			          :
 #endif
-				(
+			          (
 #ifdef EVE_FLASH_AVAILABLE
-			    bitmapInfo->Flash ? !Esd_LoadFromFlash(coLoad ? &bitmapInfo->Format : NULL, bitmapInfo->Compressed, addr, bitmapInfo->FlashAddress, bitmapInfo->Size) :
+			              bitmapInfo->Flash ? !Esd_LoadFromFlash(coLoad ? &bitmapInfo->Format : NULL, bitmapInfo->Compressed, addr, bitmapInfo->FlashAddress, bitmapInfo->Size) :
 #endif
-			                      !Esd_LoadFromFile(coLoad ? &bitmapInfo->Format : NULL, bitmapInfo->Compressed, addr, bitmapInfo->File)
-				))
+			                                !Esd_LoadFromFile(coLoad ? &bitmapInfo->Format : NULL, bitmapInfo->Compressed, addr, bitmapInfo->File)))
 			{
 #ifdef ESD_BITMAPINFO_DEBUG
 				eve_printf_debug(bitmapInfo->Flash ? "Failed to load bitmap from flash\n" : "Failed to load bitmap from file\n");
