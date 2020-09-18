@@ -266,7 +266,7 @@ ESD_CORE_EXPORT void Esd_Render_Bitmap_RotateScaled(Esd_BitmapCell bitmapCell, e
 		EVE_CoCmd_setMatrix(Esd_Host);
 		EVE_CoCmd_loadIdentity(Esd_Host);
 		EVE_CoDl_begin(phost, BITMAPS);
-		EVE_CoCmd_dl(Esd_Host, VERTEX2F(x * 16, y * 16));
+		EVE_CoDl_vertex2f_4(Esd_Host, x * 16, y * 16);
 		EVE_CoDl_end(phost);
 		EVE_CoDl_restoreContext(phost);
 	}
@@ -301,13 +301,13 @@ ESD_CORE_EXPORT void Esd_Render_Bitmap_Rotate(Esd_BitmapCell bitmapCell, esd_arg
 		int tilenumber = 0;
 		const int TITLE_SIZE = 64; //Magic number, DONOT CHANGE
 		EVE_CoDl_colorArgb_ex(phost, c);
+		EVE_CoDl_vertexFormat(phost, 4);
 		EVE_CoDl_saveContext(phost);
 
 		Esd_CoDl_BitmapSize(handle, BILINEAR, BORDER, BORDER, TITLE_SIZE, TITLE_SIZE); //Bitmap_Size command
 
 		EVE_CoDl_begin(phost, BITMAPS);
 
-		EVE_CoDl_vertexFormat(phost, 4);
 		Esd_CoDl_PagedCell(handle, cell);
 		scope
 		{
@@ -326,7 +326,7 @@ ESD_CORE_EXPORT void Esd_Render_Bitmap_Rotate(Esd_BitmapCell bitmapCell, esd_arg
 					//EVE_CoCmd_translate(Esd_Host, -x_center, -y_center);
 
 					EVE_CoCmd_setMatrix(Esd_Host);
-					EVE_CoCmd_dl(Esd_Host, VERTEX2F(dx * 16, dy * 16));
+					EVE_CoDl_vertex2f_4(Esd_Host, dx * 16, dy * 16);
 				}
 			}
 		}

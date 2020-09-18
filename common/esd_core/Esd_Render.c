@@ -11,9 +11,8 @@ ESD_CORE_EXPORT void Esd_Render_LineF(esd_int32_f4_t x0, esd_int32_f4_t y0, esd_
 	EVE_CoDl_colorArgb_ex(phost, color);
 	EVE_CoDl_lineWidth(phost, width);
 	EVE_CoDl_begin(phost, LINES);
-	EVE_CoDl_vertexFormat(phost, 4);
-	EVE_CoCmd_dl(phost, VERTEX2F(x0, y0));
-	EVE_CoCmd_dl(phost, VERTEX2F(x1, y1));
+	EVE_CoDl_vertex2f_4(phost, x0, y0);
+	EVE_CoDl_vertex2f_4(phost, x1, y1);
 	EVE_CoDl_end(phost);
 }
 
