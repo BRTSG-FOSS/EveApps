@@ -63,6 +63,10 @@ ESD_CORE_EXPORT void Esd_Render_Circle_Stroke(
 	EVE_CoDl_colorArgb_ex(phost, color);
 	EVE_CoDl_vertexFormat(phost, 4);
 
+	/* ---- */
+	/* NOTE: Bypassing CoDl optimizer on purpose inside a SAVE_CONTEXT block */
+	/* ---- */
+
 	// Use local rendering context, bypass EVE_CoDl display list functions.
 	EVE_CoCmd_dl(phost, SAVE_CONTEXT());
 
@@ -102,6 +106,10 @@ ESD_CORE_EXPORT void Esd_Render_Circle_Stroke(
 
 	// Restore rendering context, EVE_CoDl display list optimizations functions should be used again after this.
 	EVE_CoCmd_dl(phost, RESTORE_CONTEXT());
+
+	/* ---- */
+	/* NOTE: Bypassed CoDl optimizer on purpose inside a SAVE_CONTEXT block */
+	/* ---- */
 
 	EVE_CoDl_end(phost);
 }

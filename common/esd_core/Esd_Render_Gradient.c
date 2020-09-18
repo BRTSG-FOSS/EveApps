@@ -72,6 +72,10 @@ ESD_CORE_EXPORT void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t widt
 	EVE_CoDl_vertexFormat(phost, 0);
 	EVE_CoDl_begin(phost, BITMAPS);
 
+	/* ---- */
+	/* NOTE: Bypassing CoDl optimizer on purpose inside a SAVE_CONTEXT block */
+	/* ---- */
+
 	// Use local rendering context, bypass ESD display list functions.
 	// This is useful here, since we're changing bitmap transform matrices, which may use a lot of display list entries.
 	EVE_CoCmd_dl(Esd_Host, SAVE_CONTEXT());
@@ -119,6 +123,11 @@ ESD_CORE_EXPORT void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t widt
 	EVE_CoCmd_loadIdentity(Esd_Host);
 #endif
 	EVE_CoCmd_dl(Esd_Host, RESTORE_CONTEXT());
+
+	/* ---- */
+	/* NOTE: Bypassed CoDl optimizer on purpose inside a SAVE_CONTEXT block */
+	/* ---- */
+
 	EVE_CoDl_end(phost);
 
 	// Move to the next cell in the bitmap for next gradient
@@ -138,26 +147,26 @@ ESD_CORE_EXPORT void Esd_Render_MultiGradient_Rounded(int16_t x, int16_t y, int1
 	// EVE_CoDl_clear(1, 0, 0);
 	// Esd_Scissor_Reset(scissor);
 	EVE_CoDl_colorArgb_ex(phost, ESD_ARGB_WHITE);
-	EVE_CoCmd_dl(Esd_Host, COLOR_MASK(0, 0, 0, 1));
+	EVE_CoDl_colorMask(Esd_Host, 0, 0, 0, 1);
 	EVE_CoDl_lineWidth(phost, 16);
 	EVE_CoDl_begin(phost, RECTS);
 	EVE_CoDl_vertexFormat(phost, 0);
 	EVE_CoDl_vertex2f(phost, x, y);
 	EVE_CoDl_vertex2f(phost, x + width, y + height);
 	EVE_CoDl_end(phost);
-	EVE_CoCmd_dl(Esd_Host, COLOR_MASK(1, 1, 1, 1));
+	EVE_CoDl_colorMask(Esd_Host, 1, 1, 1, 1);
 
 	// Draw rounded rectangle as masking shape
-	EVE_CoCmd_dl(Esd_Host, BLEND_FUNC(ZERO, ONE_MINUS_SRC_ALPHA));
+	EVE_CoDl_blendFunc(Esd_Host, ZERO, ONE_MINUS_SRC_ALPHA);
 	Esd_Render_RectF(x << 4, y << 4, width << 4, height << 4, radius, ESD_COMPOSE_RGB_ALPHA(0xFFFFFF, alpha));
 
 	// Draw color using mask alpha
-	EVE_CoCmd_dl(Esd_Host, BLEND_FUNC(ONE_MINUS_DST_ALPHA, ONE));
+	EVE_CoDl_blendFunc(Esd_Host, ONE_MINUS_DST_ALPHA, ONE);
 	Esd_Render_MultiGradient(x, y, width, height, topLeft | 0xFF000000, topRight | 0xFF000000, bottomLeft | 0xFF000000, bottomRight | 0xFF000000);
 
 	// Restore context
 	// EVE_CoDl_restoreContext(phost);
-	EVE_CoCmd_dl(Esd_Host, BLEND_FUNC(SRC_ALPHA, ONE_MINUS_SRC_ALPHA));
+	EVE_CoDl_blendFunc_default(Esd_Host);
 }
 
 /* end of file */

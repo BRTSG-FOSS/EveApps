@@ -101,6 +101,11 @@ ESD_CORE_EXPORT void Esd_Render_Rect_Stroke(
 		y1 >>= 1;
 	}
 	EVE_CoDl_vertexFormat(phost, vertexFormat);
+
+	/* ---- */
+	/* NOTE: Bypassing CoDl optimizer on purpose inside a SAVE_CONTEXT block */
+	/* ---- */
+
 	EVE_CoCmd_dl(phost, SAVE_CONTEXT());
 
 	// Outer reset
@@ -143,6 +148,11 @@ ESD_CORE_EXPORT void Esd_Render_Rect_Stroke(
 
 	// Restore rendering context, ESD display list optimizations functions should be used again after this.
 	EVE_CoCmd_dl(phost, RESTORE_CONTEXT());
+
+	/* ---- */
+	/* NOTE: Bypassed CoDl optimizer on purpose inside a SAVE_CONTEXT block */
+	/* ---- */
+
 	EVE_CoDl_end(phost);
 }
 

@@ -14,12 +14,12 @@ void Esd_CoDl_Bitmap_Vertex(int16_t x, int16_t y, uint8_t handle, uint16_t cell)
 		EVE_CoDl_bitmapHandle(phost, handle);
 		Esd_CoDl_PagedBitmapSource(handle, cell >> 7);
 		EVE_CoDl_cell(phost, cell & 0x7F);
-		EVE_CoCmd_dl(phost, VERTEX2F(x, y));
+		EVE_CoDl_vertex2f(phost, x, y);
 	}
 	else
 	{
 		Esd_CoDl_PagedBitmapSource(handle, cell >> 7);
-		EVE_CoCmd_dl(phost, VERTEX2II(x, y, handle, cell));
+		EVE_CoDl_vertex2ii(phost, x, y, handle, cell & 0x7F);
 	}
 }
 
@@ -27,6 +27,10 @@ void Esd_CoDl_Bitmap_Vertex(int16_t x, int16_t y, uint8_t handle, uint16_t cell)
 // Also EVE_CoCmd_loadIdentity must be called afterwards to fully restore the context
 void Esd_CoDl_Bitmap_Vertex_DXT1(int16_t x, int16_t y, uint8_t handle, uint8_t additional, uint16_t cell, uint16_t cells)
 {
+	/* ---- */
+	/* NOTE: Partially bypassing CoDl optimizer on purpose inside a saveContext block */
+	/* ---- */
+
 	EVE_HalContext *phost = Esd_GetHost();
 	EVE_CoCmd_dl(phost, BLEND_FUNC(ONE, ZERO));
 	EVE_CoCmd_dl(phost, COLOR_A(0x55));
@@ -47,6 +51,10 @@ void Esd_CoDl_Bitmap_Vertex_DXT1(int16_t x, int16_t y, uint8_t handle, uint8_t a
 // NOTE: This function may only be used within a Esd_CoDl_SAVE_CONTEXT block, because it does not clean up state
 void Esd_CoDl_Bitmap_Vertex_PALETTED8(int16_t x, int16_t y, uint8_t handle, uint16_t cell, uint32_t paletteAddr)
 {
+	/* ---- */
+	/* NOTE: Partially bypassing CoDl optimizer on purpose inside a saveContext block */
+	/* ---- */
+
 	EVE_HalContext *phost = Esd_GetHost();
 	if (EVE_CHIPID >= EVE_FT810)
 	{

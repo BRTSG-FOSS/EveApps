@@ -97,6 +97,10 @@ ESD_CORE_EXPORT void Esd_AttachFlashFast()
 
 ESD_CORE_EXPORT void Esd_BeginLogo()
 {
+	/* ---- */
+	/* NOTE: Bypassed CoDl optimizer on purpose due to coprocessor logo behaviour */
+	/* ---- */
+
 	EVE_HalContext *phost = Esd_GetHost();
 	Esd_GpuAlloc_Reset(Esd_GAlloc);
 	Esd_GpuAlloc_Alloc(Esd_GAlloc, RAM_G_SIZE, 0); // Block allocation

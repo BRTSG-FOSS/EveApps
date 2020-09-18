@@ -203,7 +203,7 @@ ESD_CORE_EXPORT void Esd_CoDl_PagedBitmapSource(uint8_t handle, uint8_t page)
 		if (EVE_CHIPID >= EVE_BT815 && ESD_IS_FORMAT_ASTC(info->Format))
 			pageOffset /= c_AstcBlockHeight[info->Format & 0xF]; // Stride under ASTC is by block row
 		pageAddr = addr + pageOffset;
-		EVE_CoCmd_dl(phost, BITMAP_SOURCE(pageAddr));
+		EVE_CoDl_bitmapSource(phost, pageAddr);
 		Esd_CurrentContext->HandleState.Page[handle] = page;
 	}
 }
@@ -287,9 +287,9 @@ ESD_CORE_EXPORT uint8_t Esd_CoDl_SetupBitmap(Esd_BitmapInfo *bitmapInfo)
 		{
 			// Important. Bitmap swizzle not reset by SETBITMAP
 			if (bitmapInfo->Swizzle)
-				EVE_CoCmd_dl(phost, BITMAP_SWIZZLE(bitmapInfo->SwizzleR, bitmapInfo->SwizzleG, bitmapInfo->SwizzleB, bitmapInfo->SwizzleA));
+				EVE_CoDl_bitmapSwizzle(phost, bitmapInfo->SwizzleR & 0xFF, bitmapInfo->SwizzleG & 0xFF, bitmapInfo->SwizzleB & 0xFF, bitmapInfo->SwizzleA & 0xFF);
 			else
-				EVE_CoCmd_dl(phost, BITMAP_SWIZZLE(RED, GREEN, BLUE, ALPHA));
+				EVE_CoDl_bitmapSwizzle(phost, RED, GREEN, BLUE, ALPHA);
 		}
 #endif
 
