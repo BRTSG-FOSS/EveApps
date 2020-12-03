@@ -119,6 +119,10 @@ ESD_PARAMETER(min, Type = float, Default = 0)
 ESD_PARAMETER(max, Type = float, Default = 100)
 #define Esd_Float_ClampedValue(value, min, max) ((value) < (min) ? (min) : ((value) > (max) ? (max) : (value)))
 
+ESD_FUNCTION(Esd_Float_To_Int, Type = int32_t, DisplayName = "Float to Int", Category = EsdUtilities, Inline)
+ESD_PARAMETER(value, Type = float, Default = 0)
+static inline int Esd_Float_To_Int(value) { return (int)value; }
+
 #endif /* Esd_MATH__H */
 
 /* end of file */

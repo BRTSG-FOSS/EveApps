@@ -89,9 +89,34 @@ ESD_CORE_EXPORT void Esd_Defaults(Esd_Parameters *ep)
 	memset(ep, 0, sizeof(Esd_Parameters));
 #ifdef ESD_FLASH_FILES
 #ifdef _WIN32
-	wcscpy_s(ep->FlashFilePaths[ESD_FLASH_BT815], _countof(ep->FlashFilePaths[ESD_FLASH_BT815]), L"__Flash.bin");
+	struct stat buffer;
+	//check exe folder first
+	if (stat("__Flash.bin", &buffer) == 0)
+	{
+		wcscpy_s(ep->FlashFilePaths[ESD_FLASH_BT815], _countof(ep->FlashFilePaths[ESD_FLASH_BT815]), L"__Flash.bin");
+	}
+	//check Data folder
+	else if (stat("..\\..\\..\\Data\\__Flash.bin", &buffer) == 0)
+	{
+		wcscpy_s(ep->FlashFilePaths[ESD_FLASH_BT815], _countof(ep->FlashFilePaths[ESD_FLASH_BT815]), L"..\\..\\..\\Data\\__Flash.bin");
+	}
+	else
+	{
+		eve_printf_debug("__Flash.bin not exist\n");
+	}
 #if (EVE_SUPPORT_CHIPID >= EVE_BT817)
-	wcscpy_s(ep->FlashFilePaths[ESD_FLASH_BT817], _countof(ep->FlashFilePaths[ESD_FLASH_BT817]), L"__Flash.bin");
+	if (stat("__Flash.bin", &buffer) == 0)
+	{
+		wcscpy_s(ep->FlashFilePaths[ESD_FLASH_BT817], _countof(ep->FlashFilePaths[ESD_FLASH_BT817]), L"__Flash.bin");
+	}
+	else if (stat("..\\..\\..\\Data\\__Flash.bin", &buffer) == 0)
+	{
+		wcscpy_s(ep->FlashFilePaths[ESD_FLASH_BT817], _countof(ep->FlashFilePaths[ESD_FLASH_BT817]), L"..\\..\\..\\Data\\__Flash.bin");
+	}
+	else
+	{
+		eve_printf_debug("..\\..\\..\\Data\\__Flash.bin not exist\n");
+	}
 #endif
 #else
 	strcpy(ep->FlashFilePaths[ESD_FLASH_BT815], _countof(ep->FlashFilePaths[ESD_FLASH_BT815]), "__Flash.bin");
@@ -200,13 +225,17 @@ ESD_CORE_EXPORT bool Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 
 #ifdef ESD_FLASH_FILES
 		if (chipId >= EVE_BT815 || (chipId <= 0 && ep->FlashFilePaths[EVE_gen(chipId) - EVE3][0]))
+		{
 			EVE_Util_selectFlashFileInteractive(flashPath, &updateFlash, &updateFlashFirmware, &params, ep->FlashFilePaths[(chipId > 0) ? (EVE_gen(chipId) - EVE3) : 0]); /* FIXME: EVE_Util_selectFlashFileInteractive needs to take all the options, as it detects chipId as well */
+		}
 #endif
 
 #ifdef BT8XXEMU_PLATFORM
 		EVE_Util_emulatorDefaults(&params, &emulatorParams, chipId);
-#ifdef ESD_FLASH_FILES
+#if defined(ESD_FLASH_FILES)
 		EVE_Util_emulatorFlashDefaults(&params, &emulatorParams, &flashParams, flashPath);
+#elif defined(EVE_FLASH_AVAILABLE)
+		EVE_Util_emulatorFlashDefaults(&params, &emulatorParams, &flashParams, "__Flash.bin");
 #endif
 #endif
 
