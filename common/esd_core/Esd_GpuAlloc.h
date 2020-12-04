@@ -113,7 +113,7 @@ ESD_CORE_EXPORT uint32_t Esd_GpuAlloc_GetTotal(Esd_GpuAlloc *ga);
 #ifndef NDEBUG
 ESD_CORE_EXPORT void Esd_GpuAlloc_Print(Esd_GpuAlloc *ga);
 #else
-#define ESD_GpuAlloc_Print(ga) \
+#define Esd_GpuAlloc_Print(ga) \
 	do                         \
 	{                          \
 	} while (0)

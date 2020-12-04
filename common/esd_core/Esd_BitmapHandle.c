@@ -230,6 +230,7 @@ ESD_CORE_EXPORT uint8_t Esd_CoDl_SetupBitmap(Esd_BitmapInfo *bitmapInfo)
 	if (!(ESD_BITMAPHANDLE_VALID(handle)
 	        && (handle != ESD_SCRATCHHANDLE)
 	        && (Esd_CurrentContext->HandleState.Info[handle] == bitmapInfo)
+			&& (Esd_CurrentContext->HandleState.Address[handle] == addr)
 	        && (Esd_CurrentContext->HandleState.GpuHandle[handle].Id == bitmapInfo->GpuHandle.Id)
 	        && (Esd_CurrentContext->HandleState.GpuHandle[handle].Seq == bitmapInfo->GpuHandle.Seq)))
 	{
@@ -254,6 +255,7 @@ ESD_CORE_EXPORT uint8_t Esd_CoDl_SetupBitmap(Esd_BitmapInfo *bitmapInfo)
 				// Attach this handle to the bitmap info
 				handle = i;
 				Esd_CurrentContext->HandleState.Info[i] = bitmapInfo;
+				Esd_CurrentContext->HandleState.Address[i] = addr;
 				Esd_CurrentContext->HandleState.GpuHandle[i] = bitmapInfo->GpuHandle;
 				break;
 			}
@@ -410,6 +412,7 @@ ESD_CORE_EXPORT uint8_t Esd_CoDl_SetupFont(Esd_FontInfo *fontInfo)
 		if (!ESD_BITMAPHANDLE_VALID(handle)
 		    || (handle == ESD_SCRATCHHANDLE)
 		    || (Esd_CurrentContext->HandleState.Info[handle] != fontInfo)
+			|| (Esd_CurrentContext->HandleState.Address[handle] != addr)
 		    || (Esd_CurrentContext->HandleState.GpuHandle[handle].Id != fontInfo->FontResource.GpuHandle.Id)
 		    || (Esd_CurrentContext->HandleState.GpuHandle[handle].Seq != fontInfo->FontResource.GpuHandle.Seq))
 		{
@@ -432,6 +435,7 @@ ESD_CORE_EXPORT uint8_t Esd_CoDl_SetupFont(Esd_FontInfo *fontInfo)
 					// Attach this handle to the font info
 					handle = i;
 					Esd_CurrentContext->HandleState.Info[i] = fontInfo;
+					Esd_CurrentContext->HandleState.Address[i] = addr;
 					Esd_CurrentContext->HandleState.GpuHandle[i] = fontInfo->FontResource.GpuHandle;
 					break;
 				}

@@ -15,6 +15,7 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 typedef struct
 {
 	void *Info[ESD_BITMAPHANDLE_CAP];
+	uint32_t Address[ESD_BITMAPHANDLE_CAP];
 	Esd_GpuHandle GpuHandle[ESD_BITMAPHANDLE_CAP];
 	uint8_t Use[ESD_BITMAPHANDLE_CAP];
 

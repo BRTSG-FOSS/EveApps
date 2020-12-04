@@ -11,6 +11,17 @@ Allocation mechanism for RAM_G.
 static int s_ErrorGpuAllocFailed = 0;
 #endif
 
+#ifndef GA_ENABLE_DEFRAG_SAFE
+#define GA_ENABLE_DEFRAG_SAFE 1
+#endif
+// TODO: #ifndef GA_ENABLE_DEFRAG_AGGRESSIVE
+// TODO: #define GA_ENABLE_DEFRAG_AGGRESSIVE 1
+// TODO: #endif
+
+#if GA_ENABLE_DEFRAG_SAFE
+#include "Esd_Context.h"
+#endif
+
 ESD_CORE_EXPORT void Esd_GpuAlloc_Reset(Esd_GpuAlloc *ga)
 {
 	int id, idx;
@@ -260,6 +271,97 @@ ESD_CORE_EXPORT void Esd_GpuAlloc_Update(Esd_GpuAlloc *ga)
 			ga->AllocEntries[idx].Flags &= ~GA_USED_FLAG;
 		}
 	}
+
+#if GA_ENABLE_DEFRAG_SAFE
+	for (idx = 0; idx < ga->NbAllocEntries; ++idx)
+	{
+		// Find the first empty block
+		if (ga->AllocEntries[idx].Id == MAX_NUM_ALLOCATIONS)
+			break;
+	}
+
+	// Memory is fragmented, try to find a small block that can be moved
+	// This strategy only works if the first open space is larger than the fragmented blocks
+	if (idx != ga->NbAllocEntries - 1)
+	{
+		// The first empty block is the largest space we can fill to cleanly defragment memory
+		uint32_t leftIdx = idx;
+		uint32_t leftSpace = ga->AllocEntries[leftIdx].Length;
+
+		uint32_t largestIdx = MAX_NUM_ALLOCATIONS;
+		uint32_t largestSpace = 0;
+
+		for (idx = leftIdx + 1; idx < ga->NbAllocEntries; ++idx)
+		{
+			if (ga->AllocEntries[idx].Id != MAX_NUM_ALLOCATIONS
+				&& ga->AllocEntries[idx].Length <= leftSpace
+				&& (ga->AllocEntries[idx].Flags & GA_FIXED_FLAG) == 0)
+			{
+				// This entry can potentially be moved
+				uint32_t space = 0;
+
+				// Count space that will be emptied
+				// Doesn't count for the first entry, it moves into the same empty space
+				if (idx > leftIdx + 1)
+					space += ga->AllocEntries[idx].Length;
+
+				// Count empty space on the left
+				if (ga->AllocEntries[idx - 1].Id == MAX_NUM_ALLOCATIONS)
+					space += ga->AllocEntries[idx - 1].Length;
+
+				// Count empty space on the right
+				if (idx + 1 < MAX_NUM_ALLOCATIONS
+					&& ga->AllocEntries[idx + 1].Id == MAX_NUM_ALLOCATIONS)
+					space += ga->AllocEntries[idx + 1].Length;
+
+				if (space > largestSpace)
+				{
+					largestIdx = idx;
+					largestSpace = space;
+				}
+			}
+		}
+
+		if (largestIdx != MAX_NUM_ALLOCATIONS)
+		{
+			// Store handle, address, and size
+			uint16_t handle = ga->AllocEntries[largestIdx].Id;
+			uint32_t addr = ga->AllocEntries[largestIdx].Address;
+			uint32_t size = ga->AllocEntries[largestIdx].Length;
+
+			// Esd_GpuAlloc_Print(ga);
+
+			// Get new allocation
+			Esd_GpuHandle newHandle = Esd_GpuAlloc_Alloc(ga, size, ga->AllocEntries[largestIdx].Flags);
+			idx = ga->AllocRefs[handle].Idx;
+			uint32_t newIdx = ga->AllocRefs[newHandle.Id].Idx;
+			uint32_t newAddr = ga->AllocEntries[newIdx].Address;
+
+
+			eve_assert(ga->AllocEntries[idx].Id == handle); // Verify old allocation
+			eve_printf_debug("Defragmenting allocation %i with handle id %i and size %i bytes, leaving a free space of %i bytes. Copy %i to %i\n", 
+				(int)largestIdx, handle, size, (int)largestSpace, (int)addr, (int)newAddr);
+			EVE_CoCmd_memCpy(Esd_GetHost(), newAddr, addr, size);
+			if (!EVE_Cmd_waitFlush(Esd_GetHost()))
+			{
+				eve_printf_debug("Failed to copy. Defragmentation failed");
+			}
+			else
+			{
+				// Swap the handles
+				ga->AllocEntries[newIdx].Id = handle;
+				ga->AllocEntries[idx].Id = newHandle.Id; // New handle will be discarded
+				ga->AllocRefs[handle].Idx = newIdx;
+				ga->AllocRefs[newHandle.Id].Idx = idx; // New handle will be discarded
+
+				ga->AllocEntries[newIdx].Flags &= ~GA_USED_FLAG; // Don't flag the new one as used
+				ga->AllocEntries[idx].Flags |= GA_GC_FLAG; // Force GC on the old address
+			}
+
+			// Esd_GpuAlloc_Print(ga);
+		}
+	}
+#endif
 }
 
 // Get total used GPU RAM
