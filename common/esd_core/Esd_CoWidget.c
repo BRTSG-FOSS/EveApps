@@ -488,4 +488,27 @@ bool Esd_CoWidget_PlayVideoFlash(uint32_t addr, uint16_t options)
 #endif
 }
 
+bool Esd_CoWidget_PlayVideo(Esd_BitmapCell video, uint16_t options)
+{
+#if defined(EVE_SUPPORT_VIDEO)
+	Esd_BitmapInfo *info = video.Info;
+	if (!info->Video && info->Format != AVI)
+	{
+		eve_printf_debug("Not a video bitmap info object\n");
+		return false;
+	}
+
+	if (info->Flash)
+	{
+		return Esd_CoWidget_PlayVideoFlash(info->FlashAddress, options);
+	}
+	else
+	{
+		return Esd_CoWidget_PlayVideoFile(info->File, options);
+	}
+#else
+	eve_printf_debug("Video is not supported\n");
+	return false;
+#endif
+}
 /* end of file */

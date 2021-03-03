@@ -44,11 +44,14 @@ typedef struct Esd_FontInfo // (40 bytes) (56 bytes on 64 bit)
 	// (Runtime) Font height
 	uint16_t FontHeight;
 
-	// (Runtime) Baseline, from top of font glyph
-	uint16_t BaseLine;
+	// Baseline, from top of font glyph
+	uint32_t BaseLine : 11;
 
-	// (Runtime) Caps height of font, measured from baseline
-	uint16_t CapsHeight;
+	// Caps height of font, measured from baseline
+	uint32_t CapsHeight : 11;
+
+	// Offset of left edge of characters in the bitmap
+	uint32_t XOffset : 10;
 
 	// (Runtime) The glyph address as specified in the loaded font resource
 	uint32_t GlyphAddress;
@@ -79,10 +82,13 @@ typedef struct Esd_RomFontInfo // (8 bytes)
 	uint16_t FontHeight;
 
 	// (Runtime) Baseline, from top of font glyph
-	uint16_t BaseLine;
+	uint32_t BaseLine : 11;
 
 	// (Runtime) Caps height of font, measured from baseline
-	uint16_t CapsHeight;
+	uint32_t CapsHeight : 11;
+
+	// (Runtime) Offset of left edge of characters in the bitmap
+	uint32_t XOffset : 10;
 
 } Esd_RomFontInfo;
 

@@ -118,6 +118,13 @@ ESD_CORE_EXPORT uint16_t Esd_GetFontCapsHeight(Esd_FontInfo *fontInfo)
 	return 0;
 }
 
+ESD_CORE_EXPORT uint16_t Esd_GetFontXOffset(Esd_FontInfo *fontInfo)
+{
+	if (fontInfo)
+		return fontInfo->XOffset;
+	return 0;
+}
+
 void Esd_BitmapHandle_Initialize()
 {
 	// memset(Esd_BitmapHandleGpuHandle, 0, sizeof(Esd_BitmapHandleGpuHandle));

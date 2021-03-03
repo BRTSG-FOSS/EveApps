@@ -47,11 +47,11 @@ ESD_CORE_EXPORT void Esd_CoWidget_PopupSpinner();
 Video only, not applicable to bitmap cell animation. 
 Only one video can play in the background at a time. 
 Background play will be interrupted when any other video is started, and cannot be resumed. */
-ESD_FUNCTION(Esd_CoWidget_PlayBgVideo, Type = bool, Attributes = ESD_CORE_EXPORT, Category = EsdUtilities, Include = "Esd_Core.h")
+ESD_FUNCTION(Esd_CoWidget_PlayBgVideo, Type = bool, Attributes = ESD_CORE_EXPORT, Category = EsdUtilities, Include = "Esd_Core.h", Buffered)
 ESD_PARAMETER(video, Type = Esd_BitmapCell)
 ESD_CORE_EXPORT bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video);
 
-ESD_FUNCTION(Esd_CoWidget_StopBgVideo, Type = void, Attributes = ESD_CORE_EXPORT, Category = EsdUtilities, Include = "Esd_Core.h")
+ESD_FUNCTION(Esd_CoWidget_StopBgVideo, Type = void, Attributes = ESD_CORE_EXPORT, Category = EsdUtilities, Include = "Esd_Core.h", Buffered)
 ESD_CORE_EXPORT void Esd_CoWidget_StopBgVideo();
 
 ESD_ENUM(Esd_Opt_PlayVideo, Type = uint16_t, Include = "Esd_Core.h", Flags)
@@ -71,17 +71,22 @@ ESD_IDENTIFIER(OPT_SOUND)
 ESD_END()
 
 /* Play video fullscreen, returns when the video is done playing. No interactivity */
-ESD_FUNCTION(Esd_CoWidget_PlayVideoFile, Type = bool, Attributes = ESD_CORE_EXPORT, Category = EsdUtilities, Include = "Esd_Core.h")
+ESD_FUNCTION(Esd_CoWidget_PlayVideoFile, Type = bool, Attributes = ESD_CORE_EXPORT, Category = EsdUtilities, Include = "Esd_Core.h", Buffered)
 ESD_PARAMETER(filename, Type = const char *)
 ESD_PARAMETER(options, Type = Esd_Opt_PlayVideoEx, Default = OPT_FULLSCREEN | OPT_SOUND)
 ESD_CORE_EXPORT bool Esd_CoWidget_PlayVideoFile(const char *filename, uint16_t options);
 
 /* Play video fullscreen, returns when the video is done playing. No interactivity */
-ESD_FUNCTION(Esd_CoWidget_PlayVideoFlash, Type = bool, Attributes = ESD_CORE_EXPORT, Category = EsdUtilities, Include = "Esd_Core.h")
+ESD_FUNCTION(Esd_CoWidget_PlayVideoFlash, Type = bool, Attributes = ESD_CORE_EXPORT, Category = EsdUtilities, Include = "Esd_Core.h", Buffered)
 ESD_PARAMETER(addr, Type = uint32_t)
 ESD_PARAMETER(options, Type = Esd_Opt_PlayVideoEx, Default = OPT_FULLSCREEN | OPT_SOUND)
 ESD_CORE_EXPORT bool Esd_CoWidget_PlayVideoFlash(uint32_t addr, uint16_t options);
 
+/* Play video fullscreen, returns when the video is done playing. No interactivity */
+ESD_FUNCTION(Esd_CoWidget_PlayVideo, Type = bool, Attributes = ESD_CORE_EXPORT, Category = EsdUtilities, Include = "Esd_Core.h", Buffered)
+ESD_PARAMETER(video, Type = Esd_BitmapCell)
+ESD_PARAMETER(options, Type = Esd_Opt_PlayVideoEx, Default = OPT_FULLSCREEN | OPT_SOUND)
+ESD_CORE_EXPORT bool Esd_CoWidget_PlayVideo(Esd_BitmapCell video, uint16_t options);
 #endif /* #ifndef ESD_COWIDGET__H */
 
 /* end of file */

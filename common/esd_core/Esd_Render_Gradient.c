@@ -5,6 +5,8 @@
 #include "Esd_BitmapHandle.h"
 #include "Esd_Math.h"
 
+#include "math.h"
+
 // Multi gradient rendering state
 Esd_GpuHandle s_MultiGradient_GpuHandle;
 uint32_t s_MultiGradient_Cell;

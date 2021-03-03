@@ -82,6 +82,10 @@ ESD_FUNCTION(Esd_GetFontCapsHeight, Type = uint16_t, Attributes = ESD_CORE_EXPOR
 ESD_PARAMETER(fontInfo, Type = Esd_FontInfo *)
 ESD_CORE_EXPORT uint16_t Esd_GetFontCapsHeight(Esd_FontInfo *fontInfo);
 
+ESD_FUNCTION(Esd_GetFontXOffset, Type = uint16_t, Attributes = ESD_CORE_EXPORT, DisplayName = "Get Font X Offset", Category = EsdUtilities)
+ESD_PARAMETER(fontInfo, Type = Esd_FontInfo *)
+ESD_CORE_EXPORT uint16_t Esd_GetFontXOffset(Esd_FontInfo *fontInfo);
+
 /* end of supported functions */
 
 #endif /* #ifndef ESD_BITMAPHANDLE__H */
