@@ -52,7 +52,7 @@ ESD_CORE_EXPORT Esd_GpuAlloc *Esd_GAlloc = NULL; // Pointer to current s_GAlloc
 //
 // External definitions
 //
-#if _DEBUG
+#if defined(_DEBUG)
 void Esd_CheckTypeSizes();
 #endif
 
@@ -149,7 +149,7 @@ ESD_CORE_EXPORT void Esd_Initialize()
 #endif
 	eve_printf_debug(FT_WELCOME_MESSAGE);
 
-#if _DEBUG
+#if defined(_DEBUG)
 	Esd_CheckTypeSizes();
 #endif
 }
@@ -466,7 +466,7 @@ ESD_CORE_EXPORT bool Esd_WaitSwap(Esd_Context *ec)
 	/* Reset the coprocessor in case of fault */
 	if (ec->HalContext.CmdFault)
 	{
-#if _DEBUG
+#if defined(_DEBUG)
 		/* Show error for a while */
 		EVE_sleep(1000);
 #endif

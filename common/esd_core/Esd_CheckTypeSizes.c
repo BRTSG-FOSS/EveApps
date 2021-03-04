@@ -29,7 +29,9 @@
 * has no liability in relation to those amendments.
 */
 
-#if _DEBUG
+#include "EVE_Config.h"
+
+#if defined(_DEBUG)
 #include "Esd_Base.h"
 #include "Esd_GpuAlloc.h"
 
