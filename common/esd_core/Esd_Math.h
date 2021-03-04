@@ -121,7 +121,7 @@ ESD_PARAMETER(max, Type = float, Default = 100)
 
 ESD_FUNCTION(Esd_Float_To_Int, Type = int32_t, DisplayName = "Float to Int", Category = EsdUtilities, Inline)
 ESD_PARAMETER(value, Type = float, Default = 0)
-static inline int Esd_Float_To_Int(value) { return (int)value; }
+static inline int Esd_Float_To_Int(float value) { return (int)value; }
 
 #endif /* Esd_MATH__H */
 
