@@ -61,7 +61,7 @@ void Esd_CoWidget_Render();
 // When not in the simulation, use the Esd_Main__Start etc symbols
 // as exported by the single Application logic document included
 #ifndef ESD_SIMULATION
-#if defined(EVE_MULTI_TARGET)
+#if defined(EVE_MULTI_PLATFORM_TARGET)
 #define Esd_IsRunning__ESD() (phost->Host == EVE_HOST_BT8XXEMU ? BT8XXEMU_isRunning(phost->Emulator) : true)
 #elif defined(BT8XXEMU_PLATFORM)
 #define Esd_IsRunning__ESD() BT8XXEMU_isRunning(Esd_Host->Emulator)
@@ -259,8 +259,8 @@ ESD_CORE_EXPORT bool Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 		return false;
 	}
 
-#if !defined(ESD_SIMULATION) && (!defined(BT8XXEMU_PLATFORM) || defined(EVE_MULTI_TARGET))
-#if defined(EVE_MULTI_TARGET)
+#if !defined(ESD_SIMULATION) && (!defined(BT8XXEMU_PLATFORM) || defined(EVE_MULTI_PLATFORM_TARGET))
+#if defined(EVE_MULTI_PLATFORM_TARGET)
 	if (phost->Host != EVE_HOST_BT8XXEMU)
 #endif
 	{

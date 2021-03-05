@@ -82,7 +82,7 @@ typedef struct
 
 } Esd_Context;
 
-#if defined(EVE_FLASH_AVAILABLE) && (defined(EVE_MULTI_TARGET) || (defined(BT8XXEMU_PLATFORM) && !defined(ESD_SIMULATION)))
+#if defined(EVE_FLASH_AVAILABLE) && (defined(EVE_MULTI_PLATFORM_TARGET) || (defined(BT8XXEMU_PLATFORM) && !defined(ESD_SIMULATION)))
 #define ESD_FLASH_FILES
 #endif
 

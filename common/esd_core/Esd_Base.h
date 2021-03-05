@@ -184,7 +184,7 @@ typedef uint32_t esd_classid_t;
 #endif
 #define ESD_CORE_EXPORT ESD_EXTERN_LIBARY
 #else
-#ifdef EVE_MULTI_TARGET
+#if defined(EVE_MULTI_TARGET) && defined(WIN32)
 #ifdef ESD_CORE_EXPORT
 #undef ESD_CORE_EXPORT
 #define ESD_CORE_EXPORT _declspec(dllexport)
