@@ -265,10 +265,14 @@ ESD_CORE_EXPORT bool Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 #endif
 	{
 		// TODO: Store calibration somewhere
+#ifndef EVE_TOUCH_DISABLED
 		if (!Esd_Calibrate())
 		{
 			eve_printf_debug("Calibrate failed\n");
 		}
+#else
+		eve_printf_debug("Touch not supported");
+#endif
 	}
 #endif
 
