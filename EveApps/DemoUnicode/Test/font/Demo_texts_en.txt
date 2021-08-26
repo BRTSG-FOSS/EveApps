@@ -1,0 +1,7 @@
+English
+The quick brown fox jumps over the lazy dog
+On
+Off
+0123456789
+qwertyuiopasdfghjklzxcvbnm  
+	`-+[]\;'",.

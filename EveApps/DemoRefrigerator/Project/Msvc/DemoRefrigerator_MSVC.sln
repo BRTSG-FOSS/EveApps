@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoRefrigerator_MSVC", "DemoRefrigerator_MSVC.vcxproj", "{6BE7A525-49F3-4130-9AEE-C9652395A00A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6BE7A525-49F3-4130-9AEE-C9652395A00A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6BE7A525-49F3-4130-9AEE-C9652395A00A}.Debug|Win32.Build.0 = Debug|Win32
+		{6BE7A525-49F3-4130-9AEE-C9652395A00A}.Release|Win32.ActiveCfg = Release|Win32
+		{6BE7A525-49F3-4130-9AEE-C9652395A00A}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {504D3963-FF9C-4426-B0C7-DDE64A6D0EE2}
+	EndGlobalSection
+EndGlobal

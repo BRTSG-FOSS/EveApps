@@ -1,0 +1,264 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{5f9f3603-966d-4559-a3ff-41a5ebd6e93a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{0795fa58-8447-4dc7-bc7a-5c2353a25619}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{07a1764e-8ac0-463e-86a8-5edc2b2bf934}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\application">
+      <UniqueIdentifier>{49f4fdc6-29f5-4315-8a12-15b6ad0ae4ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\eve_hal">
+      <UniqueIdentifier>{55f6b58f-6aed-4277-a5dc-45590815e591}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\eve_hal\Hdr">
+      <UniqueIdentifier>{4047e9cb-b4bc-48db-9d3f-49528ac12d01}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_Cmd.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_Hal.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_BT8XXEMU.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_FT9XX.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_FT4222.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_MPSSE.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_WIN32.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_ILI9488_FT9XX.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_LoadFile_FATFS.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_LoadFile_STDIO.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_Util.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_CoCmd.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_MediaFifo.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\App.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Src\DemoMainmenu.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\application\FileIo.c">
+      <Filter>Common\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\application\FileTransfer.c">
+      <Filter>Common\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\application\Gesture.c">
+      <Filter>Common\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\application\Common.c">
+      <Filter>Common\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\application\Logo.c">
+      <Filter>Common\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\application\Maths.c">
+      <Filter>Common\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\application\FlashHelper.c">
+      <Filter>Common\application</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_CoCmd_IO.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_CoCmd_State.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_CoCmd_Widgets.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_CoDl.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_GpuDefs_BT81X.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_GpuDefs_FT80X.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_GpuDefs_FT81X.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_BT8XXEMUC.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_MULTI.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\common\eve_hal\EVE_HalImpl_RP2040.c">
+      <Filter>Common\eve_hal</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Cmd.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Config.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_GpuDefs.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_GpuTypes.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Hal.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_HalImpl.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_ILI9488.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_IntTypes.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_IntTypes_MSVC12.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_LoadFile.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Platform.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Platform_BT8XXEMU.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Platform_FT9XX.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Platform_FT4222.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Platform_MPSSE.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Platform_WIN32.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Util.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\bt8xxemu.h">
+      <Filter>Common\eve_hal\Hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\bt8xxemu_inttypes.h">
+      <Filter>Common\eve_hal\Hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\FT_DataTypes.h">
+      <Filter>Common\eve_hal\Hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\FT_Gpu.h">
+      <Filter>Common\eve_hal\Hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\FT_Gpu_Hal.h">
+      <Filter>Common\eve_hal\Hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\FT_LoadFile.h">
+      <Filter>Common\eve_hal\Hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\FT_Platform.h">
+      <Filter>Common\eve_hal\Hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\ftd2xx.h">
+      <Filter>Common\eve_hal\Hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\Gpu.h">
+      <Filter>Common\eve_hal\Hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\Gpu_Hal.h">
+      <Filter>Common\eve_hal\Hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\Hal_Config.h">
+      <Filter>Common\eve_hal\Hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\LibFT4222.h">
+      <Filter>Common\eve_hal\Hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\libMPSSE_spi.h">
+      <Filter>Common\eve_hal\Hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\Platform.h">
+      <Filter>Common\eve_hal\Hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\WinTypes.h">
+      <Filter>Common\eve_hal\Hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_CoCmd.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_MediaFifo.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Hdr\DemoMainmenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Hdr\App.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\application\Common.h">
+      <Filter>Common\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\application\FileIo.h">
+      <Filter>Common\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\application\FileTransfer.h">
+      <Filter>Common\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\application\Gesture.h">
+      <Filter>Common\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\application\Logo.h">
+      <Filter>Common\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\application\Maths.h">
+      <Filter>Common\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\application\FlashHelper.h">
+      <Filter>Common\application</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_CoDl.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_HalDefs.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\Hdr\Gpu_CoCmd.h">
+      <Filter>Common\eve_hal\Hdr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\common\eve_hal\EVE_Platform_RP2040.h">
+      <Filter>Common\eve_hal</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

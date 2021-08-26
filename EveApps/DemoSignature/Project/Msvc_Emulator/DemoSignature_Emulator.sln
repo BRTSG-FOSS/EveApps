@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoSignature_Emulator", "DemoSignature_Emulator.vcxproj", "{9F893545-ACFC-4588-B7E3-9A32CA18725D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9F893545-ACFC-4588-B7E3-9A32CA18725D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9F893545-ACFC-4588-B7E3-9A32CA18725D}.Debug|Win32.Build.0 = Debug|Win32
+		{9F893545-ACFC-4588-B7E3-9A32CA18725D}.Release|Win32.ActiveCfg = Release|Win32
+		{9F893545-ACFC-4588-B7E3-9A32CA18725D}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3A8526CA-E4D4-4A51-B8F1-BF988E115E06}
+	EndGlobalSection
+EndGlobal

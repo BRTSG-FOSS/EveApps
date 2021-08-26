@@ -1,0 +1,11 @@
+BT815.blob                   : 0      : 4096   : 254   : 0     : 0     : 0    
+font_chinese_27_ASTC.glyph   : 4096   : 3584   : 4     : 0     : 0     : 1    
+font_chinese_27_ASTC.xfont   : 7680   : 192    : 254   : 0     : 0     : 2    
+font_chinese_28_L1.glyph.bin : 7872   : 16384  : 254   : 0     : 1     : 3    
+font_chinese_28_L1.xfont.bin : 24256  : 192    : 254   : 0     : 1     : 4    
+font_chinese_29_L2.glyph.bin : 24448  : 32768  : 254   : 0     : 1     : 5    
+font_chinese_29_L2.xfont.bin : 57216  : 192    : 254   : 0     : 1     : 6    
+font_chinese_30_L4.glyph.bin : 57408  : 65536  : 254   : 0     : 1     : 7    
+font_chinese_30_L4.xfont.bin : 122944 : 192    : 254   : 0     : 1     : 8    
+font_chinese_31_L8.glyph.bin : 123136 : 131072 : 254   : 0     : 1     : 9    
+font_chinese_31_L8.xfont.bin : 254208 : 192    : 254   : 0     : 1     : 10   

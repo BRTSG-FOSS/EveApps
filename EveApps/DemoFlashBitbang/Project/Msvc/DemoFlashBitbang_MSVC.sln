@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoFlashBitbang_MSVC", "DemoFlashBitbang_MSVC.vcxproj", "{FBBBBF6D-E43B-4568-AA38-4D76E6D29FB5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FBBBBF6D-E43B-4568-AA38-4D76E6D29FB5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FBBBBF6D-E43B-4568-AA38-4D76E6D29FB5}.Debug|Win32.Build.0 = Debug|Win32
+		{FBBBBF6D-E43B-4568-AA38-4D76E6D29FB5}.Release|Win32.ActiveCfg = Release|Win32
+		{FBBBBF6D-E43B-4568-AA38-4D76E6D29FB5}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6A32F47E-32F8-4B79-B193-093F5224BD6C}
+	EndGlobalSection
+EndGlobal
