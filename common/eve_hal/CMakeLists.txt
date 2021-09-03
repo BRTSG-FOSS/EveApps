@@ -51,43 +51,43 @@ IF (WIN32)
     ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD 
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/MSVC/x64/libMPSSE.dll
-      ${CMAKE_BINARY_DIR}/bin/\$\(Configuration\)/libMPSSE.dll)
+      ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/libMPSSE.dll)
     ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD 
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/MSVC/x64/LibFT4222-64.dll
-      ${CMAKE_BINARY_DIR}/bin/\$\(Configuration\)/LibFT4222-64.dll)
+      ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/LibFT4222-64.dll)
     ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD 
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/MSVC/x64/ftd2xx.dll
-      ${CMAKE_BINARY_DIR}/bin/\$\(Configuration\)/ftd2xx.dll)
+      ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/ftd2xx.dll)
     ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD 
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/Simulation/x64/bt8xxemu.dll
-      ${CMAKE_BINARY_DIR}/bin/\$\(Configuration\)/bt8xxemu.dll)
+      ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/bt8xxemu.dll)
     ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD 
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/Simulation/x64/mx25lemu.dll
-      ${CMAKE_BINARY_DIR}/bin/\$\(Configuration\)/mx25lemu.dll)
+      ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/mx25lemu.dll)
   ELSE()
     ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD 
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/MSVC/libMPSSE.dll
-      ${CMAKE_BINARY_DIR}/bin/\$\(Configuration\)/libMPSSE.dll)
+      ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/libMPSSE.dll)
     ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD 
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/MSVC/LibFT4222.dll
-      ${CMAKE_BINARY_DIR}/bin/\$\(Configuration\)/LibFT4222.dll)
+      ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/LibFT4222.dll)
     ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD 
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/MSVC/ftd2xx.dll
-      ${CMAKE_BINARY_DIR}/bin/\$\(Configuration\)/ftd2xx.dll)
+      ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/ftd2xx.dll)
     ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD 
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/Simulation/bt8xxemu.dll
-      ${CMAKE_BINARY_DIR}/bin/\$\(Configuration\)/bt8xxemu.dll)
+      ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/bt8xxemu.dll)
     ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD 
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/Simulation/mx25lemu.dll
-      ${CMAKE_BINARY_DIR}/bin/\$\(Configuration\)/mx25lemu.dll)
+      ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/mx25lemu.dll)
   ENDIF()
 ENDIF()
