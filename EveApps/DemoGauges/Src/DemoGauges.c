@@ -177,6 +177,10 @@ prog_uchar8_t digits[] = { 120,156,237,93,93,108,92,199,117,190,251,203,229,82,1
 static uint8_t NUM_DISPLAY_SCREEN;
 static int32_t ox;
 static int32_t px;
+
+int VertextFormat = 4; 
+int Vertextdevider = 1; 
+
 static void cs(uint8_t i) {
 	switch (i) {
 	case  0: EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(200, 255, 200)); break;
@@ -188,7 +192,7 @@ static void cs(uint8_t i) {
 void Math_Polar(EVE_HalContext *pHalContext, int32_t r, float_t th, int32_t ox, int32_t oy){
     int32_t x, y;
     Math_Polarxy(r, th, &x, &y, ox, oy);
-    EVE_Cmd_wr32(s_pHalContext,VERTEX2F(x,y));
+    EVE_Cmd_wr32(s_pHalContext,VERTEX2F(x/Vertextdevider,y/Vertextdevider));
 }
 
 void DemoGauges(EVE_HalContext* pHalContext) {
@@ -206,25 +210,19 @@ void DemoGauges(EVE_HalContext* pHalContext) {
 	int16_t val = 0;
 #endif
 
-#ifdef DISPLAY_RESOLUTION_HVGA_PORTRAIT
-	w = (300.0 / 320.0*s_pHalContext->Width); h = 350.0 / 480.0*s_pHalContext->Height;
-	NUM_DISPLAY_SCREEN = 1;
+	dt = 10;
+	w = s_pHalContext->Width - dt * 4;
+	h = s_pHalContext->Height - 20;
+	NUM_DISPLAY_SCREEN = 2;
 
-	dt = 10;
-#elif defined DISPLAY_RESOLUTION_WVGA
-	w = 600.0 / 800.0 * s_pHalContext->Width;
-	h = 400.0 / 480.0 * s_pHalContext->Height;
-	NUM_DISPLAY_SCREEN = 2;
-	dt = 10;
-#elif defined DISPLAY_RESOLUTION_WQVGA
-	w = (220.0 / 480.0*s_pHalContext->Width); h = 130.0 / 272.0*s_pHalContext->Height;
-	NUM_DISPLAY_SCREEN = 2;
-	dt = 10;
-#else 
-	w = 220; h = 130;
-	NUM_DISPLAY_SCREEN = 1;
-	dt = 50;
-#endif
+	if (s_pHalContext->Width <= 320)  { // 320 = size width of QVGA
+		NUM_DISPLAY_SCREEN = 1;
+	}
+
+	if (s_pHalContext->Width >= 1023) { // -2048 to 2047
+		VertextFormat = 3;
+		Vertextdevider = 2;
+	}
 
 	EVE_CoCmd_dlStart(s_pHalContext);
 	EVE_CoCmd_memSet(s_pHalContext, 0, 0, 10 * 1024);
@@ -314,6 +312,8 @@ void DemoGauges(EVE_HalContext* pHalContext) {
 	int rval2 = 9000L;
 	do {
 		EVE_CoCmd_dlStart(s_pHalContext);
+		EVE_Cmd_wr32(s_pHalContext, VERTEX_FORMAT(VertextFormat));
+
 		EVE_CoCmd_append(s_pHalContext, 100000L, dloffset);
 
 		for (z = 0; z < NUM_DISPLAY_SCREEN; z++) {
@@ -368,14 +368,19 @@ void DemoGauges(EVE_HalContext* pHalContext) {
 			EVE_Cmd_wr32(s_pHalContext, SCISSOR_SIZE(w, (uint16_t)(s_pHalContext->Height*0.36)));
 			EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
 			EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 0, 0));
-#ifdef DISPLAY_RESOLUTION_HVGA_PORTRAIT
-			EVE_CoCmd_number(s_pHalContext, ox + dt + 50, 160, 13, 2, val / 100);
-			EVE_CoCmd_text(s_pHalContext, ox + dt + 86 + 50, 160, 13, 0, ".");
-			EVE_CoCmd_number(s_pHalContext, ox + dt + 96 + 50, 160, 13, 2, val % 100);
-#else
-			EVE_CoCmd_number(s_pHalContext, (ox + px) / 2 + 15, 160, 31, 2, val / 100);
-			EVE_CoCmd_text(s_pHalContext,   (ox + px) / 2 + 66, 160, 31, 0, ".");
-			EVE_CoCmd_number(s_pHalContext, (ox + px) / 2 + 76, 160, 31, 2, val % 100); 
+
+#if defined(DISPLAY_RESOLUTION_HVGA_PORTRAIT)
+			// Use custom font
+			int offset = 105;
+			EVE_CoCmd_number(s_pHalContext, px  - offset     , 160, 13, 2, val / 100);
+			EVE_CoCmd_text(s_pHalContext  , px  - offset + 86, 160, 13, 0, ".");
+			EVE_CoCmd_number(s_pHalContext, px  - offset + 96, 160, 13, 2, val % 100);
+#else				
+			// Use built in font
+			int offset = 70;
+			EVE_CoCmd_number(s_pHalContext, px  - offset + 15, 160, 31, 2, val / 100);
+			EVE_CoCmd_text(s_pHalContext,   px  - offset + 66, 160, 31, 0, ".");
+			EVE_CoCmd_number(s_pHalContext, px  - offset + 76, 160, 31, 2, val % 100); 
 #endif
 		}
 		EVE_Cmd_wr32(s_pHalContext, DISPLAY());
