@@ -15,6 +15,7 @@
 
 1. INTRODUCTION
     Demo application for audio playback on Eve platform.
+    Note: On WSVGA and WXGA, animation background will be disabled.
 
 2. SUPPORTED PLATFORM
     Host platform:
