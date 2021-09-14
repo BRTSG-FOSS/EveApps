@@ -174,8 +174,12 @@ void drawUi() {
     Display_Start(s_pHalContext);
 
     EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
-    EVE_CoCmd_animFrame(s_pHalContext, xAnim, yAnim, ANIM_ADDR, frame);
     
+    // Disable animation on WSVGA and WXGA
+    if (s_pHalContext->Width < 1024) {
+        EVE_CoCmd_animFrame(s_pHalContext, xAnim, yAnim, ANIM_ADDR, frame);
+    }
+
     frame++;
     if (frame > FRAME_COUNT) frame = 0;
 
