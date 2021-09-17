@@ -146,6 +146,12 @@ Note:
         - Code clean up and minor bug fix
         
 6. RELEASE LOG
+    v1.4-rc3
+        - Fix bug: DemoGauges's UI broken on LCD WXGA
+        - Add RST_PULSE at boot up (supported GD3X)
+    v1.4-rc2
+        - Minor bug fix
+        - single header (eve.h) is excluded 
     v1.4-rc1
         - Add single header eve.h for the whole common folder
         - Port every Demo to use single header version (eve.h) 
