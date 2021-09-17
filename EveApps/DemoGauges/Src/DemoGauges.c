@@ -178,8 +178,8 @@ static uint8_t NUM_DISPLAY_SCREEN;
 static int32_t ox;
 static int32_t px;
 
-int VertextFormat = 4; 
-int Vertextdevider = 1; 
+static int VertextFmt = 4; 
+static int VertextDiv = 1; 
 
 static void cs(uint8_t i) {
 	switch (i) {
@@ -192,7 +192,7 @@ static void cs(uint8_t i) {
 void Math_Polar(EVE_HalContext *pHalContext, int32_t r, float_t th, int32_t ox, int32_t oy){
     int32_t x, y;
     Math_Polarxy(r, th, &x, &y, ox, oy);
-    EVE_Cmd_wr32(s_pHalContext,VERTEX2F(x/Vertextdevider,y/Vertextdevider));
+    EVE_Cmd_wr32(s_pHalContext,VERTEX2F(x/VertextDiv, y/VertextDiv));
 }
 
 void DemoGauges(EVE_HalContext* pHalContext) {
@@ -220,8 +220,8 @@ void DemoGauges(EVE_HalContext* pHalContext) {
 	}
 
 	if (s_pHalContext->Width >= 1023) { // -2048 to 2047
-		VertextFormat = 3;
-		Vertextdevider = 2;
+		VertextFmt = 3;
+		VertextDiv = 2;
 	}
 
 	EVE_CoCmd_dlStart(s_pHalContext);
