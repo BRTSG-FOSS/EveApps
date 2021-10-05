@@ -1,1 +1,4 @@
 build/
+.vs
+Debug/
+__flash.bin
