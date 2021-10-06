@@ -215,7 +215,16 @@ Note:
     For Eve registers and commands/instructions definition, you can find it at the file common/eve_hal/EVE_GpuDef.h and common/eve_hal/Eve_CoCmd.h.
 	  For Eve Emulator, it is for windows platform only and located at common/eve_hal/Bin/Simulation and common/eve_hal/Hdr。 
     For flash blob file used to access the eve connected flash chip, you can find it at common/eve_flash.  
-    
+
+## FatFs library
+
+For SD card access, EveApps using FatFs library version R0.14a from http://elm-chan.org/fsw/ff/00index_e.html.
+
+License: BSD (http://elm-chan.org/fsw/ff/doc/appnote.html#license)
+
+FatFs library is locate at folder common/application/fatfs.
+
+
 ## Version
     This version is v1.4.0-rc3
         
@@ -229,7 +238,7 @@ Note:
         - Add 28 demo application and 1 sample application
         - Add Pico RP2040 platform support
         - Trigger the system reset (at bootup) for some platform which has no Power Down pin toggled (such as GD3X)
-        
+
 ## License
 Copyright (c) 2012-2021 Scott Chacon and others
 
