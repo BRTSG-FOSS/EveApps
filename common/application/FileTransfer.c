@@ -199,7 +199,6 @@ Ftf_Progress_t* Ftf_Progress_Init(EVE_HalContext* phost, const char* filePath, c
 
 	progress.sent = 0;
 	progress.addr = addr;
-	APP_DBG_U(progress.addr);
 	progress.direction = direction;
 #pragma warning(push)
 #pragma warning(disable : 4996)
@@ -249,7 +248,6 @@ Ftf_Progress_t* Ftf_Progress_Init(EVE_HalContext* phost, const char* filePath, c
 		progress.bytesPerPercent = FREAD_BLOCK;
 	}
 
-	APP_DBG_U(progress.addr);
 	return &progress;
 }
 
@@ -319,7 +317,6 @@ uint32_t Ftf_Progress_Read_Next(EVE_HalContext* phost, Ftf_Progress_t* progress)
 		blockSize = ALIGN(fileWriteBlock, 64);
 
 		uint32_t fret = FlashHelper_Read(phost, gramaddr, progress->addr, blockSize, pbuff);
-		APP_DBG_U(blockSize);
 
 		if (FLASH_CMD_SUCCESS != fret) {
 			printf("Error when reading flash\n");
@@ -425,10 +422,6 @@ uint32_t Ftf_Read_File_From_Flash_With_Progressbar(EVE_HalContext* phost, uint8_
 	uint32_t address, uint32_t size) {
 	Ftf_Progress_t* progress = Ftf_Progress_Init(phost, filePath, fileName, address, FTF_PROGESS_READ);
 	progress->fileSize = size;
-	APP_DBG_U(address);
-	APP_DBG_U(progress->addr);
-	APP_DBG_U(progress->bytesPerPercent);
-
 	while (1) {
 		uint32_t pc = Ftf_Progress_Read_Next(phost, progress);
 		Ftf_Progress_Ui(phost, progress);
@@ -527,7 +520,6 @@ uint32_t Ftf_Write_FileArr_To_Flash_By_Cmd_Fifo(EVE_HalContext* phost, const cha
 
 	i = 0;
 	while (file[i] != NULL) {
-		APP_DBG("cat %s", file[i]);
 		fileSize = FileIO_File_Open(file[i], FILEIO_E_FOPEN_READ);
 
 		if (0 >= fileSize) {
@@ -722,10 +714,13 @@ uint32_t Ftf_Write_File_nBytes_To_RAM_G(EVE_HalContext* phost, const char* file,
 	const uint32_t BufferSize = FREAD_BLOCK;
 	int32_t bytes;
 	int32_t sent = 0;
-	uint32_t fileSize = 0;
+	int32_t fileSize = 0;
 	uint8_t pbuff[FREAD_BLOCK];
 
 	fileSize = FileIO_File_Open(file, FILEIO_E_FOPEN_READ);
+	if (nbytes == 0){
+		nbytes = fileSize;
+	}
 
 	if (offset) {
 		FileIO_File_Seek(offset);
@@ -735,9 +730,12 @@ uint32_t Ftf_Write_File_nBytes_To_RAM_G(EVE_HalContext* phost, const char* file,
 		printf("Unable to open file: %s\n", file);
 		return 0;
 	}
-
 	while (fileSize > 0 && sent < nbytes) {
 		bytes = FileIO_File_Read(pbuff, BufferSize);
+		if (bytes == 0) {
+			printf("Error on f_read\n");
+			break;
+		}
 		if ((sent + bytes) > nbytes) {
 			bytes = nbytes - sent;
 		}
@@ -759,27 +757,7 @@ uint32_t Ftf_Write_File_nBytes_To_RAM_G(EVE_HalContext* phost, const char* file,
  * @return uint32_t Number of bytes transfered on successful, 0 on error
  */
 uint32_t Ftf_Write_File_To_RAM_G(EVE_HalContext* phost, const char* file, uint32_t addr) {
-	uint32_t bytes;
-	uint32_t sent = 0;
-	uint32_t fileSize = 0;
-	uint8_t pbuff[FREAD_BLOCK];
-
-	fileSize = FileIO_File_Open(file, FILEIO_E_FOPEN_READ);
-	if (0 >= fileSize) {
-		printf("Unable to open file: %s\n", file);
-		return 0;
-	}
-
-	while (fileSize > 0) {
-		bytes = FileIO_File_Read(pbuff, FREAD_BLOCK);
-		EVE_Hal_wrMem(phost, addr + sent, pbuff, bytes);
-		fileSize -= bytes;
-		sent += bytes;
-	}
-
-	FileIO_File_Close();
-
-	return sent;
+	return Ftf_Write_File_nBytes_To_RAM_G(phost, file, addr, 0, 0);
 }
 
 /**

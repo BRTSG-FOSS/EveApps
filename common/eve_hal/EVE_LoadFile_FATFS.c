@@ -43,32 +43,31 @@ static FATFS s_FatFS;
 #if defined(RP2040_PLATFORM)
 
 SDHOST_STATUS sdhost_card_detect(void) {
-	FATFS fs;
     FRESULT fr;     /* FatFs return code */
     UINT br;
     UINT bw;
 
-	fr = f_mount(&fs, MOUNT_POINT, 1);
+	fr = f_mount(&s_FatFS, MOUNT_POINT, 1);
     if (fr != FR_OK) {
-        printf("mount error %d\n", fr);
+    	eve_printf_debug("mount error %d\n", fr);
 		return SDHOST_CARD_REMOVED;
     }
-    printf("mount ok\n");
+    eve_printf_debug("mount ok\n");
 	return SDHOST_CARD_INSERTED;
 }
+
 void sdhost_init(void) {
-	FATFS fs;
     FRESULT fr;     /* FatFs return code */
     UINT br;
     UINT bw;
 
-	fr = f_mount(&fs, MOUNT_POINT, 1);
+	fr = f_mount(&s_FatFS, MOUNT_POINT, 1);
     if (fr != FR_OK) {
-        printf("mount error %d\n", fr);
+    	eve_printf_debug("mount error %d\n", fr);
     }
-    printf("mount ok\n");
+    eve_printf_debug("mount ok\n");
 
-    switch (fs.fs_type) {
+    switch (s_FatFS.fs_type) {
         case FS_FAT12:
             printf("Type is FAT12\n");
             break;
@@ -85,7 +84,7 @@ void sdhost_init(void) {
             printf("Type is unknown\n");
             break;
     }
-    printf("Card size: %7.2f GB (GB = 1E9 bytes)\n\n", fs.csize * fs.n_fatent * 512E-9);
+    eve_printf_debug("Card size: %7.2f GB (GB = 1E9 bytes)\n\n", s_FatFS.csize * s_FatFS.n_fatent * 512E-9);
 }
 #endif
 
@@ -105,24 +104,18 @@ bool EVE_Util_loadSdCard(EVE_HalContext *phost)
 	{
 		if (!s_FatFSLoaded && (f_mount(&s_FatFS, MOUNT_POINT, 1) != FR_OK))
 		{
-			eve_printf_debug("FatFS SD card mount failed\n");
+			printf("FatFS SD card mount failed\n");
 		}
 		else
 		{
-			if (!s_FatFSLoaded)
-			{
-				s_FatFSLoaded = true;
-				eve_printf_debug("FatFS SD card mounted successfully\n");
-			}
+			printf("FatFS SD card mounted successfully\n");
+			s_FatFSLoaded = true;
 		}
 	}
 	else
 	{
-		if (s_FatFSLoaded)
-		{
-			eve_printf_debug("SD card not detected\n");
-			s_FatFSLoaded = false;
-		}
+		printf("SD card not detected\n");
+		s_FatFSLoaded = false;
 	}
 #else
 	s_FatFSLoaded = true;

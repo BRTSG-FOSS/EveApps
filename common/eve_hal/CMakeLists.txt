@@ -40,8 +40,7 @@ ELSE()
     hardware_timer
   )
   LINK_LIBRARIES(fatfs)
-  
-  INCLUDE_DIRECTORIES(../application/fatfs)
+  INCLUDE_DIRECTORIES(../application/fatfs/source)
 ENDIF()
 
 

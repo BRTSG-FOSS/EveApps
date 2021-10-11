@@ -1,4 +1,4 @@
-#if !defined(__FT900__) && !defined(__FT930__)
+#if defined(EVE_PLATFORM_RP2040)
 
 #include "pico.h"
 #include "pico/stdlib.h"
@@ -591,4 +591,4 @@ DRESULT disk_ioctl (
 
 	return res;
 }
-#endif //!defined(__FT900__) && !defined(__FT930__)
+#endif

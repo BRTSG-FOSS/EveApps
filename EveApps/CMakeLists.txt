@@ -3,7 +3,7 @@ LINK_LIBRARIES(eve_hal)
 
 IF(EVE_APPS_PLATFORM STREQUAL "RP2040")
   LINK_LIBRARIES(fatfs)
-  INCLUDE_DIRECTORIES("../common/application/fatfs")
+  INCLUDE_DIRECTORIES("../common/application/fatfs/source")
 ENDIF()
 
 INCLUDE_DIRECTORIES("../common/application")
