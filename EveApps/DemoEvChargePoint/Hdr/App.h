@@ -5,7 +5,7 @@
 
 // Path to UI assets Folder
 #if defined(MSVC_PLATFORM) || defined(MSVC_FT800EMU)
-#define TEST_DIR                            "..\\..\\Test\\"
+#define TEST_DIR                            "..\\..\\..\\Test\\"
 #else
 #define TEST_DIR                            "/EveApps/DemoEvChargePoint/Test"
 #endif

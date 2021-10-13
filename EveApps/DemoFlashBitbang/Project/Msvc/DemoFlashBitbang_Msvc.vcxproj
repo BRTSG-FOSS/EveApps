@@ -92,7 +92,7 @@
     <ClInclude Include="..\..\Hdr\DemoFlashBitbang.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{FBBBBF6D-E43B-4568-AA38-4D76E6D29FB5}</ProjectGuid>
+    <ProjectGuid>{F5D4975A-5E13-4673-BF31-C7A9C03DF12B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>DemoFlashBitbang</RootNamespace>
     <ProjectName>DemoFlashBitbang_MSVC</ProjectName>
@@ -121,9 +121,9 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+  <PropertyGroup>
+    <OutDir>$(ProjectDir)/$(Configuration)</OutDir>
+    <LocalDebuggerWorkingDirectory>$(ProjectDir)/$(Configuration)</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

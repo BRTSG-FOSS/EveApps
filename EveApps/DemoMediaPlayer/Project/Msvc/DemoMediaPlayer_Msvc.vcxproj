@@ -107,7 +107,7 @@
     <ClInclude Include="..\..\libs\AviPlayer\FT_Util.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{FBBBBF6D-E43B-4568-AA38-4D76E6D29FB5}</ProjectGuid>
+    <ProjectGuid>{6CD4FC82-D01F-4DB8-AFE4-D06CEEF5CDF8}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>DemoMediaPlayer</RootNamespace>
     <ProjectName>DemoMediaPlayer_MSVC</ProjectName>
@@ -136,9 +136,9 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+  <PropertyGroup>
+    <OutDir>$(ProjectDir)/$(Configuration)</OutDir>
+    <LocalDebuggerWorkingDirectory>$(ProjectDir)/$(Configuration)</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

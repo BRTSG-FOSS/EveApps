@@ -6,7 +6,7 @@
 
 // Path to UI assets Folder
 #if defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM)
-#define TEST_DIR                            "..\\..\\Test\\"
+#define TEST_DIR                            "..\\..\\..\\Test\\"
 #define EVE_FLASH_DIR                       "..\\..\\..\\..\\common\\eve_flash"
 #else
 #define TEST_DIR                            "/EveApps/SampleApp/Test"

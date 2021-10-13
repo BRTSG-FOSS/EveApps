@@ -107,7 +107,7 @@
     <ClInclude Include="..\..\libs\AviPlayer\FT_Util.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{BB16C885-7CB6-4013-9016-D69C2B4A3739}</ProjectGuid>
+    <ProjectGuid>{463F5380-1909-42A5-9794-0E406EE02D68}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>DemoMediaPlayer_Emulator</RootNamespace>
     <ProjectName>DemoMediaPlayer_Emulator</ProjectName>
@@ -134,7 +134,10 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <OutDir>$(ProjectDir)/$(Configuration)</OutDir>
+    <LocalDebuggerWorkingDirectory>$(ProjectDir)/$(Configuration)</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -152,7 +155,7 @@
     <PreBuildEvent>
       <Command>
         xcopy /sy  "$(ProjectDir)..\..\..\..\common\eve_hal\Bin\Simulation\x86\*.*" "$(OutDir)" || exit 0
-        echo F | xcopy /sy  "$(ProjectDir)..\..\Test\Flash\*.bin" "$(OutDir)\..\__Flash.bin" || exit 0
+        echo F | xcopy /sy  "$(ProjectDir)..\..\Test\Flash\*.bin" "$(OutDir)\__Flash.bin" || exit 0
         </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
@@ -173,7 +176,7 @@
     <PreBuildEvent>
       <Command>
         xcopy /sy  "$(ProjectDir)..\..\..\..\common\eve_hal\Bin\Simulation\x86\*.*" "$(OutDir)" || exit 0
-        echo F | xcopy /sy  "$(ProjectDir)..\..\Test\Flash\*.bin" "$(OutDir)\..\__Flash.bin" || exit 0
+        echo F | xcopy /sy  "$(ProjectDir)..\..\Test\Flash\*.bin" "$(OutDir)\__Flash.bin" || exit 0
         </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>

@@ -92,7 +92,7 @@
     <ClInclude Include="..\..\Hdr\DemoCircleView.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{FBBBBF6D-E43B-4568-AA38-4D76E6D29FB5}</ProjectGuid>
+    <ProjectGuid>{1AFDF703-05E7-4DA4-A9D2-2C2B441C2F97}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>DemoCircleView</RootNamespace>
     <ProjectName>DemoCircleView_MSVC</ProjectName>
@@ -121,9 +121,9 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+  <PropertyGroup>
+    <OutDir>$(ProjectDir)/$(Configuration)</OutDir>
+    <LocalDebuggerWorkingDirectory>$(ProjectDir)/$(Configuration)</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
