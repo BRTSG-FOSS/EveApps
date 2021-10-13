@@ -79,11 +79,13 @@ uint16_t List_Out_files() {
 	struct _finddata_t Files;
 	long file_spec;
 	if (!_chdir(path))
+	{
 #if defined(DISPLAY_RESOLUTION_WQVGA) || defined(DISPLAY_RESOLUTION_QVGA)
 		file_spec = _findfirst("*.jpg*", &Files);
-#elif defined(DISPLAY_RESOLUTION_WVGA)
+#else
 		file_spec = _findfirst("*H.jpg*", &Files);
 #endif
+	}
 	else
 		return nooffiles;
 #if defined(DISPLAY_RESOLUTION_WQVGA) || defined(DISPLAY_RESOLUTION_QVGA)
@@ -92,7 +94,7 @@ uint16_t List_Out_files() {
 		Image_prop[nooffiles].file_size = (Files.size + 3)&~3;
 		nooffiles++;
 	}
-#elif defined(DISPLAY_RESOLUTION_WVGA)
+#else
 	strcpy_P(Image_prop[nooffiles].name, Files.name);
 	Image_prop[nooffiles].file_size = (Files.size + 3)&~3;
 	nooffiles++;
@@ -106,7 +108,7 @@ uint16_t List_Out_files() {
 			Image_prop[nooffiles].file_size = (Files.size + 3)&~3;
 			nooffiles++;
 		}
-#elif defined(DISPLAY_RESOLUTION_WVGA)
+#else
 		strcpy_P(Image_prop[nooffiles].name, Files.name);
 		Image_prop[nooffiles].file_size = (Files.size + 3)&~3;
 		nooffiles++;
@@ -215,7 +217,7 @@ void Loadimage2ram(uint8_t bmphandle) {
 	EVE_Cmd_wr32(s_pHalContext, CMD_LOADIMAGE);
 #if defined(DISPLAY_RESOLUTION_QVGA) || defined(DISPLAY_RESOLUTION_WQVGA) || defined(DISPLAY_RESOLUTION_HVGA_PORTRAIT)
 	EVE_Cmd_wr32(s_pHalContext, (bmphandle ? 131072L : 100));
-#elif defined(DISPLAY_RESOLUTION_WVGA)
+#else
 	EVE_Cmd_wr32(s_pHalContext, (bmphandle ? 400000L : 300));  //different ram location for bigger bitmap
 
 #endif
@@ -234,11 +236,9 @@ void DemoImageviewer(EVE_HalContext* pHalContext) {
 	int32_t px = ((s_pHalContext->Width - 320) / 2) + aspect_ratio,
 		x = ((s_pHalContext->Width - 320) / 2) + aspect_ratio,
 		tracker = 0, temp_x;
-#elif  defined(DISPLAY_RESOLUTION_WVGA)
-	int32_t px = ((s_pHalContext->Width - 512) / 2) + aspect_ratio, x = ((s_pHalContext->Width - 512) / 2) + aspect_ratio, tracker = 0,
-		temp_x;
 #else
-	int32_t px = ((s_pHalContext->Width - 512) / 2) + aspect_ratio, x = ((s_pHalContext->Width - 512) / 2) + aspect_ratio, tracker = 0, temp_x;
+	int32_t px = ((s_pHalContext->Width - 512) / 2) + aspect_ratio, x = ((s_pHalContext->Width - 512) / 2) + aspect_ratio;
+	int32_t tracker = 0, temp_x = 0;
 #endif
 
 	uint8_t r = 1, loaded = 0, Touch_detected = 0;
@@ -258,7 +258,7 @@ void DemoImageviewer(EVE_HalContext* pHalContext) {
 #if defined(DISPLAY_RESOLUTION_WQVGA) || defined(DISPLAY_RESOLUTION_QVGA) || defined(DISPLAY_RESOLUTION_HVGA_PORTRAIT)
 	for (i = 0; i < 64; i++)
 		EVE_Hal_wr8(s_pHalContext, i, 96 - (3 * i / 2));
-#elif defined(DISPLAY_RESOLUTION_WVGA)
+#else
 	for (i = 0; i < 180; i++) {
 		EVE_Hal_wr8(s_pHalContext, i, 90 - (i / 2));
 	}
@@ -271,7 +271,7 @@ void DemoImageviewer(EVE_HalContext* pHalContext) {
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE((r ? 131072L : 100)));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(RGB565, 320L * 2, 194));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, 320, 194));
-#elif defined(DISPLAY_RESOLUTION_WVGA)
+#else
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE((r ? 400000L : 300)));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(RGB565, imgWidth * 2, imgHeight));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT_H((imgWidth * 2) >> 10, imgHeight >> 9));
@@ -284,7 +284,7 @@ void DemoImageviewer(EVE_HalContext* pHalContext) {
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(0));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(L8, 1, 64));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, REPEAT, BORDER, s_pHalContext->Width, 64));
-#elif defined(DISPLAY_RESOLUTION_WVGA)
+#else
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(2));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(0));
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(L8, 1, 180));
@@ -294,7 +294,7 @@ void DemoImageviewer(EVE_HalContext* pHalContext) {
 	EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
 #if defined(DISPLAY_RESOLUTION_WQVGA) || defined(DISPLAY_RESOLUTION_QVGA) || defined(DISPLAY_RESOLUTION_HVGA_PORTRAIT)
 	EVE_Cmd_wr32(s_pHalContext, VERTEX2II(x, (10 + aspect_ratio), r, 0));
-#elif defined(DISPLAY_RESOLUTION_WVGA)
+#else
 	EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(r));
 	EVE_Cmd_wr32(s_pHalContext, CELL(0));
 	EVE_Cmd_wr32(s_pHalContext, VERTEX2F(x * 16, (10 + aspect_ratio) * 16));
@@ -312,16 +312,16 @@ void DemoImageviewer(EVE_HalContext* pHalContext) {
 		if (x != temp_x) {
 			EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(r ^ 1));
 			EVE_Cmd_wr32(s_pHalContext, CELL(0));
-#if defined(DISPLAY_RESOLUTION_WVGA)
-			EVE_Cmd_wr32(s_pHalContext, VERTEX2F(16 * (x - 656), 16 * (10 + aspect_ratio)));
-#elif defined(DISPLAY_RESOLUTION_QVGA) || defined(DISPLAY_RESOLUTION_WQVGA)  ||  defined(DISPLAY_RESOLUTION_HVGA_PORTRAIT)
+#if defined(DISPLAY_RESOLUTION_QVGA) || defined(DISPLAY_RESOLUTION_WQVGA)  ||  defined(DISPLAY_RESOLUTION_HVGA_PORTRAIT)
 			EVE_Cmd_wr32(s_pHalContext, VERTEX2F(16 * (x - 400), 16 * (10 + aspect_ratio)));
+#else
+			EVE_Cmd_wr32(s_pHalContext, VERTEX2F(16 * (x - 656), 16 * (10 + aspect_ratio)));
 #endif
 		}
 
 #if defined(DISPLAY_RESOLUTION_QVGA) || defined(DISPLAY_RESOLUTION_WQVGA)  ||  defined(DISPLAY_RESOLUTION_HVGA_PORTRAIT)
 		EVE_Cmd_wr32(s_pHalContext, VERTEX2II(x, (10 + aspect_ratio), r, 0));
-#elif defined(DISPLAY_RESOLUTION_WVGA)
+#else
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(r));
 		EVE_Cmd_wr32(s_pHalContext, VERTEX2F(x * 16, (10 + aspect_ratio) * 16));
 #endif
@@ -333,7 +333,7 @@ void DemoImageviewer(EVE_HalContext* pHalContext) {
 		EVE_Cmd_wr32(s_pHalContext, VERTEX2II(x, 207, 2, 0));
 #elif defined(DISPLAY_RESOLUTION_WQVGA)
 		EVE_Cmd_wr32(s_pHalContext, VERTEX2II(0, 212, 2, 0));
-#elif defined(DISPLAY_RESOLUTION_WVGA)
+#else
 		EVE_Cmd_wr32(s_pHalContext, VERTEX2II(0, 300, 2, 0));
 #endif
 		EVE_Cmd_wr32(s_pHalContext, COLOR_MASK(1, 1, 1, 1));
@@ -345,7 +345,7 @@ void DemoImageviewer(EVE_HalContext* pHalContext) {
 		EVE_CoCmd_scale(s_pHalContext, 1 * 65536, 65536 * -1);
 		EVE_CoCmd_translate(s_pHalContext, -(temp_x) * 65536L, 65536L * -96.5);
 		EVE_CoCmd_setMatrix(s_pHalContext);
-#elif defined(DISPLAY_RESOLUTION_WVGA)
+#else
 		EVE_CoCmd_loadIdentity(s_pHalContext);
 		EVE_CoCmd_translate(s_pHalContext, 256 * 65536L, 65536L * 150);
 		EVE_CoCmd_scale(s_pHalContext, 1 * 65536, 65536 * -1);
@@ -358,7 +358,7 @@ void DemoImageviewer(EVE_HalContext* pHalContext) {
 			EVE_Cmd_wr32(s_pHalContext, CELL(0));
 #if defined(DISPLAY_RESOLUTION_QVGA) || defined(DISPLAY_RESOLUTION_WQVGA)  ||  defined(DISPLAY_RESOLUTION_HVGA_PORTRAIT)
 			EVE_Cmd_wr32(s_pHalContext, VERTEX2F(16 * (x - 400), 16 * 212));
-#elif defined(DISPLAY_RESOLUTION_WVGA)
+#else
 			EVE_Cmd_wr32(s_pHalContext, VERTEX2F(16 * (x - 656), 16 * 365));
 #endif
 		}
@@ -366,7 +366,7 @@ void DemoImageviewer(EVE_HalContext* pHalContext) {
 		EVE_Cmd_wr32(s_pHalContext, VERTEX2II(x, 207, r, 0));
 #elif defined(DISPLAY_RESOLUTION_WQVGA)
 		EVE_Cmd_wr32(s_pHalContext, VERTEX2II(x, 212, r, 0));
-#elif defined(DISPLAY_RESOLUTION_WVGA)
+#else
 		EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(r));
 		EVE_Cmd_wr32(s_pHalContext, VERTEX2F(x * 16, 365 * 16));
 #endif
@@ -377,7 +377,7 @@ void DemoImageviewer(EVE_HalContext* pHalContext) {
 			EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(((r ^ 1) ? 131072L : 100)));
 			EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(RGB565, 320L * 2, 194));
 			EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, 320, 194));
-#elif defined(DISPLAY_RESOLUTION_WVGA)
+#else
 			EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(r ^ 1));
 			EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(((r ^ 1) ? 400000L : 300)));
 			EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(RGB565, imgWidth * 2, imgHeight));
