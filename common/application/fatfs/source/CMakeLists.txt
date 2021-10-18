@@ -8,6 +8,7 @@ ADD_LIBRARY(fatfs
     ${HDRS}
   )
 
+IF(IS_PLATFORM_RP2040)
 add_subdirectory(hardware_gpio_ex)
 TARGET_LINK_LIBRARIES(
   fatfs 
@@ -21,3 +22,4 @@ TARGET_LINK_LIBRARIES(fatfs
     hardware_timer
     hardware_clocks
 )
+ENDIF()
