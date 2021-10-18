@@ -106,9 +106,9 @@ ESD follows the same styling as HAL, except the library prefix (`Esd_`) and func
 ## Folder introduction
 
     ├───common                  
-    │   ├───app_common          | Application's common functions
-    │   ├───eve_flash           | Blob binary for flash programming
-    │   └───eve_hal             | Hardware abstraction layer to bridge different platforms
+    │   ├───application          | Application's common functions and fatfs library
+    │   ├───eve_flash            | Blob binary for flash programming
+    │   └───eve_hal              | Hardware abstraction layer to bridge different platforms
     ├───EveApps                  
     │    ├───DemoCircleView      | Image viewer demo
     │    ├───DemoEvChargePoint   | Electric charging station demo
