@@ -252,6 +252,7 @@ ELSEIF(IS_PLATFORM_FT9XX)
   SET(CMAKE_C_COMPILER "${FT9XX_TOOLCHAIN}/Toolchain/tools/bin/ft32-elf-gcc.exe")
   SET(CMAKE_CXX_COMPILER "${FT9XX_TOOLCHAIN}/Toolchain/tools/bin/ft32-elf-g++.exe")
   SET(CMAKE_MAKE_PROGRAM "${FT9XX_TOOLCHAIN}/External/GnuWin32/bin/make.exe")
+  SET(CMAKE_OBJCOPY      "${FT9XX_TOOLCHAIN}/Toolchain/tools/ft32-elf/bin/objcopy.exe")
 
   # Where is the target environment
   SET(CMAKE_FIND_ROOT_PATH  "${FT9XX_TOOLCHAIN}/Toolchain/tools/bin")
