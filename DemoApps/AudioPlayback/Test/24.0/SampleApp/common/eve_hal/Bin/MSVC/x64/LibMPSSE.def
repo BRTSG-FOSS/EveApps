@@ -1,0 +1,14 @@
+LIBRARY libMPSSE.dll
+
+EXPORTS
+Init_libMPSSE
+SPI_GetNumChannels
+SPI_GetChannelInfo
+SPI_OpenChannel
+SPI_InitChannel
+SPI_CloseChannel
+Cleanup_libMPSSE
+SPI_Write
+SPI_Read
+SPI_ToggleCS
+FT_WriteGPIO

@@ -1,0 +1,6 @@
+unified.blob          : 0       : 4096
+abstract.anim.data    : 4096    : 8605504
+abstract.anim.object  : 8609600 : 384
+bicycle.anim.data     : 8609984 : 327104
+bicycle.anim.object   : 8937088 : 128
+battery.ramg.anim.bin : 8937216 : 19712
