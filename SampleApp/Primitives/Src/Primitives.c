@@ -58,9 +58,9 @@ int main(int argc, char* argv[])
 
     char *info[] =
     {  "EVE Sample Application",
-        "This sample demonstrate the using of", 
-        "basic elements, such as lines, rectangle, point",
-        "bitmap, text ..."
+        "This sample demonstrate the using of primitives graphics", 
+        "",
+        ""
     }; 
 
     while (TRUE) {
@@ -721,7 +721,7 @@ void SAMAPP_Primitives_stencil()
 * @brief Display Polygons
 *
 */
-void SAMAPP_Gpu_polygon()
+void SAMAPP_Primitives_polygon()
 {
     Draw_Text(s_pHalContext, "Example for: Polygons");
 
@@ -778,7 +778,7 @@ void SAMAPP_Gpu_polygon()
 * @brief Display a cube
 *
 */
-void SAMAPP_Gpu_cube()
+void SAMAPP_Primitives_cube()
 {
     uint32_t points[6 * 5], x, y, i, z;
     int16_t xoffset, yoffset, CubeEdgeSz;
@@ -1422,7 +1422,7 @@ void SAMAPP_Primitives_testcard() {
 * @brief API to demonstrate CMD_GRADIENTA with transparency
 *
 */
-void SAMAPP_gradientA()
+void SAMAPP_Primitives_gradientA()
 {
 #if defined (BT81X_ENABLE) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM))
     Draw_Text(s_pHalContext, "Example for: CMD_GRADIENTA with transparency");
@@ -1526,7 +1526,7 @@ void SAMAPP_gradientA()
 * @brief API to demonstrate the use of transfer commands
 *
 */
-void SAMAPP_CoPro_appendCmds()
+void SAMAPP_Primitives_appendComand()
 {
     uint32_t AppendCmds[16];
     int16_t xoffset;
@@ -1584,6 +1584,65 @@ void SAMAPP_CoPro_appendCmds()
     EVE_sleep(2000);
 }
 
+/**
+* @brief Simple graph
+*
+*/
+void SAMAPP_Primitives_simpleMap()
+{
+    Draw_Text(s_pHalContext, "Example for: A simple map");
+
+    App_WrDl_Buffer(s_pHalContext, CLEAR_COLOR_RGB(236, 232, 224)); //light gray
+    App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1));
+    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(170, 157, 136)); //medium gray
+    App_WrDl_Buffer(s_pHalContext, LINE_WIDTH(63));
+    App_WrDl_Buffer(s_pHalContext, CALL(11)); //draw the streets
+    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(250, 250, 250)); //white
+    App_WrDl_Buffer(s_pHalContext, LINE_WIDTH(48));
+    App_WrDl_Buffer(s_pHalContext, CALL(11)); //draw the streets
+    App_WrDl_Buffer(s_pHalContext, COLOR_RGB(0, 0, 0));
+    App_WrDl_Buffer(s_pHalContext, BEGIN(BITMAPS));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2II(240, 91, 27, 77)); //draw "Main st." at (240,91)
+    App_WrDl_Buffer(s_pHalContext, VERTEX2II(252, 91, 27, 97));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2II(260, 91, 27, 105));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2II(263, 91, 27, 110));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2II(275, 91, 27, 115));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2II(282, 91, 27, 116));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2II(286, 91, 27, 46));
+    App_WrDl_Buffer(s_pHalContext, END());
+    App_WrDl_Buffer(s_pHalContext, DISPLAY());
+    App_WrDl_Buffer(s_pHalContext, BEGIN(LINES));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2F(-160, -20));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2F(320, 4160));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2F(800, -20));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2F(1280, 4160));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2F(1920, -20));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2F(2400, 4160));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2F(2560, -20));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2F(3040, 4160));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2F(3200, -20));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2F(3680, 4160));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2F(2880, -20));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2F(3360, 4160));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2F(-20, 0));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2F(5440, -480));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2F(-20, 960));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2F(5440, 480));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2F(-20, 1920));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2F(5440, 1440));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2F(-20, 2880));
+    App_WrDl_Buffer(s_pHalContext, VERTEX2F(5440, 2400));
+    App_WrDl_Buffer(s_pHalContext, END());
+    App_WrDl_Buffer(s_pHalContext, RETURN());
+
+    /* Download the DL into DL RAM */
+    App_Flush_DL_Buffer(s_pHalContext);
+
+    /* Do a swap */
+    GPU_DLSwap(s_pHalContext, DLSWAP_FRAME);
+    SAMAPP_ENABLE_DELAY();
+}
+
 void SAMAPP_Primitives() 
 {
     SAMAPP_Primitives_points();
@@ -1597,8 +1656,8 @@ void SAMAPP_Primitives()
     SAMAPP_Primitives_edgeStrips();
     SAMAPP_Primitives_scissor();
     SAMAPP_Primitives_stencil();
-    SAMAPP_Gpu_polygon();
-    SAMAPP_Gpu_cube();
+    SAMAPP_Primitives_polygon();
+    SAMAPP_Primitives_cube();
     SAMAPP_Primitives_ballStencil();
     SAMAPP_Primitives_string();
     SAMAPP_Primitives_additiveBlendPoints();
@@ -1608,8 +1667,9 @@ void SAMAPP_Primitives()
     SAMAPP_Primitives_macroUsage();
     SAMAPP_Primitives_calibratesub();
     SAMAPP_Primitives_testcard();
-    SAMAPP_gradientA();
-    SAMAPP_CoPro_appendCmds();
+    SAMAPP_Primitives_gradientA();
+    SAMAPP_Primitives_appendComand();
+    SAMAPP_Primitives_simpleMap();
 }
 
 

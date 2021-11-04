@@ -63,9 +63,9 @@ int main(int argc, char* argv[])
 
     char *info[] =
     {  "EVE Sample Application",
-        "This sample demonstrate the using of", 
-        "using Sketch, Slider,",
-        "& Buttons."
+        "This sample demonstrate the using of bitmap", 
+        "",
+        ""
     }; 
 
     while (TRUE) {

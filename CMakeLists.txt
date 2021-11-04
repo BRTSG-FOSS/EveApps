@@ -21,7 +21,7 @@
 #  nmake SampleApp
 #
 
-SET(FT9XX_TOOLCHAIN "PATH_TO:\ Bridgetek/FT9xx\ Toolchain2.5.0") #Any space must be prefixed with '\'
+SET(FT9XX_TOOLCHAIN "D:/sw/Bridgetek/FT9xx\ Toolchain2.5.0") #Any space must be prefixed with '\'
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.13 FATAL_ERROR)
 set (CMAKE_VERBOSE_MAKEFILE ON)
@@ -140,7 +140,6 @@ function(give_sugguest value array global_set)
   ENDFOREACH()
 endfunction()
   
-#cmake  -G "MinGW Makefiles" -DEVE_APPS_PLATFORM=MM900EV3A -DEVE_APPS_GRAPHICS=BT817 -DEVE_APPS_DISPLAY=EVE_DISPLAY_WXGA -DCMAKE_BUILD_TYPE=Debug ..
 function(validate_input option_name array)
   set(value "${${option_name}}")
   

@@ -7,7 +7,7 @@
 #if defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM)
 #define TEST_DIR                            "..\\..\\..\\Test\\"
 #else
-#define TEST_DIR                            "/EveApps/Primitives/Test"
+#define TEST_DIR                            "/EveApps/SampleApp/Primitives/Test"
 #endif
 
 #define GET_CALIBRATION                     1

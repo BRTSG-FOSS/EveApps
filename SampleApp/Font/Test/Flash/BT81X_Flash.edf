@@ -1,0 +1,22 @@
+name                        : id    : start   : size    : type  : stype : comp  : width : height
+
+unified.blob                : 0     : 0       : 4096    : 1     : 0     : 0     : 0     : 0    
+font_chinese_27_ASTC.glyph  : 1     : 4096    : 3584    : 4     : 0     : 0     : 0     : 0    
+font_chinese_27_ASTC.xfont  : 2     : 7680    : 192     : 254   : 0     : 0     : 0     : 0    
+font_chinese_28_L1.glyph    : 3     : 7872    : 16384   : 4     : 0     : 0     : 0     : 0    
+font_chinese_28_L1.xfont    : 4     : 24256   : 192     : 254   : 0     : 0     : 0     : 0    
+font_chinese_29_L2.glyph    : 5     : 24448   : 32768   : 4     : 0     : 0     : 0     : 0    
+font_chinese_29_L2.xfont    : 6     : 57216   : 192     : 254   : 0     : 0     : 0     : 0    
+font_chinese_30_L4.glyph    : 7     : 57408   : 65536   : 4     : 0     : 0     : 0     : 0    
+font_chinese_30_L4.xfont    : 8     : 122944  : 192     : 254   : 0     : 0     : 0     : 0    
+font_chinese_31_L8.glyph    : 9     : 123136  : 131072  : 4     : 0     : 0     : 0     : 0    
+font_chinese_31_L8.xfont    : 10    : 254208  : 192     : 254   : 0     : 0     : 0     : 0    
+font16.jpg                  : 11    : 254400  : 10880   : 9     : 0     : 0     : 0     : 0    
+mssong_20.glyph             : 12    : 265280  : 4174528 : 4     : 0     : 0     : 0     : 0    
+mssong_20.xfont             : 13    : 4439808 : 4544    : 254   : 0     : 0     : 0     : 0    
+Roboto_BoldCondensed_12.bin : 14    : 4444352 : 19392   : 254   : 0     : 1     : 0     : 0    
+simkai1.gly                 : 15    : 4463744 : 600960  : 254   : 0     : 0     : 0     : 0    
+simkai1.xfo                 : 16    : 5064704 : 16064   : 254   : 0     : 0     : 0     : 0    
+simkai2.gly                 : 17    : 5080768 : 62720   : 254   : 0     : 0     : 0     : 0    
+simkai2.xfo                 : 18    : 5143488 : 128     : 254   : 0     : 0     : 0     : 0    
+Tuffy_Bold.raw              : 19    : 5143616 : 6656    : 254   : 0     : 0     : 0     : 0    
