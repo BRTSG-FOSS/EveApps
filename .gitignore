@@ -1,1 +1,6 @@
 build/
+.vs
+Debug/
+Release/
+__flash.bin
+.settings

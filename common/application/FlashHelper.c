@@ -379,8 +379,6 @@ uint32_t FlashHelper_SwitchFullMode(EVE_HalContext* phost)
  *
  * @param physical_W Panel width in inches
  * @param physical_H Panel height in inches
- * @param displayW Expected width of Panel
- * @param displayH Expected height of Panel
  * @return ft_void_t
  */
 ft_void_t Ft_Gpu_HorizontalScanoutFilter(EVE_HalContext* phost, uint32_t physical_W, uint32_t physical_H) {

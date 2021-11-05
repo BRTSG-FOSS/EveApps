@@ -101,7 +101,9 @@ uint32_t Draw_Image(EVE_HalContext *phost, const char *filePath, uint32_t format
 void Calibration_Restore(EVE_HalContext *phost);
 void Calibration_Save(EVE_HalContext *phost);
 void Display_Start(EVE_HalContext *phost);
+void Display_StartColor(EVE_HalContext* phost, uint8_t* bgColor, uint8_t* textColor);
 void Display_End(EVE_HalContext *phost);
+void Draw_TextColor(EVE_HalContext* phost, const char8_t* str, uint8_t* bgColor, uint8_t* textColor);
 void Draw_Text(EVE_HalContext *phost, const char8_t *str);
 void Draw_Text2(EVE_HalContext* phost, const char8_t* str, int ms);
 void Play_MuteSound(EVE_HalContext *phost);
@@ -113,5 +115,6 @@ void Show_Diaglog_Info(EVE_HalContext *phost, const uint8_t *msg);
 uint8_t isSDcardDetected();
 void hintScreen(EVE_HalContext *phost, const uint8_t *msg);
 void Flash_Init(EVE_HalContext* phost, const uint8_t *filePath, const uint8_t *fileName);
+void WelcomeScreen(Gpu_Hal_Context_t* phost, char* info[]);
 
 #endif /* COMMON_H_ */

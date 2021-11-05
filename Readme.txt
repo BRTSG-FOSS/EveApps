@@ -16,7 +16,7 @@
 1. INTRODUCTION
     EveApps is a set of applications based on Eve Series chip (FT80X, FT81X, BT815/6, BT817/8) for users to refer to.
     
-    It contains 26 demo application and 1 sample application. They are all written in ANSI C code and full source code is enclosed.
+    It contains 26 demo application and 11 sample application. They are all written in ANSI C code and full source code is enclosed.
     Demo application is for demo purpose and fair complex, which is closed to real-life project. 
     Sample application is for the tutorial purpose which is simpler and easier to understand each display list or command.   
     For beginners, please always start from SampleApp project first.
@@ -139,13 +139,18 @@ Note:
     For flash blob file used to access the eve connected flash chip, you can find it at common/eve_flash.        
             
 5. VERSION
-    v1.4-rc2
-        - Support Raspberry Pico RP2040 MCU
-        - Change test folder location in the SD to EveApps/[application name]/Test
-        - Fix QSPI connection issue of MM930LITE and MM817EV
-        - Code clean up and minor bug fix
+    v1.5.0-rc1
+        - Update FatFS library in common/application/fatfs to R0.14b
+        - Add DemoApp.snl and SampleApp.snl to build all the demo projects and sampleApp project in one batch
+        - Update4d Cmakelist.txt to build every project in one shot for FT90X/Win32/RP2040 platform 
+        - Break the SampleApp into 11 smaller projects
         
 6. RELEASE LOG
+    v1.5.0-rc1
+        - Update FatFS library in common/application/fatfs to R0.14b
+        - Add DemoApp.snl and SampleApp.snl to build all the demo projects and sampleApp project in one batch
+        - Update4d Cmakelist.txt to build every project in one shot for FT90X/Win32/RP2040 platform 
+        - Break the SampleApp into 11 smaller projects
     v1.4-rc3
         - Fix bug: DemoGauges's UI broken on LCD WXGA
         - Add RST_PULSE at boot up (supported GD3X)

@@ -20,17 +20,14 @@ ELSE()
   )
 ENDIF()
 
-IF(NOT EVE_APPS_PLATFORM STREQUAL "RP2040")
-
+IF (WIN32)
   TARGET_LINK_LIBRARIES(eve_hal
     libMPSSE
     LibFT4222
     ftd2xx
     bt8xxemu
   )
-  
-ELSE()
-
+ELSEIF(IS_PLATFORM_RP2040)
   # Add the standard library to the build
   TARGET_LINK_LIBRARIES(eve_hal pico_stdlib)
   
@@ -40,11 +37,16 @@ ELSE()
     hardware_timer
   )
   LINK_LIBRARIES(fatfs)
-  
-  INCLUDE_DIRECTORIES(../application/fatfs)
+  INCLUDE_DIRECTORIES(../application/fatfs/source)  
+ELSEIF(IS_PLATFORM_FT900)
+  LINK_LIBRARIES(fatfs)
+  TARGET_LINK_LIBRARIES(eve_hal "ft900;m;c;stub")
+  INCLUDE_DIRECTORIES(../application/fatfs/source)  
+ELSEIF(IS_PLATFORM_FT930)
+  LINK_LIBRARIES(fatfs)
+  TARGET_LINK_LIBRARIES(eve_hal "ft930;m;c;stub")
+  INCLUDE_DIRECTORIES(../application/fatfs/source)  
 ENDIF()
-
-
 
 IF (WIN32)
   IF(CMAKE_SIZEOF_VOID_P EQUAL 8)

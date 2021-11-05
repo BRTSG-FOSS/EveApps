@@ -1,0 +1,5 @@
+{
+    "PLAYBACK_FORMAT": "ADPCM_SAMPLES",
+    "PLAYBACK_FREQ": "44100",
+    "type": "audio"
+}
