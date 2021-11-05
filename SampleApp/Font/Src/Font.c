@@ -24,9 +24,10 @@
 #include "EVE_CoCmd.h"
 #include "Font.h"
 
-#define SAMAPP_INFO_START  Display_StartColor(s_pHalContext, (uint8_t[]) { 0x77, 0x77, 0x77 }, (uint8_t[]) { 255, 255, 255 })
-#define SAMAPP_INFO_END    Display_End(s_pHalContext);
-#define SAMAPP_DELAY_NEXT  EVE_sleep(2000);
+#define SAMAPP_INFO_TEXT(str)  Draw_TextColor(s_pHalContext, str, (uint8_t[]) { 0x77, 0x77, 0x77 }, (uint8_t[]) { 255, 255, 255 })
+#define SAMAPP_INFO_START      Display_StartColor(s_pHalContext, (uint8_t[]) { 0x77, 0x77, 0x77 }, (uint8_t[]) { 255, 255, 255 })
+#define SAMAPP_INFO_END        Display_End(s_pHalContext);
+#define SAMAPP_DELAY_NEXT      EVE_sleep(2000);
 
 static EVE_HalContext s_halContext;
 static EVE_HalContext* s_pHalContext;
@@ -277,10 +278,6 @@ void SAMAPP_Font_font_Cache() {
     APP_INF("Copying xfont from %d by %d bytes to %d", xfont_chinese_ASTC[_add], xfont_chinese_ASTC[_size], xfontOnRamG);
     EVE_CoCmd_flashRead(s_pHalContext, xfontOnRamG, xfont_chinese_ASTC[_add], xfont_chinese_ASTC[_size]);
 
-    // read glyph to ramg
-    APP_INF("Copying glyph from %d by %d bytes to %d", glyph_chinese_ASTC[_add], glyph_chinese_ASTC[_size], glyphOnRamG);
-    EVE_CoCmd_flashRead(s_pHalContext, glyphOnRamG, glyph_chinese_ASTC[_add], glyph_chinese_ASTC[_size]);
-
     EVE_Cmd_waitFlush(s_pHalContext);
 
     for (int t = 0; t < 2; t++) {
@@ -321,13 +318,17 @@ void SAMAPP_Font_font_Cache() {
         duration[t] = endms - startms;
     }
     EVE_Cmd_waitFlush(s_pHalContext);
-    APP_INF(
+    
+    char strDuration[100];
+    sprintf(strDuration,
         "Duration No FontCache: %u ms\n"
         "Duration With FontCache: %u ms\n"
         "Different: %d ms (%d%%)",
         duration[0], duration[1],
         (int)(duration[0] - duration[1]),
         (int)(abs((int)duration[1] - (int)duration[0]) * 100) / duration[1]);
+    SAMAPP_INFO_TEXT(strDuration);
+
     SAMAPP_DELAY_NEXT;
 #endif // EVE_SUPPORT_GEN == EVE4
 }
@@ -357,10 +358,6 @@ void SAMAPP_Font_fontCacheQuery() {
 
     const char* str = u8"\x0004\x0003\x0009\x0005\x000b\x0006\x0008\x000c\x000d\x0001\x0002\x0007";
     int loopText = strlen(str);
-
-    // read glyph to ramg
-    APP_DBG("Copying glyph from %d by %d bytes to %d", glyph_chinese_ASTC[_add], glyph_chinese_ASTC[_size], glyphOnRamG);
-    EVE_CoCmd_flashRead(s_pHalContext, glyphOnRamG, glyph_chinese_ASTC[_add], glyph_chinese_ASTC[_size]);
 
     // read .xfont to ramg
     APP_DBG("Copying xfont from %d by %d bytes to %d", xfont_chinese_ASTC[_add], xfont_chinese_ASTC[_size], xfontOnRamG);
