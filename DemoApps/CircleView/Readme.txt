@@ -45,7 +45,7 @@
         
     3.2 BUILD AND RUN
         3.2.1 FT9XX platform
-            - Copy Test folder to SDcard, the path is: /EveApps/DemoCircleArea/Test
+            - Copy Test folder to SDcard, the path is: /EveApps/DemoCircleView/Test
             - Import project in Project\FT9XX into FT9xx toolchain
             - Build and run with FT9xx toolchain (Please see 3.2 Building the 
               project in AN_325_FT9xx_Tool_Chain_Installation_Guide.pdf)
