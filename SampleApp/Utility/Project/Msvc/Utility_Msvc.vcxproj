@@ -90,7 +90,7 @@
     <ClInclude Include="..\..\Hdr\Utility.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{4A485CE6-8E2F-4906-A9F1-54A75B0C4AD9}</ProjectGuid>
+    <ProjectGuid>{E26194B1-16ED-412B-A9E8-BFF78397E57A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Utility</RootNamespace>
     <ProjectName>Utility_MSVC</ProjectName>

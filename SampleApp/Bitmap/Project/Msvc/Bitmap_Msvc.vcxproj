@@ -90,7 +90,7 @@
     <ClInclude Include="..\..\Hdr\Bitmap.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{4A485CE6-8E2F-4906-A9F1-54A75B0C4AD9}</ProjectGuid>
+    <ProjectGuid>{756CC44E-DDB2-45DD-B4BD-8EA1A3F9311E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Bitmap</RootNamespace>
     <ProjectName>Bitmap_MSVC</ProjectName>

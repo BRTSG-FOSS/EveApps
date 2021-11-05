@@ -90,7 +90,7 @@
     <ClInclude Include="..\..\Hdr\Sound.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{4A485CE6-8E2F-4906-A9F1-54A75B0C4AD9}</ProjectGuid>
+    <ProjectGuid>{C0872233-F79B-4BCE-A4F3-AC5785CCE488}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Sound</RootNamespace>
     <ProjectName>Sound_MSVC</ProjectName>
