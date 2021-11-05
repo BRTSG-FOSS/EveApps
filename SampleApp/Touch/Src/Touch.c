@@ -232,43 +232,24 @@ void helperLogoIntialsetup(const SAMAPP_Logo_Img_t sptr[], uint8_t num)
 void helperConcentricCircles(float C1, uint16_t R, uint16_t G, uint16_t B)
 {
 #if (EVE_CHIPID & 0x01) == 0x01 // capacity EVE
-    EVE_Cmd_wr32(s_pHalContext, CLEAR_COLOR_A(0));
-
-    /* Using ColorMask to disable color buffer updates, and
-    set the BlendFunc to a value that writes     incoming alpha
-    directly into the alpha buffer, by specifying a source blend factor
-    of ONE */
-
-    EVE_Cmd_wr32(s_pHalContext, COLOR_MASK(0, 0, 0, 1));
-    EVE_Cmd_wr32(s_pHalContext, BLEND_FUNC(ONE, ONE_MINUS_SRC_ALPHA));
-
-    /*Draw the Outer circle */
-
+    EVE_Cmd_wr32(s_pHalContext, STENCIL_FUNC(NEVER, 0x00, 0x00));
+    EVE_Cmd_wr32(s_pHalContext, STENCIL_OP(INCR, INCR));
     EVE_Cmd_wr32(s_pHalContext, BEGIN(FTPOINTS));
-    EVE_Cmd_wr32(s_pHalContext, POINT_SIZE((uint16_t )(C1 * 16))); //outer circle
+    EVE_Cmd_wr32(s_pHalContext, POINT_SIZE((uint16_t )((C1 - 5) * 16))); //inner circle
     EVE_Cmd_wr32(s_pHalContext, VERTEX2II(240, 136, 0, 0));
 
-    /* Draw the inner circle in a blend mode that clears any drawn
-    pixels to zero, so the source blend factor is ZERO */
-    EVE_Cmd_wr32(s_pHalContext, BLEND_FUNC(ZERO, ONE_MINUS_SRC_ALPHA));
-
-    EVE_Cmd_wr32(s_pHalContext, POINT_SIZE((uint16_t )((C1 - 2) * 16))); //inner circle
+    EVE_Cmd_wr32(s_pHalContext, STENCIL_FUNC(NOTEQUAL, 0x01, 0x01));
+    EVE_Cmd_wr32(s_pHalContext, POINT_SIZE((uint16_t )((C1) * 16))); //outer circle
     EVE_Cmd_wr32(s_pHalContext, VERTEX2II(240, 136, 0, 0));
 
-    /*Enable the color Mask and the source blend factor is set to DST ALPHA, so the
-    transparency values come from the alpha buffer*/
-
-    EVE_Cmd_wr32(s_pHalContext, COLOR_MASK(1, 1, 1, 0));
-
-    EVE_Cmd_wr32(s_pHalContext, BLEND_FUNC(DST_ALPHA, ONE));
-
-    /* draw the outer circle again with the color mask enabled andd the blend factor
-    is set to SRC_ALPHA */
+    EVE_Cmd_wr32(s_pHalContext, STENCIL_FUNC(EQUAL, 0x01, 0x01));
+    EVE_Cmd_wr32(s_pHalContext, STENCIL_OP(KEEP, KEEP));
     EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(R, G, B));
-    EVE_Cmd_wr32(s_pHalContext, POINT_SIZE((uint16_t )(C1 * 16)));
+    EVE_Cmd_wr32(s_pHalContext, POINT_SIZE((uint16_t )((C1) * 16)));
     EVE_Cmd_wr32(s_pHalContext, VERTEX2II(240, 136, 0, 0));
 
-    EVE_Cmd_wr32(s_pHalContext, BLEND_FUNC(SRC_ALPHA, ONE_MINUS_SRC_ALPHA));
+    EVE_Cmd_wr32(s_pHalContext, STENCIL_FUNC(ALWAYS, 0x01, 0x01));
+    EVE_Cmd_wr32(s_pHalContext, STENCIL_OP(KEEP, KEEP));
 
     EVE_Cmd_wr32(s_pHalContext, END());
 #endif // capacity EVE
@@ -948,10 +929,10 @@ void SAMAPP_Touch_BouncingCircles()
     for (int32_t k = 0; k < 150; k++)
     {
         EVE_CoCmd_dlStart(s_pHalContext);
+        EVE_Cmd_wr32(s_pHalContext, CLEAR_COLOR_RGB(100, 255, 100));
         EVE_Cmd_wr32(s_pHalContext, CLEAR(1, 1, 1));
         EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
         /* values of the five touches are stored here */
-
         Touchval[0] = EVE_Hal_rd32(s_pHalContext, REG_CTOUCH_TOUCH0_XY);
         Touchval[1] = EVE_Hal_rd32(s_pHalContext, REG_CTOUCH_TOUCH1_XY);
         Touchval[2] = EVE_Hal_rd32(s_pHalContext, REG_CTOUCH_TOUCH2_XY);
