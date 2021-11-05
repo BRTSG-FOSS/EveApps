@@ -247,7 +247,6 @@ void SAMAPP_Font_romFonts()
 void SAMAPP_Font_font_Cache() {
 #if EVE_SUPPORT_GEN == EVE4
 #define UNICODE_HANDLE1   (1)
-#define UNICODE_HANDLE2   (2)
     const uint32_t xfontOnRamG = RAM_G;
     const uint32_t glyphOnRamG = 4096;
     const uint32_t startOfCache = 800 * 1024;
@@ -293,7 +292,7 @@ void SAMAPP_Font_font_Cache() {
             EVE_Hal_flush(s_pHalContext);
         }
         else { /// with font cache
-               /// Now set fontcache
+            /// Now set fontcache
             SAMAPP_INFO_START;
             fontHandler = t + 1;
             EVE_CoCmd_setFont2(s_pHalContext, fontHandler, xfontOnRamG, firstchar);
@@ -513,7 +512,7 @@ void SAMAPP_Font_fromJPEG()
     fontaddr = (1024);//data address - starts at location 1024
     memcpy(&FontIdxTable[128 + 16], &fontaddr, 4);
 
-    EVE_Hal_wrProgMem(s_pHalContext, RAM_G, FontIdxTable, (128 + 5 * 4));
+    EVE_Hal_wrMem(s_pHalContext, RAM_G, FontIdxTable, (128 + 5 * 4));
 
     /* download the jpeg image and decode */
     /* Characters from 32 to 128 are present and each character is 16*16 dimention */

@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
     return 0;
 }
 
-PROGMEM SAMAPP_Logo_Img_t Main_Icons[1] = { 
+SAMAPP_Logo_Img_t Main_Icons[1] = {
     { TEST_DIR "\\tile3.bin", ImH, RGB565, NEAREST, ImW, ImH, ImW * 2, 0L }, 
 };
 

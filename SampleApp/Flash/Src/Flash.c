@@ -68,18 +68,18 @@ int main(int argc, char* argv[])
     return 0;
 }
 
-char* message[50];
-int index = 0;
+char* flashMessage[50];
+int messageIndex = 0;
 
 void healperAppendMessage(char *s, int num)
 {
-    message[index] = (char*)malloc(num);
-    if (!message[index]) {
+    flashMessage[messageIndex] = (char*)malloc(num);
+    if (!flashMessage[messageIndex]) {
         APP_ERR("Malloc failed");
         return;
     }
 
-    memcpy(message[index], s, num);
+    memcpy(flashMessage[messageIndex], s, num);
     
 
     EVE_CoCmd_dlStart(s_pHalContext);
@@ -90,21 +90,21 @@ void healperAppendMessage(char *s, int num)
 
     int y = 0;
     int x = 20;
-    for (int i = 0; i <= index; i++) {
-        EVE_CoCmd_text(s_pHalContext, x, y, 23, 0, message[i]);
+    for (int i = 0; i <= messageIndex; i++) {
+        EVE_CoCmd_text(s_pHalContext, x, y, 23, 0, flashMessage[i]);
         y += 30;
     }
     Display_End(s_pHalContext);
 
-    index++;
+    messageIndex++;
     EVE_sleep(500);
 }
 
 void healperClearMessage() {
-    for (int i = 0; i < index; i++) {
-        free(message[i]);
+    for (int i = 0; i < messageIndex; i++) {
+        free(flashMessage[i]);
     }
-    index = 0;
+    messageIndex = 0;
 }
 
 
