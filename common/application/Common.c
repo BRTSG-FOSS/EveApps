@@ -804,20 +804,20 @@ void WelcomeScreen(Gpu_Hal_Context_t *phost, char* info[])
 		EVE_CoCmd_text(phost, DispWidth/2, 60, 26, OPT_CENTER , info[1]);
 		EVE_CoCmd_text(phost, DispWidth/2, 90, 26, OPT_CENTER , info[2]);  
 		EVE_CoCmd_text(phost, DispWidth/2, 120, 26, OPT_CENTER, info[3]);  
-		EVE_CoCmd_text(phost, DispWidth/2, DispHeight-30, 26, OPT_CENTER, "Click to play");
+		EVE_CoCmd_text(phost, DispWidth/2, 180, 26, OPT_CENTER, "Click to play");
 		
 		// play button circle boundary
 		EVE_Cmd_wr32(phost, COLOR_RGB(100, 100, 100));
 		EVE_Cmd_wr32(phost, BEGIN(FTPOINTS));   
 		EVE_Cmd_wr32(phost, POINT_SIZE(20*16));
 		EVE_Cmd_wr32(phost, TAG('P'));
-		EVE_Cmd_wr32(phost, VERTEX2F(VP(DispWidth/2), VP(DispHeight-60)));
+		EVE_Cmd_wr32(phost, VERTEX2F(VP(DispWidth/2), VP(150)));
 		EVE_Cmd_wr32(phost, COLOR_RGB(180, 35, 35));
 		
 		// play button
 		EVE_Cmd_wr32(phost, BEGIN(BITMAPS));
 		EVE_Cmd_wr32(phost, CELL(4));
-		EVE_Cmd_wr32(phost, VERTEX2F(VP(DispWidth/2 -14), VP(DispHeight-75)));
+		EVE_Cmd_wr32(phost, VERTEX2F(VP(DispWidth/2 -14), VP(135)));
 		EVE_Cmd_wr32(phost, END());
 		Display_End(phost);
 
