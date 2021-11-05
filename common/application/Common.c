@@ -771,78 +771,56 @@ PROGMEM prog_uchar8_t home_start_icon[] = {0x78,0x9C,0xE5,0x94,0xBF,0x4E,0xC2,0x
 
 void WelcomeScreen(Gpu_Hal_Context_t *phost, char* info[])
 {
-	Gpu_Hal_WrCmd32(phost,CMD_INFLATE);
-	Gpu_Hal_WrCmd32(phost,0);
+	Gpu_Hal_WrCmd32(phost, CMD_INFLATE);
+	Gpu_Hal_WrCmd32(phost, 0);
 #if defined(MSVC_PLATFORM) || defined(MSVC_FT800EMU)
-	Gpu_Hal_WrCmdBuf(phost,home_start_icon,sizeof(home_start_icon)); //Load from RAM
+	EVE_Cmd_wrMem(phost,home_start_icon,sizeof(home_start_icon)); //Load from RAM
 #else
-	Gpu_Hal_WrCmdBufFromFlash(phost,home_start_icon,sizeof(home_start_icon)); //Load from Flash
+    EVE_Cmd_wrProgMem(phost,home_start_icon,sizeof(home_start_icon)); //Load from Flash
 #endif
+    EVE_Cmd_waitFlush(phost);
 
-	Gpu_CoCmd_Dlstart(phost);        // start
-	App_WrCoCmd_Buffer(phost,CLEAR(1,1,1));
-	App_WrCoCmd_Buffer(phost,COLOR_RGB(255, 255, 255));
-
-	App_WrCoCmd_Buffer(phost,BITMAP_HANDLE(0));    // handle for background stars
-	App_WrCoCmd_Buffer(phost,BITMAP_SOURCE(0));      // Starting address in gram
-	App_WrCoCmd_Buffer(phost,BITMAP_LAYOUT(L4, 16, 32));  // format
-	App_WrCoCmd_Buffer(phost,BITMAP_SIZE(NEAREST, BORDER, BORDER, 32, 32  ));
-
-	App_WrCoCmd_Buffer(phost,DISPLAY());
-	Gpu_CoCmd_Swap(phost);
-	App_Flush_Co_Buffer(phost);
-	Gpu_Hal_WaitCmdfifo_empty(phost);
+	Display_Start(phost);
+	EVE_Cmd_wr32(phost, BITMAP_HANDLE(0));    // handle for background stars
+	EVE_Cmd_wr32(phost, BITMAP_SOURCE(0));      // Starting address in gram
+	EVE_Cmd_wr32(phost, BITMAP_LAYOUT(L4, 16, 32));  // format
+	EVE_Cmd_wr32(phost, BITMAP_SIZE(NEAREST, BORDER, BORDER, 32, 32  ));
+	Display_End(phost);
 
 	do
 	{
-		Gpu_CoCmd_Dlstart(phost);   
-		App_WrCoCmd_Buffer(phost,BITMAP_TRANSFORM_A(256));
-		App_WrCoCmd_Buffer(phost,BITMAP_TRANSFORM_A(256));
-		App_WrCoCmd_Buffer(phost,BITMAP_TRANSFORM_B(0));
-		App_WrCoCmd_Buffer(phost,BITMAP_TRANSFORM_C(0));
-		App_WrCoCmd_Buffer(phost,BITMAP_TRANSFORM_D(0));
-		App_WrCoCmd_Buffer(phost,BITMAP_TRANSFORM_E(256));
-		App_WrCoCmd_Buffer(phost,BITMAP_TRANSFORM_F(0));  
-		App_WrCoCmd_Buffer(phost,SAVE_CONTEXT());    
-		App_WrCoCmd_Buffer(phost,COLOR_RGB(219,180,150));
-		App_WrCoCmd_Buffer(phost,COLOR_A(220));
-		App_WrCoCmd_Buffer(phost,BEGIN(EDGE_STRIP_A));
-		App_WrCoCmd_Buffer(phost,VERTEX2F(0,DispHeight*16));
-		App_WrCoCmd_Buffer(phost,VERTEX2F(DispWidth*16,DispHeight*16));
-		App_WrCoCmd_Buffer(phost,COLOR_A(255));
-		App_WrCoCmd_Buffer(phost,RESTORE_CONTEXT());    
-		App_WrCoCmd_Buffer(phost,COLOR_RGB(0,0,0));
-		// INFORMATION 
-		Gpu_CoCmd_Text(phost,DispWidth/2,20,28,OPT_CENTERX|OPT_CENTERY,info[0]);
-		Gpu_CoCmd_Text(phost,DispWidth/2,60,26,OPT_CENTERX|OPT_CENTERY,info[1]);
-		Gpu_CoCmd_Text(phost,DispWidth/2,90,26,OPT_CENTERX|OPT_CENTERY,info[2]);  
-		Gpu_CoCmd_Text(phost,DispWidth/2,120,26,OPT_CENTERX|OPT_CENTERY,info[3]);  
-		Gpu_CoCmd_Text(phost,DispWidth/2,DispHeight-30,26,OPT_CENTERX|OPT_CENTERY,"Click to play");
-		App_WrCoCmd_Buffer(phost,COLOR_RGB(100,100,100));
-		App_WrCoCmd_Buffer(phost,BEGIN(FTPOINTS));   
-		App_WrCoCmd_Buffer(phost,POINT_SIZE(20*16));
-		App_WrCoCmd_Buffer(phost,TAG('P'));
-		App_WrCoCmd_Buffer(phost,VERTEX2F((DispWidth/2)*16,(DispHeight-60)*16));
-		App_WrCoCmd_Buffer(phost,COLOR_RGB(180,35,35));
+		Display_StartColor(phost, (uint8_t[]) { 255, 255, 255 }, (uint8_t[]) { 219, 180, 150 });
+		EVE_Cmd_wr32(phost, SAVE_CONTEXT());    
+		EVE_Cmd_wr32(phost, COLOR_A(220));
+		EVE_Cmd_wr32(phost, BEGIN(EDGE_STRIP_A));
+		EVE_Cmd_wr32(phost, VERTEX2F(0, VP(DispHeight)));
+		EVE_Cmd_wr32(phost, VERTEX2F(VP(DispWidth), VP(DispHeight)));
+		EVE_Cmd_wr32(phost, COLOR_A(255));
+		EVE_Cmd_wr32(phost, RESTORE_CONTEXT());    
+		EVE_Cmd_wr32(phost, COLOR_RGB(0, 0, 0));
+		
+		// information
+		EVE_CoCmd_text(phost, DispWidth/2, 20, 28, OPT_CENTER , info[0]);
+		EVE_CoCmd_text(phost, DispWidth/2, 60, 26, OPT_CENTER , info[1]);
+		EVE_CoCmd_text(phost, DispWidth/2, 90, 26, OPT_CENTER , info[2]);  
+		EVE_CoCmd_text(phost, DispWidth/2, 120, 26, OPT_CENTER, info[3]);  
+		EVE_CoCmd_text(phost, DispWidth/2, DispHeight-30, 26, OPT_CENTER, "Click to play");
+		
+		// play button circle boundary
+		EVE_Cmd_wr32(phost, COLOR_RGB(100, 100, 100));
+		EVE_Cmd_wr32(phost, BEGIN(FTPOINTS));   
+		EVE_Cmd_wr32(phost, POINT_SIZE(20*16));
+		EVE_Cmd_wr32(phost, TAG('P'));
+		EVE_Cmd_wr32(phost, VERTEX2F(VP(DispWidth/2), VP(DispHeight-60)));
+		EVE_Cmd_wr32(phost, COLOR_RGB(180, 35, 35));
+		
+		// play button
+		EVE_Cmd_wr32(phost, BEGIN(BITMAPS));
+		EVE_Cmd_wr32(phost, CELL(4));
+		EVE_Cmd_wr32(phost, VERTEX2F(VP(DispWidth/2 -14), VP(DispHeight-75)));
+		EVE_Cmd_wr32(phost, END());
+		Display_End(phost);
 
-		App_WrCoCmd_Buffer(phost,BEGIN(BITMAPS));
-		App_WrCoCmd_Buffer(phost,VERTEX2II((DispWidth/2)-14,(DispHeight-75), 0, 4));
-		App_WrCoCmd_Buffer(phost,END());
-
-		//
-		//    App_WrCoCmd_Buffer(phost, BITMAP_HANDLE(LOGO_ICON_HANDLE));
-		//    App_WrCoCmd_Buffer(phost, BITMAP_SOURCE(RAM_G));      // Starting address in gram
-		//    App_WrCoCmd_Buffer(phost,BITMAP_LAYOUT(L4, 20, 40));  // format
-		//    App_WrCoCmd_Buffer(phost,BITMAP_SIZE(NEAREST, BORDER, BORDER, 40, 40  ));
-		//
-		//    App_WrCoCmd_Buffer(phost,BEGIN(BITMAPS));
-		//    App_WrCoCmd_Buffer(phost,VERTEX2II(10,60,LOGO_ICON_HANDLE,0));
-		//    App_WrCoCmd_Buffer(phost,END());
-
-		App_WrCoCmd_Buffer(phost,DISPLAY());
-		Gpu_CoCmd_Swap(phost);
-		App_Flush_Co_Buffer(phost);
-		Gpu_Hal_WaitCmdfifo_empty(phost);
 	}while(Gpu_Hal_Rd8(phost, REG_TOUCH_TAG)!='P');
-	Play_Sound(phost, 0x50,255,0xc0);
+	Play_Sound(phost, 0x50, 255, 0xc0);
 }
