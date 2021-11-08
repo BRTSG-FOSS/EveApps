@@ -32,6 +32,11 @@
 #include "Common.h"
 #include "App.h"
 
+#if defined(EVE_DISPLAY_WXGA) ||  defined(EVE_DISPLAY_WSVGA)
+#pragma message(": EVE_DISPLAY_WXGA and EVE_DISPLAY_WSVGA are not supported")
+void DemoJackpot(EVE_HalContext* pHalContext) {}
+#else
+
 static EVE_HalContext *s_pHalContext;
 
 #if defined(FT900_PLATFORM) || defined(FT93X_PLATFORM)
@@ -1951,3 +1956,4 @@ void DemoJackpot(EVE_HalContext* pHalContext) {
 
 	}
 }
+#endif defined(EVE_DISPLAY_WXGA) ||  defined(EVE_DISPLAY_WSVGA)

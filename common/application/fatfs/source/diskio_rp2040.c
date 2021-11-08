@@ -1,4 +1,4 @@
-#if defined(EVE_PLATFORM_RP2040)
+#if defined(RP2040_PLATFORM)
 
 #include "pico.h"
 #include "pico/stdlib.h"

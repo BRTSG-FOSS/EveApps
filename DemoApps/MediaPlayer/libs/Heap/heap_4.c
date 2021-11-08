@@ -77,6 +77,8 @@
  * See heap_1.c, heap_2.c and heap_3.c for alternative implementations, and the
  * memory management pages of http://www.FreeRTOS.org for more information.
  */
+ #if !defined(_MSC_VER)
+ 
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -599,5 +601,6 @@ void *_calloc_r(
 }
 
 #endif
+#endif // not MSVC build
 
 //#endif  //FT32_PORT_HEAP
