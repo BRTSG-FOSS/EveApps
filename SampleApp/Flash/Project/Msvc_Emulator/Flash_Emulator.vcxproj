@@ -93,7 +93,7 @@
     <ProjectGuid>{42727F7D-CC17-4013-8679-DF4A767200B2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Flash_Emulator</RootNamespace>
-    <ProjectName>Flash_Emulator</ProjectName>
+    <ProjectName>SAMAPP_Flash_Emulator</ProjectName>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

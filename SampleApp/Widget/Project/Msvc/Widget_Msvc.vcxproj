@@ -93,7 +93,7 @@
     <ProjectGuid>{D1C87E09-4BF1-435B-932E-B929A65B076E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Widget</RootNamespace>
-    <ProjectName>Widget_MSVC</ProjectName>
+    <ProjectName>SAMAPP_Widget_MSVC</ProjectName>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

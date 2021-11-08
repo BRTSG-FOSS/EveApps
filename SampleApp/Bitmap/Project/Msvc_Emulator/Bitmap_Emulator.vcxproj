@@ -93,7 +93,7 @@
     <ProjectGuid>{8FDBB898-EEA4-46DD-B36E-9F0ADC628075}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Bitmap_Emulator</RootNamespace>
-    <ProjectName>Bitmap_Emulator</ProjectName>
+    <ProjectName>SAMAPP_Bitmap_Emulator</ProjectName>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

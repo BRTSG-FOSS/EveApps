@@ -93,7 +93,7 @@
     <ProjectGuid>{AF0E47B0-F6A9-43BC-8476-C7D7A1BF18F6}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Widget_Emulator</RootNamespace>
-    <ProjectName>Widget_Emulator</ProjectName>
+    <ProjectName>SAMAPP_Widget_Emulator</ProjectName>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

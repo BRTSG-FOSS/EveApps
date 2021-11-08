@@ -93,7 +93,7 @@
     <ProjectGuid>{C00730EE-C135-4D12-B05E-8E15DE1DA73A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Video_Emulator</RootNamespace>
-    <ProjectName>Video_Emulator</ProjectName>
+    <ProjectName>SAMAPP_Video_Emulator</ProjectName>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

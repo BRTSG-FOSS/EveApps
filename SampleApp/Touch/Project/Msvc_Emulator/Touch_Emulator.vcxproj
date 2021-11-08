@@ -93,7 +93,7 @@
     <ProjectGuid>{8D937ABE-258B-400B-9FAE-44A3150305F2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Touch_Emulator</RootNamespace>
-    <ProjectName>Touch_Emulator</ProjectName>
+    <ProjectName>SAMAPP_Touch_Emulator</ProjectName>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

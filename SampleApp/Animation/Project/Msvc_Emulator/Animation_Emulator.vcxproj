@@ -90,10 +90,10 @@
     <ClInclude Include="..\..\Hdr\Animation.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{743C8099-435B-448E-BF71-D2B0BAB7A6B6}</ProjectGuid>
+    <ProjectGuid>{65BB667E-1434-4146-B784-15AD91C1D464}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Animation_Emulator</RootNamespace>
-    <ProjectName>Animation_Emulator</ProjectName>
+    <ProjectName>SAMAPP_Animation_Emulator</ProjectName>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

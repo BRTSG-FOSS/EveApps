@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="15.0">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -50,7 +50,8 @@
     <ClCompile Include="..\..\common\eve_hal\EVE_Util.c" />
     <ClCompile Include="..\..\Src\App.c" />
     <ClCompile Include="..\..\Src\eab.c" />
-  <ClCompile Include="../../Src/audio_playback.c" /></ItemGroup>
+    <ClCompile Include="../../Src/audio_playback.c" />
+  </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\common\application\Common.h" />
     <ClInclude Include="..\..\common\application\FileIo.h" />
@@ -162,7 +163,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;EVE_PLATFORM_FT4222;EVE_GRAPHICS_BT815;WIN32;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;EVE_PLATFORM_FT4222;WIN32;%(PreprocessorDefinitions);EVE_GRAPHICS_ME817EV;FT4222_PLATFORM;EVE_DISPLAY_WVGA</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\common\application;..\..\common\eve_hal;..\..\common\eve_hal\Hdr;..\..\Hdr\;</AdditionalIncludeDirectories>
       <AdditionalOptions>/VERBOSE /utf-8 </AdditionalOptions>
     </ClCompile>
@@ -182,7 +183,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;EVE_PLATFORM_FT4222;EVE_GRAPHICS_BT815;WIN32;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;EVE_PLATFORM_FT4222;WIN32;%(PreprocessorDefinitions);EVE_GRAPHICS_ME817EV;FT4222_PLATFORM;EVE_DISPLAY_WVGA</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\common\application;..\..\common\eve_hal;..\..\common\eve_hal\Hdr;..\..\Hdr\;</AdditionalIncludeDirectories>
       <AdditionalOptions>/VERBOSE /utf-8 </AdditionalOptions>
     </ClCompile>
@@ -200,7 +201,7 @@
     <ClCompile>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>EVE_PLATFORM_FT4222;EVE_GRAPHICS_BT815;WIN32;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>EVE_PLATFORM_FT4222;WIN32;%(PreprocessorDefinitions);EVE_GRAPHICS_ME817EV;FT4222_PLATFORM;EVE_DISPLAY_WVGA</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\common\application;..\..\common\eve_hal;..\..\common\eve_hal\Hdr;..\..\Hdr\;</AdditionalIncludeDirectories>
       <AdditionalOptions>/VERBOSE /utf-8 </AdditionalOptions>
     </ClCompile>
@@ -218,7 +219,7 @@
     <ClCompile>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>EVE_PLATFORM_FT4222;EVE_GRAPHICS_BT815;WIN32;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>EVE_PLATFORM_FT4222;WIN32;%(PreprocessorDefinitions);EVE_GRAPHICS_ME817EV;FT4222_PLATFORM;EVE_DISPLAY_WVGA</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\common\application;..\..\common\eve_hal;..\..\common\eve_hal\Hdr;..\..\Hdr\;</AdditionalIncludeDirectories>
       <AdditionalOptions>/VERBOSE /utf-8 </AdditionalOptions>
     </ClCompile>

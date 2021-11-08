@@ -93,7 +93,7 @@
     <ProjectGuid>{0F1375C5-766A-4D97-978B-AB53DF7011DA}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Sound_Emulator</RootNamespace>
-    <ProjectName>Sound_Emulator</ProjectName>
+    <ProjectName>SAMAPP_Sound_Emulator</ProjectName>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

@@ -93,7 +93,7 @@
     <ProjectGuid>{FDB9B229-7B35-4D61-BE5F-B717D27B3F0E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Primitives_Emulator</RootNamespace>
-    <ProjectName>Primitives_Emulator</ProjectName>
+    <ProjectName>SAMAPP_Primitives_Emulator</ProjectName>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

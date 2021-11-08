@@ -93,7 +93,7 @@
     <ProjectGuid>{B8200420-E1F2-4602-B95D-572057C3630E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Power</RootNamespace>
-    <ProjectName>Power_MSVC</ProjectName>
+    <ProjectName>SAMAPP_Power_MSVC</ProjectName>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

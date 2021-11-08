@@ -32,7 +32,7 @@
 									<listOptionValue builtIn="false" value="_DEBUG=1"/>
 									<listOptionValue builtIn="false" value="EVE_GRAPHICS_ME817EV=1"/>
 									<listOptionValue builtIn="false" value="MM900EV1B=1"/>
-									<listOptionValue builtIn="false" value="EVE_DISPLAY_WXGA=1"/>
+									<listOptionValue builtIn="false" value="EVE_DISPLAY_WVGA=1"/>
 								</option>
 								<option id="com.ftdichip.managedbuild.gnu.cross.ft90x.build.gcc.c.compiler.option.include.paths.32424121" name="Include paths (-I)" superClass="com.ftdichip.managedbuild.gnu.cross.ft90x.build.gcc.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${FT90X_TOOLCHAIN}/hardware/include&quot;"/>
@@ -127,7 +127,7 @@
 									<listOptionValue builtIn="false" value="__FT900__"/>
 									<listOptionValue builtIn="false" value="EVE_GRAPHICS_ME817EV=1"/>
 									<listOptionValue builtIn="false" value="MM900EV1B=1"/>
-									<listOptionValue builtIn="false" value="EVE_DISPLAY_WXGA=1"/>
+									<listOptionValue builtIn="false" value="EVE_DISPLAY_WVGA=1"/>
 								</option>
 								<option id="com.ftdichip.managedbuild.gnu.cross.ft90x.build.gcc.c.compiler.option.include.paths.528777138" name="Include paths (-I)" superClass="com.ftdichip.managedbuild.gnu.cross.ft90x.build.gcc.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${FT90X_TOOLCHAIN}/hardware/include&quot;"/>
