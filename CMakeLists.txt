@@ -287,7 +287,8 @@ INCLUDE_DIRECTORIES("common/eve_hal")
 INCLUDE_DIRECTORIES("common/eve_hal/Hdr")
 
 IF(NOT EVE_APPS_GRAPHICS STREQUAL "MULTI")
-  ADD_SUBDIRECTORY(EveApps)
+  ADD_SUBDIRECTORY(DemoApps)
+  ADD_SUBDIRECTORY(SampleApp)
 ENDIF()
 
 ########################################################################
