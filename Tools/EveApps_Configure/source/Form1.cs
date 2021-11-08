@@ -142,35 +142,43 @@ namespace EveAppsConfig
         string[] Demo =
         {
                 "All                            ",
-                "DemoFlashBitbang              ",
-                "DemoAudioPlayback              ",
-                "DemoCircleView                 ",
-                "DemoEvChargePoint              ",
-                "DemoGauges                     ",
-                "DemoGradient                   ",
-                "DemoGraph                      ",
-                "DemoHDPictureViewer            ",
-                "DemoImageviewer                ",
-                "DemoImageviewer2               ",
-                "DemoInstrument                 ",
-                "DemoJackpot                    ",
-                "DemoKeyboard                   ",
-                "DemoLift                       ",
-                "DemoLift2                      ",
-                "DemoMainmenu                   ",
-                "DemoMediaPlayer                ",
-                "DemoMetaballs                  ",
-                "DemoMeter                      ",
-                "DemoRefrigerator               ",
-                "DemoRotaryDial                 ",
-                "DemoRunningBar                 ",
-                "DemoSignals                    ",
-                "DemoSignature                  ",
-                "DemoSketch                     ",
-                "DemoUnicode                    ",
-                "DemoUnicodeRuntime             ",
-                "DemoWashingMachine             ",
-                "SampleApp                      ",
+                "DemoApps/FlashBitbang              ",
+                "DemoApps/AudioPlayback              ",
+                "DemoApps/CircleView                 ",
+                "DemoApps/EvChargePoint              ",
+                "DemoApps/Gauges                     ",
+                "DemoApps/Gradient                   ",
+                "DemoApps/Graph                      ",
+                "DemoApps/HDPictureViewer            ",
+                "DemoApps/Imageviewer                ",
+                "DemoApps/Imageviewer2               ",
+                "DemoApps/Instrument                 ",
+                "DemoApps/Jackpot                    ",
+                "DemoApps/Keyboard                   ",
+                "DemoApps/Lift                       ",
+                "DemoApps/Lift2                      ",
+                "DemoApps/Mainmenu                   ",
+                "DemoApps/MediaPlayer                ",
+                "DemoApps/Metaballs                  ",
+                "DemoApps/Meter                      ",
+                "DemoApps/Refrigerator               ",
+                "DemoApps/RotaryDial                 ",
+                "DemoApps/RunningBar                 ",
+                "DemoApps/Signals                    ",
+                "DemoApps/Signature                  ",
+                "DemoApps/Sketch                     ",
+                "DemoApps/Unicode                    ",
+                "DemoApps/UnicodeRuntime             ",
+                "DemoApps/WashingMachine             ",
+                "SampleApp/Widget                ",
+                "SampleApp/Video                 ",
+                "SampleApp/Utility               ",
+                "SampleApp/Touch                 ",
+                "SampleApp/Sound                 ",
+                "SampleApp/Primitives            ",
+                "SampleApp/Power                 ",
+                "SampleApp/Font                  ",
+                "SampleApp/Flash                 ",
             };
 
         string[] Touch =
@@ -646,7 +654,7 @@ namespace EveAppsConfig
             try { if (cbb_Demo.SelectedIndex > -1) { demo = cbb_Demo.SelectedItem.ToString().Trim(); } } catch { }
 
             // Special reset for DemoEvChargePoint            
-            if (demo == "DemoEvChargePoint")
+            if (demo == "Demo/EvChargePoint")
             {
                 lcd = "EVE_DISPLAY_WXGA";
             }
@@ -676,7 +684,7 @@ namespace EveAppsConfig
             if (demo == "" || demo == "All")
             {
                 Txt_Log.AppendText("Setting LCD as EVE_DISPLAY_WXGA for DemoEvChargePoint...\r\n");
-                demo = "DemoEvChargePoint";
+                demo = "Demo/EvChargePoint";
                 lcd = "EVE_DISPLAY_WXGA";
                 this.do_setup(module, eveIC, mhost, f900host, f930host, lcd, flash, demo, support, touch);
             }
