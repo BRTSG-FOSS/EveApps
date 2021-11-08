@@ -226,9 +226,14 @@ FatFs library is locate at folder common/application/fatfs.
 
 
 ## Version
-    This version is v1.4.0-rc3
+    This version is v1.5.0-rc1
         
 ## Release log
+    v1.5.0-rc1
+      - Update FatFS library in common/application/fatfs to R0.14b
+      - Add DemoApp.snl and SampleApp.snl to build all the demo projects and sampleApp project in one batch
+      - Update4d Cmakelist.txt to build every project in one shot for FT90X/Win32/RP2040 platform 
+      - Break the SampleApp into 11 smaller projects
     v1.4.0-rc3:
         - Fix minor issue: DemoGauges's UI broken on LCD WXGA
     v1.4.0-rc2
