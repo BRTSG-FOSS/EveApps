@@ -5,6 +5,8 @@ INCLUDE_DIRECTORIES("Hdr")
 
 get_filename_component(ProjectId ${CMAKE_CURRENT_LIST_DIR} NAME)
 string(REPLACE " " "_" ProjectId ${ProjectId})
+set(ProjectId "SAMAPP_${ProjectId}")
+
 project(${ProjectId} C CXX)
 
 ADD_EXECUTABLE(${ProjectId} ${SRCS} ${HDRS})

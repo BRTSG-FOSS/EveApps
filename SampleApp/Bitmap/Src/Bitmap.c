@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
 * @param source Image source
 * @param numcell Cell number
 */
-void helper_ASTCScreen(const char* str, int16_t x, int16_t y, int16_t w, int16_t h, int16_t margin,
+void helperASTCScreen(const char* str, int16_t x, int16_t y, int16_t w, int16_t h, int16_t margin,
     int16_t numcell)
 {
 #if defined (BT81X_ENABLE) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM)) // Win32 BT81X
@@ -531,62 +531,62 @@ void SAMAPP_Bitmap_ASTCLayoutRAMG()
     Display_Start(s_pHalContext);
     x = 20;
     y = 20;
-    helper_ASTCScreen("1x1", x, y, 12, 10, 20, 2);
+    helperASTCScreen("1x1", x, y, 12, 10, 20, 2);
     y += 30;
-    helper_ASTCScreen("1x2", x, y, 12, 20, 20, 2);
+    helperASTCScreen("1x2", x, y, 12, 20, 20, 2);
     y += 30;
-    helper_ASTCScreen("1x3", x, y, 12, 30, 20, 2);
+    helperASTCScreen("1x3", x, y, 12, 30, 20, 2);
     y += 40;
-    helper_ASTCScreen("1x4", x, y, 12, 40, 20, 2);
+    helperASTCScreen("1x4", x, y, 12, 40, 20, 2);
     y += 50;
-    helper_ASTCScreen("1x5", x, y, 12, 50, 20, 2);
+    helperASTCScreen("1x5", x, y, 12, 50, 20, 2);
 
     x += 90;
     y = 20;
-    helper_ASTCScreen("2x1", x, y, 24, 10, 40, 2);
+    helperASTCScreen("2x1", x, y, 24, 10, 40, 2);
     y += 30;
-    helper_ASTCScreen("2x2", x, y, 24, 20, 40, 2);
+    helperASTCScreen("2x2", x, y, 24, 20, 40, 2);
     y += 30;
-    helper_ASTCScreen("2x3", x, y, 24, 30, 40, 2);
+    helperASTCScreen("2x3", x, y, 24, 30, 40, 2);
     y += 40;
-    helper_ASTCScreen("2x4", x, y, 24, 40, 40, 2);
+    helperASTCScreen("2x4", x, y, 24, 40, 40, 2);
     y += 50;
-    helper_ASTCScreen("2x5", x, y, 24, 50, 40, 2);
+    helperASTCScreen("2x5", x, y, 24, 50, 40, 2);
 
     x += 110;
     y = 20;
-    helper_ASTCScreen("3x1", x, y, 36, 10, 50, 2);
+    helperASTCScreen("3x1", x, y, 36, 10, 50, 2);
     y += 30;
-    helper_ASTCScreen("3x2", x, y, 36, 20, 50, 2);
+    helperASTCScreen("3x2", x, y, 36, 20, 50, 2);
     y += 30;
-    helper_ASTCScreen("3x3", x, y, 36, 30, 50, 2);
+    helperASTCScreen("3x3", x, y, 36, 30, 50, 2);
     y += 40;
-    helper_ASTCScreen("3x4", x, y, 36, 40, 50, 2);
+    helperASTCScreen("3x4", x, y, 36, 40, 50, 2);
     y += 50;
-    helper_ASTCScreen("3x5", x, y, 36, 50, 50, 2);
+    helperASTCScreen("3x5", x, y, 36, 50, 50, 2);
 
     x += 130;
     y = 20;
-    helper_ASTCScreen("4x1", x, y, 48, 10, 60, 2);
+    helperASTCScreen("4x1", x, y, 48, 10, 60, 2);
     y += 30;
-    helper_ASTCScreen("4x2", x, y, 48, 20, 60, 2);
-    helper_ASTCScreen("4x3", x, y + 30, 48, 30, 60, 2);
+    helperASTCScreen("4x2", x, y, 48, 20, 60, 2);
+    helperASTCScreen("4x3", x, y + 30, 48, 30, 60, 2);
     y += 70;
-    helper_ASTCScreen("4x4", x, y, 48, 40, 60, 2);
+    helperASTCScreen("4x4", x, y, 48, 40, 60, 2);
     y += 50;
-    helper_ASTCScreen("4x5", x, y, 48, 50, 60, 2);
+    helperASTCScreen("4x5", x, y, 48, 50, 60, 2);
 
     x += 150;
     y = 20;
-    helper_ASTCScreen("5x1", x, y, 60, 10, 70, 2);
+    helperASTCScreen("5x1", x, y, 60, 10, 70, 2);
     y += 30;
-    helper_ASTCScreen("5x2", x, y, 60, 20, 70, 2);
+    helperASTCScreen("5x2", x, y, 60, 20, 70, 2);
     y += 30;
-    helper_ASTCScreen("5x3", x, y, 60, 30, 70, 2);
+    helperASTCScreen("5x3", x, y, 60, 30, 70, 2);
     y += 40;
-    helper_ASTCScreen("5x4", x, y, 60, 40, 70, 2);
+    helperASTCScreen("5x4", x, y, 60, 40, 70, 2);
     y += 50;
-    helper_ASTCScreen("5x5", x, y, 60, 50, 70, 2);
+    helperASTCScreen("5x5", x, y, 60, 50, 70, 2);
 
     Display_End(s_pHalContext);
     SAMAPP_DELAY;
@@ -611,63 +611,63 @@ void SAMAPP_Bitmap_ASTCLayoutFlash()
     Display_Start(s_pHalContext);
     x = 20;
     y = 20;
-    helper_ASTCScreen("1x1", x, y, 12, 10, 20, 1);
+    helperASTCScreen("1x1", x, y, 12, 10, 20, 1);
     y += 30;
-    helper_ASTCScreen("1x2", x, y, 12, 20, 20, 1);
+    helperASTCScreen("1x2", x, y, 12, 20, 20, 1);
     y += 30;
-    helper_ASTCScreen("1x3", x, y, 12, 30, 20, 1);
+    helperASTCScreen("1x3", x, y, 12, 30, 20, 1);
     y += 40;
-    helper_ASTCScreen("1x4", x, y, 12, 40, 20, 2);
+    helperASTCScreen("1x4", x, y, 12, 40, 20, 2);
     y += 50;
-    helper_ASTCScreen("1x5", x, y, 12, 50, 20, 1);
+    helperASTCScreen("1x5", x, y, 12, 50, 20, 1);
 
     x += 90;
     y = 20;
-    helper_ASTCScreen("2x1", x, y, 24, 10, 40, 1);
+    helperASTCScreen("2x1", x, y, 24, 10, 40, 1);
     y += 30;
-    helper_ASTCScreen("2x2", x, y, 24, 20, 40, 2);
+    helperASTCScreen("2x2", x, y, 24, 20, 40, 2);
     y += 30;
-    helper_ASTCScreen("2x3", x, y, 24, 30, 40, 1);
+    helperASTCScreen("2x3", x, y, 24, 30, 40, 1);
     y += 40;
-    helper_ASTCScreen("2x4", x, y, 24, 40, 40, 2);
+    helperASTCScreen("2x4", x, y, 24, 40, 40, 2);
     y += 50;
-    helper_ASTCScreen("2x5", x, y, 24, 50, 40, 1);
+    helperASTCScreen("2x5", x, y, 24, 50, 40, 1);
 
     x += 110;
     y = 20;
-    helper_ASTCScreen("3x1", x, y, 36, 10, 50, 1);
+    helperASTCScreen("3x1", x, y, 36, 10, 50, 1);
     y += 30;
-    helper_ASTCScreen("3x2", x, y, 36, 20, 50, 1);
+    helperASTCScreen("3x2", x, y, 36, 20, 50, 1);
     y += 30;
-    helper_ASTCScreen("3x3", x, y, 36, 30, 50, 1);
+    helperASTCScreen("3x3", x, y, 36, 30, 50, 1);
     y += 40;
-    helper_ASTCScreen("3x4", x, y, 36, 40, 50, 2);
+    helperASTCScreen("3x4", x, y, 36, 40, 50, 2);
     y += 50;
-    helper_ASTCScreen("3x5", x, y, 36, 50, 50, 1);
+    helperASTCScreen("3x5", x, y, 36, 50, 50, 1);
 
     x += 130;
     y = 20;
-    helper_ASTCScreen("4x1", x, y, 48, 10, 60, 2);
+    helperASTCScreen("4x1", x, y, 48, 10, 60, 2);
     y += 30;
-    helper_ASTCScreen("4x2", x, y, 48, 20, 60, 2);
+    helperASTCScreen("4x2", x, y, 48, 20, 60, 2);
     y += 30;
-    helper_ASTCScreen("4x3", x, y, 48, 30, 60, 2);
+    helperASTCScreen("4x3", x, y, 48, 30, 60, 2);
     y += 40;
-    helper_ASTCScreen("4x4", x, y, 48, 40, 60, 2);
+    helperASTCScreen("4x4", x, y, 48, 40, 60, 2);
     y += 50;
-    helper_ASTCScreen("4x5", x, y, 48, 50, 60, 2);
+    helperASTCScreen("4x5", x, y, 48, 50, 60, 2);
 
     x += 150;
     y = 20;
-    helper_ASTCScreen("5x1", x, y, 60, 10, 70, 1);
+    helperASTCScreen("5x1", x, y, 60, 10, 70, 1);
     y += 30;
-    helper_ASTCScreen("5x2", x, y, 60, 20, 70, 1);
+    helperASTCScreen("5x2", x, y, 60, 20, 70, 1);
     y += 30;
-    helper_ASTCScreen("5x3", x, y, 60, 30, 70, 1);
+    helperASTCScreen("5x3", x, y, 60, 30, 70, 1);
     y += 40;
-    helper_ASTCScreen("5x4", x, y, 60, 40, 70, 2);
+    helperASTCScreen("5x4", x, y, 60, 40, 70, 2);
     y += 50;
-    helper_ASTCScreen("5x5", x, y, 60, 50, 70, 1);
+    helperASTCScreen("5x5", x, y, 60, 50, 70, 1);
 
     Display_End(s_pHalContext);
     SAMAPP_DELAY;
