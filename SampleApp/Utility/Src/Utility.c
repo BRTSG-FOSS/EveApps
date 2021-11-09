@@ -161,7 +161,8 @@ static void helperCMDBWriteString(uint8_t* str)
     int padding = textLen % 4;
     /* Copy the command instruction into buffer */
     uint32_t v = 0;
-    for (int i = 0; i < textLen/4; i++) {
+    for (int i = 0; i < textLen/4; i++) 
+    {
         v = str[i*4 + 0] << 0 |
             str[i*4 + 1] << 8 |
             str[i*4 + 2] << 16|
@@ -172,7 +173,8 @@ static void helperCMDBWriteString(uint8_t* str)
     if (padding)
     {
         v = 0;
-        for (int i = 0; i < (4 - padding); i++) {
+        for (int i = 0; i < (4 - padding); i++) 
+        {
             v |= str[textLen / 4*4 + i] << i * 8;
         }
         EVE_Hal_wr32(s_pHalContext, REG_CMDB_WRITE, v);
