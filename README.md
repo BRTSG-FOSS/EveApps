@@ -109,37 +109,55 @@ ESD follows the same styling as HAL, except the library prefix (`Esd_`) and func
     │   ├───application          | Application's common functions and fatfs library
     │   ├───eve_flash            | Blob binary for flash programming
     │   └───eve_hal              | Hardware abstraction layer to bridge different platforms
-    ├───EveApps                  
-    │    ├───DemoCircleView      | Image viewer demo
-    │    ├───DemoEvChargePoint   | Electric charging station demo
-    │    ├───DemoFlashBitbang    | Reading flash content in low-level mode
-    │    ├───DemoGauges          | Gauges demo
-    │    ├───DemoGradient        | Color gradient demo
-    │    ├───DemoGraph           | Graph demo
-    │    ├───DemoHDPictureViewer | 4K image viewing demo
-    │    ├───DemoImageviewer     | Image viewer demo
-    │    ├───DemoImageviewer2    | Image viewer demo
-    │    ├───DemoInstrument      | Instrument demo
-    │    ├───DemoJackpot         | Jackpot game demo
-    │    ├───DemoKeyboard        | Keyboard demo
-    │    ├───DemoLift            | Lift demo
-    │    ├───DemoLift2           | Lift with video background demo
-    │    ├───DemoMainmenu        | Main menu demo
-    │    ├───DemoMediaPlayer     | Manage and play media content on hard disk/SD card
-    │    ├───DemoMetaballs       | Balls demo
-    │    ├───DemoMeter           | Meter demo 
-    │    ├───DemoRefrigerator    | Refrigerator demo
-    │    ├───DemoRotaryDial      | Rotary dial demo
-    │    ├───DemoRunningBar      | Street light moving demo 
-    │    ├───DemoSignals         | Wave signals demo
-    │    ├───DemoSignature       | Signature demo
-    │    ├───DemoSketch          | Sketch demo
-    │    ├───DemoUnicode         | Unicode demo
-    │    ├───DemoUnicodeRuntime  | Unicode demo with runtime determined characters
-    │    ├───DemoWashingMachine  | Washing machine UI demo
-    │    └───SampleApp           | Sample application for tutorial purpose
+    │    
+    ├───DemoApps
+    │    ├───CircleView      | Image viewer demo
+    │    ├───EvChargePoint   | Electric charging station demo
+    │    ├───FlashBitbang    | Reading flash content in low-level mode
+    │    ├───Gauges          | Gauges demo
+    │    ├───Gradient        | Color gradient demo
+    │    ├───Graph           | Graph demo
+    │    ├───HDPictureViewer | 4K image viewing demo
+    │    ├───Imageviewer     | Image viewer demo
+    │    ├───Imageviewer2    | Image viewer demo
+    │    ├───Instrument      | Instrument demo
+    │    ├───Jackpot         | Jackpot game demo
+    │    ├───Keyboard        | Keyboard demo
+    │    ├───Lift            | Lift demo
+    │    ├───Lift2           | Lift with video background demo
+    │    ├───Mainmenu        | Main menu demo
+    │    ├───MediaPlayer     | Manage and play media content on hard disk/SD card
+    │    ├───Metaballs       | Balls demo
+    │    ├───Meter           | Meter demo 
+    │    ├───Refrigerator    | Refrigerator demo
+    │    ├───RotaryDial      | Rotary dial demo
+    │    ├───RunningBar      | Street light moving demo 
+    │    ├───Signals         | Wave signals demo
+    │    ├───Signature       | Signature demo
+    │    ├───Sketch          | Sketch demo
+    │    ├───Unicode         | Unicode demo
+    │    ├───UnicodeRuntime  | Unicode demo with runtime determined characters
+    │    ├───WashingMachine  | Washing machine UI demo
+    │    
+    ├───SampleApp
+    │    ├───Animation       | Sample usage of animation such as drawing animation from RAMG/Flash, with/without host MCU's control
+    │    ├───Bitmap          | Sample usage of drawing bitmap such as ASTC, bitmap rotate, grayscale/full color, load image from flash/command buffer
+    │    ├───Flash           | Sample usage of flash program and flash's states
+    │    ├───Font            | Sample usage of font from ROM/RAMG, font caching, font from JPEG image
+    │    ├───Power           | Sample usage of power control such as changing system clock, power off components, GPIO drive strength
+    │    ├───Primitives      | Sample usage of drawing primitives: points, lines, rectangles, bitmap, linestrips, edgestrips, scissor, polygon, cube, ball stencil.
+    │    ├───Sound           | Sample usage of builtin audio, play audio from raw file
+    │    ├───Touch           | Sample usage of touch/multiple detection up to 5 finger
+    │    ├───Utility         | Sample usage of helper utiliti such as wait/sleep, crc check, call list, underrun detection.
+    │    ├───Video           | Sample usage of video playback from RAMG/Flash/CMDB, full screen mode.
+    │    ├───Widget          | Sample for widgets: Text, number, button, screensaver, sketch, scroller, progress bar.
     │            
-    ├───Tools/EveApps_Configure  | An .NET GUI tool to help user select hardware for an EveApps application
+    ├───Tools/EveApps_Configure  | An .NET GUI tool to help user select hardware for any example application
+
+Note:
+    For Eve registers and commands/instructions definition, user can find it at the file common/eve_hal/EVE_GpuDef.h and common/eve_hal/Eve_CoCmd.h.
+	  For Eve Emulator, it is for windows platform only and located at common/eve_hal/Bin/Simulation and common/eve_hal/Hdr。 
+    For flash blob file used to access the eve connected flash chip, user can find it at common/eve_flash.  
 
 ## Support platforms
 
@@ -178,43 +196,6 @@ ESD follows the same styling as HAL, except the library prefix (`Esd_`) and func
     └────────────────────┴────────────────────────────────────────────────┴─────────────────────┴────────────────────────────────┘
     x = unsupport
     . = support
-    
-## The api sets of sample application
-
-● Set 00: Sample usage of drawing primitives: points, lines, rectangles, bitmap, bitmap palette, bitmap palette background, fonts, text 8x8,text vga, bar graph, linestrips, edgestrips, scissor, polygon, cube, ball stencil, street map, additive blend text, macro usage, additive blend points.
-
-● Set 01: Sample for CRC check, logo, widgets: clock, gauge, gradient, keys, progressbar, scroll, slider, dial, toggle, spinner, touch, powermode.
-
-● Set 02: Sample for inflate, loadimage mono, loadimage fullcolor.
-
-● Set 03: Sample for cmd_setfont.
-
-● Set 04: Sample for widgets: Text, number, button, screensaver, snapshot, sketch, matrix, track, music player streaming.
-
-● Set 05: Sample for custom font application: Chinese Font.
-
-● Set 06: Sample for multi touch on screen with audio.
-
-● Set 07: Sample for multi touch on screen with bouncing squares, bouncing circles, bouncing points and moving points. 
-
-● Set 08: Sample for multi tracker, number bases, screen orientation, higher resolution bitmap, FT81x paletted bitmap, bitmap paletted8, dxt1 compressed image, simple video playback, video playback via media fifo, video playback frame by frame, video playback via command buffer, video playback from flash, video playback frame by frame from flash.
-
-● Set 09: Sample for changing frequency, FT81x power off components, FT81x change pad drives strength.
-
-● Set 10: Sample for ASTC layout on RAM_G, astc layout on flash, ASTC layout for a cell, flash state, program flash, mediafifo, cmdinflate, cmd_gradienta, cmd_fillwidth, rotate, animation, extended format font, reset font, OTP_FORMAT, coprocessor faults and restore.
-
-● Set 11: Sample for BULK transfer using reg_cmdb_write/reg_cmdb_space.
-
-● Set 12: Sample for image rotate by RotateAround, image rotate by Rotate and Translate.
-
-● Set 13: Sample for Unicode string with re-index glyph data.
-
-● Set 14: Sample usage of BT817/8 specific commands. 
-
-Note:
-    For Eve registers and commands/instructions definition, you can find it at the file common/eve_hal/EVE_GpuDef.h and common/eve_hal/Eve_CoCmd.h.
-	  For Eve Emulator, it is for windows platform only and located at common/eve_hal/Bin/Simulation and common/eve_hal/Hdr。 
-    For flash blob file used to access the eve connected flash chip, you can find it at common/eve_flash.  
 
 ## FatFs library
 
@@ -226,9 +207,12 @@ FatFs library is locate at folder common/application/fatfs.
 
 
 ## Version
-    This version is v1.5.0-rc1
+    This version is v1.5.1-rc1
         
 ## Release log
+    v1.5.1-rc1
+      - Fix Cmake compile error
+      - Fix issue: No sound when start Sound project
     v1.5.0-rc1
       - Update FatFS library in common/application/fatfs to R0.14b
       - Add DemoApp.snl and SampleApp.snl to build all the demo projects and sampleApp project in one batch

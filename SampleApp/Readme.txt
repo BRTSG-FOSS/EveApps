@@ -22,16 +22,16 @@ individual functions.
    It contains 11 projects for different groups of Eve functionality.
 
 2. FOLDER Structure
-    ├───Animation     | Example project for animation functionality
-    ├───Bitmap        | Example project for bitmap drawing
-    ├───Flash         | Example project for flash usage
-    ├───Font          | Example project for font functionality
-    ├───Power         | Example project for power control
-    ├───Primitives    | Example project for primitives graphics drawing
-    ├───Sound         | Example project for sound functionality
-    ├───Touch         | Example project for touch  functionality
-    ├───Utility       | Example project for utility functionality
-    ├───Video         | Example project for video functionality
-    ├───Widget        | Example project for some default widgets
+    ├───Animation     | Sample usage for animation functionality
+    ├───Bitmap        | Sample usage for bitmap drawing
+    ├───Flash         | Sample usage for flash usage
+    ├───Font          | Sample usage for font functionality
+    ├───Power         | Sample usage for power control
+    ├───Primitives    | Sample usage for primitives graphics drawing
+    ├───Sound         | Sample usage for sound functionality
+    ├───Touch         | Sample usage for touch  functionality
+    ├───Utility       | Sample usage for utility functionality
+    ├───Video         | Sample usage for video functionality
+    ├───Widget        | Sample usage for some default widgets
 
                                    【END】
