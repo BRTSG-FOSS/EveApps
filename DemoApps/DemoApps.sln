@@ -3,121 +3,117 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoAudioPlayback_MSVC", "DemoAudioPlayback\Project\Msvc\DemoAudioPlayback_Msvc.vcxproj", "{FBBBBF6D-E43B-4568-AA38-4D76E6D29FB5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoAudioPlayback_MSVC", "AudioPlayback\Project\Msvc\DemoAudioPlayback_Msvc.vcxproj", "{FBBBBF6D-E43B-4568-AA38-4D76E6D29FB5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoAudioPlayback_Emulator", "DemoAudioPlayback\Project\Msvc_Emulator\DemoAudioPlayback_Emulator.vcxproj", "{BB16C885-7CB6-4013-9016-D69C2B4A3739}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoAudioPlayback_Emulator", "AudioPlayback\Project\Msvc_Emulator\DemoAudioPlayback_Emulator.vcxproj", "{BB16C885-7CB6-4013-9016-D69C2B4A3739}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoCircleView_MSVC", "DemoCircleView\Project\Msvc\DemoCircleView_Msvc.vcxproj", "{1AFDF703-05E7-4DA4-A9D2-2C2B441C2F97}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoCircleView_MSVC", "CircleView\Project\Msvc\DemoCircleView_Msvc.vcxproj", "{1AFDF703-05E7-4DA4-A9D2-2C2B441C2F97}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoCircleView_Emulator", "DemoCircleView\Project\Msvc_Emulator\DemoCircleView_Emulator.vcxproj", "{67949AD5-A853-4BC0-B1D9-F101F50989E7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoCircleView_Emulator", "CircleView\Project\Msvc_Emulator\DemoCircleView_Emulator.vcxproj", "{67949AD5-A853-4BC0-B1D9-F101F50989E7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoEvChargePoint_MSVC", "DemoEvChargePoint\Project\Msvc\DemoEvChargePoint_Msvc.vcxproj", "{B1017E54-8186-4858-8B69-C018EC560F75}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoEvChargePoint_MSVC", "EvChargePoint\Project\Msvc\DemoEvChargePoint_Msvc.vcxproj", "{B1017E54-8186-4858-8B69-C018EC560F75}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoEvChargePoint_Emulator", "DemoEvChargePoint\Project\Msvc_Emulator\DemoEvChargePoint_Emulator.vcxproj", "{96AA02AC-57D4-4EF6-B49E-04DD78EDEC22}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoEvChargePoint_Emulator", "EvChargePoint\Project\Msvc_Emulator\DemoEvChargePoint_Emulator.vcxproj", "{96AA02AC-57D4-4EF6-B49E-04DD78EDEC22}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoFlashBitbang_MSVC", "DemoFlashBitbang\Project\Msvc\DemoFlashBitbang_Msvc.vcxproj", "{F5D4975A-5E13-4673-BF31-C7A9C03DF12B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoFlashBitbang_MSVC", "FlashBitbang\Project\Msvc\DemoFlashBitbang_Msvc.vcxproj", "{F5D4975A-5E13-4673-BF31-C7A9C03DF12B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoFlashBitbang_Emulator", "DemoFlashBitbang\Project\Msvc_Emulator\DemoFlashBitbang_Emulator.vcxproj", "{BE252225-31AA-4403-BC64-23723D8DEB32}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoFlashBitbang_Emulator", "FlashBitbang\Project\Msvc_Emulator\DemoFlashBitbang_Emulator.vcxproj", "{BE252225-31AA-4403-BC64-23723D8DEB32}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoGauges_MSVC", "DemoGauges\Project\Msvc\DemoGauges_MSVC.vcxproj", "{44ED6780-AE62-40DA-B902-F5093012FBC4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoGauges_MSVC", "Gauges\Project\Msvc\DemoGauges_MSVC.vcxproj", "{44ED6780-AE62-40DA-B902-F5093012FBC4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoGauges_Emulator", "DemoGauges\Project\Msvc_Emulator\DemoGauges_Emulator.vcxproj", "{3E02EA0F-31E5-4069-9044-A3E34E794DC9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoGauges_Emulator", "Gauges\Project\Msvc_Emulator\DemoGauges_Emulator.vcxproj", "{3E02EA0F-31E5-4069-9044-A3E34E794DC9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoGradient_MSVC", "DemoGradient\Project\Msvc\DemoGradient_MSVC.vcxproj", "{05EFD78D-4944-41E3-9E9A-816E067ECC73}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoGradient_MSVC", "Gradient\Project\Msvc\DemoGradient_MSVC.vcxproj", "{05EFD78D-4944-41E3-9E9A-816E067ECC73}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoGradient_Emulator", "DemoGradient\Project\Msvc_Emulator\DemoGradient_Emulator.vcxproj", "{27F80A0E-4A4A-4332-8FF1-75E51C56A4A2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoGradient_Emulator", "Gradient\Project\Msvc_Emulator\DemoGradient_Emulator.vcxproj", "{27F80A0E-4A4A-4332-8FF1-75E51C56A4A2}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoGraph_MSVC", "DemoGraph\Project\Msvc\DemoGraph_MSVC.vcxproj", "{B62990BD-515F-4978-A381-D28AB3DA2259}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoGraph_MSVC", "Graph\Project\Msvc\DemoGraph_MSVC.vcxproj", "{B62990BD-515F-4978-A381-D28AB3DA2259}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoGraph_Emulator", "DemoGraph\Project\Msvc_Emulator\DemoGraph_Emulator.vcxproj", "{400B6646-291C-43DE-B0AF-8861CEB59ACC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoGraph_Emulator", "Graph\Project\Msvc_Emulator\DemoGraph_Emulator.vcxproj", "{400B6646-291C-43DE-B0AF-8861CEB59ACC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoHDPictureViewer_MSVC", "DemoHDPictureViewer\Project\Msvc\DemoHDPictureViewer_MSVC.vcxproj", "{C3B5D442-1A86-413B-A1D8-B9ABEE8361B7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoHDPictureViewer_MSVC", "HDPictureViewer\Project\Msvc\DemoHDPictureViewer_MSVC.vcxproj", "{C3B5D442-1A86-413B-A1D8-B9ABEE8361B7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoHDPictureViewer_Emulator", "DemoHDPictureViewer\Project\Msvc_Emulator\DemoHDPictureViewer_Emulator.vcxproj", "{8DA6F4C7-D443-4143-BA21-A79F0540FFBF}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoHDPictureViewer_Emulator", "HDPictureViewer\Project\Msvc_Emulator\DemoHDPictureViewer_Emulator.vcxproj", "{8DA6F4C7-D443-4143-BA21-A79F0540FFBF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoImageviewer_MSVC", "DemoImageviewer\Project\Msvc\DemoImageviewer_MSVC.vcxproj", "{F868393C-7426-4AE3-BAAB-67AF4965C111}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoImageviewer_MSVC", "Imageviewer\Project\Msvc\DemoImageviewer_MSVC.vcxproj", "{F868393C-7426-4AE3-BAAB-67AF4965C111}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoImageviewer_Emulator", "DemoImageviewer\Project\Msvc_Emulator\DemoImageviewer_Emulator.vcxproj", "{F71AE674-E63F-4762-8AE5-128E6F5AC2E8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoImageviewer_Emulator", "Imageviewer\Project\Msvc_Emulator\DemoImageviewer_Emulator.vcxproj", "{F71AE674-E63F-4762-8AE5-128E6F5AC2E8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoImageviewer2_MSVC", "DemoImageviewer2\Project\Msvc\DemoImageviewer2_MSVC.vcxproj", "{82095D36-8E54-4A1C-A5D6-ED77343DC694}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoImageviewer2_MSVC", "Imageviewer2\Project\Msvc\DemoImageviewer2_MSVC.vcxproj", "{82095D36-8E54-4A1C-A5D6-ED77343DC694}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoImageviewer2_Emulator", "DemoImageviewer2\Project\Msvc_Emulator\DemoImageviewer2_Emulator.vcxproj", "{56E90B9F-E657-482B-88CA-67F51455FF19}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoImageviewer2_Emulator", "Imageviewer2\Project\Msvc_Emulator\DemoImageviewer2_Emulator.vcxproj", "{56E90B9F-E657-482B-88CA-67F51455FF19}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoInstrument_MSVC", "DemoInstrument\Project\Msvc\DemoInstrument_Msvc.vcxproj", "{F0A38BB5-1C08-428F-B6B4-E59D1AE55520}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoInstrument_MSVC", "Instrument\Project\Msvc\DemoInstrument_Msvc.vcxproj", "{F0A38BB5-1C08-428F-B6B4-E59D1AE55520}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoInstrument_Emulator", "DemoInstrument\Project\Msvc_Emulator\DemoInstrument_Emulator.vcxproj", "{5DDD5CED-FDB5-42E7-81B7-FC251177F1C9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoInstrument_Emulator", "Instrument\Project\Msvc_Emulator\DemoInstrument_Emulator.vcxproj", "{5DDD5CED-FDB5-42E7-81B7-FC251177F1C9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoJackpot_MSVC", "DemoJackpot\Project\Msvc\DemoJackpot_MSVC.vcxproj", "{FAD08FBE-53BC-42EB-B192-A46224660723}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoJackpot_MSVC", "Jackpot\Project\Msvc\DemoJackpot_MSVC.vcxproj", "{FAD08FBE-53BC-42EB-B192-A46224660723}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoJackpot_Emulator", "DemoJackpot\Project\Msvc_Emulator\DemoJackpot_Emulator.vcxproj", "{0377D9C0-099A-4E95-A67E-D536B4D3B9FA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoJackpot_Emulator", "Jackpot\Project\Msvc_Emulator\DemoJackpot_Emulator.vcxproj", "{0377D9C0-099A-4E95-A67E-D536B4D3B9FA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoKeyboard_MSVC", "DemoKeyboard\Project\Msvc\DemoKeyboard_MSVC.vcxproj", "{F462172E-280B-4498-911F-0D810887E7E8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoKeyboard_MSVC", "Keyboard\Project\Msvc\DemoKeyboard_MSVC.vcxproj", "{F462172E-280B-4498-911F-0D810887E7E8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoKeyboard_Emulator", "DemoKeyboard\Project\Msvc_Emulator\DemoKeyboard_Emulator.vcxproj", "{FBFFC77F-23E1-4977-B510-15A853FD98E1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoKeyboard_Emulator", "Keyboard\Project\Msvc_Emulator\DemoKeyboard_Emulator.vcxproj", "{FBFFC77F-23E1-4977-B510-15A853FD98E1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoLift_MSVC", "DemoLift\Project\Msvc\DemoLift_MSVC.vcxproj", "{B3C791DE-91C0-46DD-ADF1-4BDF560A0E96}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoLift_MSVC", "Lift\Project\Msvc\DemoLift_MSVC.vcxproj", "{B3C791DE-91C0-46DD-ADF1-4BDF560A0E96}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoLift_Emulator", "DemoLift\Project\Msvc_Emulator\DemoLift_Emulator.vcxproj", "{7937262B-3EE4-420D-A8C3-005F16C38D84}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoLift_Emulator", "Lift\Project\Msvc_Emulator\DemoLift_Emulator.vcxproj", "{7937262B-3EE4-420D-A8C3-005F16C38D84}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoLift2_MSVC", "DemoLift2\Project\Msvc\DemoLift2_MSVC.vcxproj", "{AA756361-E2CE-4393-A4FB-DD46760C18A3}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoLift2_MSVC", "Lift2\Project\Msvc\DemoLift2_MSVC.vcxproj", "{AA756361-E2CE-4393-A4FB-DD46760C18A3}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoLift2_Emulator", "DemoLift2\Project\Msvc_Emulator\DemoLift2_Emulator.vcxproj", "{05190170-6F8E-499C-B00E-DA4F8F1C3F09}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoLift2_Emulator", "Lift2\Project\Msvc_Emulator\DemoLift2_Emulator.vcxproj", "{05190170-6F8E-499C-B00E-DA4F8F1C3F09}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoMainmenu_MSVC", "DemoMainmenu\Project\Msvc\DemoMainmenu_MSVC.vcxproj", "{B8E078A6-1C60-46EF-B435-38BB9757D714}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoMainmenu_MSVC", "Mainmenu\Project\Msvc\DemoMainmenu_MSVC.vcxproj", "{B8E078A6-1C60-46EF-B435-38BB9757D714}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoMainmenu_Emulator", "DemoMainmenu\Project\Msvc_Emulator\DemoMainmenu_Emulator.vcxproj", "{06F1D002-2BB3-4C1E-871A-1B3F408F8553}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoMainmenu_Emulator", "Mainmenu\Project\Msvc_Emulator\DemoMainmenu_Emulator.vcxproj", "{06F1D002-2BB3-4C1E-871A-1B3F408F8553}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoMediaPlayer_MSVC", "DemoMediaPlayer\Project\Msvc\DemoMediaPlayer_Msvc.vcxproj", "{6CD4FC82-D01F-4DB8-AFE4-D06CEEF5CDF8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoMediaPlayer_MSVC", "MediaPlayer\Project\Msvc\DemoMediaPlayer_Msvc.vcxproj", "{6CD4FC82-D01F-4DB8-AFE4-D06CEEF5CDF8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoMediaPlayer_Emulator", "DemoMediaPlayer\Project\Msvc_Emulator\DemoMediaPlayer_Emulator.vcxproj", "{463F5380-1909-42A5-9794-0E406EE02D68}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoMediaPlayer_Emulator", "MediaPlayer\Project\Msvc_Emulator\DemoMediaPlayer_Emulator.vcxproj", "{463F5380-1909-42A5-9794-0E406EE02D68}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoMetaballs_MSVC", "DemoMetaballs\Project\Msvc\DemoMetaballs_MSVC.vcxproj", "{CC8E638E-698C-4065-A690-3AA51745F5E9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoMetaballs_MSVC", "Metaballs\Project\Msvc\DemoMetaballs_MSVC.vcxproj", "{CC8E638E-698C-4065-A690-3AA51745F5E9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoMetaballs_Emulator", "DemoMetaballs\Project\Msvc_Emulator\DemoMetaballs_Emulator.vcxproj", "{7E65EC90-D8E7-4FD8-A62A-ADAA780A6CB9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoMetaballs_Emulator", "Metaballs\Project\Msvc_Emulator\DemoMetaballs_Emulator.vcxproj", "{7E65EC90-D8E7-4FD8-A62A-ADAA780A6CB9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoMeter_MSVC", "DemoMeter\Project\Msvc\DemoMeter_Msvc.vcxproj", "{4A485CE6-8E2F-4906-A9F1-54A75B0C4AD9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoMeter_MSVC", "Meter\Project\Msvc\DemoMeter_Msvc.vcxproj", "{4A485CE6-8E2F-4906-A9F1-54A75B0C4AD9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoMeter_Emulator", "DemoMeter\Project\Msvc_Emulator\DemoMeter_Emulator.vcxproj", "{743C8099-435B-448E-BF71-D2B0BAB7A6B6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoMeter_Emulator", "Meter\Project\Msvc_Emulator\DemoMeter_Emulator.vcxproj", "{743C8099-435B-448E-BF71-D2B0BAB7A6B6}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoRefrigerator_MSVC", "DemoRefrigerator\Project\Msvc\DemoRefrigerator_MSVC.vcxproj", "{6BE7A525-49F3-4130-9AEE-C9652395A00A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoRefrigerator_MSVC", "Refrigerator\Project\Msvc\DemoRefrigerator_MSVC.vcxproj", "{6BE7A525-49F3-4130-9AEE-C9652395A00A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoRefrigerator_Emulator", "DemoRefrigerator\Project\Msvc_Emulator\DemoRefrigerator_Emulator.vcxproj", "{B2B7D6C6-5587-4F02-9DC7-22D69830B437}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoRefrigerator_Emulator", "Refrigerator\Project\Msvc_Emulator\DemoRefrigerator_Emulator.vcxproj", "{B2B7D6C6-5587-4F02-9DC7-22D69830B437}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoRotaryDial_MSVC", "DemoRotaryDial\Project\Msvc\DemoRotaryDial_MSVC.vcxproj", "{B5973EA3-2F12-4271-8A9E-72F29EBC8771}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoRotaryDial_MSVC", "RotaryDial\Project\Msvc\DemoRotaryDial_MSVC.vcxproj", "{B5973EA3-2F12-4271-8A9E-72F29EBC8771}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoRotaryDial_Emulator", "DemoRotaryDial\Project\Msvc_Emulator\DemoRotaryDial_Emulator.vcxproj", "{59DDB85F-C041-4560-9740-40C91CEE8AB0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoRotaryDial_Emulator", "RotaryDial\Project\Msvc_Emulator\DemoRotaryDial_Emulator.vcxproj", "{59DDB85F-C041-4560-9740-40C91CEE8AB0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoRunningBar_MSVC", "DemoRunningBar\Project\Msvc\DemoRunningBar_MSVC.vcxproj", "{37479BB8-A58D-44C0-A496-B6315F5F765A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoRunningBar_MSVC", "RunningBar\Project\Msvc\DemoRunningBar_MSVC.vcxproj", "{37479BB8-A58D-44C0-A496-B6315F5F765A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoRunningBar_Emulator", "DemoRunningBar\Project\Msvc_Emulator\DemoRunningBar_Emulator.vcxproj", "{2F695894-9B21-4570-8DF4-A7AD77C673E9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoRunningBar_Emulator", "RunningBar\Project\Msvc_Emulator\DemoRunningBar_Emulator.vcxproj", "{2F695894-9B21-4570-8DF4-A7AD77C673E9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoSignals_MSVC", "DemoSignals\Project\Msvc\DemoSignals_MSVC.vcxproj", "{564B60D2-F755-4819-856D-CEB7C7AFB00F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoSignals_MSVC", "Signals\Project\Msvc\DemoSignals_MSVC.vcxproj", "{564B60D2-F755-4819-856D-CEB7C7AFB00F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoSignals_Emulator", "DemoSignals\Project\Msvc_Emulator\DemoSignals_Emulator.vcxproj", "{ADD7EE9A-3CDD-4007-AB7A-B52232EA211F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoSignals_Emulator", "Signals\Project\Msvc_Emulator\DemoSignals_Emulator.vcxproj", "{ADD7EE9A-3CDD-4007-AB7A-B52232EA211F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoSignature_MSVC", "DemoSignature\Project\Msvc\DemoSignature_MSVC.vcxproj", "{B30B1438-B748-4241-A442-61AF6F2E4371}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoSignature_MSVC", "Signature\Project\Msvc\DemoSignature_MSVC.vcxproj", "{B30B1438-B748-4241-A442-61AF6F2E4371}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoSignature_Emulator", "DemoSignature\Project\Msvc_Emulator\DemoSignature_Emulator.vcxproj", "{9F893545-ACFC-4588-B7E3-9A32CA18725D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoSignature_Emulator", "Signature\Project\Msvc_Emulator\DemoSignature_Emulator.vcxproj", "{9F893545-ACFC-4588-B7E3-9A32CA18725D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoSketch_MSVC", "DemoSketch\Project\Msvc\DemoSketch_MSVC.vcxproj", "{2CD44577-819B-42F4-A84E-3FF7659760BD}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoSketch_MSVC", "Sketch\Project\Msvc\DemoSketch_MSVC.vcxproj", "{2CD44577-819B-42F4-A84E-3FF7659760BD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoSketch_Emulator", "DemoSketch\Project\Msvc_Emulator\DemoSketch_Emulator.vcxproj", "{CC2E5516-F52D-4346-8C22-6DF52828D651}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoSketch_Emulator", "Sketch\Project\Msvc_Emulator\DemoSketch_Emulator.vcxproj", "{CC2E5516-F52D-4346-8C22-6DF52828D651}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoUnicode_MSVC", "DemoUnicode\Project\Msvc\DemoUnicode_MSVC.vcxproj", "{E4EC03DD-28BF-4600-9D38-5BFC696AA00B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoUnicode_MSVC", "Unicode\Project\Msvc\DemoUnicode_MSVC.vcxproj", "{E4EC03DD-28BF-4600-9D38-5BFC696AA00B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoUnicode_Emulator", "DemoUnicode\Project\Msvc_Emulator\DemoUnicode_Emulator.vcxproj", "{B0AA40B3-32E8-4E10-B6CA-218AD9C59DFB}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoUnicode_Emulator", "Unicode\Project\Msvc_Emulator\DemoUnicode_Emulator.vcxproj", "{B0AA40B3-32E8-4E10-B6CA-218AD9C59DFB}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoUnicodeRuntime_MSVC", "DemoUnicodeRuntime\Project\Msvc\DemoUnicodeRuntime_MSVC.vcxproj", "{04129F4D-3568-44DC-948B-E054C2A92002}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoUnicodeRuntime_MSVC", "UnicodeRuntime\Project\Msvc\DemoUnicodeRuntime_MSVC.vcxproj", "{04129F4D-3568-44DC-948B-E054C2A92002}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoUnicodeRuntime_Emulator", "DemoUnicodeRuntime\Project\Msvc_Emulator\DemoUnicodeRuntime_Emulator.vcxproj", "{EB80049A-AD84-4573-A8C5-2440777DCC59}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoUnicodeRuntime_Emulator", "UnicodeRuntime\Project\Msvc_Emulator\DemoUnicodeRuntime_Emulator.vcxproj", "{EB80049A-AD84-4573-A8C5-2440777DCC59}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoWashingMachine_MSVC", "DemoWashingMachine\Project\Msvc\DemoWashingMachine_MSVC.vcxproj", "{F04E27DF-C278-4130-93DC-75E834C9457E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoWashingMachine_MSVC", "WashingMachine\Project\Msvc\DemoWashingMachine_MSVC.vcxproj", "{F04E27DF-C278-4130-93DC-75E834C9457E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoWashingMachine_Emulator", "DemoWashingMachine\Project\Msvc_Emulator\DemoWashingMachine_Emulator.vcxproj", "{4A4DD7EE-013C-49A7-8195-65236B5F79DE}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleApp_MSVC", "SampleApp\Project\Msvc\SampleApp_MSVC.vcxproj", "{867F118F-CE7E-4155-8705-C3F04AB7D406}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleApp_Emulator", "SampleApp\Project\Msvc_Emulator\SampleApp_Emulator.vcxproj", "{2DBEF2C0-CBD8-4B07-A828-CDA32DE35D7D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DemoWashingMachine_Emulator", "WashingMachine\Project\Msvc_Emulator\DemoWashingMachine_Emulator.vcxproj", "{4A4DD7EE-013C-49A7-8195-65236B5F79DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
