@@ -26,7 +26,7 @@
 
 static EVE_HalContext s_halContext;
 static EVE_HalContext* s_pHalContext;
-void Sound();
+void SAMAPP_Sound();
 
 int main(int argc, char* argv[])
 {
@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
 	while (TRUE) {
         WelcomeScreen(s_pHalContext, info);
 
-        Sound();
+        SAMAPP_Sound();
 
 		EVE_Util_clearScreen(s_pHalContext);
 
@@ -77,7 +77,7 @@ PROGMEM prog_uchar8_t SAMAPP_Snd_TagArray[58] = { 0x63, 0x1, 0x2, 0x3, 0x4, 0x5,
 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x60,
 0x61 };
 
-void highLight_Btn(int32_t tagvalsnd, const prog_uchar8_t* pTagArray, int32_t wbutton,
+void helperHighLightBtn(int32_t tagvalsnd, const prog_uchar8_t* pTagArray, int32_t wbutton,
     int32_t hbutton, const char8_t* StringArray, const prog_uchar8_t* pString)
 {
 
@@ -136,7 +136,7 @@ void highLight_Btn(int32_t tagvalsnd, const prog_uchar8_t* pTagArray, int32_t wb
     }
 }
 
-void draw_Btn(const prog_uchar8_t* pTagArray, int32_t wbutton, int32_t hbutton)
+void helperDrawBtn(const prog_uchar8_t* pTagArray, int32_t wbutton, int32_t hbutton)
 {
     int32_t numbtnrow = 7;
     int32_t numbtncol = 8;
@@ -160,9 +160,9 @@ void draw_Btn(const prog_uchar8_t* pTagArray, int32_t wbutton, int32_t hbutton)
 * @brief  mple app api to demonstrate sound
 *
 */
-void SAMAPP_Sound()
+void SAMAPP_Sound_builtin()
 {
-    int32_t LoopFlag = 100;
+    int32_t LoopFlag = 1000;
     int32_t wbutton;
     int32_t hbutton;
     int32_t tagval;
@@ -176,6 +176,9 @@ void SAMAPP_Sound()
     const PROGMEM prog_uchar8_t* pString;
     const PROGMEM prog_uchar8_t* pTagArray;
     char8_t StringArray[8] = { 0 };
+
+    Draw_Text(s_pHalContext, "Example for: Play built-in sound\n\n\nPlease touch on screen");
+
     /*************************************************************************/
     /* Below code demonstrates the usage of sound function. All the supported*/
     /* sounds and respective pitches are put as part of keys/buttons, by     */
@@ -240,7 +243,7 @@ void SAMAPP_Sound()
         EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0x80, 0x80, 0x00));
         EVE_Cmd_wr32(s_pHalContext, BEGIN(RECTS));
 
-        draw_Btn(pTagArray, wbutton, hbutton);
+        helperDrawBtn(pTagArray, wbutton, hbutton);
 
         EVE_Cmd_wr32(s_pHalContext, END());
         EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0xff, 0xff, 0xff));
@@ -248,7 +251,7 @@ void SAMAPP_Sound()
         pTagArray = SAMAPP_Snd_TagArray;
         pString = SAMAPP_Snd_Array;
 
-        highLight_Btn(tagvalsnd, pTagArray, wbutton, hbutton, StringArray, pString);
+        helperHighLightBtn(tagvalsnd, pTagArray, wbutton, hbutton, StringArray, pString);
 
         /* Draw vertical slider bar for frequency control */
         StringArray[0] = '\0';
@@ -276,14 +279,12 @@ void SAMAPP_Sound()
     EVE_Hal_wr8(s_pHalContext, REG_PLAY, 1);
 }
 
-#if defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM)
 /**
 * @brief API to demonstrate music playback in streaming way
 *
 */
-void SAMAPP_Aud_Music_Player_Streaming()
+void SAMAPP_Sound_musicStreaming()
 {
-    FILE* pFile = NULL;
     uint32_t filesz = 0;
     uint32_t chunksize = 16 * 1024;
     uint32_t totalbufflen = 64 * 1024;
@@ -293,15 +294,15 @@ void SAMAPP_Aud_Music_Player_Streaming()
     uint32_t wrptr = RAM_G;
     uint32_t rdptr;
     uint32_t freebuffspace;
-    pFile = fopen(TEST_DIR "\\Devil_Ride_30_11025hz.raw", "rb+");
-    if (!pFile)
+
+    Draw_Text(s_pHalContext, "Example for: Play music streaming way");
+
+    filesz = FileIO_File_Open(TEST_DIR "\\Devil_Ride_30_11025hz.raw", FILEIO_E_FOPEN_READ);
+    if (filesz <= 0)
     {
+        APP_ERR("Cannot open Devil_Ride_30_11025hz.raw");
         return;
     }
-    fseek(pFile, 0, SEEK_END);
-    filesz = ftell(pFile);
-
-    fseek(pFile, 0, SEEK_SET);
 
     pBuff = (uint8_t*) malloc(totalbufflen);
 
@@ -325,9 +326,8 @@ void SAMAPP_Aud_Music_Player_Streaming()
         {
             currreadlen = chunksize;
         }
-        fread(pBuff, 1, currreadlen, pFile);
-
-        EVE_Hal_wrProgMem(s_pHalContext, wrptr, pBuff, currreadlen);
+        FileIO_File_Read(pBuff, currreadlen);
+        EVE_Hal_wrMem(s_pHalContext, wrptr, pBuff, currreadlen);
         wrptr += currreadlen;
         wrptr = wrptr % (RAM_G + totalbufflen);
 
@@ -381,78 +381,37 @@ void SAMAPP_Aud_Music_Player_Streaming()
     EVE_Hal_wr8(s_pHalContext, REG_VOL_PB, 0);
     EVE_Hal_wr8(s_pHalContext, REG_PLAYBACK_PLAY, 1);
 
-    fclose(pFile);
+    FileIO_File_Close();
     free(pBuff);
 }
-#endif
-#if defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM)
+
 /**
 * @brief API to demonstrate music playback
 *
 */
-void SAMAPP_Aud_Music_Player()
+void SAMAPP_Sound_fromEABConvertedRaw()
 {
-    FILE* pFile = NULL;
-    int32_t filesz;
-    int32_t freebuffspace = 100 * 1024;
-    int32_t chunksize = 10 * 1024;
-    int32_t totalbufflen = 100 * 1024;
-    int32_t currreadlen;
-    uint8_t* pBuff = NULL;
-    const uint8_t* loopflag = 1;
-    pFile = fopen(TEST_DIR "\\Devil_Ride_30_11025hz.raw", "rb+");
-    if (!pFile)
-    {
-        return;
-    }
-    fseek(pFile, 0, SEEK_END);
-    filesz = ftell(pFile);
+    Draw_Text(s_pHalContext, "Example for: Play sound from EAB converted audio");
 
-    fseek(pFile, 0, SEEK_SET);
+    Gpu_Hal_LoadImageToMemory(s_pHalContext, TEST_DIR "\\Devil_Ride_30_11025hz.raw", 0, LOAD);
+    EVE_Cmd_waitFlush(s_pHalContext);
 
-    /* Ideally allocate memory wrt sampling frequency and amount of buffering */
-    pBuff = (uint8_t*) malloc(chunksize);
-
-    while (filesz > 0)
-    {
-        currreadlen = filesz;
-
-        if (currreadlen > chunksize)
-        {
-            currreadlen = chunksize;
-        }
-        fread(pBuff, 1, currreadlen, pFile);
-        EVE_Hal_wrProgMem(s_pHalContext, RAM_G + (totalbufflen - freebuffspace), pBuff, chunksize);
-        filesz -= chunksize;
-        freebuffspace -= chunksize;
-        if (freebuffspace <= 0)
-        {
-            break;
-        }
-    }
-
-    /* check if single shot or not */
-    if (filesz <= 0)
-    {
-        loopflag = 0;
-
-    }
-    EVE_Hal_wr32(s_pHalContext, REG_PLAYBACK_START, RAM_G); //Audio playback start address in sram
-    EVE_Hal_wr32(s_pHalContext, REG_PLAYBACK_LENGTH, (totalbufflen - freebuffspace));//Length of raw data buffer in bytes
-    EVE_Hal_wr16(s_pHalContext, REG_PLAYBACK_FREQ, 11025);//Current read address
-    EVE_Hal_wr8(s_pHalContext, REG_PLAYBACK_FORMAT, LINEAR_SAMPLES);//Current sampling frequency
-    EVE_Hal_wr8(s_pHalContext, REG_PLAYBACK_LOOP, 0);//Audio playback format
     EVE_Hal_wr8(s_pHalContext, REG_VOL_PB, 255);
+    EVE_Hal_wr32(s_pHalContext, REG_PLAYBACK_START, 0); //Audio playback start address
+    EVE_Hal_wr32(s_pHalContext, REG_PLAYBACK_LENGTH, 334707);//Length of raw data buffer in bytes
+    EVE_Hal_wr16(s_pHalContext, REG_PLAYBACK_FREQ, 11025);//Frequency
+    EVE_Hal_wr8(s_pHalContext, REG_PLAYBACK_FORMAT, LINEAR_SAMPLES);//Current sampling frequency
+    EVE_Hal_wr8(s_pHalContext, REG_PLAYBACK_LOOP, 0);
     EVE_Hal_wr8(s_pHalContext, REG_PLAYBACK_PLAY, 1);
-
-    fclose(pFile);
-    free(pBuff);
+    EVE_Cmd_waitFlush(s_pHalContext);
+    while (EVE_Hal_rd8(s_pHalContext, REG_PLAYBACK_PLAY) == 1);
+    EVE_Cmd_waitFlush(s_pHalContext);
 }
-#endif
 
-
-void Sound() {
-
+void SAMAPP_Sound() {
+    SAMAPP_Sound_builtin();
+    SAMAPP_Sound_musicStreaming();
+    SAMAPP_Sound_fromEABConvertedRaw();
 }
 
 
