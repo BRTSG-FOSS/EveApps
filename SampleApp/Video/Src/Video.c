@@ -157,6 +157,49 @@ void SAMAPP_Video_fromFlash()
 }
 
 /**
+* @brief AVI video playback from file via CMD buffer
+*
+*/
+void SAMAPP_Video_fromFile()
+{
+#if defined(BT81X_ENABLE)
+#define CMD_BUFFER 2*1024
+    uint8_t pbuff[CMD_BUFFER];
+    uint32_t filesz;
+
+    Draw_Text(s_pHalContext, "Example for: Video display from file");
+
+    filesz = FileIO_File_Open(TEST_DIR "\\Big buck bunny 240p 40s  adpcm_ima_wav.avi", FILEIO_E_FOPEN_READ);
+    if (filesz <= 0)
+    {
+        printf("\nFailed to open file.\n");
+        return;
+    }
+
+    EVE_Hal_wr8(s_pHalContext, REG_VOL_PB, 255);
+#if defined(BT81X_ENABLE)
+    EVE_Hal_wr8(s_pHalContext, REG_PLAY_CONTROL, 1); // restore default value
+#endif
+
+    EVE_Cmd_wr32(s_pHalContext, CMD_PLAYVIDEO);
+    EVE_Cmd_wr32(s_pHalContext, OPT_SOUND | OPT_NOTEAR);
+    APP_INF("Video playback starts.\n");
+    
+    while (filesz > 0)
+    {
+        uint32_t bytesread = filesz > CMD_BUFFER ? CMD_BUFFER : filesz;
+        FileIO_File_Read(pbuff, bytesread);
+        filesz -= bytesread;
+        EVE_Cmd_wrMem(s_pHalContext, pbuff, bytesread);
+    }
+
+    helperStopVideoCmdFifo();
+    EVE_Cmd_restore(s_pHalContext);
+    EVE_Cmd_waitFlush(s_pHalContext);
+#endif 
+}
+
+/**
 * @brief Test AVI video playback full screen from flash
 *
 */
@@ -200,11 +243,6 @@ void SAMAPP_Video_fromCMDB()
 #define SPARE_RAM_G_ADDRESS  (RAM_G + VIDEO_RAM_SPACE)
 
     Draw_Text(s_pHalContext, "Example for: Video display via REG_CMDB_WRITE/REG_CMDB_SPACE");
-
-    //read back the logo ARGB data to file
-    Ftf_Read_File_From_RAM_G(s_pHalContext, TEST_DIR "\\chicken_before.raw", 
-        SPARE_RAM_G_ADDRESS,
-        SPARE_RAM_G_SIZE);
 
     SAMAPP_INFO_START;
     EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(0));
@@ -322,10 +360,6 @@ void SAMAPP_Video_fromCMDBuffer()
     /* close the opened binary zlib file */
     free(Picpbuff);
     EVE_Cmd_waitFlush(s_pHalContext);
-
-    //read back the logo ARGB data to file
-    Ftf_Read_File_From_RAM_G(s_pHalContext, TEST_DIR "\\logo_argb4_first_2.raw", 
-        LOGO_ADDRESS, PNG_W * PNG_H * 2);
 
     SAMAPP_INFO_START;
     EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(0));
@@ -765,7 +799,7 @@ void SAMAPP_Video_audioEnalbe()
 
     Draw_Text(s_pHalContext, "Example for: Video display with audio enable");
 
-    filesz = FileIO_File_Open(TEST_DIR "\\bbb_lo.avi", FILEIO_E_FOPEN_READ);
+    filesz = FileIO_File_Open(TEST_DIR "\\Big buck bunny 240p 40s  adpcm_ima_wav.avi", FILEIO_E_FOPEN_READ);
     if (filesz <= 0)
     {
         SAMAPP_INFO_TEXT("Unable to open file.");
@@ -846,6 +880,7 @@ void SAMAPP_Video_audioEnalbe()
 
 void SAMAPP_Video() {
     SAMAPP_Video_fromFlash();
+    SAMAPP_Video_fromFile();
     SAMAPP_Video_fromFlashFullScreen();
     SAMAPP_Video_fromCMDB();
     SAMAPP_Video_fromCMDBuffer();
