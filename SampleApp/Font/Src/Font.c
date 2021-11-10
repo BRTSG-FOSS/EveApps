@@ -46,7 +46,6 @@ int main(int argc, char* argv[])
 
     // Write flash binary
     Flash_Init(s_pHalContext, TEST_DIR "/Flash/BT81X_Flash.bin", "BT81X_Flash.bin");
-
     EVE_Util_clearScreen(s_pHalContext);
 
     char *info[] =

@@ -46,6 +46,7 @@ int main(int argc, char* argv[])
     Calibration_Save(s_pHalContext);
 #endif
 
+    Flash_Init(s_pHalContext, TEST_DIR "/Flash/BT81X_Flash.bin", "BT81X_Flash.bin");
     EVE_Util_clearScreen(s_pHalContext);
 
     char *info[] =
@@ -133,8 +134,6 @@ static void helperStopVideoCmdFifo()
 void SAMAPP_Video_fromFlash()
 {
 #if defined (BT81X_ENABLE)
-#define ADDR_VIDEO 4096
-
     if (!FlashHelper_SwitchFullMode(s_pHalContext))
     {
         APP_ERR("SwitchFullMode failed");
@@ -145,7 +144,7 @@ void SAMAPP_Video_fromFlash()
     SAMAPP_INFO_START;
     EVE_CoCmd_text(s_pHalContext, 0, 150, 30, 0, "Video display from Flash");
     EVE_Cmd_waitFlush(s_pHalContext);
-    EVE_CoCmd_flashSource(s_pHalContext, ADDR_VIDEO);
+    EVE_CoCmd_flashSource(s_pHalContext, 4096);
     EVE_Cmd_wr32(s_pHalContext, CMD_PLAYVIDEO);
     EVE_Cmd_wr32(s_pHalContext, OPT_FLASH | OPT_SOUND | OPT_NOTEAR | OPT_OVERLAY);
     
