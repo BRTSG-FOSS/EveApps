@@ -218,6 +218,8 @@ namespace EveAppsConfig
             cbb_Flash.SelectedIndex = 0;
             cbb_Demo.SelectedIndex = 0;
             cbb_Touch.SelectedIndex = 0;
+
+            txt_root.Text = "../../../EveApps";
         }
         public Form1()
         {
