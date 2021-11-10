@@ -40,8 +40,8 @@ static EVE_HalContext *s_pHalContext;
 
 Img_t g_Img[] = {
     //index addressFlash addressRamg size      x    y  w  h    bitmapLayout extFormat    tag isFlash
-    { 0     ,12187264    ,0          ,6400   ,0   ,0 ,80 ,80 ,COMPRESSED_RGBA_ASTC_4x4_KHR       ,0           ,1  ,1 },
-    { 1     ,12193664    ,0          ,6400   ,0   ,0 ,80 ,80 ,COMPRESSED_RGBA_ASTC_4x4_KHR       ,0           ,2  ,1 },
+    { 0     ,10530496    ,0          ,6400   ,0   ,0 ,80 ,80 ,COMPRESSED_RGBA_ASTC_4x4_KHR       ,0           ,1  ,1 },
+    { 1     ,10536896    ,0          ,6400   ,0   ,0 ,80 ,80 ,COMPRESSED_RGBA_ASTC_4x4_KHR       ,0           ,2  ,1 },
 };
 
 #define ANIM_ADDR     (10529664) // address of "output.anim.object" from Flash map after generating Flash
@@ -70,9 +70,9 @@ typedef struct _AUDIO {
     int addr, len, freq, format;
 }AUDIO;
 AUDIO wav[3] = {
-    {10530496, 662208, 22050, LINEAR_SAMPLES},
-    {11192704, 661632, 22050, ULAW_SAMPLES},
-    {11854336, 332928, 22050, ADPCM_SAMPLES},
+    {10543296, 275648, 11025, LINEAR_SAMPLES},
+    {10818944, 275648, 11025, ULAW_SAMPLES},
+    {11094592, 137856, 11025, ADPCM_SAMPLES},
 };
 
 #define TAG_SLIDER (BTN_NUM+1)
@@ -89,7 +89,7 @@ void changeAudio(AUDIO* ad) {
 #endif
 
     // Start playback
-    EVE_Hal_wr32(s_pHalContext, REG_PLAYBACK_START, 0);
+    EVE_Hal_wr32(s_pHalContext, REG_PLAYBACK_START, ad->addr);
     EVE_Hal_wr32(s_pHalContext, REG_PLAYBACK_LENGTH, ad->len);
     EVE_Hal_wr16(s_pHalContext, REG_PLAYBACK_FREQ, ad->freq);
     EVE_Hal_wr8(s_pHalContext, REG_PLAYBACK_FORMAT, ad->format);
@@ -172,9 +172,8 @@ void drawUi() {
     const int16_t yAnim = 240;
 
     Display_Start(s_pHalContext);
-
     EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
-    
+
     // Disable animation on WSVGA and WXGA
     if (s_pHalContext->Width < 1024) {
         EVE_CoCmd_animFrame(s_pHalContext, xAnim, yAnim, ANIM_ADDR, frame);
@@ -195,15 +194,18 @@ void drawUi() {
         img->y = btn[i].y;
         img->tag = btn[i].tag;
         Image_Draw(s_pHalContext, img);
-
         EVE_CoCmd_text(s_pHalContext, img->x - (strlen(media_info[i]) * 5), img->y + 100, 30, 0, media_info[i]);
-    
     }
+
+    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0, 0, 0));
 
     char cvol[300];
     sprintf(cvol, "Volume %d", gs_volume);
 
     EVE_CoCmd_text(s_pHalContext, 100, 60, 30, 0, cvol);
+
+    // Audio license info
+    EVE_CoCmd_text(s_pHalContext, 10, s_pHalContext->Height - 20, 21, 0, "Royalty Free Music from Bensound");
 
     EVE_Cmd_wr32(s_pHalContext, TAG(TAG_SLIDER));
     EVE_CoCmd_slider(s_pHalContext, 100, 100, s_pHalContext->Width - 200, 20, OPT_FLAT, gs_volume, 255);
@@ -219,9 +221,9 @@ void DemoAudioPlayback(EVE_HalContext* pHalContext) {
     FlashHelper_SwitchFullMode(s_pHalContext);
 
     // To avoid a pop sound on reset or power state change
-    // EVE_Hal_wr16(s_pHalContext, REG_SOUND,0x0);//configure “mute” sound to be played 
-    // EVE_Hal_wr8(s_pHalContext, REG_PLAY,1);//play sound 
-    // while (1 == EVE_Hal_rd8(s_pHalContext, REG_PLAY));//Wait for the completion of sound play 
+    EVE_Hal_wr16(s_pHalContext, REG_SOUND,0x0);//configure “mute” sound to be played 
+    EVE_Hal_wr8(s_pHalContext, REG_PLAY,1);//play sound 
+    while (1 == EVE_Hal_rd8(s_pHalContext, REG_PLAY));//Wait for the completion of sound play 
 
     /// Button positioning
     int padding = (s_pHalContext->Width - ((BTN_NUM-1) * BUTTON_MARGIN) - ((BTN_NUM-2) * 80)) / 2 ;

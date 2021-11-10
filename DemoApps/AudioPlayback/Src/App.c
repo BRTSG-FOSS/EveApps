@@ -68,31 +68,7 @@ int main(int argc, char *argv[])
 
 	if (s_pHalContext->Width > 1023)
 		Setup_Precision(3); // -2048 to 2047. Note: Use VP with vertex
-
-    {
-        int sz = Ftf_Write_File_To_RAM_G(s_pHalContext, 
-            TEST_DIR "/relaxed-inspiration-ig-version-short-30s-6579.raw", 0);
-        EVE_Hal_wr8(s_pHalContext, REG_VOL_PB, 0);
-        APP_DBG_U(sz);
-        // Start playback
-        EVE_Hal_wr32(s_pHalContext, REG_PLAYBACK_START, 0);
-        EVE_Hal_wr32(s_pHalContext, REG_PLAYBACK_LENGTH, sz);
-        EVE_Hal_wr16(s_pHalContext, REG_PLAYBACK_FREQ, 44100);
-        EVE_Hal_wr8(s_pHalContext, REG_PLAYBACK_FORMAT, ADPCM_SAMPLES);
-        EVE_Hal_wr8(s_pHalContext, REG_PLAYBACK_PAUSE, 0);
-        EVE_Hal_wr8(s_pHalContext, REG_PLAYBACK_LOOP, 0);
-        EVE_Hal_wr8(s_pHalContext, REG_PLAYBACK_PLAY, 1);
-        EVE_Cmd_waitFlush(s_pHalContext);
-        /// Volume increase from 0
-        uint32_t vol = 0;
-        int ins = 1;
-        while (vol < 100) {
-            EVE_Hal_wr8(s_pHalContext, REG_VOL_PB, vol);
-            vol += ins;
-            ins++;
-            EVE_sleep(1);
-        }
-    }
+    
 	// read and store calibration setting
 #if !defined(BT8XXEMU_PLATFORM) && GET_CALIBRATION == 1
 	Esd_Calibrate(s_pHalContext);
@@ -100,7 +76,6 @@ int main(int argc, char *argv[])
 #endif
 
 	Flash_Init(s_pHalContext, TEST_DIR "/Flash/BT81X_Flash.bin", "BT81X_Flash.bin");
-
 	mainLoop();
 
 #if defined(MSVC_PLATFORM) || defined(FT900_PLATFORM) || defined(FT93X_PLATFORM)
