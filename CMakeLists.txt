@@ -21,7 +21,7 @@
 #  nmake SampleApp
 #
 
-SET(FT9XX_TOOLCHAIN "D:/sw/Bridgetek/FT9xx\ Toolchain2.5.0") #Any space must be prefixed with '\'
+SET(FT9XX_TOOLCHAIN "Bridgetek/FT9xx\ Toolchain2.5.0" CACHE PATH "Location of FT9XX toolchain") #Any space must be prefixed with '\'
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.13 FATAL_ERROR)
 set (CMAKE_VERBOSE_MAKEFILE ON)
@@ -126,7 +126,7 @@ SET(EVE_APPS_PLATFORM "MULTI" CACHE STRING "Platform Target")
 SET_PROPERTY(CACHE EVE_APPS_PLATFORM PROPERTY STRINGS ${LIST_PLATFORM})
 
 SET(EVE_APPS_DISPLAY "EVE_DISPLAY_QVGA" CACHE STRING "Platform Target")
-SET_PROPERTY(CACHE EVE_APPS_PLATFORM PROPERTY STRINGS ${LIST_DISPLAY})
+SET_PROPERTY(CACHE EVE_APPS_DISPLAY PROPERTY STRINGS ${LIST_DISPLAY})
 
 # Validate input ###############################################################
 function(give_sugguest value array global_set)
@@ -188,6 +188,16 @@ SET(IS_PLATFORM_FT930    "${IS_PLATFORM_FT930}"    CACHE STRING "Platform Target
 SET(IS_PLATFORM_FT4222   "${IS_PLATFORM_FT4222}"   CACHE STRING "Platform Target FT4222  ")
 SET(IS_PLATFORM_MPSSE    "${IS_PLATFORM_MPSSE}"    CACHE STRING "Platform Target MPSSE   ")
 SET(IS_PLATFORM_EMULATOR "${IS_PLATFORM_EMULATOR}" CACHE STRING "Platform Target EMULATOR")
+
+mark_as_advanced(IS_PLATFORM_FT9XX   )
+mark_as_advanced(IS_PLATFORM_RP2040  )
+mark_as_advanced(IS_PLATFORM_WINDOW  )
+mark_as_advanced(IS_PLATFORM_MULTI   )
+mark_as_advanced(IS_PLATFORM_FT900   )
+mark_as_advanced(IS_PLATFORM_FT930   )
+mark_as_advanced(IS_PLATFORM_FT4222  )
+mark_as_advanced(IS_PLATFORM_MPSSE   )
+mark_as_advanced(IS_PLATFORM_EMULATOR)
 
 # C language version ###########################################################
 set(CMAKE_C_STANDARD 11)
@@ -276,19 +286,15 @@ ELSEIF(IS_PLATFORM_FT930)
   ADD_DEFINITIONS("-D__FT930__")
 ENDIF()
 
-# Common setup ##########################################################
-MESSAGE("EVE_APPS_PLATFORM = ${EVE_APPS_PLATFORM}")
-MESSAGE("FT9XX_TOOLCHAIN = ${FT9XX_TOOLCHAIN}")
-MESSAGE("EVE_APPS_GRAPHICS = ${EVE_APPS_GRAPHICS}")
-MESSAGE("CMAKE_OBJCOPY = ${CMAKE_OBJCOPY}")
-
+# Common setup #################################################################
 ADD_SUBDIRECTORY(common)
 INCLUDE_DIRECTORIES("common/eve_hal")
 INCLUDE_DIRECTORIES("common/eve_hal/Hdr")
 
+# Project setup ################################################################
 IF(NOT EVE_APPS_GRAPHICS STREQUAL "MULTI")
   ADD_SUBDIRECTORY(DemoApps)
   ADD_SUBDIRECTORY(SampleApp)
 ENDIF()
 
-########################################################################
+################################################################################
