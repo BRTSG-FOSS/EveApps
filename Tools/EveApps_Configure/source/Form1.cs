@@ -225,6 +225,7 @@ namespace EveAppsConfig
         {
             InitializeComponent();
             initDefault();
+            this.restoreDefault(false);
         }
 
         public static string PrintXML(string xml, bool isEclipse)
@@ -638,7 +639,7 @@ namespace EveAppsConfig
             }
         }
 
-        private void btn_restoreDefault_Click(object sender, EventArgs e)
+        private void restoreDefault(bool isSetup = false)
         {
             Txt_Log.Clear();
 
@@ -661,14 +662,14 @@ namespace EveAppsConfig
                 lcd = "EVE_DISPLAY_WXGA";
             }
 
-            cbb_Module  .SelectedIndex = cbb_Module  .FindString(module  );
-            cbb_EveIC   .SelectedIndex = cbb_EveIC   .FindString(eveIC   );
-            cbb_msvchost.SelectedIndex = cbb_msvchost.FindString(mhost   );
-            cbb_ft900   .SelectedIndex = cbb_ft900   .FindString(f900host);
-            cbb_ft930   .SelectedIndex = cbb_ft930   .FindString(f930host);
-            cbb_LCD     .SelectedIndex = cbb_LCD     .FindString(lcd     );
-            cbb_Flash   .SelectedIndex = cbb_Flash   .FindString(flash   );
-            cbb_Touch   .SelectedIndex = cbb_Touch   .FindString(touch);
+            cbb_Module.SelectedIndex = cbb_Module.FindString(module);
+            cbb_EveIC.SelectedIndex = cbb_EveIC.FindString(eveIC);
+            cbb_msvchost.SelectedIndex = cbb_msvchost.FindString(mhost);
+            cbb_ft900.SelectedIndex = cbb_ft900.FindString(f900host);
+            cbb_ft930.SelectedIndex = cbb_ft930.FindString(f930host);
+            cbb_LCD.SelectedIndex = cbb_LCD.FindString(lcd);
+            cbb_Flash.SelectedIndex = cbb_Flash.FindString(flash);
+            cbb_Touch.SelectedIndex = cbb_Touch.FindString(touch);
 
             Cb_Astc.Checked = false;
             Cb_Capacitive.Checked = false;
@@ -680,6 +681,11 @@ namespace EveAppsConfig
             Cb_Unicode.Checked = false;
             Cb_Video.Checked = false;
 
+            if (!isSetup)
+            {
+                return;
+            }
+
             this.do_setup(module, eveIC, mhost, f900host, f930host, lcd, flash, demo, support, touch);
 
             // Special reset for DemoEvChargePoint        
@@ -690,6 +696,11 @@ namespace EveAppsConfig
                 lcd = "EVE_DISPLAY_WXGA";
                 this.do_setup(module, eveIC, mhost, f900host, f930host, lcd, flash, demo, support, touch);
             }
+        }
+
+        private void btn_restoreDefault_Click(object sender, EventArgs e)
+        {
+            this.restoreDefault(true);
         }
 
         private void btn_about_Click(object sender, EventArgs e)
