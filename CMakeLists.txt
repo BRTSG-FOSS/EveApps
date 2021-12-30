@@ -24,7 +24,8 @@
 SET(FT9XX_TOOLCHAIN "Bridgetek/FT9xx\ Toolchain2.5.0" CACHE PATH "Location of FT9XX toolchain") #Any space must be prefixed with '\'
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.13 FATAL_ERROR)
-set (CMAKE_VERBOSE_MAKEFILE ON)
+#Uncomment to see gcc stdout
+#set (CMAKE_VERBOSE_MAKEFILE ON)
 IF (POLICY CMP0020)
 	CMAKE_POLICY(SET CMP0020 NEW)
 ENDIF ()

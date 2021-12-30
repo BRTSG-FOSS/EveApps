@@ -9,11 +9,10 @@ ADD_LIBRARY(fatfs
   )
 
 IF(IS_PLATFORM_RP2040)
-add_subdirectory(hardware_gpio_ex)
 TARGET_LINK_LIBRARIES(
   fatfs 
   pico_stdlib
-  hardware_gpio_ex
+  hardware_gpio
   )
   
 # Add any user requested libraries

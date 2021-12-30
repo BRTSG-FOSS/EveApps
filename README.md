@@ -23,6 +23,9 @@ Please note that some of the applications are developed for certain Eve Series c
 
 Requires the Pico toolchain https://github.com/ndabas/pico-setup-windows to be installed.
 
+Pico-SDK version 1.3.0 is required
+
+
 The following steps will build for Raspberry Pi Pico.
 Replace `X:\source\eve_apps` with your EveApps repository path.
 

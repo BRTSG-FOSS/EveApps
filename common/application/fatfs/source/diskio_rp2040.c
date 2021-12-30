@@ -124,7 +124,7 @@ void init_spi(void)
 
 	gpio_init(PIN_SPI0_MISO);
 	gpio_pull_up(PIN_SPI0_MISO);
-	gpio_set_schmitt(PIN_SPI0_MISO, 1); // 0: Off, 1: On (default)
+	gpio_set_input_hysteresis_enabled(PIN_SPI0_MISO, 1); // 0: Off, 1: On (default)
 	gpio_set_function(PIN_SPI0_MISO, GPIO_FUNC_SPI);
 
 	gpio_init(PIN_SPI0_MOSI);
