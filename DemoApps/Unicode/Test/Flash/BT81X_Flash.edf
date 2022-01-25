@@ -1,9 +1,11 @@
-unified.blob     : 0     : 4096 : 1 : 0 : 0 : 0
-01.glyph         : 4096  : 14080 : 4 : 0 : 0 : 1
-01.xfont         : 18176 : 128 : 254 : 0 : 0 : 2
-02.glyph         : 18304 : 16512 : 4 : 0 : 0 : 3
-02.xfont         : 34816 : 128 : 254 : 0 : 0 : 4
-03.glyph         : 34944 : 15872 : 4 : 0 : 0 : 5
-03.xfont         : 50816 : 128 : 254 : 0 : 0 : 6
-krdv011_27.glyph : 50944 : 5888 : 4 : 0 : 0 : 7
-krdv011_27.xfont : 56832 : 128 : 254 : 0 : 0 : 8
+name                   : id    : start : size  : type  : stype : comp  : width : height
+
+unified.blob           : 0     : 0     : 4096  : 1     : 0     : 0     : 0     : 0    
+font_chinese_27.glyph  : 1     : 4096  : 16896 : 4     : 0     : 0     : 0     : 0    
+font_chinese_27.xfont  : 2     : 20992 : 128   : 254   : 0     : 0     : 0     : 0    
+font_english_27.glyph  : 3     : 21120 : 20736 : 4     : 0     : 0     : 0     : 0    
+font_english_27.xfont  : 4     : 41856 : 128   : 254   : 0     : 0     : 0     : 0    
+font_japanese_27.glyph : 5     : 41984 : 32768 : 4     : 0     : 0     : 0     : 0    
+font_japanese_27.xfont : 6     : 74752 : 192   : 254   : 0     : 0     : 0     : 0    
+font_kokila_27.glyph   : 7     : 74944 : 10944 : 4     : 0     : 0     : 0     : 0    
+font_kokila_27.xfont   : 8     : 85888 : 128   : 254   : 0     : 0     : 0     : 0    

@@ -84,8 +84,8 @@ const char8_t *txtStrEn[] = {
 const char8_t *txtStrJa[] = {
 	u8"\x0045\x0046\x0042",
 	u8"\x0039\x0035\x003a\x0039\x003e\x003f\x0036\x0040\x0038\x003b\x003c\x002b\x0043\x0044\x0028\x0047\x002a\x0041\x0033\x0048\x002d",
-	u8"\x0029",
-	u8"\x0037\x003d",
+	u8"\x0036\x003f",
+	u8"\x0036\x003c",
 	u8"\x0009\x000b\x000c\x000d\x000e\x000f\x0010\x0011\x0012\x0013",
 	u8"\x0023\x0026\x0019\x0020\x001a\x0034\x0028\x0029\x0031\x0021",
 	u8"\x0024\x0027\x001f\x002b\x001b\x001c\x002e\x002a\x0032",
@@ -137,9 +137,9 @@ static const uint32_t addrXfont_Cn = 20992;
 static const uint32_t addrGlyph_En = 21120;
 static const uint32_t addrXfont_En = 41856;
 static const uint32_t addrGlyph_Ja = 41984;
-static const uint32_t addrXfont_Ja = 70016;
-static const uint32_t addrGlyph_Hi = 70144;
-static const uint32_t addrXfont_Hi = 81088;
+static const uint32_t addrXfont_Ja = 74752;
+static const uint32_t addrGlyph_Hi = 74944;
+static const uint32_t addrXfont_Hi = 85888;
 static const uint32_t size_last = 128;
 #endif
 
