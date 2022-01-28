@@ -588,6 +588,11 @@ void SAMAPP_Bitmap_ASTCLayoutRAMG()
     y += 50;
     helperASTCScreen("5x5", x, y, 60, 50, 70, 2);
 
+    y += 70;
+    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 0, 0));
+    EVE_CoCmd_text(s_pHalContext, 20, y, 28, OPT_FILL,
+        "Note: Multi-celled bitmaps must have a size which is a multiple of 4 blocks (See programming guide)");
+
     Display_End(s_pHalContext);
     SAMAPP_DELAY;
 #endif // Win32 BT81X
@@ -669,6 +674,11 @@ void SAMAPP_Bitmap_ASTCLayoutFlash()
     y += 50;
     helperASTCScreen("5x5", x, y, 60, 50, 70, 1);
 
+    y += 70;
+    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 0, 0));
+    EVE_CoCmd_text(s_pHalContext, 20, y, 28, OPT_FILL,
+        "Note: Multi-celled bitmaps must have a size which is a multiple of 4 blocks (See programming guide)");
+
     Display_End(s_pHalContext);
     SAMAPP_DELAY;
 #endif // Win32 BT81X
@@ -747,6 +757,11 @@ void SAMAPP_Bitmap_ASTCLayoutCell_1_3x2()
     EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
     EVE_Cmd_wr32(s_pHalContext, CELL(1)); //#CELL 1
     EVE_Cmd_wr32(s_pHalContext, VERTEX2F((x + 50 + 70) * 16, (y - 2) * 16));
+
+    y += 70;
+    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 0, 0));
+    EVE_CoCmd_text(s_pHalContext, 30, y, 28, OPT_FILL,
+        "Note: Multi-celled bitmaps must have a size which is a multiple of 4 blocks (See programming guide)");
 
     Display_End(s_pHalContext);
     SAMAPP_DELAY;
