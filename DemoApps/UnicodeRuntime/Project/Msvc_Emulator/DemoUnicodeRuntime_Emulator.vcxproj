@@ -136,7 +136,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;BT8XXEMU_PLATFORM;WIN32;%(PreprocessorDefinitions);EVE_GRAPHICS_ME817EV;EVE_DISPLAY_WVGA</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;WIN32;%(PreprocessorDefinitions);EVE_GRAPHICS_ME817EV;EVE_PLATFORM_FT4222;EVE_DISPLAY_WVGA</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\..\..\common\application;..\..\..\..\common\eve_hal;..\..\..\..\common\eve_hal\Hdr;..\..\Hdr\;</AdditionalIncludeDirectories>
       <AdditionalOptions>/VERBOSE /utf-8 </AdditionalOptions>
     </ClCompile>
@@ -157,7 +157,7 @@
     <ClCompile>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>BT8XXEMU_PLATFORM;WIN32;%(PreprocessorDefinitions);EVE_GRAPHICS_ME817EV;EVE_DISPLAY_WVGA</PreprocessorDefinitions>
+      <PreprocessorDefinitions>;WIN32;%(PreprocessorDefinitions);EVE_GRAPHICS_ME817EV;EVE_PLATFORM_FT4222;EVE_DISPLAY_WVGA</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\..\..\common\application;..\..\..\..\common\eve_hal;..\..\..\..\common\eve_hal\Hdr;..\..\Hdr\;..\..\..\Common\</AdditionalIncludeDirectories>
       <AdditionalOptions>/VERBOSE /utf-8 </AdditionalOptions>
     </ClCompile>
