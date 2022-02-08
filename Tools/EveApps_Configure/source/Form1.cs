@@ -46,6 +46,7 @@ namespace EveAppsConfig
                 "EVE_GRAPHICS_VM810C ",
                 "EVE_GRAPHICS_VM816C ",
                 "EVE_GRAPHICS_ME817EV",
+                "EVE_GRAPHICS_GD3X_DAZZLER",
         };
 
         string[] EveIC = {
@@ -83,8 +84,9 @@ namespace EveAppsConfig
         {
                 "   ",
                 // "BT8XXEMU_PLATFORM   ", Emulator have only 1 mode, non configurable
-                "FT4222_PLATFORM     ",
-                "MPSSE_PLATFORM      ",
+                "EVE_PLATFORM_FT4222     ",
+                "EVE_PLATFORM_MPSSE      ",
+                "EVE_PLATFORM_RP2040     ",
         };
         string[] LCD =
         {
@@ -141,11 +143,11 @@ namespace EveAppsConfig
             };
         string[] Demo =
         {
-                "All                            ",
-                "DemoApps/FlashBitbang              ",
+                "All                                 ",
                 "DemoApps/AudioPlayback              ",
                 "DemoApps/CircleView                 ",
                 "DemoApps/EvChargePoint              ",
+                "DemoApps/FlashBitbang               ",
                 "DemoApps/Gauges                     ",
                 "DemoApps/Gradient                   ",
                 "DemoApps/Graph                      ",
@@ -170,15 +172,17 @@ namespace EveAppsConfig
                 "DemoApps/Unicode                    ",
                 "DemoApps/UnicodeRuntime             ",
                 "DemoApps/WashingMachine             ",
-                "SampleApp/Widget                ",
-                "SampleApp/Video                 ",
-                "SampleApp/Utility               ",
-                "SampleApp/Touch                 ",
-                "SampleApp/Sound                 ",
-                "SampleApp/Primitives            ",
-                "SampleApp/Power                 ",
-                "SampleApp/Font                  ",
-                "SampleApp/Flash                 ",
+                "SampleApp/Widget                    ",
+                "SampleApp/Video                     ",
+                "SampleApp/Utility                   ",
+                "SampleApp/Touch                     ",
+                "SampleApp/Sound                     ",
+                "SampleApp/Primitives                ",
+                "SampleApp/Power                     ",
+                "SampleApp/Font                      ",
+                "SampleApp/Flash                     ",
+                "SampleApp/Bitmap                    ",
+                "SampleApp/Animation                 ",
             };
 
         string[] Touch =
@@ -186,6 +190,25 @@ namespace EveAppsConfig
                 "                               ",
                 "EVE_TOUCH_FOCAL                ",
                 "EVE_TOUCH_GOODIX               ",
+                "EVE_TOUCH_RESISTIVE            ",
+                "EVE_TOUCH_DISABLED             ",
+        };
+
+        string[] ToBeDelete = // This should be deleted from user macro
+        {
+                "BT8XXEMU_PLATFORM               ", 
+                "FT9XX_PLATFORM                  ",           
+                "FT4222_PLATFORM                 ",          
+                "MPSSE_PLATFORM                  ",           
+                "RP2040_PLATFORM                 ",          
+                "DISPLAY_RESOLUTION_             ",      
+                "DISPLAY_RESOLUTION_QVGA         ",  
+                "DISPLAY_RESOLUTION_WQVGA        ", 
+                "DISPLAY_RESOLUTION_WVGA         ",  
+                "DISPLAY_RESOLUTION_WSVGA        ", 
+                "DISPLAY_RESOLUTION_WXGA         ",  
+                "DISPLAY_RESOLUTION_HVGA_PORTRAIT", 
+                " ", 
         };
 
         private void initDefault()
@@ -375,6 +398,7 @@ namespace EveAppsConfig
                         string text = node.OuterXml;
                         Console.WriteLine("Found:" + text);
 
+                        text = ft9xReplaceNode(ToBeDelete, text, "");
                         text = ft9xReplaceNode(module, text, module_);
                         text = ft9xReplaceNode(EveIC, text, eveIC_);
                         text = ft9xReplaceNode(config, text, host_);
@@ -457,6 +481,9 @@ namespace EveAppsConfig
                 {
                     string text = node.InnerText;
                     Console.WriteLine("Found:" + text);
+
+                    // Delete unwanted macro
+                    text = msvcReplaceNode(ToBeDelete, text, "");
 
                     text = msvcReplaceNode(module, text, module_);
                     text = msvcReplaceNode(EveIC, text, eveIC_);
@@ -645,7 +672,7 @@ namespace EveAppsConfig
 
             string module = "EVE_GRAPHICS_ME817EV";
             string eveIC = "";
-            string mhost = "FT4222_PLATFORM";
+            string mhost = "EVE_PLATFORM_FT4222";
             string f900host = "MM900EV1B";
             string f930host = "MM930LITE";
             string lcd = "EVE_DISPLAY_WVGA";
