@@ -83,7 +83,8 @@ namespace EveAppsConfig
         string[] MsvcHost =
         {
                 "   ",
-                // "BT8XXEMU_PLATFORM   ", Emulator have only 1 mode, non configurable
+                "BT8XXEMU_PLATFORM       ",
+                "EVE_PLATFORM_BT8XXEMU   ",
                 "EVE_PLATFORM_FT4222     ",
                 "EVE_PLATFORM_MPSSE      ",
                 "EVE_PLATFORM_RP2040     ",
