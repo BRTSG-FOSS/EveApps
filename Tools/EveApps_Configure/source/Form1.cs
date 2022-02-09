@@ -489,7 +489,11 @@ namespace EveAppsConfig
                     text = msvcReplaceNode(EveIC, text, eveIC_);
 
                     // If not emulator file, change MSVC to FT4222 or MPSSE
-                    if (!text.Contains("BT8XXEMU_PLATFORM"))
+                    if (f.Contains("BT8XXEMU_PLATFORM") || f.Contains("Emulator"))
+                    {
+                        text = msvcReplaceNode(MsvcHost, text, "EVE_PLATFORM_BT8XXEMU");
+                    }
+                    else
                     {
                         text = msvcReplaceNode(MsvcHost, text, host_);
                     }
