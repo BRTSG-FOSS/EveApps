@@ -790,8 +790,8 @@ void SAMAPP_Video_ASTCOverlay()
 void SAMAPP_Video_audioEnalbe()
 {
 #if defined(EVE_FLASH_AVAILABLE) && defined(FT81X_ENABLE)// FT81X only
-    uint16_t aviw = 256;
-    uint16_t avih = 144;
+    uint16_t aviw = 462;
+    uint16_t avih = 240;
     uint8_t g_scratch[SCRATCH_BUFF_SZ];
     Fifo_t stFifo;
     uint32_t mediafifo;
