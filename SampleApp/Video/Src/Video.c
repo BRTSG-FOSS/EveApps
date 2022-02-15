@@ -140,7 +140,6 @@ void SAMAPP_Video_fromFlash()
         return;
     }
     Draw_Text(s_pHalContext, "Example for: Video display from Flash");
-    SAMAPP_INFO_TEXT("CMD_PLAYVIDEO will use 2xWxH bytes on top of RAM_G");
 
     SAMAPP_INFO_START;
     EVE_CoCmd_text(s_pHalContext, 0, 150, 30, 0, "Video display from Flash");
@@ -169,7 +168,6 @@ void SAMAPP_Video_fromFile()
     uint32_t filesz;
 
     Draw_Text(s_pHalContext, "Example for: Video display from file");
-    SAMAPP_INFO_TEXT("CMD_PLAYVIDEO will use 2xWxH bytes on top of RAM_G");
 
     filesz = FileIO_File_Open(TEST_DIR "\\Big buck bunny 240p 40s  adpcm_ima_wav.avi", FILEIO_E_FOPEN_READ);
     if (filesz <= 0)
@@ -245,7 +243,6 @@ void SAMAPP_Video_fromCMDB()
 #define SPARE_RAM_G_ADDRESS  (RAM_G + VIDEO_RAM_SPACE)
 
     Draw_Text(s_pHalContext, "Example for: Video display via REG_CMDB_WRITE/REG_CMDB_SPACE");
-    SAMAPP_INFO_TEXT("CMD_PLAYVIDEO will use 2xWxH bytes on top of RAM_G");
 
     SAMAPP_INFO_START;
     EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(0));
@@ -330,7 +327,6 @@ void SAMAPP_Video_fromCMDBuffer()
 #define PNG_H 103
 
     Draw_Text(s_pHalContext, "Example for: Video display via command buffer");
-    SAMAPP_INFO_TEXT("CMD_PLAYVIDEO will use 2xWxH bytes on top of RAM_G");
 
     /* construct the DL and display */
     uint32_t PicFileLen = FileIO_File_Open(
@@ -674,7 +670,6 @@ void SAMAPP_Video_ASTCOverlay()
 #define ASTC_LOGO_FLASH_ADDR  (4096)
 
     Draw_Text(s_pHalContext, "Example for: Video display with ASTC overlay");
-    SAMAPP_INFO_TEXT("CMD_PLAYVIDEO will use 2xWxH bytes on top of RAM_G");
 
     // clear screen
     SAMAPP_INFO_START;
@@ -803,7 +798,7 @@ void SAMAPP_Video_audioEnalbe()
     uint32_t cmdwr;
 
     Draw_Text(s_pHalContext, "Example for: Video display with audio enable");
-    SAMAPP_INFO_TEXT("CMD_PLAYVIDEO will use 2xWxH bytes on top of RAM_G");
+
     filesz = FileIO_File_Open(TEST_DIR "\\Big buck bunny 240p 40s  adpcm_ima_wav.avi", FILEIO_E_FOPEN_READ);
     if (filesz <= 0)
     {
