@@ -448,8 +448,8 @@ void SAMAPP_Video_frameByFrameFromFlash()
     const uint32_t flashSource = 4096;
 
     // video 1st settings
-    const uint32_t videoW = 256;
-    const uint32_t videoH = 144;
+    const uint32_t videoW = 462;
+    const uint32_t videoH = 240;
     const uint32_t videoX = 0;
     const uint32_t videoY = 0;
     const uint32_t videoSource = 8;
