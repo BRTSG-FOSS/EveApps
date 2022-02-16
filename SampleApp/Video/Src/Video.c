@@ -98,7 +98,7 @@ static void helperStopVideoCmdFifo()
     EVE_Hal_wr8(s_pHalContext, REG_PLAY_CONTROL, 1); // restore default value
 #endif                               
 
-                                                     //fill remain padding bytes to command fifo
+    // fill remain padding bytes to command fifo
     EVE_sleep(5000);
     eve_printf_debug("Pad FIFO\n");
     int emptyBuffer[EMPTY_BUFFER_SIZE] = { 0 };
@@ -106,7 +106,6 @@ static void helperStopVideoCmdFifo()
     {
         cmdRead = EVE_Hal_rd16(s_pHalContext, REG_CMD_READ);
         cmdWrite = EVE_Hal_rd16(s_pHalContext, REG_CMD_WRITE);
-        APP_DBG("cmdRead: %d, cmdWrite: %d\n", cmdRead, cmdWrite);
 
         if (cmdRead == cmdWrite)
         {
@@ -176,7 +175,7 @@ void SAMAPP_Video_fromFile()
         return;
     }
 
-    EVE_Hal_wr8(s_pHalContext, REG_VOL_PB, 255);
+    EVE_Hal_wr8(s_pHalContext, REG_VOL_PB, 155);
 #if defined(BT81X_ENABLE)
     EVE_Hal_wr8(s_pHalContext, REG_PLAY_CONTROL, 1); // restore default value
 #endif
@@ -386,7 +385,7 @@ void SAMAPP_Video_fromCMDBuffer()
         return;
     }
 
-    EVE_Hal_wr8(s_pHalContext, REG_VOL_PB, 255);
+    EVE_Hal_wr8(s_pHalContext, REG_VOL_PB, 155);
 #if defined(BT81X_ENABLE)
     EVE_Hal_wr8(s_pHalContext, REG_PLAY_CONTROL, 1); // restore default value
 #endif        
@@ -587,7 +586,7 @@ void SAMAPP_Video_frameByFrameMediafifo()
         EVE_Hal_rd32(s_pHalContext, REG_CMD_READ), 
         EVE_Hal_rd32(s_pHalContext, REG_CMD_WRITE));
 
-    EVE_Hal_wr8(s_pHalContext, REG_VOL_PB, 255);
+    EVE_Hal_wr8(s_pHalContext, REG_VOL_PB, 155);
     EVE_CoCmd_videoStart(s_pHalContext); //initialize AVI video decoder
     EVE_CoCmd_videoFrame(s_pHalContext, 4, videoFrameStatusAddr);//load 1 frame
     EVE_Cmd_waitFlush(s_pHalContext);
@@ -820,7 +819,7 @@ void SAMAPP_Video_audioEnalbe()
     Fifo_Init(&stFifo, mediafifo, mediafifolen, REG_MEDIAFIFO_READ, REG_MEDIAFIFO_WRITE);
 
     EVE_Cmd_waitFlush(s_pHalContext);
-    EVE_Hal_wr8(s_pHalContext, REG_VOL_PB, 255);
+    EVE_Hal_wr8(s_pHalContext, REG_VOL_PB, 155);
     EVE_Cmd_wr32(s_pHalContext, CMD_PLAYVIDEO);
     EVE_Cmd_wr32(s_pHalContext, OPT_MEDIAFIFO | OPT_NOTEAR | OPT_SOUND | OPT_FULLSCREEN);
 
@@ -874,11 +873,158 @@ void SAMAPP_Video_audioEnalbe()
 
     }
     EVE_Cmd_restore(s_pHalContext);
+
+#endif
+}
+
+/**
+* @brief Video playback frame by frame with pause/resume button
+*
+*/
+void SAMAPP_Video_pauseResumeFBF()
+{
+#if defined(EVE_FLASH_AVAILABLE) && defined(FT81X_ENABLE)
+    const uint32_t flashSource = 4096;
+
+    // video 1st settings
+    const uint32_t videoW = 462;
+    const uint32_t videoH = 240;
+    const uint32_t videoX = s_pHalContext->Width / 2 - videoW / 2;
+    const uint32_t videoY = s_pHalContext->Height / 2 - videoH / 2;
+    const uint32_t videoSource = 8;
+    const uint32_t videoHANDLE = 1;
+    const uint32_t completionPtr = 0;
+    static uint8_t isPause = 0;
+    const uint8_t btnPauseTag = 1;
+    uint8_t txtPause[][20] = { "RESUME", "PAUSE" };
+    if (!FlashHelper_SwitchFullMode(s_pHalContext))
+    {
+        APP_ERR("SwitchFullMode failed");
+        return;
+    }
+    Draw_Text(s_pHalContext, "Example for: Video playback frame by frame with pause/resume button");
+    for (int i = 0; i < 2; i++) {
+        Display_Start(s_pHalContext);
+        // video 
+        EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(videoHANDLE));
+        EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(videoSource));
+        EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(RGB565, videoW * 2L, videoH));
+        EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT_H(((videoW * 2L) >> 10), ((videoH) >> 9)));
+        EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, videoW, videoH));
+        EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE_H((videoW >> 9), (videoH >> 9)));
+        EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
+        EVE_Cmd_wr32(s_pHalContext, VERTEX2F(videoX * 16, videoY * 16));
+        EVE_Cmd_wr32(s_pHalContext, END());
+
+        /*** Show a button ***/
+        uint32_t btnW = 200;
+        uint32_t btnH = 50;
+        uint32_t btnX = s_pHalContext->Width/2 - btnW/2;
+        uint32_t btnY = s_pHalContext->Height - btnH - 10;
+        EVE_Cmd_wr32(s_pHalContext, TAG(btnPauseTag));
+        EVE_CoCmd_button(s_pHalContext, btnX, btnY, btnW, btnH, 30, 0, txtPause[i]);
+        /*** Done button ***/
+        Display_End(s_pHalContext);
+    }
     
+    EVE_CoCmd_flashSource(s_pHalContext, flashSource);
+    EVE_CoCmd_videoStartF(s_pHalContext);
+    do
+    {
+        Gesture_Renew(s_pHalContext);
+        if (Gesture_Get()->tagReleased == btnPauseTag) {
+            isPause = !isPause;
+            EVE_CoCmd_swap(s_pHalContext);
+            EVE_Cmd_waitFlush(s_pHalContext);
+        }
+
+        if (!isPause) {
+            EVE_CoCmd_videoFrame(s_pHalContext, videoSource, completionPtr);
+            EVE_Cmd_waitFlush(s_pHalContext);
+        }
+    }while (EVE_Hal_rd32(s_pHalContext, completionPtr) != 0);
+#endif
+}
+
+
+/**
+* @brief Video playback with pause/resume button
+*
+*/
+void SAMAPP_Video_pauseResumeWithAudio()
+{
+#if defined(EVE_FLASH_AVAILABLE) && defined(BT81X_ENABLE) // BT81X only
+    const uint32_t flashSource = 4096;
+
+    const uint32_t videoW = 462;
+    const uint32_t videoH = 240;
+    const uint32_t videoX = s_pHalContext->Width / 2 - videoW / 2;
+    const uint32_t videoY = s_pHalContext->Height / 2 - videoH / 2;
+    const uint32_t videoSource = 8;
+    const uint32_t videoHANDLE = 1;
+    const uint32_t txtOffset = RAM_G_SIZE - 1024;
+    static uint8_t isPause = 0;
+    const uint8_t btnPauseTag = 1;
+    uint8_t txtPause[][20] = { "RESUME\n", "PAUSE\n" };
+
+    Draw_Text(s_pHalContext, "Example for: Video+audio playback with pause/resume button");
+
+    // clear screen
+    SAMAPP_INFO_START;
+    SAMAPP_INFO_END;
+
+    if (!FlashHelper_SwitchFullMode(s_pHalContext))
+    {
+        APP_ERR("SwitchFullMode failed");
+        return;
+    }
+
+    SAMAPP_INFO_START;
+    // video
+    EVE_Cmd_wr32(s_pHalContext, BITMAP_HANDLE(videoHANDLE));
+    EVE_Cmd_wr32(s_pHalContext, BITMAP_SOURCE(videoSource));
+    EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT(RGB565, videoW * 2L, videoH));
+    EVE_Cmd_wr32(s_pHalContext, BITMAP_LAYOUT_H(((videoW * 2L) >> 10), ((videoH) >> 9)));
+    EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE(NEAREST, BORDER, BORDER, videoW, videoH));
+    EVE_Cmd_wr32(s_pHalContext, BITMAP_SIZE_H((videoW >> 9), (videoH >> 9)));
+    EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
+    EVE_Cmd_wr32(s_pHalContext, VERTEX2F(videoX * 16, videoY * 16));
+    EVE_Cmd_wr32(s_pHalContext, END());
+
+    /*** Show a button ***/
+    uint32_t btnW = 300;
+    uint32_t btnH = 50;
+    uint32_t btnX = s_pHalContext->Width / 2 - btnW / 2;
+    uint32_t btnY = s_pHalContext->Height - btnH - 10;
+    EVE_Cmd_wr32(s_pHalContext, TAG(btnPauseTag));
+    EVE_CoCmd_button(s_pHalContext, btnX, btnY, btnW, btnH, 30, 0, "Pause/Resume");
+    /*** Done button ***/
+    SAMAPP_INFO_END;
+   
+
+    EVE_Hal_wr8(s_pHalContext, REG_PLAY_CONTROL, 1); // restore default value
+    EVE_CoCmd_flashSource(s_pHalContext, flashSource);
+    EVE_Cmd_wr32(s_pHalContext, CMD_PLAYVIDEO);
+    EVE_Cmd_wr32(s_pHalContext, OPT_NODL | OPT_FLASH | OPT_SOUND | OPT_NOTEAR | OPT_OVERLAY);
+    EVE_Cmd_waitFlush(s_pHalContext); //Video plays after this
+    uint32_t lastCmdRead = EVE_Cmd_rp(s_pHalContext);
+    EVE_CoCmd_nop(s_pHalContext);
+
+    while (lastCmdRead == EVE_Cmd_rp(s_pHalContext))
+    {
+        Gesture_Renew(s_pHalContext);
+        if (Gesture_Get()->tagReleased == btnPauseTag) {
+            isPause = !isPause;
+            EVE_Hal_wr8(s_pHalContext, REG_PLAY_CONTROL, isPause?0:1); // stop the video
+        }
+    }
+    printf("Video end\n");
 #endif
 }
 
 void SAMAPP_Video() {
+    SAMAPP_Video_pauseResumeFBF();
+    SAMAPP_Video_pauseResumeWithAudio();
     SAMAPP_Video_fromFlash();
     SAMAPP_Video_fromFile();
     SAMAPP_Video_fromFlashFullScreen();
@@ -886,8 +1032,8 @@ void SAMAPP_Video() {
     SAMAPP_Video_fromCMDBuffer();
     SAMAPP_Video_frameByFrameFromFlash();
     SAMAPP_Video_frameByFrameMediafifo();
-    SAMAPP_Video_ASTCOverlay();
     SAMAPP_Video_audioEnalbe();
+    SAMAPP_Video_ASTCOverlay();
 }
 
 
