@@ -891,7 +891,7 @@ void SAMAPP_Video_pauseResumeFBF()
     const uint32_t videoH = 240;
     const uint32_t videoX = s_pHalContext->Width / 2 - videoW / 2;
     const uint32_t videoY = s_pHalContext->Height / 2 - videoH / 2;
-    const uint32_t videoSource = 8;
+    const uint32_t videoSource = 0;
     const uint32_t videoHANDLE = 1;
     const uint32_t completionPtr = 0;
     static uint8_t isPause = 0;
@@ -960,7 +960,7 @@ void SAMAPP_Video_pauseResumeWithAudio()
     const uint32_t videoH = 240;
     const uint32_t videoX = s_pHalContext->Width / 2 - videoW / 2;
     const uint32_t videoY = s_pHalContext->Height / 2 - videoH / 2;
-    const uint32_t videoSource = 8;
+    const uint32_t videoSource = 0;
     const uint32_t videoHANDLE = 1;
     const uint32_t txtOffset = RAM_G_SIZE - 1024;
     static uint8_t isPause = 0;
