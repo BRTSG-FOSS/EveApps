@@ -100,15 +100,16 @@ int main(int argc, char* argv[])
 * @param source Image source
 * @param numcell Cell number
 */
-void helperDrawASTC(const char* title, int16_t fmt, int16_t x, int16_t y, 
+void helperDrawASTC(const char* title, int16_t source, int16_t fmt, int16_t x, int16_t y, 
     int16_t w, int16_t h, int16_t margin, int16_t numcell)
 {
 #if defined(BT81X_ENABLE) // BT81X
     int m1 = 30;
-    uint32_t source = 0;
 
     if (title != 0 ) {
+        EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0, 0, 0));
         EVE_CoCmd_text(s_pHalContext, x, y, 16, 0, title);
+        EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0xFF, 0xFF, 0xFF));
     }
     EVE_CoCmd_setBitmap(s_pHalContext, source, fmt, w, h);
     EVE_Cmd_wr32(s_pHalContext, BEGIN(BITMAPS));
@@ -530,62 +531,62 @@ void SAMAPP_Bitmap_ASTCLayoutRAMG()
     Display_Start(s_pHalContext);
     x = 20;
     y = 20;
-    helperDrawASTC("1x1", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 12, 10, 20, 2);
+    helperDrawASTC("1x1", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 12, 10, 20, 2);
     y += 30;
-    helperDrawASTC("1x2", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 12, 20, 20, 2);
+    helperDrawASTC("1x2", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 12, 20, 20, 2);
     y += 30;
-    helperDrawASTC("1x3", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 12, 30, 20, 2);
+    helperDrawASTC("1x3", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 12, 30, 20, 2);
     y += 40;
-    helperDrawASTC("1x4", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 12, 40, 20, 2);
+    helperDrawASTC("1x4", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 12, 40, 20, 2);
     y += 50;
-    helperDrawASTC("1x5", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 12, 50, 20, 2);
+    helperDrawASTC("1x5", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 12, 50, 20, 2);
 
     x += 90;
     y = 20;
-    helperDrawASTC("2x1", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 24, 10, 40, 2);
+    helperDrawASTC("2x1", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 24, 10, 40, 2);
     y += 30;
-    helperDrawASTC("2x2", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 24, 20, 40, 2);
+    helperDrawASTC("2x2", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 24, 20, 40, 2);
     y += 30;
-    helperDrawASTC("2x3", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 24, 30, 40, 2);
+    helperDrawASTC("2x3", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 24, 30, 40, 2);
     y += 40;
-    helperDrawASTC("2x4", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 24, 40, 40, 2);
+    helperDrawASTC("2x4", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 24, 40, 40, 2);
     y += 50;
-    helperDrawASTC("2x5", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 24, 50, 40, 2);
+    helperDrawASTC("2x5", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 24, 50, 40, 2);
 
     x += 110;
     y = 20;
-    helperDrawASTC("3x1", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 36, 10, 50, 2);
+    helperDrawASTC("3x1", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 36, 10, 50, 2);
     y += 30;
-    helperDrawASTC("3x2", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 36, 20, 50, 2);
+    helperDrawASTC("3x2", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 36, 20, 50, 2);
     y += 30;
-    helperDrawASTC("3x3", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 36, 30, 50, 2);
+    helperDrawASTC("3x3", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 36, 30, 50, 2);
     y += 40;
-    helperDrawASTC("3x4", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 36, 40, 50, 2);
+    helperDrawASTC("3x4", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 36, 40, 50, 2);
     y += 50;
-    helperDrawASTC("3x5", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 36, 50, 50, 2);
+    helperDrawASTC("3x5", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 36, 50, 50, 2);
 
     x += 130;
     y = 20;
-    helperDrawASTC("4x1", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 48, 10, 60, 2);
+    helperDrawASTC("4x1", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 48, 10, 60, 2);
     y += 30;
-    helperDrawASTC("4x2", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 48, 20, 60, 2);
-    helperDrawASTC("4x3", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y + 30, 48, 30, 60, 2);
+    helperDrawASTC("4x2", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 48, 20, 60, 2);
+    helperDrawASTC("4x3", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y + 30, 48, 30, 60, 2);
     y += 70;
-    helperDrawASTC("4x4", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 48, 40, 60, 2);
+    helperDrawASTC("4x4", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 48, 40, 60, 2);
     y += 50;
-    helperDrawASTC("4x5", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 48, 50, 60, 2);
+    helperDrawASTC("4x5", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 48, 50, 60, 2);
 
     x += 150;
     y = 20;
-    helperDrawASTC("5x1", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 60, 10, 70, 2);
+    helperDrawASTC("5x1", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 60, 10, 70, 2);
     y += 30;
-    helperDrawASTC("5x2", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 60, 20, 70, 2);
+    helperDrawASTC("5x2", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 60, 20, 70, 2);
     y += 30;
-    helperDrawASTC("5x3", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 60, 30, 70, 2);
+    helperDrawASTC("5x3", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 60, 30, 70, 2);
     y += 40;
-    helperDrawASTC("5x4", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 60, 40, 70, 2);
+    helperDrawASTC("5x4", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 60, 40, 70, 2);
     y += 50;
-    helperDrawASTC("5x5", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 60, 50, 70, 2);
+    helperDrawASTC("5x5", 0, COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 60, 50, 70, 2);
 
     y += 70;
     EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 0, 0));
@@ -604,74 +605,79 @@ void SAMAPP_Bitmap_ASTCLayoutRAMG()
 void SAMAPP_Bitmap_ASTCLayoutFlash()
 {
 #if defined (BT81X_ENABLE) && (defined(MSVC_PLATFORM) || defined(BT8XXEMU_PLATFORM))
-    char* files[] = { TEST_DIR "\\numbers_astc12x10.raw", 0 };
+    char* files = TEST_DIR "\\numbers_astc12x10.raw";
     int16_t x = 0;
     int16_t y = 0;
-
-    Ftf_Write_FileArr_To_RAM_G(s_pHalContext, files, 0);
+    uint32_t astc_flash_addr = 4096;
 
     Draw_Text(s_pHalContext, "Example for: ASTC bitmap on Flash");
+
+    if (0 == Ftf_Write_File_To_Flash_By_RAM_G(s_pHalContext, files, astc_flash_addr))
+    {
+        APP_ERR("Error when write raw file to flash");
+        return;
+    }
 
     Display_Start(s_pHalContext);
     x = 20;
     y = 20;
-    helperDrawASTC("1x1", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 12, 10, 20, 1);
+    helperDrawASTC("1x1", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 12, 10, 20, 1);
     y += 30;
-    helperDrawASTC("1x2", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 12, 20, 20, 1);
+    helperDrawASTC("1x2", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 12, 20, 20, 1);
     y += 30;
-    helperDrawASTC("1x3", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 12, 30, 20, 1);
+    helperDrawASTC("1x3", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 12, 30, 20, 1);
     y += 40;
-    helperDrawASTC("1x4", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 12, 40, 20, 2);
+    helperDrawASTC("1x4", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 12, 40, 20, 2);
     y += 50;
-    helperDrawASTC("1x5", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 12, 50, 20, 1);
+    helperDrawASTC("1x5", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 12, 50, 20, 1);
 
     x += 90;
     y = 20;
-    helperDrawASTC("2x1", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 24, 10, 40, 1);
+    helperDrawASTC("2x1", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 24, 10, 40, 1);
     y += 30;
-    helperDrawASTC("2x2", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 24, 20, 40, 2);
+    helperDrawASTC("2x2", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 24, 20, 40, 2);
     y += 30;
-    helperDrawASTC("2x3", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 24, 30, 40, 1);
+    helperDrawASTC("2x3", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 24, 30, 40, 1);
     y += 40;
-    helperDrawASTC("2x4", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 24, 40, 40, 2);
+    helperDrawASTC("2x4", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 24, 40, 40, 2);
     y += 50;
-    helperDrawASTC("2x5", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 24, 50, 40, 1);
+    helperDrawASTC("2x5", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 24, 50, 40, 1);
 
     x += 110;
     y = 20;
-    helperDrawASTC("3x1", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 36, 10, 50, 1);
+    helperDrawASTC("3x1", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 36, 10, 50, 1);
     y += 30;
-    helperDrawASTC("3x2", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 36, 20, 50, 1);
+    helperDrawASTC("3x2", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 36, 20, 50, 1);
     y += 30;
-    helperDrawASTC("3x3", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 36, 30, 50, 1);
+    helperDrawASTC("3x3", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 36, 30, 50, 1);
     y += 40;
-    helperDrawASTC("3x4", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 36, 40, 50, 2);
+    helperDrawASTC("3x4", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 36, 40, 50, 2);
     y += 50;
-    helperDrawASTC("3x5", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 36, 50, 50, 1);
+    helperDrawASTC("3x5", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 36, 50, 50, 1);
 
     x += 130;
     y = 20;
-    helperDrawASTC("4x1", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 48, 10, 60, 2);
+    helperDrawASTC("4x1", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 48, 10, 60, 2);
     y += 30;
-    helperDrawASTC("4x2", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 48, 20, 60, 2);
+    helperDrawASTC("4x2", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 48, 20, 60, 2);
     y += 30;
-    helperDrawASTC("4x3", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 48, 30, 60, 2);
+    helperDrawASTC("4x3", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 48, 30, 60, 2);
     y += 40;
-    helperDrawASTC("4x4", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 48, 40, 60, 2);
+    helperDrawASTC("4x4", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 48, 40, 60, 2);
     y += 50;
-    helperDrawASTC("4x5", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 48, 50, 60, 2);
+    helperDrawASTC("4x5", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 48, 50, 60, 2);
 
     x += 150;
     y = 20;
-    helperDrawASTC("5x1", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 60, 10, 70, 1);
+    helperDrawASTC("5x1", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 60, 10, 70, 1);
     y += 30;
-    helperDrawASTC("5x2", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 60, 20, 70, 1);
+    helperDrawASTC("5x2", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 60, 20, 70, 1);
     y += 30;
-    helperDrawASTC("5x3", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 60, 30, 70, 1);
+    helperDrawASTC("5x3", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 60, 30, 70, 1);
     y += 40;
-    helperDrawASTC("5x4", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 60, 40, 70, 2);
+    helperDrawASTC("5x4", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 60, 40, 70, 2);
     y += 50;
-    helperDrawASTC("5x5", COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 60, 50, 70, 1);
+    helperDrawASTC("5x5", ATFLASH(astc_flash_addr), COMPRESSED_RGBA_ASTC_12x10_KHR, x, y, 60, 50, 70, 1);
 
     y += 70;
     EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 0, 0));
@@ -1456,7 +1462,6 @@ void SAMAPP_Bitmap_matrix()
 
 void SAMAPP_Bitmap() 
 {
-    SAMAPP_Bitmap_ASTCLayoutRAMG(); EVE_sleep(9999999);
     SAMAPP_Bitmap_getImage();
     SAMAPP_Bitmap_nonSquareDisplay();
     SAMAPP_Bitmap_dithering();
