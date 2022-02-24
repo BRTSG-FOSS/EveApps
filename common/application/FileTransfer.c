@@ -742,6 +742,7 @@ uint32_t Ftf_Write_File_nBytes_To_RAM_G(EVE_HalContext* phost, const char* file,
 		EVE_Hal_wrMem(phost, addr, pbuff, bytes);
 		fileSize -= bytes;
 		sent += bytes;
+		addr += bytes;
 	}
 
 	FileIO_File_Close();
