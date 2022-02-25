@@ -100,8 +100,8 @@ int main(int argc, char* argv[])
 * @param source Image source
 * @param numcell Cell number
 */
-void helperDrawASTC(const char* title, int16_t source, int16_t fmt, int16_t x, int16_t y, 
-    int16_t w, int16_t h, int16_t margin, int16_t numcell)
+void helperDrawASTC(const char* title, uint16_t source, uint16_t fmt, uint16_t x, uint16_t y, 
+    uint16_t w, uint16_t h, uint16_t margin, uint16_t numcell)
 {
 #if defined(BT81X_ENABLE) // BT81X
     int m1 = 30;
@@ -771,6 +771,110 @@ void SAMAPP_Bitmap_ASTCLayoutCell_1_3x2()
     Display_End(s_pHalContext);
     SAMAPP_DELAY;
 #endif // Win32 BT81X
+}
+
+/**
+* @brief API to demonstrate multicell ASTC bitmap on RAMG
+* 
+* On 81x ASTC bitmaps cells must start on a multiple of 4 blocks.
+* So, if using 5x4 texels on an image 20x100:
+* - The legal cell size is 20x20 (5 cells, 20 blocks / cell), 20x25 (4 cells, 24 blocks / cell) ...
+* - The illegal cell size is 10x20(10 cells. 10 blocks / cell), 10x25(8 cells. 14 blocks / cell) ...
+* 
+* https://github.com/BRTSG-FOSS/EveApps/issues/21
+*/
+void SAMAPP_Bitmap_ASTCMultiCellRAMG()
+{
+#if defined (BT81X_ENABLE)
+    const char* astc_file = TEST_DIR "\\cell_100x672_COMPRESSED_RGBA_ASTC_4x4_KHR.raw";
+    int16_t x = 20;
+    int16_t y = 20;
+    uint32_t astc_addr = 0;
+
+    Draw_Text(s_pHalContext, "Example for: Multicell ASTC bitmap on RAM_G");
+
+    uint32_t fs = Ftf_Write_File_To_RAM_G(s_pHalContext, astc_file, astc_addr);
+    if (fs == 0)
+    {
+        APP_ERR("Error when write raw file to RAM_G");
+        return;
+    }
+
+    Display_Start(s_pHalContext);
+    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0x33, 0x33, 0x33));
+    EVE_CoCmd_text(s_pHalContext, 20, y, 28, 0,
+        "Example for: Multicell ASTC bitmap on RAM_G:\n\n\n"\
+        "On 81x ASTC bitmaps cells must start on a multiple of 4 blocks.\n"\
+        "So, if using ASTC 4x4 texels on an image 100x672:\n\n"\
+        ""\
+        "  - The legal cell size is 100x96 (7 cells, 600 blocks / cell):\n");
+
+    y += 180;
+    helperDrawASTC(0, astc_addr, COMPRESSED_RGBA_ASTC_4x4_KHR, x, y, 100, 96, 105, 7);
+
+    y += 140;
+    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0x33, 0x33, 0x33));
+    EVE_CoCmd_text(s_pHalContext, 20, y, 28, OPT_FILL,
+        "  - The illegal cell size is 100x84 (8 cells, 525 blocks / cell):\n");
+    y += 40;
+    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
+    helperDrawASTC(0, astc_addr, COMPRESSED_RGBA_ASTC_4x4_KHR, x, y, 100, 84, 105, 7);
+
+    Display_End(s_pHalContext);
+    SAMAPP_DELAY;
+#endif
+}
+
+/**
+* @brief API to demonstrate multicell ASTC bitmap on Flash
+* 
+* On 81x ASTC bitmaps cells must start on a multiple of 4 blocks.
+* So, if using 5x4 texels on an image 20x100:
+* - The legal cell size is 20x20 (5 cells, 20 blocks / cell), 20x25 (4 cells, 24 blocks / cell) ...
+* - The illegal cell size is 10x20(10 cells. 10 blocks / cell), 10x25(8 cells. 14 blocks / cell) ...
+* 
+* https://github.com/BRTSG-FOSS/EveApps/issues/21
+*/
+void SAMAPP_Bitmap_ASTCMultiCellFlash()
+{
+#if defined (BT81X_ENABLE)
+    const char* astc_file = TEST_DIR "\\cell_100x672_COMPRESSED_RGBA_ASTC_4x4_KHR.raw";
+    int16_t x = 20;
+    int16_t y = 20;
+    uint32_t astc_addr = 0;
+
+    Draw_Text(s_pHalContext, "Example for: Multicell ASTC bitmap on Flash");
+
+    uint32_t fs = Ftf_Write_File_To_Flash_By_RAM_G(s_pHalContext, astc_file, astc_addr);
+    if (fs == 0)
+    {
+        APP_ERR("Error when write raw file to Flash");
+        return;
+    }
+
+    Display_Start(s_pHalContext);
+    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0x33, 0x33, 0x33));
+    EVE_CoCmd_text(s_pHalContext, 20, y, 28, 0,
+        "Example for: Multicell ASTC bitmap on Flash:\n\n\n"\
+        "On 81x ASTC bitmaps cells must start on a multiple of 4 blocks.\n"\
+        "So, if using ASTC 4x4 texels on an image 100x672:\n\n"\
+        ""\
+        "  - The legal cell size is 100x96 (7 cells, 600 blocks / cell):\n");
+
+    y += 180;
+    helperDrawASTC(0, ATFLASH(astc_addr), COMPRESSED_RGBA_ASTC_4x4_KHR, x, y, 100, 96, 105, 7);
+
+    y += 140;
+    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0x33, 0x33, 0x33));
+    EVE_CoCmd_text(s_pHalContext, 20, y, 28, OPT_FILL,
+        "  - The illegal cell size is 100x84 (8 cells, 525 blocks / cell):\n");
+    y += 40;
+    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
+    helperDrawASTC(0, ATFLASH(astc_addr), COMPRESSED_RGBA_ASTC_4x4_KHR, x, y, 100, 84, 105, 7);
+
+    Display_End(s_pHalContext);
+    SAMAPP_DELAY;
+#endif
 }
 
 /**
@@ -1468,6 +1572,8 @@ void SAMAPP_Bitmap()
     SAMAPP_Bitmap_ASTC();
     SAMAPP_Bitmap_ASTCLayoutRAMG();
     SAMAPP_Bitmap_ASTCLayoutFlash();
+    SAMAPP_Bitmap_ASTCMultiCellRAMG();
+    SAMAPP_Bitmap_ASTCMultiCellFlash(); 
     SAMAPP_Bitmap_ASTCLayoutCell_1_3x2();
     SAMAPP_Bitmap_rotate();
     SAMAPP_Bitmap_rotateAndTranslate();
