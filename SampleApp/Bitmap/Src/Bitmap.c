@@ -810,6 +810,7 @@ void SAMAPP_Bitmap_ASTCMultiCellRAMG()
         "  - The legal cell size is 100x96 (7 cells, 600 blocks / cell):\n");
 
     y += 180;
+    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0xff, 0xff, 0xff));
     helperDrawASTC(0, astc_addr, COMPRESSED_RGBA_ASTC_4x4_KHR, x, y, 100, 96, 105, 7);
 
     y += 140;
@@ -862,6 +863,7 @@ void SAMAPP_Bitmap_ASTCMultiCellFlash()
         "  - The legal cell size is 100x96 (7 cells, 600 blocks / cell):\n");
 
     y += 180;
+    EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0xff, 0xff, 0xff));
     helperDrawASTC(0, ATFLASH(astc_addr), COMPRESSED_RGBA_ASTC_4x4_KHR, x, y, 100, 96, 105, 7);
 
     y += 140;
