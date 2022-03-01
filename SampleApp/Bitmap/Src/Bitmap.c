@@ -842,7 +842,7 @@ void SAMAPP_Bitmap_ASTCMultiCellFlash()
     const char* astc_file = TEST_DIR "\\cell_100x672_COMPRESSED_RGBA_ASTC_4x4_KHR.raw";
     int16_t x = 20;
     int16_t y = 20;
-    uint32_t astc_addr = 0;
+    uint32_t astc_addr = 4096;
 
     Draw_Text(s_pHalContext, "Example for: Multicell ASTC bitmap on Flash");
 
