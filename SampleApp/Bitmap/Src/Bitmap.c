@@ -843,6 +843,7 @@ void SAMAPP_Bitmap_ASTCMultiCellFlash()
     int16_t x = 20;
     int16_t y = 20;
     uint32_t astc_addr = 4096;
+    uint8_t save_adaptive = EVE_Hal_rd8(s_pHalContext, REG_ADAPTIVE_FRAMERATE);
 
     Draw_Text(s_pHalContext, "Example for: Multicell ASTC bitmap on Flash");
 
@@ -853,6 +854,12 @@ void SAMAPP_Bitmap_ASTCMultiCellFlash()
         return;
     }
 
+    // On large screen, disable REG_ADAPTIVE_FRAMERATE so image can displayed
+    if (s_pHalContext->Width > 800) {
+        EVE_Hal_wr8(s_pHalContext, REG_ADAPTIVE_FRAMERATE, 0);
+    }
+
+    APP_DBG_U(EVE_Hal_rd32(s_pHalContext, REG_UNDERRUN));
     Display_Start(s_pHalContext);
     EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0x33, 0x33, 0x33));
     EVE_CoCmd_text(s_pHalContext, 20, y, 28, 0,
@@ -864,7 +871,7 @@ void SAMAPP_Bitmap_ASTCMultiCellFlash()
 
     y += 180;
     EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0xff, 0xff, 0xff));
-    helperDrawASTC(0, ATFLASH(astc_addr), COMPRESSED_RGBA_ASTC_4x4_KHR, x, y, 100, 96, 105, 7);
+    helperDrawASTC(0, ATFLASH(astc_addr), COMPRESSED_RGBA_ASTC_4x4_KHR, x, y, 100, 96, 105, 3);
 
     y += 140;
     EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(0x33, 0x33, 0x33));
@@ -872,10 +879,13 @@ void SAMAPP_Bitmap_ASTCMultiCellFlash()
         "  - The illegal cell size is 100x84 (8 cells, 525 blocks / cell):\n");
     y += 40;
     EVE_Cmd_wr32(s_pHalContext, COLOR_RGB(255, 255, 255));
-    helperDrawASTC(0, ATFLASH(astc_addr), COMPRESSED_RGBA_ASTC_4x4_KHR, x, y, 100, 84, 105, 7);
-
+    helperDrawASTC(0, ATFLASH(astc_addr), COMPRESSED_RGBA_ASTC_4x4_KHR, x, y, 100, 84, 105, 3);
     Display_End(s_pHalContext);
     SAMAPP_DELAY;
+
+    if (s_pHalContext->Width > 800) {
+        EVE_Hal_wr8(s_pHalContext, REG_ADAPTIVE_FRAMERATE, save_adaptive);
+    }
 #endif
 }
 
