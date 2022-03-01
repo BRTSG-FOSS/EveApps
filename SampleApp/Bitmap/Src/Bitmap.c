@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
 * @param source Image source
 * @param numcell Cell number
 */
-void helperDrawASTC(const char* title, uint16_t source, uint16_t fmt, uint16_t x, uint16_t y, 
+void helperDrawASTC(const char* title, uint32_t source, uint16_t fmt, uint16_t x, uint16_t y, 
     uint16_t w, uint16_t h, uint16_t margin, uint16_t numcell)
 {
 #if defined(BT81X_ENABLE) // BT81X
