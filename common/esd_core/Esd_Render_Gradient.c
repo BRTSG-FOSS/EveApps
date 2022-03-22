@@ -200,7 +200,7 @@ ESD_CORE_EXPORT void Esd_Render_RectF_Grad(esd_int32_f4_t x, esd_int32_f4_t y, e
 		return;
 	}
 
-	scope
+	eve_scope
 	{
 		double radius = direction * M_PI / 180.0f;
 		double sine = sin(radius), cosine = cos(radius);

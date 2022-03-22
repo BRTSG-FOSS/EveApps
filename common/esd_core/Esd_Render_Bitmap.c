@@ -317,7 +317,7 @@ ESD_CORE_EXPORT void Esd_Render_Bitmap_Rotate(Esd_BitmapCell bitmapCell, esd_arg
 		EVE_CoDl_begin(phost, BITMAPS);
 
 		Esd_CoDl_PagedCell(handle, cell);
-		scope
+		eve_scope
 		{
 			int dx, dy;
 			for (dx = (x - radius); dx < (x + radius); dx += TITLE_SIZE)
