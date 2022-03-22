@@ -7,6 +7,10 @@
 #include "Esd_BitmapInfo.h"
 #include "Esd_Math.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Esd_Render_Rect
 // Esd_Render_Line
 // Esd_Render_Point
@@ -236,6 +240,10 @@ ESD_ENUM(Esd_Stroke, Type = uint8_t, Include = "Esd_Core.h")
 #define ESD_STROKE_OUTER (2)
 #define ESD_STROKE_CENTER (3)
 ESD_END()
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* #ifndef ESD_RENDER__H */
 

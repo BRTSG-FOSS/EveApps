@@ -24,6 +24,10 @@ Either allocation option does not guarantee that memory will remain persistently
 
 #include "EVE_IntTypes.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define MAX_NUM_ALLOCATIONS 64UL
 
 // Set the GC flag. This automatically frees the allocation when the USED flag is not set during Update.
@@ -117,6 +121,10 @@ ESD_CORE_EXPORT void Esd_GpuAlloc_Print(Esd_GpuAlloc *ga);
 	do                         \
 	{                          \
 	} while (0)
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif /* #ifndef ESD_GPUALLOC__H */

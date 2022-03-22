@@ -5,6 +5,10 @@
 #include "Esd_Base.h"
 #include "Esd_Math.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Returns the current scissor area
 ESD_FUNCTION(Esd_Scissor_Get, Type = Esd_Rect16, Attributes = ESD_CORE_EXPORT, Category = EveRenderFunctions, Include = "Esd_Core.h")
 ESD_CORE_EXPORT Esd_Rect16 Esd_Scissor_Get();
@@ -24,6 +28,10 @@ ESD_CORE_EXPORT void Esd_Scissor_Adjust(Esd_Rect16 rect, Esd_Rect16 state);
 ESD_FUNCTION(Esd_Scissor_Reset, Attributes = ESD_CORE_EXPORT, Category = EveRenderFunctions, Include = "Esd_Core.h")
 ESD_PARAMETER(state, Type = Esd_Rect16)
 ESD_CORE_EXPORT void Esd_Scissor_Reset(Esd_Rect16 state);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* #ifndef ESD_SCISSOR__H */
 

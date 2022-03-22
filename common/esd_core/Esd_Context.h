@@ -38,6 +38,10 @@
 #include "Esd_BitmapHandle.h"
 #include "Esd_TouchTag.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Runtime context of ESD */
 typedef struct
 {
@@ -151,6 +155,10 @@ static inline uint32_t Esd_GetDeltaMs() { return Esd_CurrentContext->DeltaMs; }
 /// A function to get the current HAL context data structure
 ESD_FUNCTION(Esd_GetHost, Type = EVE_HalContext *, DisplayName = "Get EVE Host", Category = EsdUtilities, Inline, Include = "Esd_Core.h")
 static inline EVE_HalContext *Esd_GetHost() { return Esd_Host; }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* #ifndef ESD_CONTEXT__H */
 

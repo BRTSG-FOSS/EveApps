@@ -11,6 +11,10 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 #include "Esd_BitmapInfo.h"
 #include "Esd_FontInfo.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Handle allocation state
 typedef struct
 {
@@ -87,6 +91,10 @@ ESD_PARAMETER(fontInfo, Type = Esd_FontInfo *)
 ESD_CORE_EXPORT uint16_t Esd_GetFontXOffset(Esd_FontInfo *fontInfo);
 
 /* end of supported functions */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* #ifndef ESD_BITMAPHANDLE__H */
 

@@ -9,6 +9,10 @@ Bitmap info structure
 #include "Esd_GpuAlloc.h"
 #include "Esd_ResourceInfo.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 ESD_TYPE(Esd_BitmapInfo, Native = Struct) // TODO: Struct support, expose values
 typedef struct Esd_BitmapInfo
 {
@@ -180,6 +184,10 @@ static inline int32_t Esd_BitmapInfo_GetHeight(Esd_BitmapInfo *bitmapInfo)
 		return 1;
 	return bitmapInfo->Height;
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* #ifndef ESD_BITMAPINFO__H */
 

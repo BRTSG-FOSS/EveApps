@@ -14,6 +14,10 @@ Resource info structure
 #include "Esd_Base.h"
 #include "Esd_GpuAlloc.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Resource loading mechanisms
 ESD_ENUM(Esd_ResourceType, DisplayName = "Resource Type")
 #define ESD_RESOURCE_FILE 0
@@ -107,6 +111,10 @@ ESD_CORE_EXPORT void Esd_ResourcePersist(Esd_ResourceInfo *resourceInfo);
 
 /// Check if a format is an ASTC format
 #define ESD_IS_FORMAT_ASTC(format) ((format & 0xFFF0) == 0x93B0)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* #ifndef ESD_FONTINFO__H */
 

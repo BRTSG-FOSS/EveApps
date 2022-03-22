@@ -15,6 +15,10 @@ Font info structure
 #include "Esd_GpuAlloc.h"
 #include "Esd_ResourceInfo.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 ESD_ENUM(Esd_FontType, DisplayName = "Bitmap Format")
 #define ESD_FONT_ROM 0
 #define ESD_FONT_LEGACY 1
@@ -100,6 +104,10 @@ ESD_CORE_EXPORT uint32_t Esd_LoadFont(Esd_FontInfo *fontInfo);
 ESD_UPDATE(Esd_FontPersist, DisplayName = "Persist Font", Category = EsdUtilities)
 ESD_PARAMETER(fontInfo, Type = Esd_FontInfo *)
 ESD_CORE_EXPORT void Esd_FontPersist(Esd_FontInfo *fontInfo);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* #ifndef ESD_FONTINFO__H */
 

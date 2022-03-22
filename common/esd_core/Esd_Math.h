@@ -33,6 +33,10 @@
 
 #include "Esd_Base.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 ESD_TYPE(Esd_Point16, Native = Struct) // TODO: Struct support, expose values
 typedef struct
 {
@@ -122,6 +126,10 @@ ESD_PARAMETER(max, Type = float, Default = 100)
 ESD_FUNCTION(Esd_Float_To_Int, Type = int32_t, DisplayName = "Float to Int", Category = EsdUtilities, Inline)
 ESD_PARAMETER(value, Type = float, Default = 0)
 static inline int Esd_Float_To_Int(float value) { return (int)value; }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* Esd_MATH__H */
 

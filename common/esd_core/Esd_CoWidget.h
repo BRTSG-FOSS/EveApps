@@ -5,6 +5,10 @@
 #include "Esd_Context.h"
 #include "Esd_Math.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
 
 The coprocessor provides several commands which use the same CMD_STOP
@@ -88,5 +92,9 @@ ESD_PARAMETER(video, Type = Esd_BitmapCell)
 ESD_PARAMETER(options, Type = Esd_Opt_PlayVideoEx, Default = OPT_FULLSCREEN | OPT_SOUND)
 ESD_CORE_EXPORT bool Esd_CoWidget_PlayVideo(Esd_BitmapCell video, uint16_t options);
 #endif /* #ifndef ESD_COWIDGET__H */
+
+#ifdef __cplusplus
+}
+#endif
 
 /* end of file */

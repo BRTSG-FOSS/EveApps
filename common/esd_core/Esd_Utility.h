@@ -34,6 +34,10 @@
 
 #include "Esd_Base.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 ESD_CORE_EXPORT void Esd_AttachFlashFast();
 
 ESD_CORE_EXPORT void Esd_ShowLogo();
@@ -44,6 +48,10 @@ ESD_CORE_EXPORT bool Esd_Calibrate();
 
 ESD_CORE_EXPORT void Esd_DeferredFree(void *ptr);
 ESD_CORE_EXPORT void Esd_ProcessFree();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* #ifndef ESD_UTILITY__H */
 

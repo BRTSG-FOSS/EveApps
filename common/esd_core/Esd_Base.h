@@ -114,6 +114,10 @@ ESD_PARAMETER(dl, Type = uint32_t)
 
 #include <EVE_Hal.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 ESD_TYPE(void, Native = Void)
 ESD_TYPE(char, Native = Char, Edit = String)
 ESD_TYPE(signed char, Native = Int8, Edit = Integer)
@@ -235,6 +239,10 @@ void LogError__ESD(const char *str);
 	do                  \
 	{                   \
 	} while (0)
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif /* #ifndef ESD_BASE__H */
