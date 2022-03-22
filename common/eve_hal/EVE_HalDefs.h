@@ -124,6 +124,7 @@ typedef struct EVE_GpuDefs
 
 extern EVE_GpuDefs EVE_GpuDefs_FT80X;
 extern EVE_GpuDefs EVE_GpuDefs_FT81X;
+extern EVE_GpuDefs EVE_GpuDefs_BT88X;
 extern EVE_GpuDefs EVE_GpuDefs_BT81X;
 #endif
 

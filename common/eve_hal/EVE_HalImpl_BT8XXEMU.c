@@ -174,6 +174,8 @@ bool EVE_HalImpl_open(EVE_HalContext *phost, const EVE_HalParameters *parameters
 #ifdef EVE_MULTI_GRAPHICS_TARGET
 	if (params->Mode >= BT8XXEMU_EmulatorBT815)
 		phost->GpuDefs = &EVE_GpuDefs_BT81X;
+	else if (params->Mode >= BT8XXEMU_EmulatorBT880)
+		phost->GpuDefs = &EVE_GpuDefs_BT88X;
 	else if (params->Mode >= BT8XXEMU_EmulatorFT810)
 		phost->GpuDefs = &EVE_GpuDefs_FT81X;
 	else

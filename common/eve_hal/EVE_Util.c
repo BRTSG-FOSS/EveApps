@@ -823,8 +823,10 @@ EVE_HAL_EXPORT bool EVE_Util_bootup(EVE_HalContext *phost, EVE_BootupParameters 
 	phost->ChipId = EXTRACT_CHIPID(chipId);
 	if (phost->ChipId >= EVE_BT815)
 		phost->GpuDefs = &EVE_GpuDefs_BT81X;
+	else if (phost->ChipId >= EVE_BT880)
+		phost->GpuDefs = &EVE_GpuDefs_BT88X;
 	else if (phost->ChipId >= EVE_FT810)
-		phost->GpuDefs = &EVE_GpuDefs_FT81X; // TODO: BT880
+		phost->GpuDefs = &EVE_GpuDefs_FT81X;
 	else if (phost->ChipId >= EVE_FT800)
 		phost->GpuDefs = &EVE_GpuDefs_FT80X;
 #endif
