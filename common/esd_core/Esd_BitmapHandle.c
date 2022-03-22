@@ -22,12 +22,12 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 // #define ESD_ROMFONT_NB 35UL
 // uint8_t Esd_RomFontHandles[ESD_ROMFONT_NB - ESD_FONTHANDLE_NB] = { 0 };
 
-#if (EVE_SUPPORT_CHIPID >= EVE_FT810)
+#ifdef EVE_SUPPORT_LARGEFONT
 #define ESD_ROMFONT_CAP 35UL // Max, rom font handle, exclusive
 #else
 #define ESD_ROMFONT_CAP 32UL // Max, rom font handle, exclusive
 #endif
-#define ESD_ROMFONT_MAX (phost ? ((EVE_CHIPID >= EVE_FT810) ? 35UL : 32UL) : ESD_ROMFONT_CAP)
+#define ESD_ROMFONT_MAX (phost ? (EVE_Hal_supportLargeFont(phost) ? 35UL : 32UL) : ESD_ROMFONT_CAP)
 #define ESD_ROMFONT_MIN 16UL // Min, rom font handle, inclusive
 #define ESD_ROMFONT_NBCAP (ESD_ROMFONT_CAP - ESD_ROMFONT_MIN)
 #define ESD_ROMFONT_NB (ESD_ROMFONT_MAX - ESD_ROMFONT_MIN)
@@ -50,7 +50,7 @@ static Esd_RomFontInfo s_RomFonts[ESD_ROMFONT_NBCAP] = {
 	{ 0, ESD_FONT_ROM, 29UL, 0, 0, 0 },
 	{ 0, ESD_FONT_ROM, 30UL, 0, 0, 0 },
 	{ 0, ESD_FONT_ROM, 31UL, 0, 0, 0 },
-#if (EVE_SUPPORT_CHIPID >= EVE_FT810)
+#ifdef EVE_SUPPORT_LARGEFONT
 	{ 0, ESD_FONT_ROM, 32UL, 0, 0, 0 },
 	{ 0, ESD_FONT_ROM, 33UL, 0, 0, 0 },
 	{ 0, ESD_FONT_ROM, 34UL, 0, 0, 0 },
@@ -74,7 +74,7 @@ static Esd_RomFontInfo s_RomFonts[ESD_ROMFONT_NBCAP] = {
 	{ .Type = ESD_FONT_ROM, .RomFont = 29UL },
 	{ .Type = ESD_FONT_ROM, .RomFont = 30UL },
 	{ .Type = ESD_FONT_ROM, .RomFont = 31UL },
-#if (EVE_SUPPORT_CHIPID >= EVE_FT810)
+#ifdef EVE_SUPPORT_LARGEFONT
 	{ .Type = ESD_FONT_ROM, .RomFont = 32UL },
 	{ .Type = ESD_FONT_ROM, .RomFont = 33UL },
 	{ .Type = ESD_FONT_ROM, .RomFont = 34UL },
