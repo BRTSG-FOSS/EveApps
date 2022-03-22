@@ -515,7 +515,7 @@ static inline EVE_CHIPID_T EVE_extendedChipId(int chipId)
 	{
 	case EVE_FT800 & 0xFFFF:
 	case EVE_FT801 & 0xFFFF:
-		return (chipId & 0xFFFF) | 0x10000;
+		return (EVE_CHIPID_T)((chipId & 0xFFFF) | 0x10000);
 	case EVE_FT810 & 0xFFFF:
 	case EVE_FT811 & 0xFFFF:
 	case EVE_FT812 & 0xFFFF:
@@ -524,17 +524,17 @@ static inline EVE_CHIPID_T EVE_extendedChipId(int chipId)
 	case EVE_BT881 & 0xFFFF:
 	case EVE_BT882 & 0xFFFF:
 	case EVE_BT883 & 0xFFFF:
-		return (chipId & 0xFFFF) | 0x20000;
+		return (EVE_CHIPID_T)((chipId & 0xFFFF) | 0x20000);
 	case EVE_BT815 & 0xFFFF:
 	case EVE_BT816 & 0xFFFF:
-		return (chipId & 0xFFFF) | 0x30000;
+		return (EVE_CHIPID_T)((chipId & 0xFFFF) | 0x30000);
 	case EVE_BT817 & 0xFFFF:
 	case EVE_BT818 & 0xFFFF:
-		return (chipId & 0xFFFF) | 0x40000;
+		return (EVE_CHIPID_T)((chipId & 0xFFFF) | 0x40000);
 	default:
 		break;
 	}
-	return chipId & 0xFFFF;
+	return (EVE_CHIPID_T)(chipId & 0xFFFF);
 }
 
 static inline int EVE_gen(EVE_CHIPID_T chipId)
