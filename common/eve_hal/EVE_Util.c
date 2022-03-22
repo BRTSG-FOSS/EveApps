@@ -91,7 +91,7 @@ static const char *s_HostDisplayNames[EVE_HOST_NB] = {
 	"Embedded",
 };
 
-#define EVE_SELECT_CHIP_NB 10
+#define EVE_SELECT_CHIP_NB 14
 
 /* Interactive emulator chip selection */
 static const char *s_SelectChipName[EVE_SELECT_CHIP_NB] = {
@@ -101,6 +101,10 @@ static const char *s_SelectChipName[EVE_SELECT_CHIP_NB] = {
 	"FT811",
 	"FT812",
 	"FT813",
+	"BT880",
+	"BT881",
+	"BT882",
+	"BT883",
 	"BT815",
 	"BT816",
 	"BT817",
@@ -114,6 +118,10 @@ static EVE_CHIPID_T s_SelectChipId[EVE_SELECT_CHIP_NB] = {
 	EVE_FT811,
 	EVE_FT812,
 	EVE_FT813,
+	EVE_BT880,
+	EVE_BT881,
+	EVE_BT882,
+	EVE_BT883,
 	EVE_BT815,
 	EVE_BT816,
 	EVE_BT817,
@@ -731,7 +739,7 @@ EVE_HAL_EXPORT void EVE_Util_configDefaults(EVE_HalContext *phost, EVE_ConfigPar
 	eve_printf_debug("Display refresh rate set to %f\n", (float)((double)freq / ((double)config->HCycle * (double)config->VCycle * (double)config->PCLK)));
 }
 
-#define EXTRACT_CHIPID(romChipId) ((((romChipId) >> 8) & 0xFF) | (((romChipId) & (0xFF)) << 8))
+#define EXTRACT_CHIPID(romChipId) EVE_extendedChipId((((romChipId) >> 8) & 0xFF) | (((romChipId) & (0xFF)) << 8))
 
 EVE_HAL_EXPORT bool EVE_Util_bootup(EVE_HalContext *phost, EVE_BootupParameters *bootup)
 {
@@ -816,7 +824,7 @@ EVE_HAL_EXPORT bool EVE_Util_bootup(EVE_HalContext *phost, EVE_BootupParameters 
 	if (phost->ChipId >= EVE_BT815)
 		phost->GpuDefs = &EVE_GpuDefs_BT81X;
 	else if (phost->ChipId >= EVE_FT810)
-		phost->GpuDefs = &EVE_GpuDefs_FT81X;
+		phost->GpuDefs = &EVE_GpuDefs_FT81X; // TODO: BT880
 	else if (phost->ChipId >= EVE_FT800)
 		phost->GpuDefs = &EVE_GpuDefs_FT80X;
 #endif
@@ -1651,7 +1659,7 @@ void EVE_Util_emulatorDefaults(EVE_HalParameters *params, void *emulatorParams, 
 
 	BT8XXEMU_EmulatorParameters *pEmulatorParams = emulatorParams;
 
-	BT8XXEMU_defaults(BT8XXEMU_VERSION_API, pEmulatorParams, chipId); // TODO: should be pEmulatorParams->mode?
+	BT8XXEMU_defaults(BT8XXEMU_VERSION_API, pEmulatorParams, chipId & 0xFFFF); // TODO: should be pEmulatorParams->mode?
 	pEmulatorParams->Flags &= (~BT8XXEMU_EmulatorEnableDynamicDegrade & ~BT8XXEMU_EmulatorEnableRegPwmDutyEmulation);
 
 	// TODO: emulatorParams.Log

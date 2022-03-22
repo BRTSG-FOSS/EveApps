@@ -51,21 +51,27 @@ the available list of which is specified further below for ESD using these macro
 #define ESD_TARGET_FLASH(name, ...)
 #define ESD_TARGET_TOUCH(name, ...)
 
-#define EVE_FT800 0x0800
-#define EVE_FT801 0x0801
-#define EVE_FT810 0x0810
-#define EVE_FT811 0x0811
-#define EVE_FT812 0x0812
-#define EVE_FT813 0x0813
-#define EVE_BT815 0x0815
-#define EVE_BT816 0x0816
-#define EVE_BT817 0x0817
-#define EVE_BT818 0x0818
+// Chip IDs with EVE generation
+#define EVE_FT800 0x10800
+#define EVE_FT801 0x10801
+#define EVE_FT810 0x20810
+#define EVE_FT811 0x20811
+#define EVE_FT812 0x20812
+#define EVE_FT813 0x20813
+#define EVE_BT880 0x20880
+#define EVE_BT881 0x20881
+#define EVE_BT882 0x20882
+#define EVE_BT883 0x20883
+#define EVE_BT815 0x30815
+#define EVE_BT816 0x30816
+#define EVE_BT817 0x40817
+#define EVE_BT818 0x40818
 
-#define EVE1 1 /* FT800 - FT801 */
-#define EVE2 2 /* FT810 - FT813 */
-#define EVE3 3 /* BT815 - BT816 */
-#define EVE4 4 /* BT817 - BT818 */
+// EVE generations
+#define EVE1 1 /* FT800 and FT801 */
+#define EVE2 2 /* FT810 to FT813, and BT880 to BT883 */
+#define EVE3 3 /* BT815 and BT816 */
+#define EVE4 4 /* BT817 and BT818 */
 
 ///////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
@@ -179,6 +185,10 @@ Graphics target:
 - EVE_SUPPORT_CHIPID=EVE_FT811
 - EVE_SUPPORT_CHIPID=EVE_FT812
 - EVE_SUPPORT_CHIPID=EVE_FT813
+- EVE_SUPPORT_CHIPID=EVE_BT880
+- EVE_SUPPORT_CHIPID=EVE_BT881
+- EVE_SUPPORT_CHIPID=EVE_BT882
+- EVE_SUPPORT_CHIPID=EVE_BT883
 - EVE_SUPPORT_CHIPID=EVE_BT815
 - EVE_SUPPORT_CHIPID=EVE_BT816
 - EVE_SUPPORT_CHIPID=EVE_BT817
@@ -294,6 +304,8 @@ Validate the configured options.
     || defined(EVE_GRAPHICS_FT800) || defined(EVE_GRAPHICS_FT801)    \
     || defined(EVE_GRAPHICS_FT810) || defined(EVE_GRAPHICS_FT811)    \
     || defined(EVE_GRAPHICS_FT812) || defined(EVE_GRAPHICS_FT813)    \
+    || defined(EVE_GRAPHICS_BT880) || defined(EVE_GRAPHICS_BT881)    \
+    || defined(EVE_GRAPHICS_BT882) || defined(EVE_GRAPHICS_BT883)    \
     || defined(EVE_GRAPHICS_BT815) || defined(EVE_GRAPHICS_BT816)    \
     || defined(EVE_GRAPHICS_BT817) || defined(EVE_GRAPHICS_BT818)
 #define EVE_GRAPHICS_AVAILABLE
@@ -340,13 +352,18 @@ Validate the configured options.
 
 /*
 
-The selected graphics module must set one of the following options.
+The selected graphics module below must set one of the following options.
+(Users must select the graphics module definition, *not* one of these enable options.)
 - FT800_ENABLE
 - FT801_ENABLE
 - FT810_ENABLE
 - FT811_ENABLE
 - FT812_ENABLE
 - FT813_ENABLE
+- BT880_ENABLE
+- BT881_ENABLE
+- BT882_ENABLE
+- BT883_ENABLE
 - BT815_ENABLE
 - BT816_ENABLE
 - BT817_ENABLE
@@ -917,6 +934,11 @@ It may also set platform, display, and flash values if none are configured.
 #define DISPLAY_RESOLUTION_QVGA
 #endif
 
+#ifndef EVE_TOUCH_AVAILABLE
+#define EVE_TOUCH_AVAILABLE
+#define EVE_TOUCH_RESISTIVE
+#endif
+
 #elif defined(EVE_GRAPHICS_FT813)
 #define FT813_ENABLE
 #ifndef EVE_DISPLAY_AVAILABLE
@@ -924,8 +946,10 @@ It may also set platform, display, and flash values if none are configured.
 #define DISPLAY_RESOLUTION_QVGA
 #endif
 
-#elif defined(EVE_GRAPHICS_FT810)
-#define FT810_ENABLE
+#elif defined(EVE_GRAPHICS_BT880)
+
+#define BT880_ENABLE
+
 #ifndef EVE_DISPLAY_AVAILABLE
 #define EVE_DISPLAY_AVAILABLE
 #define DISPLAY_RESOLUTION_QVGA
@@ -934,6 +958,35 @@ It may also set platform, display, and flash values if none are configured.
 #ifndef EVE_TOUCH_AVAILABLE
 #define EVE_TOUCH_AVAILABLE
 #define EVE_TOUCH_RESISTIVE
+#endif
+
+#elif defined(EVE_GRAPHICS_BT881)
+
+#define BT881_ENABLE
+#define ENABLE_SPI_QUAD
+
+#ifndef EVE_DISPLAY_AVAILABLE
+#define EVE_DISPLAY_AVAILABLE
+#define DISPLAY_RESOLUTION_WVGA
+#endif
+
+#elif defined(EVE_GRAPHICS_BT882)
+#define BT882_ENABLE
+#ifndef EVE_DISPLAY_AVAILABLE
+#define EVE_DISPLAY_AVAILABLE
+#define DISPLAY_RESOLUTION_QVGA
+#endif
+
+#ifndef EVE_TOUCH_AVAILABLE
+#define EVE_TOUCH_AVAILABLE
+#define EVE_TOUCH_RESISTIVE
+#endif
+
+#elif defined(EVE_GRAPHICS_BT883)
+#define BT883_ENABLE
+#ifndef EVE_DISPLAY_AVAILABLE
+#define EVE_DISPLAY_AVAILABLE
+#define DISPLAY_RESOLUTION_QVGA
 #endif
 
 #elif defined(EVE_GRAPHICS_BT815)
@@ -1029,6 +1082,11 @@ It may also set platform, display, and flash values if none are configured.
 #define FT81X_ENABLE
 #endif
 
+/// Re-Mapping BT880 Series to BT88X
+#if defined(BT880_ENABLE) || defined(BT881_ENABLE) || defined(BT882_ENABLE) || defined(BT883_ENABLE)
+#define BT88X_ENABLE
+#endif
+
 /// Re-Mapping BT815 Series to BT81X
 #if defined(BT815_ENABLE) || defined(BT816_ENABLE)
 #define BT81X_ENABLE
@@ -1040,7 +1098,6 @@ It may also set platform, display, and flash values if none are configured.
 #endif
 
 /// Model numbered macro for versioning convenience.
-/// Matches the BT8XXEMU_EmulatorMode enum values.
 #if defined(FT800_ENABLE)
 #define EVE_SUPPORT_CHIPID EVE_FT800
 #define EVE_SUPPORT_GEN EVE1
@@ -1065,6 +1122,22 @@ It may also set platform, display, and flash values if none are configured.
 #define EVE_SUPPORT_CHIPID EVE_FT813
 #define EVE_SUPPORT_GEN EVE2
 #define FT_813_ENABLE
+#elif defined(BT880_ENABLE)
+#define EVE_SUPPORT_CHIPID EVE_BT880
+#define EVE_SUPPORT_GEN EVE2
+#define BT_880_ENABLE
+#elif defined(BT881_ENABLE)
+#define EVE_SUPPORT_CHIPID EVE_BT881
+#define EVE_SUPPORT_GEN EVE2
+#define BT_881_ENABLE
+#elif defined(BT882_ENABLE)
+#define EVE_SUPPORT_CHIPID EVE_BT882
+#define EVE_SUPPORT_GEN EVE2
+#define BT_882_ENABLE
+#elif defined(BT883_ENABLE)
+#define EVE_SUPPORT_CHIPID EVE_BT883
+#define EVE_SUPPORT_GEN EVE2
+#define BT_883_ENABLE
 #elif defined(BT815_ENABLE)
 #define EVE_SUPPORT_CHIPID EVE_BT815
 #define EVE_SUPPORT_GEN EVE3
@@ -1087,6 +1160,8 @@ It may also set platform, display, and flash values if none are configured.
 #define FT_80X_ENABLE
 #elif defined(FT81X_ENABLE)
 #define FT_81X_ENABLE
+#elif defined(BT88X_ENABLE)
+#define BT_88X_ENABLE
 #elif defined(BT81X_ENABLE)
 #define BT_81X_ENABLE
 #elif defined(BT81XA_ENABLE)

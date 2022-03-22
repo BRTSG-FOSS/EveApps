@@ -159,7 +159,7 @@ bool EVE_HalImpl_open(EVE_HalContext *phost, const EVE_HalParameters *parameters
 		params = malloc(sizeof(BT8XXEMU_EmulatorParameters));
 		if (!params)
 			return false;
-		BT8XXEMU_defaults(BT8XXEMU_VERSION_API, params, parameters->EmulatorMode);
+		BT8XXEMU_defaults(BT8XXEMU_VERSION_API, params, parameters->EmulatorMode & 0xFFFF);
 		params->Flags &= (~BT8XXEMU_EmulatorEnableDynamicDegrade & ~BT8XXEMU_EmulatorEnableRegPwmDutyEmulation);
 	}
 	phost->EmulatorParameters = params;
@@ -178,7 +178,7 @@ bool EVE_HalImpl_open(EVE_HalContext *phost, const EVE_HalParameters *parameters
 		phost->GpuDefs = &EVE_GpuDefs_FT81X;
 	else
 		phost->GpuDefs = &EVE_GpuDefs_FT80X;
-	phost->ChipId = params->Mode;
+	phost->ChipId = EVE_extendedChipId(params->Mode);
 #endif
 
 #if defined(EVE_EMULATOR_MAIN)
