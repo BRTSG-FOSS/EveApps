@@ -480,13 +480,26 @@ static bool configDefaultsEx(EVE_HalContext *phost, EVE_ConfigParameters *config
 	eve_assert(config->VCycle > config->Height);
 	eve_assert((config->VCycle - config->Height) > config->VOffset);
 
+#if (EVE_SUPPORT_CHIPID > EVE_BT815)
+	config->AdaptiveFrameRate = 0;
+#endif
+
+#if (EVE_SUPPORT_CHIPID > EVE_BT817)
+	config->AhHCycleMax = 0;
+	config->PCLK2X = 0;
+#endif
+	
 	/* Other options */
 	/* Toggle CSpread if you see red and blue fringing on black and white edges */
 	config->CSpread = 0; /* non-default */
 	/* Change this if RGB colors are swapped */
 	config->Swizzle = 0;
 
-	if (EVE_CHIPID >= EVE_FT812)
+	if (EVE_CHIPID == EVE_FT812
+		|| EVE_CHIPID == EVE_FT813
+		|| EVE_CHIPID == EVE_BT882
+		|| EVE_CHIPID == EVE_BT883
+		|| EVE_CHIPID >= EVE_BT815)
 	{
 		config->Dither = 0;
 		config->OutBitsR = 8;
@@ -1079,10 +1092,20 @@ EVE_HAL_EXPORT bool EVE_Util_config(EVE_HalContext *phost, EVE_ConfigParameters 
 	}
 #endif
 
-	/* 
-	TODO:
-	EVE_Hal_wr16(phost, REG_ADAPTIVE_FRAMERATE, 1);
-	*/
+#if (EVE_SUPPORT_CHIPID > EVE_BT815)
+	if (EVE_CHIPID >= EVE_BT815)
+	{
+		EVE_Hal_wr8(phost, REG_ADAPTIVE_FRAMERATE, config->AdaptiveFrameRate);
+	}
+#endif
+
+#if (EVE_SUPPORT_CHIPID > EVE_BT817)
+	if (EVE_CHIPID >= EVE_BT817)
+	{
+		EVE_Hal_wr16(phost, REG_AH_HCYCLE_MAX, config->AhHCycleMax);
+		EVE_Hal_wr8(phost, REG_PCLK_2X, config->PCLK2X);
+	}
+#endif
 
 #ifdef RESISTANCE_THRESHOLD /* TODO: From config */
 	if (EVE_Hal_isScreenResistive(phost))
