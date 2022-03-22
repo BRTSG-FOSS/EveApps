@@ -816,7 +816,7 @@ EVE_HAL_EXPORT bool EVE_Util_bootup(EVE_HalContext *phost, EVE_BootupParameters 
 	/* ROM_CHIPID is valid across all EVE devices */
 	if (expectedChipId && EXTRACT_CHIPID(chipId) != expectedChipId)
 		eve_printf_debug("Mismatching EVE chip id %lx, expect model %lx\n", ((chipId >> 8) & 0xFF) | ((chipId & 0xFF) << 8), expectedChipId);
-	eve_printf_debug("EVE chip id %lx %lx.%lx\n", EXTRACT_CHIPID(chipId), ((chipId >> 16) & 0xFF), ((chipId >> 24) & 0xFF));
+	eve_printf_debug("EVE chip id %lx %lx.%lx (gen %i)\n", EXTRACT_CHIPID(chipId) & 0xFFFF, ((chipId >> 16) & 0xFF), ((chipId >> 24) & 0xFF), EVE_gen(EXTRACT_CHIPID(chipId)));
 
 	/* Switch to the proper chip ID if applicable */
 #ifdef EVE_MULTI_GRAPHICS_TARGET
