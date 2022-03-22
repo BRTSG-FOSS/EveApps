@@ -448,8 +448,11 @@ ESD_CORE_EXPORT void Esd_Render(Esd_Context *ec)
 		ec->SpinnerPopped = false;
 	}
 
-	EVE_CoDl_display(phost);
-	EVE_CoCmd_swap(phost);
+	if (!ec->SpinnerPopped)
+	{
+		EVE_CoDl_display(phost);
+		EVE_CoCmd_swap(phost);
+	}
 
 	// Replacement for Ft_Gpu_Hal_WaitCmdfifo_empty(phost); with idle function
 	ec->LoopState = ESD_LOOPSTATE_IDLE;
