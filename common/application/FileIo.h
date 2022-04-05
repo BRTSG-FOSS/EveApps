@@ -44,6 +44,7 @@ enum _FILEIO_E_FRESULT{
 
 int FileIO_File_Close();
 int FileIO_File_Seek(unsigned long offset);
+int FileIO_File_Tell();
 int FileIO_File_Open(const char *filePath, enum _FILEIO_E_FOPEN e);
 int FileIO_File_Read(char* buffer, long bytes);
 int FileIO_File_Write(const char* buffer, long buffersize);

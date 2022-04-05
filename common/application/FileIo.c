@@ -127,6 +127,19 @@ int FileIO_File_Seek(unsigned long offset) {
 }
 
 /**
+ * @brief Querry file pointer
+ * 
+ * @return int file pointer possition
+ */
+int FileIO_File_Tell() {
+	if (!isFOpenning) {
+		printf("File haven't openned\n");
+		return 0;
+	}
+	return f_tell (&fp);
+}
+
+/**
  * @brief File open
  * 
  * @param filePath File to open
@@ -326,6 +339,19 @@ int FileIO_File_Seek(unsigned long offset) {
 }
 
 /**
+ * @brief Querry file pointer
+ * 
+ * @return int file pointer possition
+ */
+int FileIO_File_Tell() {
+	if (!isFOpenning) {
+		printf("File haven't openned\n");
+		return 0;
+	}
+	return ftell (fp);
+}
+
+/**
  * @brief File open
  * Please call EVE_Util_loadSdCard to use on FT9XX platform
  * 
@@ -472,6 +498,7 @@ char *FileIO_Read_Line(){
 #else // defined (MSVC_PLATFORM) || defined (BT8XXEMU_PLATFORM)
 int FileIO_File_Close() { return 0; };
 int FileIO_File_Seek(unsigned long offset) { return 0; };
+int FileIO_File_Tell() { return 0; };
 int FileIO_File_Open(const char* filePath, enum _FILEIO_E_FOPEN e) { return 0; };
 int FileIO_File_Read(char* buffer, long bytes) { return 0; };
 int FileIO_File_Write(const char* buffer, long buffersize) { return 0; };
