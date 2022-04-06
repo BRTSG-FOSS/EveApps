@@ -95,6 +95,10 @@ set(LIST_GRAPHICS MULTI
                   EVE_GRAPHICS_FT811
                   EVE_GRAPHICS_FT812
                   EVE_GRAPHICS_FT813
+                  EVE_GRAPHICS_BT880
+                  EVE_GRAPHICS_BT881
+                  EVE_GRAPHICS_BT882
+                  EVE_GRAPHICS_BT883
                   EVE_GRAPHICS_BT815
                   EVE_GRAPHICS_BT816
                   EVE_GRAPHICS_BT817
