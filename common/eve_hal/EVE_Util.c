@@ -829,7 +829,7 @@ EVE_HAL_EXPORT bool EVE_Util_bootup(EVE_HalContext *phost, EVE_BootupParameters 
 	/* ROM_CHIPID is valid across all EVE devices */
 	if (expectedChipId && EXTRACT_CHIPID(chipId) != expectedChipId)
 		eve_printf_debug("Mismatching EVE chip id %lx, expect model %lx\n", ((chipId >> 8) & 0xFF) | ((chipId & 0xFF) << 8), expectedChipId);
-	eve_printf_debug("EVE chip id %lx %lx.%lx (gen %i)\n", EXTRACT_CHIPID(chipId) & 0xFFFF, ((chipId >> 16) & 0xFF), ((chipId >> 24) & 0xFF), EVE_gen(EXTRACT_CHIPID(chipId)));
+	eve_printf_debug("EVE chip id %lx %lx.%lx (gen %i)\n", EVE_shortChipId(EXTRACT_CHIPID(chipId)), ((chipId >> 16) & 0xFF), ((chipId >> 24) & 0xFF), EVE_gen(EXTRACT_CHIPID(chipId)));
 
 	/* Switch to the proper chip ID if applicable */
 #ifdef EVE_MULTI_GRAPHICS_TARGET
@@ -1684,7 +1684,7 @@ void EVE_Util_emulatorDefaults(EVE_HalParameters *params, void *emulatorParams, 
 
 	BT8XXEMU_EmulatorParameters *pEmulatorParams = emulatorParams;
 
-	BT8XXEMU_defaults(BT8XXEMU_VERSION_API, pEmulatorParams, chipId & 0xFFFF); // TODO: should be pEmulatorParams->mode?
+	BT8XXEMU_defaults(BT8XXEMU_VERSION_API, pEmulatorParams, EVE_shortChipId(chipId)); // TODO: should be pEmulatorParams->mode?
 	pEmulatorParams->Flags &= (~BT8XXEMU_EmulatorEnableDynamicDegrade & ~BT8XXEMU_EmulatorEnableRegPwmDutyEmulation);
 
 	// TODO: emulatorParams.Log

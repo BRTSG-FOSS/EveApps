@@ -537,6 +537,12 @@ static inline EVE_CHIPID_T EVE_extendedChipId(int chipId)
 	return (EVE_CHIPID_T)(chipId & 0xFFFF);
 }
 
+/// Remove EVE generation from the chip ID
+static inline int EVE_shortChipId(EVE_CHIPID_T chipId)
+{
+	return chipId & 0xFFFF;
+}
+
 static inline int EVE_gen(EVE_CHIPID_T chipId)
 {
 	switch (chipId)
