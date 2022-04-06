@@ -84,13 +84,13 @@ nmake [Project name]
 Way 1: Import FT9XX's project inside foler "FT9XX" of any project into FT9XX toolchain. Build and run using GUI.
 
 Way 2: Use Cmake:
-Correct location of "FT9XX_TOOLCHAIN" inside EveApps/CMakelist.txt at first.
+Correct location of "FT9XX_TOOLCHAIN" at first.
 
 ```sh
 cd X:\source\EveApps
 mkdir build
 cd build
-cmake -G "MinGW Makefiles" -DEVE_APPS_PLATFORM=[FT9XX module name] -DEVE_APPS_GRAPHICS=[EVE graphics] ..
+cmake -G "MinGW Makefiles" -DEVE_APPS_PLATFORM=[FT9XX module name] -DEVE_APPS_GRAPHICS=[EVE graphics] "-DFT9XX_TOOLCHAIN=C:\Program Files (x86)\Bridgetek\FT9xx Toolchain" ..
 nmake [Project name]
 
 # [EVE graphics] can be EVE or module name, such as BT817, BT815, VM800B35A_BK ...

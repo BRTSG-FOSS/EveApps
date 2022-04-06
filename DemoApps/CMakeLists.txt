@@ -1,5 +1,7 @@
 LINK_LIBRARIES(eve_hal)
 
+set_directory_properties(PROPERTIES FOLDER DemoApps)
+
 IF((IS_PLATFORM_FT9XX) OR (IS_PLATFORM_RP2040))
   LINK_LIBRARIES(fatfs)
   INCLUDE_DIRECTORIES("../common/application/fatfs/source")
