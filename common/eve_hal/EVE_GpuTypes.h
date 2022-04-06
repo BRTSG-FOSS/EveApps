@@ -92,6 +92,17 @@ typedef enum EVE_81X_PLL_FREQ_T
 } EVE_81X_PLL_FREQ_T;
 
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
+typedef enum EVE_81X_ROM_AND_ADC_T
+{
+	EVE_MAIN_ROM = 0x80, // main graphicas ROM used
+	EVE_RCOSATAN_ROM = 0x40, // line slope table used for
+	EVE_SAMPLE_ROM = 0x20, // JA samples
+	EVE_JABOOT_ROM = 0x10, // JA microcode
+	EVE_J1BOOT_ROM = 0x08, // J1 microcode
+	EVE_ADC = 0x01,
+	EVE_POWER_ON_ROM_AND_ADC = 0x00, // specify this element to power on all ROMs and ADCs
+} EVE_81X_ROM_AND_ADC_T;
+
 typedef enum EVE_81X_GPIO_DRIVE_STRENGTH_T
 {
 	EVE_5MA = 0x00, //default current
