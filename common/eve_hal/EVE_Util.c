@@ -91,7 +91,7 @@ static const char *s_HostDisplayNames[EVE_HOST_NB] = {
 	"Embedded",
 };
 
-#define EVE_SELECT_CHIP_NB 10
+#define EVE_SELECT_CHIP_NB 14
 
 /* Interactive emulator chip selection */
 static const char *s_SelectChipName[EVE_SELECT_CHIP_NB] = {
@@ -101,6 +101,10 @@ static const char *s_SelectChipName[EVE_SELECT_CHIP_NB] = {
 	"FT811",
 	"FT812",
 	"FT813",
+	"BT880",
+	"BT881",
+	"BT882",
+	"BT883",
 	"BT815",
 	"BT816",
 	"BT817",
@@ -114,6 +118,10 @@ static EVE_CHIPID_T s_SelectChipId[EVE_SELECT_CHIP_NB] = {
 	EVE_FT811,
 	EVE_FT812,
 	EVE_FT813,
+	EVE_BT880,
+	EVE_BT881,
+	EVE_BT882,
+	EVE_BT883,
 	EVE_BT815,
 	EVE_BT816,
 	EVE_BT817,
@@ -472,13 +480,26 @@ static bool configDefaultsEx(EVE_HalContext *phost, EVE_ConfigParameters *config
 	eve_assert(config->VCycle > config->Height);
 	eve_assert((config->VCycle - config->Height) > config->VOffset);
 
+#if (EVE_SUPPORT_CHIPID > EVE_BT815)
+	config->AdaptiveFrameRate = 0;
+#endif
+
+#if (EVE_SUPPORT_CHIPID > EVE_BT817)
+	config->AhHCycleMax = 0;
+	config->PCLK2X = 0;
+#endif
+	
 	/* Other options */
 	/* Toggle CSpread if you see red and blue fringing on black and white edges */
 	config->CSpread = 0; /* non-default */
 	/* Change this if RGB colors are swapped */
 	config->Swizzle = 0;
 
-	if (EVE_CHIPID >= EVE_FT812)
+	if (EVE_CHIPID == EVE_FT812
+		|| EVE_CHIPID == EVE_FT813
+		|| EVE_CHIPID == EVE_BT882
+		|| EVE_CHIPID == EVE_BT883
+		|| EVE_CHIPID >= EVE_BT815)
 	{
 		config->Dither = 0;
 		config->OutBitsR = 8;
@@ -731,7 +752,7 @@ EVE_HAL_EXPORT void EVE_Util_configDefaults(EVE_HalContext *phost, EVE_ConfigPar
 	eve_printf_debug("Display refresh rate set to %f\n", (float)((double)freq / ((double)config->HCycle * (double)config->VCycle * (double)config->PCLK)));
 }
 
-#define EXTRACT_CHIPID(romChipId) ((((romChipId) >> 8) & 0xFF) | (((romChipId) & (0xFF)) << 8))
+#define EXTRACT_CHIPID(romChipId) EVE_extendedChipId((((romChipId) >> 8) & 0xFF) | (((romChipId) & (0xFF)) << 8))
 
 EVE_HAL_EXPORT bool EVE_Util_bootup(EVE_HalContext *phost, EVE_BootupParameters *bootup)
 {
@@ -808,13 +829,15 @@ EVE_HAL_EXPORT bool EVE_Util_bootup(EVE_HalContext *phost, EVE_BootupParameters 
 	/* ROM_CHIPID is valid across all EVE devices */
 	if (expectedChipId && EXTRACT_CHIPID(chipId) != expectedChipId)
 		eve_printf_debug("Mismatching EVE chip id %lx, expect model %lx\n", ((chipId >> 8) & 0xFF) | ((chipId & 0xFF) << 8), expectedChipId);
-	eve_printf_debug("EVE chip id %lx %lx.%lx\n", EXTRACT_CHIPID(chipId), ((chipId >> 16) & 0xFF), ((chipId >> 24) & 0xFF));
+	eve_printf_debug("EVE chip id %lx %lx.%lx (gen %i)\n", EVE_shortChipId(EXTRACT_CHIPID(chipId)), ((chipId >> 16) & 0xFF), ((chipId >> 24) & 0xFF), EVE_gen(EXTRACT_CHIPID(chipId)));
 
 	/* Switch to the proper chip ID if applicable */
 #ifdef EVE_MULTI_GRAPHICS_TARGET
 	phost->ChipId = EXTRACT_CHIPID(chipId);
 	if (phost->ChipId >= EVE_BT815)
 		phost->GpuDefs = &EVE_GpuDefs_BT81X;
+	else if (phost->ChipId >= EVE_BT880)
+		phost->GpuDefs = &EVE_GpuDefs_BT88X;
 	else if (phost->ChipId >= EVE_FT810)
 		phost->GpuDefs = &EVE_GpuDefs_FT81X;
 	else if (phost->ChipId >= EVE_FT800)
@@ -1069,10 +1092,20 @@ EVE_HAL_EXPORT bool EVE_Util_config(EVE_HalContext *phost, EVE_ConfigParameters 
 	}
 #endif
 
-	/* 
-	TODO:
-	EVE_Hal_wr16(phost, REG_ADAPTIVE_FRAMERATE, 1);
-	*/
+#if (EVE_SUPPORT_CHIPID > EVE_BT815)
+	if (EVE_CHIPID >= EVE_BT815)
+	{
+		EVE_Hal_wr8(phost, REG_ADAPTIVE_FRAMERATE, config->AdaptiveFrameRate);
+	}
+#endif
+
+#if (EVE_SUPPORT_CHIPID > EVE_BT817)
+	if (EVE_CHIPID >= EVE_BT817)
+	{
+		EVE_Hal_wr16(phost, REG_AH_HCYCLE_MAX, config->AhHCycleMax);
+		EVE_Hal_wr8(phost, REG_PCLK_2X, config->PCLK2X);
+	}
+#endif
 
 #ifdef RESISTANCE_THRESHOLD /* TODO: From config */
 	if (EVE_Hal_isScreenResistive(phost))
@@ -1651,7 +1684,7 @@ void EVE_Util_emulatorDefaults(EVE_HalParameters *params, void *emulatorParams, 
 
 	BT8XXEMU_EmulatorParameters *pEmulatorParams = emulatorParams;
 
-	BT8XXEMU_defaults(BT8XXEMU_VERSION_API, pEmulatorParams, chipId); // TODO: should be pEmulatorParams->mode?
+	BT8XXEMU_defaults(BT8XXEMU_VERSION_API, pEmulatorParams, EVE_shortChipId(chipId)); // TODO: should be pEmulatorParams->mode?
 	pEmulatorParams->Flags &= (~BT8XXEMU_EmulatorEnableDynamicDegrade & ~BT8XXEMU_EmulatorEnableRegPwmDutyEmulation);
 
 	// TODO: emulatorParams.Log

@@ -1,7 +1,7 @@
 /*
 BT8XX Emulator Library
 Copyright (C) 2013-2016  Future Technology Devices International Ltd
-Copyright (C) 2016-2020  Bridgetek Pte Lte
+Copyright (C) 2016-2022  Bridgetek Pte Lte
 Author: Jan Boon <jan.boon@kaetemi.be>
 */
 
@@ -13,6 +13,8 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 #pragma warning(disable : 26812) // Unscoped enum
 #endif
 
+#include "bt8xxemu_inttypes.h"
+
 #ifndef EVE_TCHAR_DEFINED
 #define EVE_TCHAR_DEFINED
 #ifdef _WIN32
@@ -21,8 +23,6 @@ typedef wchar_t eve_tchar_t;
 typedef char eve_tchar_t;
 #endif
 #endif
-
-#include "bt8xxemu_inttypes.h"
 
 // API version is increased whenever BT8XXEMU_EmulatorParameters format changes or functions are modified
 #define BT8XXEMU_VERSION_API 12
@@ -90,6 +90,10 @@ typedef enum
 	BT8XXEMU_EmulatorFT811 = 0x0811,
 	BT8XXEMU_EmulatorFT812 = 0x0812,
 	BT8XXEMU_EmulatorFT813 = 0x0813,
+	BT8XXEMU_EmulatorBT880 = 0x0880,
+	BT8XXEMU_EmulatorBT881 = 0x0881,
+	BT8XXEMU_EmulatorBT882 = 0x0882,
+	BT8XXEMU_EmulatorBT883 = 0x0883,
 	BT8XXEMU_EmulatorBT815 = 0x0815,
 	BT8XXEMU_EmulatorBT816 = 0x0816,
 	BT8XXEMU_EmulatorBT817 = 0x0817,

@@ -72,16 +72,20 @@ typedef enum EVE_TRANSFER_T
 
 typedef enum EVE_CHIPID_T
 {
-	EVE_CHIPID_FT800 = 0x0800,
-	EVE_CHIPID_FT801 = 0x0801,
-	EVE_CHIPID_FT810 = 0x0810,
-	EVE_CHIPID_FT811 = 0x0811,
-	EVE_CHIPID_FT812 = 0x0812,
-	EVE_CHIPID_FT813 = 0x0813,
-	EVE_CHIPID_BT815 = 0x0815,
-	EVE_CHIPID_BT816 = 0x0816,
-	EVE_CHIPID_BT817 = 0x0817,
-	EVE_CHIPID_BT818 = 0x0818,
+	EVE_CHIPID_FT800 = EVE_FT800,
+	EVE_CHIPID_FT801 = EVE_FT801,
+	EVE_CHIPID_FT810 = EVE_FT810,
+	EVE_CHIPID_FT811 = EVE_FT811,
+	EVE_CHIPID_FT812 = EVE_FT812,
+	EVE_CHIPID_FT813 = EVE_FT813,
+	EVE_CHIPID_BT880 = EVE_BT880,
+	EVE_CHIPID_BT881 = EVE_BT881,
+	EVE_CHIPID_BT882 = EVE_BT882,
+	EVE_CHIPID_BT883 = EVE_BT883,
+	EVE_CHIPID_BT815 = EVE_BT815,
+	EVE_CHIPID_BT816 = EVE_BT816,
+	EVE_CHIPID_BT817 = EVE_BT817,
+	EVE_CHIPID_BT818 = EVE_BT818,
 } EVE_CHIPID_T;
 
 /************
@@ -120,6 +124,7 @@ typedef struct EVE_GpuDefs
 
 extern EVE_GpuDefs EVE_GpuDefs_FT80X;
 extern EVE_GpuDefs EVE_GpuDefs_FT81X;
+extern EVE_GpuDefs EVE_GpuDefs_BT88X;
 extern EVE_GpuDefs EVE_GpuDefs_BT81X;
 #endif
 
@@ -493,6 +498,51 @@ static inline bool EVE_Hal_supportVideo(EVE_HalContext *phost)
 #endif
 }
 
+static inline bool EVE_Hal_supportLargeFont(EVE_HalContext *phost)
+{
+#ifdef EVE_SUPPORT_LARGEFONT
+	return EVE_CHIPID >= EVE_FT810 // FT810 and up, except BT88X range
+		&& !(EVE_CHIPID >= EVE_BT880 && EVE_CHIPID <= EVE_BT883);
+#else
+	return false;
+#endif
+}
+
+/// Include the EVE generation in the chip ID value to simplify feature set comparisons (BT880 support)
+static inline EVE_CHIPID_T EVE_extendedChipId(int chipId)
+{
+	switch (chipId & 0xFFFF)
+	{
+	case EVE_FT800 & 0xFFFF:
+	case EVE_FT801 & 0xFFFF:
+		return (EVE_CHIPID_T)((chipId & 0xFFFF) | 0x10000);
+	case EVE_FT810 & 0xFFFF:
+	case EVE_FT811 & 0xFFFF:
+	case EVE_FT812 & 0xFFFF:
+	case EVE_FT813 & 0xFFFF:
+	case EVE_BT880 & 0xFFFF:
+	case EVE_BT881 & 0xFFFF:
+	case EVE_BT882 & 0xFFFF:
+	case EVE_BT883 & 0xFFFF:
+		return (EVE_CHIPID_T)((chipId & 0xFFFF) | 0x20000);
+	case EVE_BT815 & 0xFFFF:
+	case EVE_BT816 & 0xFFFF:
+		return (EVE_CHIPID_T)((chipId & 0xFFFF) | 0x30000);
+	case EVE_BT817 & 0xFFFF:
+	case EVE_BT818 & 0xFFFF:
+		return (EVE_CHIPID_T)((chipId & 0xFFFF) | 0x40000);
+	default:
+		break;
+	}
+	return (EVE_CHIPID_T)(chipId & 0xFFFF);
+}
+
+/// Remove EVE generation from the chip ID
+static inline int EVE_shortChipId(EVE_CHIPID_T chipId)
+{
+	return chipId & 0xFFFF;
+}
+
 static inline int EVE_gen(EVE_CHIPID_T chipId)
 {
 	switch (chipId)
@@ -504,6 +554,10 @@ static inline int EVE_gen(EVE_CHIPID_T chipId)
 	case EVE_FT811:
 	case EVE_FT812:
 	case EVE_FT813:
+	case EVE_BT880:
+	case EVE_BT881:
+	case EVE_BT882:
+	case EVE_BT883:
 		return EVE2;
 	case EVE_BT815:
 	case EVE_BT816:

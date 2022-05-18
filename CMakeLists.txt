@@ -1,7 +1,7 @@
 # CMake project ################################################################
 #
 # 1. Build for FT9XX example: Edit the FT9XX_TOOLCHAIN location path at first
-#  cd build && cmake  -G "MinGW Makefiles" -DEVE_APPS_PLATFORM=MM900EV3A -DEVE_APPS_GRAPHICS=BT817 -DEVE_APPS_DISPLAY=WXGA -DCMAKE_BUILD_TYPE=Debug ..
+#  cd build && cmake  -G "MinGW Makefiles" -DEVE_APPS_PLATFORM=MM900EV3A -DEVE_APPS_GRAPHICS=BT817 -DEVE_APPS_DISPLAY=WXGA -DCMAKE_BUILD_TYPE=Debug "-DFT9XX_TOOLCHAIN=C:\Program Files (x86)\Bridgetek\FT9xx Toolchain" ..
 #  cmake --build ./ --target DemoCircleView VERBOSE=1
 #
 # 2. Build for RP2040 example:
@@ -21,8 +21,6 @@
 #  nmake SampleApp
 #
 
-SET(FT9XX_TOOLCHAIN "Bridgetek/FT9xx\ Toolchain2.5.0" CACHE PATH "Location of FT9XX toolchain") #Any space must be prefixed with '\'
-
 CMAKE_MINIMUM_REQUIRED(VERSION 3.13 FATAL_ERROR)
 #Uncomment to see gcc stdout
 #set (CMAKE_VERBOSE_MAKEFILE ON)
@@ -33,7 +31,15 @@ ENDIF ()
 IF (POLICY CMP0015)
 	CMAKE_POLICY(SET CMP0015 NEW)
 ENDIF ()
+
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
+define_property(
+  TARGET
+  PROPERTY FOLDER
+  INHERITED
+  BRIEF_DOCS "Set the folder name."
+  FULL_DOCS  "Use to organize targets in an IDE."
+)
 
 # Ensure that we are not building in our source directories. ###################
 SET(Build_Dir_OK "TRUE")
@@ -89,12 +95,17 @@ set(LIST_GRAPHICS MULTI
                   EVE_GRAPHICS_FT811
                   EVE_GRAPHICS_FT812
                   EVE_GRAPHICS_FT813
+                  EVE_GRAPHICS_BT880
+                  EVE_GRAPHICS_BT881
+                  EVE_GRAPHICS_BT882
+                  EVE_GRAPHICS_BT883
                   EVE_GRAPHICS_BT815
                   EVE_GRAPHICS_BT816
                   EVE_GRAPHICS_BT817
                   EVE_GRAPHICS_BT818
   )
 set(LIST_PLATFORM MULTI
+                  DEFAULT
                   MM900EV1A
                   MM900EV1B
                   MM900EV2A
@@ -110,7 +121,9 @@ set(LIST_PLATFORM MULTI
                   BT8XXEMU_PLATFORM
                   RP2040_PLATFORM
   )
-set(LIST_DISPLAY  EVE_DISPLAY_QVGA
+set(LIST_DISPLAY  MULTI
+                  DEFAULT
+                  EVE_DISPLAY_QVGA
                   EVE_DISPLAY_WQVGA
                   EVE_DISPLAY_WVGA
                   EVE_DISPLAY_WSVGA
@@ -122,11 +135,12 @@ set(LIST_DISPLAY  EVE_DISPLAY_QVGA
 # Set cache ####################################################################
 SET(EVE_APPS_GRAPHICS "MULTI" CACHE STRING "Graphics Module")
 SET_PROPERTY(CACHE EVE_APPS_GRAPHICS PROPERTY STRINGS ${LIST_GRAPHICS})
- 
+
+# TODO: Set a better default here automatically when CMake is run with an embedded platform
 SET(EVE_APPS_PLATFORM "MULTI" CACHE STRING "Platform Target")
 SET_PROPERTY(CACHE EVE_APPS_PLATFORM PROPERTY STRINGS ${LIST_PLATFORM})
 
-SET(EVE_APPS_DISPLAY "EVE_DISPLAY_QVGA" CACHE STRING "Platform Target")
+SET(EVE_APPS_DISPLAY "DEFAULT" CACHE STRING "Platform Target")
 SET_PROPERTY(CACHE EVE_APPS_DISPLAY PROPERTY STRINGS ${LIST_DISPLAY})
 
 # Validate input ###############################################################
@@ -134,7 +148,7 @@ function(give_sugguest value array global_set)
   FOREACH(item ${${array}})
     STRING(REGEX MATCH ".*${value}.*" search_val "${item}")
     IF(search_val)
-      MESSAGE("Notice: ${value} is not defined, selected this similar configure: ${search_val}")
+      MESSAGE(WARNING "Notice: ${value} is not defined, selected this similar configure: ${search_val}")
       set(${global_set} "${search_val}" CACHE STRING "Graphics Module" FORCE)
       break()
     ENDIF()
@@ -152,29 +166,25 @@ function(validate_input option_name array)
     
     # if give_sugguest works ok, then value of option_name is changed, if no, stop cmake with error message
     if ("${value}" STREQUAL "${${option_name}}")
-      MESSAGE("\r\nError: ${option_name} is not set, the valid ${option_name} is: \r\n")
-      MESSAGE("${list_str}\r\n\r\n")
+      MESSAGE(WARNING "\nError: ${option_name} is not set, the valid ${option_name} is: ")
+      MESSAGE(WARNING "${list_str}\n")
       MESSAGE(FATAL_ERROR "${option_name} is not set") # stop cmake
     ENDIF()
   ENDIF()
   
-  MESSAGE("${option_name} is set to ${${option_name}}")
-  MESSAGE("Other ${option_name}'s are: ${list_str} \r\n\r\n")
+  MESSAGE(STATUS "${option_name} is set to ${${option_name}}")
+  MESSAGE(STATUS "Other ${option_name}'s are: ${list_str} \n")
 endfunction()
 
 validate_input("EVE_APPS_GRAPHICS" LIST_GRAPHICS)
 validate_input("EVE_APPS_PLATFORM" LIST_PLATFORM)
 validate_input("EVE_APPS_DISPLAY"  LIST_DISPLAY)
 
-ADD_DEFINITIONS("-D${EVE_APPS_GRAPHICS}")
-ADD_DEFINITIONS("-D${EVE_APPS_PLATFORM}")
-ADD_DEFINITIONS("-D${EVE_APPS_DISPLAY}")
-
 # Find host platform name ######################################################
 STRING(REGEX MATCH "MM90.*"                    IS_PLATFORM_FT9XX    ${EVE_APPS_PLATFORM})
 STRING(REGEX MATCH "RP2040.*"                  IS_PLATFORM_RP2040   ${EVE_APPS_PLATFORM})
 STRING(REGEX MATCH "(FT4222|MPSSE|BT8XXEMU).*" IS_PLATFORM_WINDOW   ${EVE_APPS_PLATFORM})
-STRING(REGEX MATCH "MULTI"                     IS_PLATFORM_MULTI    ${EVE_APPS_PLATFORM})
+STRING(REGEX MATCH "(MULTI|DEFAULT).*"         IS_PLATFORM_MULTI    ${EVE_APPS_PLATFORM})
 STRING(REGEX MATCH "MM900.*"                   IS_PLATFORM_FT900    ${EVE_APPS_PLATFORM})
 STRING(REGEX MATCH "MM930.*"                   IS_PLATFORM_FT930    ${EVE_APPS_PLATFORM})
 STRING(REGEX MATCH "FT4222.*"                  IS_PLATFORM_FT4222   ${EVE_APPS_PLATFORM})
@@ -200,10 +210,6 @@ mark_as_advanced(IS_PLATFORM_FT4222  )
 mark_as_advanced(IS_PLATFORM_MPSSE   )
 mark_as_advanced(IS_PLATFORM_EMULATOR)
 
-# C language version ###########################################################
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD 17)
-
 # Set up the basic build environment ###########################################
 IF (CMAKE_BUILD_TYPE STREQUAL "")
   # CMake defaults to leaving CMAKE_BUILD_TYPE empty. This messes up
@@ -221,26 +227,35 @@ IF(IS_PLATFORM_RP2040)
   pico_sdk_init()
   
 ELSEIF(IS_PLATFORM_WINDOW OR IS_PLATFORM_MULTI)
+  PROJECT("EVE_Apps" C CXX)
+  
   # Strip binary in release mode
   IF (CMAKE_COMPILER_IS_GNUCXX)
     SET(CMAKE_EXE_LINKER_FLAGS_RELEASE "-s")
   ENDIF ()
+  
+  if (IS_PLATFORM_MULTI)
+    MESSAGE(STATUS "Multi-platform desktop EVE HAL build selected (targets FT4222, MPSSE, and BT8XXEMU)")
+  endif ()
   
   SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE})
   SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
   SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
   
   IF(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    MESSAGE(STATUS "Using 64-bit Windows dependencies")
     LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/Simulation/x64)
     LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/MSVC/x64)
   ELSE()
+    MESSAGE(STATUS "Using 32-bit Windows dependencies")
     LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/Simulation/x86)
     LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/MSVC/x86)
   ENDIF()
   
-  PROJECT("EVE_Apps" C CXX ASM)
-  
 ELSEIF(IS_PLATFORM_FT9XX)
+  # TODO: Get this from the env variable if FT9XX_TOOLCHAIN is not set and the env var exists
+  SET(FT9XX_TOOLCHAIN "Bridgetek/FT9xx\ Toolchain2.5.0" CACHE PATH "Location of FT9XX toolchain") #Any space must be prefixed with '\'
+
   ADD_DEFINITIONS("-D_DEBUG=1")
   SET(CMAKE_SYSTEM_NAME Generic)
 
@@ -276,9 +291,31 @@ ELSEIF(IS_PLATFORM_FT9XX)
   SET(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
   
   PROJECT("EVE_Apps" C CXX)
-  
 
 ENDIF()
+
+# C language version ###########################################################
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+
+# Most graphics boards have a default display and platform specified in the configuration header
+# MULTI and DEFAULT behave the same, it depends on the selected graphics board
+# For embedded targets, the platforma always needs to be specified, though, since CMake needs to set the proper build options
+if(NOT EVE_APPS_GRAPHICS STREQUAL "MULTI")
+  if(NOT EVE_APPS_GRAPHICS STREQUAL "")
+    add_definitions("-D${EVE_APPS_GRAPHICS}")
+  endif()
+endif()
+if(NOT EVE_APPS_PLATFORM STREQUAL "MULTI")
+  if(NOT EVE_APPS_PLATFORM STREQUAL "DEFAULT")
+    add_definitions("-D${EVE_APPS_PLATFORM}")
+  endif()
+endif()
+if(NOT EVE_APPS_DISPLAY STREQUAL "MULTI")
+  if(NOT EVE_APPS_DISPLAY STREQUAL "DEFAULT")
+    add_definitions("-D${EVE_APPS_DISPLAY}")
+  endif()
+endif()
 
 # Set host platform build flag #################################################
 IF(IS_PLATFORM_FT900)

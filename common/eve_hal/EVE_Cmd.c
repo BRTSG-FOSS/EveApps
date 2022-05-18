@@ -479,7 +479,7 @@ static bool checkWait(EVE_HalContext *phost, uint16_t rpOrSpace)
 	if (EVE_CMD_FAULT(rpOrSpace))
 	{
 		char err[128];
-		(void)err;
+		err[0] = '\0';
 		/* Coprocessor fault */
 		phost->CmdWaiting = false;
 #if defined(_DEBUG)

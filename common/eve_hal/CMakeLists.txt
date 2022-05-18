@@ -5,6 +5,9 @@ FILE(GLOB SRCS *.c)
 FILE(GLOB HDRS *.h)
 SOURCE_GROUP("" FILES ${SRCS} ${HDRS})
 
+FILE(GLOB HDRS_EXTERNAL Hdr/*.h)
+SOURCE_GROUP("Hdr" FILES ${HDRS_EXTERNAL})
+
 INCLUDE_DIRECTORIES(Hdr)
 
 IF(WIN32 AND ((EVE_APPS_PLATFORM STREQUAL "MULTI") OR (EVE_APPS_GRAPHICS STREQUAL "MULTI")))
@@ -12,11 +15,13 @@ IF(WIN32 AND ((EVE_APPS_PLATFORM STREQUAL "MULTI") OR (EVE_APPS_GRAPHICS STREQUA
   ADD_LIBRARY(eve_hal SHARED
     ${SRCS}
     ${HDRS}
+    ${HDRS_EXTERNAL}
   )
 ELSE()
   ADD_LIBRARY(eve_hal
     ${SRCS}
     ${HDRS}
+    ${HDRS_EXTERNAL}
   )
 ENDIF()
 
@@ -53,43 +58,43 @@ IF (WIN32)
     ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD 
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/MSVC/x64/libMPSSE.dll
-      ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/libMPSSE.dll)
+      ${CMAKE_BINARY_DIR}/bin/$<CONFIG>/libMPSSE.dll)
     ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD 
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/MSVC/x64/LibFT4222-64.dll
-      ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/LibFT4222-64.dll)
+      ${CMAKE_BINARY_DIR}/bin/$<CONFIG>/LibFT4222-64.dll)
     ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD 
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/MSVC/x64/ftd2xx.dll
-      ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/ftd2xx.dll)
+      ${CMAKE_BINARY_DIR}/bin/$<CONFIG>/ftd2xx.dll)
     ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD 
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/Simulation/x64/bt8xxemu.dll
-      ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/bt8xxemu.dll)
+      ${CMAKE_BINARY_DIR}/bin/$<CONFIG>/bt8xxemu.dll)
     ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD 
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/Simulation/x64/mx25lemu.dll
-      ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/mx25lemu.dll)
+      ${CMAKE_BINARY_DIR}/bin/$<CONFIG>/mx25lemu.dll)
   ELSE()
     ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD 
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/MSVC/x86/libMPSSE.dll
-      ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/libMPSSE.dll)
+      ${CMAKE_BINARY_DIR}/bin/$<CONFIG>/libMPSSE.dll)
     ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD 
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/MSVC/x86/LibFT4222.dll
-      ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/LibFT4222.dll)
+      ${CMAKE_BINARY_DIR}/bin/$<CONFIG>/LibFT4222.dll)
     ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD 
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/MSVC/x86/ftd2xx.dll
-      ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/ftd2xx.dll)
+      ${CMAKE_BINARY_DIR}/bin/$<CONFIG>/ftd2xx.dll)
     ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD 
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/Simulation/x86/bt8xxemu.dll
-      ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/bt8xxemu.dll)
+      ${CMAKE_BINARY_DIR}/bin/$<CONFIG>/bt8xxemu.dll)
     ADD_CUSTOM_COMMAND(TARGET eve_hal POST_BUILD 
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
       ${CMAKE_SOURCE_DIR}/common/eve_hal/Bin/Simulation/x86/mx25lemu.dll
-      ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/mx25lemu.dll)
+      ${CMAKE_BINARY_DIR}/bin/$<CONFIG>/mx25lemu.dll)
   ENDIF()
 ENDIF()

@@ -75,9 +75,15 @@ typedef struct EVE_ConfigParameters
 	uint8_t OutBitsB;
 	uint16_t PCLKFreq;
 	bool Dither;
-	/* TODO: 
-	AdaptiveFramerate
-	*/
+
+#if (EVE_SUPPORT_CHIPID > EVE_BT815)
+	uint8_t AdaptiveFrameRate;
+#endif
+
+#if (EVE_SUPPORT_CHIPID > EVE_BT817)
+	int16_t AhHCycleMax;
+	uint8_t PCLK2X;
+#endif
 
 #ifdef EVE_SUPPORT_HSF
 	/* Physical horizontal pixels. Set to 0 to disable HSF. */

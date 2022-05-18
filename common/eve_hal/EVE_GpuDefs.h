@@ -36,7 +36,7 @@ Defines EVE hardware values.
 This header is separated and included last 
 in case of conflicts with other libraries.
 
-Expects BT_81XA_ENABLE, BT_81X_ENABLE, FT_81X_ENABLE, or FT_80X_ENABLE
+Expects BT_81XA_ENABLE, BT_81X_ENABLE, BT_88X_ENABLE, FT_81X_ENABLE, or FT_80X_ENABLE
 to be defined. If not, multi target compilation is assumed.
 
 */
@@ -52,6 +52,7 @@ to be defined. If not, multi target compilation is assumed.
 #if !defined(EVE_MULTI_GRAPHICS_TARGET) \
     && !defined(FT_80X_ENABLE) \
     && !defined(FT_81X_ENABLE) \
+    && !defined(BT_88X_ENABLE) \
     && !defined(BT_81X_ENABLE) \
     && !defined(BT_81XA_ENABLE)
 #define EVE_MULTI_GRAPHICS_TARGET
@@ -105,6 +106,16 @@ to be defined. If not, multi target compilation is assumed.
 
 #if defined(FT_81X_ENABLE) || defined(BT_81X_ENABLE) || defined(BT_81XA_ENABLE)
 
+#define RAM_G_SIZE (1024 * 1024L)
+
+#elif defined(FT_80X_ENABLE) || defined(BT_88X_ENABLE)
+
+#define RAM_G_SIZE (256 * 1024L)
+
+#endif
+
+#if defined(FT_81X_ENABLE) || defined(BT_88X_ENABLE) || defined(BT_81X_ENABLE) || defined(BT_81XA_ENABLE)
+
 #define EVE_HAL_REG_ID 3153920UL
 #define EVE_HAL_REG_CPURESET 3153952UL
 #define EVE_HAL_REG_J1_INT 3154084UL
@@ -120,7 +131,6 @@ to be defined. If not, multi target compilation is assumed.
 #define RAM_DL 3145728UL
 #define ROMFONT_TABLEADDRESS 3145724UL
 
-#define RAM_G_SIZE (1024 * 1024L)
 #define LOW_FREQ_BOUND 58800000L //98% of 60Mhz
 
 #define SCISSOR_XY_SHIFT 11
@@ -134,7 +144,7 @@ to be defined. If not, multi target compilation is assumed.
 
 #define BITMAP_ADDR_MASK 16777215UL
 
-#elif defined(FT_81X_ENABLE)
+#elif defined(FT_81X_ENABLE) || defined(BT_88X_ENABLE)
 
 #define BITMAP_ADDR_MASK 4194303UL
 
@@ -155,7 +165,6 @@ to be defined. If not, multi target compilation is assumed.
 #define RAM_DL 1048576UL
 #define ROMFONT_TABLEADDRESS 1048572UL
 
-#define RAM_G_SIZE (256 * 1024L)
 #define LOW_FREQ_BOUND 47040000L // 98% of 48Mhz
 
 #define BITMAP_ADDR_MASK 1048575UL
@@ -455,7 +464,7 @@ to be defined. If not, multi target compilation is assumed.
 #endif
 
 // FT810
-#if defined(FT_81X_ENABLE) || defined(BT_81X_ENABLE) || defined(BT_81XA_ENABLE) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if defined(FT_81X_ENABLE) || defined(BT_88X_ENABLE) || defined(BT_81X_ENABLE) || defined(BT_81XA_ENABLE) || defined(EVE_MULTI_GRAPHICS_TARGET)
 #define CMD_SETROTATE        4294967094UL
 #define CMD_SNAPSHOT2        4294967095UL
 #define CMD_SETBASE          4294967096UL
