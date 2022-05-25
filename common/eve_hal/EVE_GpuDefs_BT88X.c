@@ -29,62 +29,20 @@
 * has no liability in relation to those amendments.
 */
 
-#ifndef EVE_PLATFORM_WIN32__H
-#define EVE_PLATFORM_WIN32__H
-
 #include "EVE_Config.h"
-#if defined(_WIN32)
+#ifdef EVE_MULTI_GRAPHICS_TARGET
+#include "EVE_HalDefs.h"
 
-/* Disable legacy C functions under TCC */
-#ifndef NO_OLDNAMES
-#define NO_OLDNAMES
-#endif
+#undef EVE_MULTI_GRAPHICS_TARGET
+#undef EVE_SUPPORT_CHIPID
+#define BT_88X_ENABLE
+#include "EVE_GpuDefs.h"
 
-/* Sane options for Windows header */
-#ifndef NOMINMAX
-#define EVE_NOMINMAX
-#define NOMINMAX
-#endif
-#if !defined(NTDDI_VERSION) && !defined(_WIN32_WINNT) && !defined(WINVER)
-#define NTDDI_VERSION 0x06000000 /* NTDDI_VISTA */
-#define _WIN32_WINNT 0x0600 /* _WIN32_WINNT_VISTA */
-#define WINVER 0x0600 /* _WIN32_WINNT_VISTA */
-#endif
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-#ifndef MICROSOFT_WINDOWS_WINBASE_H_DEFINE_INTERLOCKED_CPLUSPLUS_OVERLOADS
-#define MICROSOFT_WINDOWS_WINBASE_H_DEFINE_INTERLOCKED_CPLUSPLUS_OVERLOADS 0 // FIX C5105
-#endif
+EVE_GpuDefs EVE_GpuDefs_BT88X = {
+	EVE_GPUDEFS_IMPLEMENT
 
-/* C library inclusions */
-#ifdef POINTS
-#pragma message(__FILE__ "(" EVE_CONFIG_STR(__LINE__) "): error WINPOINTS: Invalid include order, " \
-                                                      "this header must be included before EVE_GpuDefs.h")
-#endif
-#define POINTS WINPOINTS
-#include <Windows.h>
-#undef POINTS
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-
-#include <string.h>
-
-#define _USE_MATH_DEFINES 1
-#include <math.h>
-
-#include <direct.h>
-#include <time.h>
-#include <io.h>
-
-#ifdef EVE_NOMINMAX
-#undef EVE_NOMINMAX
-#undef NOMINMAX
-#endif
+};
 
 #endif
-#endif /* #ifndef EVE_PLATFORM_WIN32__H */
 
 /* end of file */
