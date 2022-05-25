@@ -172,7 +172,7 @@ ESD_CORE_EXPORT void Esd_Render_MultiGradient_Rounded(int16_t x, int16_t y, int1
 	EVE_CoDl_blendFunc_default(Esd_Host);
 }
 
-ESD_CORE_EXPORT void Esd_Render_RectF_Grad(esd_int32_f4_t x, esd_int32_f4_t y, esd_int32_f4_t w, esd_int32_f4_t h, esd_argb32_t color1, esd_argb32_t color2, int16_t direction)
+ESD_CORE_EXPORT void Esd_Render_RectF_Grad(esd_int32_f4_t x, esd_int32_f4_t y, esd_int32_f4_t w, esd_int32_f4_t h, esd_argb32_t color1, esd_argb32_t color2, int16_t direction, uint8_t style)
 {
 
 	EVE_HalContext *phost = Esd_GetHost();
@@ -181,6 +181,10 @@ ESD_CORE_EXPORT void Esd_Render_RectF_Grad(esd_int32_f4_t x, esd_int32_f4_t y, e
 	int16_t y0 = y >> 4;
 	int16_t w1 = w >> 4;
 	int16_t h1 = h >> 4;
+
+	// Don't render empty
+	if (w1 == 0 || h1 == 0)
+		return;
 
 	// FIXME: Use rect for parameters
 	Esd_Rect16 rect = {
@@ -202,25 +206,61 @@ ESD_CORE_EXPORT void Esd_Render_RectF_Grad(esd_int32_f4_t x, esd_int32_f4_t y, e
 
 	eve_scope
 	{
-		double radius = direction * M_PI / 180.0f;
-		double sine = sin(radius), cosine = cos(radius);
 		int16_t x1 = x0 + (w1 >> 1);
 		int16_t y1 = y0 + (h1 >> 1);
-		int32_t wwhh = (int32_t)w1 * w1 + (int32_t)h1 * h1;
-		int16_t l = (int16_t)(sqrt((double)wwhh * 0.8)); // use 80% to apply gradient effect
-		int16_t half = l >> 1;
-		int16_t dy = (int16_t)(half * sine);
-		int16_t dx = (int16_t)(half * cosine);
+		int16_t dx, dy = 0;
+		double radius, sine, cosine = 0;
+
+		if (style == ESD_PERPENDICULAR_STYLE_OFF)
+		{
+			//printf("ESD_PERPENDICULAR_STYLE_OFF\n");
+			radius = direction * M_PI / 180.0f;
+			sine = sin(radius), cosine = cos(radius);
+
+			int32_t wwhh = (int32_t)w1 * w1 + (int32_t)h1 * h1;
+			int16_t l = (int16_t)(sqrt((double)wwhh * 0.8)); // use 80% to apply gradient effect
+			int16_t half = l >> 1;
+			dy = (int16_t)(half * sine);
+			dx = (int16_t)(half * cosine);
+		}
+		else
+		{
+			//printf("ESD_PERPENDICULAR_STYLE_ON\n");
+			switch (style)
+			{
+			case ESD_PERPENDICULAR_STYLE_0:
+				direction = 0;
+				break;
+			case ESD_PERPENDICULAR_STYLE_90:
+				direction = 90;
+				break;
+			case ESD_PERPENDICULAR_STYLE_180:
+				direction = 180;
+				break;
+			case ESD_PERPENDICULAR_STYLE_270:
+				direction = 270;
+				break;
+			default:
+				direction = 0;
+				break;
+			}
+
+			radius = direction * M_PI / 180.0f;
+			sine = sin(radius), cosine = cos(radius);
+
+			dx = (int16_t)(0.4 * w1 * cosine);
+			dy = (int16_t)(0.4 * h1 * sine);
+		}
 
 		Esd_Rect16 s = Esd_Scissor_Set(rect);
-		EVE_CoCmd_gradient(phost, x1 - dx, y1 - dy, color1, x1 + dx, y1 + dy, color2);
+		EVE_CoCmd_gradient(phost, x1 - dx, y1 - dy, color1, x1 + dx, y1 + dy, color2); // original
 		Esd_Scissor_Reset(s);
 	}
 }
 
-ESD_CORE_EXPORT void Esd_Render_Rect_Grad(int32_t x, int32_t y, esd_int32_f4_t w, esd_int32_f4_t h, esd_argb32_t color1, esd_argb32_t color2, int16_t direction)
+ESD_CORE_EXPORT void Esd_Render_Rect_Grad(int32_t x, int32_t y, esd_int32_f4_t w, esd_int32_f4_t h, esd_argb32_t color1, esd_argb32_t color2, int16_t direction, uint8_t style)
 {
-	Esd_Render_RectF_Grad(x << 4, y << 4, w << 4, h << 4, color1, color2, direction);
+	Esd_Render_RectF_Grad(x << 4, y << 4, w << 4, h << 4, color1, color2, direction, style);
 }
 
 /* end of file */

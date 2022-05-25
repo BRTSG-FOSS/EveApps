@@ -182,6 +182,9 @@ typedef uint32_t esd_rgb32_t;
 ESD_TYPE(esd_classid_t, Native = UInt32, Edit = Library)
 typedef uint32_t esd_classid_t;
 
+ESD_TYPE(cstring, Native = CString, Edit = String)
+typedef const char *cstring;
+
 #ifdef ESD_EXTERN_LIBARY
 #ifdef ESD_CORE_EXPORT
 #undef ESD_CORE_EXPORT

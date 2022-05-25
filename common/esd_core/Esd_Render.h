@@ -22,6 +22,7 @@ ESD_CATEGORY(EsdElements, DisplayName = "Elements", Category = EsdRenderable)
 ESD_CATEGORY(EsdPrimitives, DisplayName = "Primitives", Category = EsdRenderable)
 
 ESD_CATEGORY(EsdBasicWidgets, DisplayName = "Basics", Category = EsdWidgets)
+ESD_CATEGORY(EsdWebStyleWidgets, DisplayName = "Webstyle", Category = EsdWidgets)
 
 // A function to combine RGB channel with 8 bit Alpha channel data into 32 bit integer data
 ESD_FUNCTION(ESD_COMPOSE_RGB_ALPHA, Type = esd_argb32_t, DisplayName = "Color A+RGB Combine", Category = EsdUtilities, Macro, Include = "Esd_Core.h")
@@ -239,6 +240,14 @@ ESD_ENUM(Esd_Stroke, Type = uint8_t, Include = "Esd_Core.h")
 #define ESD_STROKE_INNER (1)
 #define ESD_STROKE_OUTER (2)
 #define ESD_STROKE_CENTER (3)
+ESD_END()
+
+ESD_ENUM(Esd_PerpendicularGradientStyle, Type = ft_uint8_t, Include = "Esd_Core.h")
+#define ESD_PERPENDICULAR_STYLE_OFF (0)
+#define ESD_PERPENDICULAR_STYLE_0 (1)
+#define ESD_PERPENDICULAR_STYLE_90 (2)
+#define ESD_PERPENDICULAR_STYLE_180 (3)
+#define ESD_PERPENDICULAR_STYLE_270 (4)
 ESD_END()
 
 #ifdef __cplusplus
