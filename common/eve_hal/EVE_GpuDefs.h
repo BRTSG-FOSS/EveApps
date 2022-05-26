@@ -576,11 +576,7 @@ to be defined. If not, multi target compilation is assumed.
 #define COLOR_MASK(r, g, b, a) ((32UL << 24) | (((r)&1UL) << 3) | (((g)&1UL) << 2) | (((b)&1UL) << 1) | (((a)&1UL) << 0))
 #define CLEAR(c, s, t) ((38UL << 24) | (((c)&1UL) << 2) | (((s)&1UL) << 1) | (((t)&1UL) << 0))
 #define VERTEX_FORMAT(frac) ((39UL << 24) | (((frac)&7UL) << 0))
-#if defined(BT_81XA_ENABLE) || defined(EVE_MULTI_GRAPHICS_TARGET)
-#define BITMAP_LAYOUT_H(linestride, height) ((40UL << 24) | (((linestride)&7UL) << 2) | (((height)&3UL) << 0))
-#else
 #define BITMAP_LAYOUT_H(linestride, height) ((40UL << 24) | (((linestride)&3UL) << 2) | (((height)&3UL) << 0))
-#endif
 #define BITMAP_SIZE_H(width, height) ((41UL << 24) | (((width)&3UL) << 2) | (((height)&3UL) << 0))
 #define PALETTE_SOURCE(addr) ((42UL << 24) | (((addr)&4194303UL) << 0))
 #define VERTEX_TRANSLATE_X(x) ((43UL << 24) | (((x)&131071UL) << 0))

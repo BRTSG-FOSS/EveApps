@@ -119,6 +119,7 @@ ESD_TARGET_GRAPHICS(EVE_GRAPHICS_VM816C, DisplayName = "VM816C", IntegratedFlash
 ESD_TARGET_GRAPHICS(EVE_GRAPHICS_ME817EV, DisplayName = "ME817EV", IntegratedFlash = "W25Q128", SupportedTouch = "\b\w+FOCAL\w*\b|\b\w+GOODIX\w*\b", LibraryTargets = "\b(BT81X|BT818)\b", FirmwareFolder = "BT817")
 
 ESD_TARGET_GRAPHICS(EVE_GRAPHICS_GD3X_DAZZLER, DisplayName = "GD3X Dazzler", IntegratedDisplay = "HDMI 720p (1280x720)", IntegratedFlash = "W25Q64", SupportedTouch = "\b\w+DISABLED\w*\b", LibraryTargets = "\b(BT81X|BT815)\b", FirmwareFolder = "BT815")
+ESD_TARGET_GRAPHICS(EVE_GRAPHICS_IDM2040, DisplayName = "IDM2040", IntegratedFlash = "W25Q128", SupportedTouch = "\b\w+FOCAL\w*\b|\b\w+GOODIX\w*\b", IntegratedPlatform = "IDM2040EV", LibraryTargets = "\b(BT81X|BT818)\b", FirmwareFolder = "BT817")
 
 // ESD_TARGET_GRAPHICS(EVE_GRAPHICS_FT800, DisplayName = "FT800 (Generic)", SupportedDisplays = "\b\w+(QVGA|HVGA|AT043B35)\w*\b", SupportedTouch = "\b\w+RESISTIVE\w*\b", LibraryTargets="\b(FT80X|FT800)\b")
 // ESD_TARGET_GRAPHICS(EVE_GRAPHICS_FT801, DisplayName = "FT801 (Generic)", SupportedDisplays = "\b\w+(QVGA|HVGA|AT043B35)\w*\b", SupportedTouch = "\b\w+FOCAL\w*\b", LibraryTargets="\b(FT80X|FT801)\b")
@@ -153,6 +154,7 @@ ESD_TARGET_PLATFORM(MM900EV_LITE, DisplayName = "MM900EV-Lite", SupportedArchite
 ESD_TARGET_PLATFORM(EVE_PLATFORM_FT4222, DisplayName = "FT4222", Icon = ":/icons/terminal.png", SupportedArchitectures = "\bFT4222\b")
 ESD_TARGET_PLATFORM(EVE_PLATFORM_MPSSE, DisplayName = "MPSSE", Icon = ":/icons/terminal.png", SupportedArchitectures = "\bMPSSE\b")
 ESD_TARGET_PLATFORM(EVE_PLATFORM_RP2040, DisplayName = "Rapberry Pi Pico", SupportedArchitectures = "\bPICO\b")
+ESD_TARGET_PLATFORM(MM2040EV, DisplayName = "MM2040EV", SupportedArchitectures = "\bPICO\b")
 
 ESD_TARGET_FLASH(EVE_FLASH_W25Q16, DisplayName = "W25Q16")
 ESD_TARGET_FLASH(EVE_FLASH_W25Q32, DisplayName = "W25Q32")
@@ -307,7 +309,9 @@ Validate the configured options.
     || defined(EVE_GRAPHICS_BT880) || defined(EVE_GRAPHICS_BT881)    \
     || defined(EVE_GRAPHICS_BT882) || defined(EVE_GRAPHICS_BT883)    \
     || defined(EVE_GRAPHICS_BT815) || defined(EVE_GRAPHICS_BT816)    \
-    || defined(EVE_GRAPHICS_BT817) || defined(EVE_GRAPHICS_BT818)
+    || defined(EVE_GRAPHICS_BT817) || defined(EVE_GRAPHICS_BT818)    \
+    || defined(EVE_GRAPHICS_GD3X_DAZZLER)                            \
+    || defined(EVE_GRAPHICS_IDM2040)
 #define EVE_GRAPHICS_AVAILABLE
 #endif
 
@@ -325,7 +329,8 @@ Validate the configured options.
     || defined(MM900EV_LITE) || defined(MM930MINI)                 \
     || defined(MM930LITE) || defined(MM932LC)                      \
     || defined(EVE_PLATFORM_FT4222) || defined(EVE_PLATFORM_MPSSE) \
-    || defined(EVE_PLATFORM_RP2040)
+    || defined(EVE_PLATFORM_RP2040)                                \
+    || defined(MM2040EV)
 #define EVE_PLATFORM_AVAILABLE
 #endif
 
@@ -788,6 +793,36 @@ It may also set platform, display, and flash values if none are configured.
 #ifndef EVE_TOUCH_AVAILABLE
 #define EVE_TOUCH_AVAILABLE
 #define EVE_TOUCH_DISABLED
+#endif
+
+#elif defined(EVE_GRAPHICS_IDM2040)
+
+#define BT817_ENABLE
+#define ENABLE_SPI_QUAD
+#define EVE_USE_INTERNAL_OSC
+
+#ifndef EVE_DISPLAY_AVAILABLE
+#define EVE_DISPLAY_AVAILABLE
+#define DISPLAY_RESOLUTION_WVGA
+#endif
+
+#if !defined(EVE_PLATFORM_AVAILABLE) && !defined(EVE_MULTI_PLATFORM_TARGET)
+#define EVE_PLATFORM_AVAILABLE
+#define EVE_PLATFORM_RP2040
+#endif
+
+#ifndef EVE_FLASH_AVAILABLE
+#define EVE_FLASH_AVAILABLE
+#define EVE_FLASH_W25Q128
+#endif
+
+#ifndef EVE_TOUCH_AVAILABLE
+#define EVE_TOUCH_AVAILABLE
+#ifdef DISPLAY_RESOLUTION_WXGA
+#define EVE_TOUCH_GOODIX
+#else
+#define EVE_TOUCH_FOCAL
+#endif
 #endif
 
 #elif defined(PANL35)
@@ -1282,7 +1317,7 @@ These may only be set by one of the platform target definitions, and should not 
 #elif defined(EVE_PLATFORM_MPSSE)
 #define MPSSE_PLATFORM
 
-#elif defined(EVE_PLATFORM_RP2040)
+#elif defined(EVE_PLATFORM_RP2040) || defined(MM2040EV)
 #define RP2040_PLATFORM
 
 #endif

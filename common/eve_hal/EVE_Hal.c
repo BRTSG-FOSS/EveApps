@@ -460,7 +460,7 @@ EVE_HAL_EXPORT void EVE_Host_resetRemoval(EVE_HalContext *phost)
  * @param str Error message to show
  * @param size Size of the message
  */
-void EVE_Hal_displayMessage(EVE_HalContext *phost, char *str, uint16_t size)
+void EVE_Hal_displayMessage(EVE_HalContext *phost, const char *str, uint16_t size)
 {
 	uint32_t round = ((size + 31U) & ~31U);
 	uint32_t addr = RAM_G + RAM_G_SIZE - round;

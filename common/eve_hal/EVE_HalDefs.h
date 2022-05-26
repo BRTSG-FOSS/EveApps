@@ -629,7 +629,7 @@ EVE_HAL_EXPORT void EVE_Host_resetRemoval(EVE_HalContext *phost);
 
 /* Display a fullscreen debug message using TEXT8X8.
 Uses the back of RAM_G. */
-EVE_HAL_EXPORT void EVE_Hal_displayMessage(EVE_HalContext *phost, char *str, uint16_t size);
+EVE_HAL_EXPORT void EVE_Hal_displayMessage(EVE_HalContext *phost, const char *str, uint16_t size);
 
 /* Display a fullscreen debug message using TEXT8X8.
 Uses the back of RAM_G. */
