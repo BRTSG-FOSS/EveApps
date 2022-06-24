@@ -68,6 +68,11 @@ to be defined. If not, multi target compilation is assumed.
 
 #define EVE_CMD_FAULT(rp) (rp & 0x3)
 
+#define EVE_FLASH_WRITE_ALIGN (256)
+#define EVE_FLASH_UPDATE_ALIGN (4096)
+#define EVE_FLASH_READ_ALIGN (64)
+#define EVE_FLASH_FIRMWARE_SIZE (4096)
+
 /**************
 ** Addresses **
 **************/

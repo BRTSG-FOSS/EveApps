@@ -384,8 +384,54 @@ bool EVE_Util_loadCmdFile(EVE_HalContext *phost, const char *filename, uint32_t 
 #endif
 }
 
+size_t EVE_Util_readFile(EVE_HalContext *phost, uint8_t *buffer, size_t size, const char *filename)
+{
+	// Read up to `size` number of bytes from the file into `buffer`, then return the number of read bytes
+#if EVE_ENABLE_FATFS
+	FRESULT fResult;
+	FIL InfSrc;
+
+	if (!s_FatFSLoaded)
+	{
+		eve_printf_debug("SD card not ready\n");
+		return false;
+	}
+
+	fResult = f_open(&InfSrc, filename, FA_READ | FA_OPEN_EXISTING);
+	if (fResult == FR_DISK_ERR)
+	{
+		eve_printf_debug("Re-mount SD card\n");
+		s_FatFSLoaded = false;
+#ifndef RP2040_PLATFORM
+		sdhost_init();
+#else
+		sd_init_card();
+#endif
+		EVE_Util_loadSdCard(phost);
+		fResult = f_open(&InfSrc, filename, FA_READ | FA_OPEN_EXISTING);
+	}
+	if (fResult == FR_OK)
+	{
+		size_t read;
+		fResult = f_read(&InfSrc, buffer, size, &read);
+		f_close(&InfSrc);
+		return read;
+	}
+	else
+	{
+		eve_printf_debug("Unable to open file: \"%s\"\n", filename);
+		return 0;
+	}
+	
+#else
+	eve_printf_debug("No filesystem support, cannot open: \"%s\"\n", filename);
+	return 0;
+#endif
+}
+
 bool EVE_Util_loadMediaFile(EVE_HalContext *phost, const char *filename, uint32_t *transfered)
 {
+
 #if EVE_ENABLE_FATFS && defined(EVE_SUPPORT_MEDIAFIFO)
 	FRESULT fResult = FR_INVALID_OBJECT;
 

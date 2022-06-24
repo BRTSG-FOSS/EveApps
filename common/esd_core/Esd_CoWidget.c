@@ -315,7 +315,7 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 	if (info->Flash)
 	{
 #ifdef EVE_FLASH_AVAILABLE
-		EVE_CoCmd_flashSource(phost, info->FlashAddress);
+		EVE_CoCmd_flashSource(phost, Esd_BitmapInfo_LoadFlashAddress(&info->FlashAddress, info->File, NULL));
 		EVE_CoCmd_videoStartF(phost);
 		EVE_CoCmd_videoFrame(phost, addr, ptr);
 		res = EVE_Cmd_waitFlush(phost);
@@ -500,7 +500,7 @@ bool Esd_CoWidget_PlayVideo(Esd_BitmapCell video, uint16_t options)
 
 	if (info->Flash)
 	{
-		return Esd_CoWidget_PlayVideoFlash(info->FlashAddress, options);
+		return Esd_CoWidget_PlayVideoFlash(Esd_BitmapInfo_LoadFlashAddress(&info->FlashAddress, info->File, NULL), options);
 	}
 	else
 	{

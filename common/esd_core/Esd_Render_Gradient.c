@@ -204,7 +204,7 @@ ESD_CORE_EXPORT void Esd_Render_RectF_Grad(esd_int32_f4_t x, esd_int32_f4_t y, e
 		return;
 	}
 
-	eve_scope
+	eve_scope()
 	{
 		int16_t x1 = x0 + (w1 >> 1);
 		int16_t y1 = y0 + (h1 >> 1);

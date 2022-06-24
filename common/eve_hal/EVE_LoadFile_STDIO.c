@@ -333,6 +333,47 @@ EVE_HAL_EXPORT bool EVE_Util_loadCmdFileW(EVE_HalContext *phost, const wchar_t *
 
 #endif
 
+#ifdef _WIN32
+static size_t readFile(EVE_HalContext *phost, uint8_t *buffer, size_t size, const char *filename, const wchar_t *filenameW)
+#else
+EVE_HAL_EXPORT size_t EVE_Util_readFile(EVE_HalContext *phost, uint8_t *buffer, size_t size, const char *filename)
+#endif
+{
+	// Read up to `size` number of bytes from the file into `buffer`, then return the number of read bytes
+	FILE *afile;
+	size_t read;
+#pragma warning(push)
+#pragma warning(disable : 4996)
+#ifdef _WIN32
+	afile = filename ? fopen(filename, "rb") : _wfopen(filenameW, L"rb");
+#else
+	afile = fopen(filename, "rb"); // read Binary (rb)
+#endif
+#pragma warning(pop)
+	if (afile == NULL)
+	{
+		eve_printf_debug("Unable to open: %s\n", filename);
+		return 0;
+	}
+	read = fread(buffer, 1, size, afile);
+	fclose(afile);
+	return read;
+}
+
+#ifdef _WIN32
+
+EVE_HAL_EXPORT size_t EVE_Util_readFile(EVE_HalContext *phost, uint8_t *buffer, size_t size, const char *filename)
+{
+	return readFile(phost, buffer, size, filename, NULL);
+}
+
+EVE_HAL_EXPORT size_t EVE_Util_readFileW(EVE_HalContext *phost, uint8_t *buffer, size_t size, const wchar_t *filename)
+{
+	return readFile(phost, buffer, size, NULL, filename);
+}
+
+#endif
+
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 #ifdef _WIN32
 static bool loadMediaFile(EVE_HalContext *phost, const char *filename, const wchar_t *filenameW, uint32_t *transfered)

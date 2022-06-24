@@ -25,7 +25,7 @@ void Esd_CoDl_Bitmap_Vertex(int16_t x, int16_t y, uint8_t handle, uint16_t cell)
 
 // NOTE: This function may only be used within a EVE_CoDl_saveContext block, because it does not clean up state, and bypasses some EVE_CoDl optimizations
 // Also EVE_CoCmd_loadIdentity must be called afterwards to fully restore the context
-void Esd_CoDl_Bitmap_Vertex_DXT1(int16_t x, int16_t y, uint8_t handle, uint8_t additional, uint16_t cell, uint16_t cells)
+void Esd_CoDl_Bitmap_Vertex_DXT1(int16_t x, int16_t y, uint8_t handle, uint8_t additional, uint8_t format, uint16_t cell, uint16_t cells)
 {
 	/* ---- */
 	/* NOTE: Partially bypassing CoDl optimizer on purpose inside a saveContext block */
@@ -33,11 +33,19 @@ void Esd_CoDl_Bitmap_Vertex_DXT1(int16_t x, int16_t y, uint8_t handle, uint8_t a
 
 	EVE_HalContext *phost = Esd_GetHost();
 	EVE_CoCmd_dl(phost, BLEND_FUNC(ONE, ZERO));
-	EVE_CoCmd_dl(phost, COLOR_A(0x55));
-	Esd_CoDl_Bitmap_Vertex(x, y, handle, cell);
-	EVE_CoCmd_dl(phost, BLEND_FUNC(ONE, ONE));
-	EVE_CoCmd_dl(phost, COLOR_A(0xAA));
-	Esd_CoDl_Bitmap_Vertex(x, y, handle, cell + cells);
+	if (format == DXT1L2)
+	{
+		EVE_CoCmd_dl(phost, COLOR_A(0xFF));
+		Esd_CoDl_Bitmap_Vertex(x, y, handle, cell);
+	}
+	else
+	{
+		EVE_CoCmd_dl(phost, COLOR_A(0x55));
+		Esd_CoDl_Bitmap_Vertex(x, y, handle, cell);
+		EVE_CoCmd_dl(phost, BLEND_FUNC(ONE, ONE));
+		EVE_CoCmd_dl(phost, COLOR_A(0xAA));
+		Esd_CoDl_Bitmap_Vertex(x, y, handle, cell + cells);
+	}
 	EVE_CoCmd_dl(phost, COLOR_MASK(1, 1, 1, 0));
 	EVE_CoCmd_scale(phost, 4UL * 65536UL, 4UL * 65536UL); // Color pass, scaled up 4x, nearest
 	EVE_CoCmd_setMatrix(phost);
@@ -117,11 +125,11 @@ ESD_CORE_EXPORT void Esd_Render_Bitmap(int16_t x, int16_t y, Esd_BitmapCell bitm
 		}
 		else
 #endif
-		    if (bitmapInfo->Format == DXT1 && ESD_BITMAPHANDLE_VALID(additional))
+		    if ((bitmapInfo->Format == DXT1 || bitmapInfo->Format == DXT1L2) && ESD_BITMAPHANDLE_VALID(additional))
 		{
 			Esd_CoDl_BitmapWidthHeight(additional, bitmapInfo->Width, bitmapInfo->Height);
 			EVE_CoDl_saveContext(phost);
-			Esd_CoDl_Bitmap_Vertex_DXT1(x, y, handle, additional, cell, bitmapInfo->Cells);
+			Esd_CoDl_Bitmap_Vertex_DXT1(x, y, handle, additional, bitmapInfo->Format, cell, bitmapInfo->Cells);
 			EVE_CoCmd_loadIdentity(Esd_Host);
 			EVE_CoDl_restoreContext(phost);
 		}
@@ -156,7 +164,7 @@ ESD_CORE_EXPORT void Esd_Render_Bitmap_Scaled(int16_t x, int16_t y, Esd_BitmapCe
 		    ? Esd_CoDl_SetupBitmap(bitmapInfo->AdditionalInfo)
 		    : ESD_BITMAPHANDLE_INVALID;
 
-		if (bitmapInfo->Format == DXT1)
+		if (bitmapInfo->Format == DXT1 || bitmapInfo->Format == DXT1L2)
 			Esd_CoDl_BitmapWidthHeight(handle, width, height);
 		else
 			Esd_CoDl_BitmapSize(handle, BILINEAR, BORDER, BORDER, width, height);
@@ -176,10 +184,10 @@ ESD_CORE_EXPORT void Esd_Render_Bitmap_Scaled(int16_t x, int16_t y, Esd_BitmapCe
 		}
 		else
 #endif
-		    if (bitmapInfo->Format == DXT1 && ESD_BITMAPHANDLE_VALID(additional))
+		    if ((bitmapInfo->Format == DXT1 || bitmapInfo->Format == DXT1L2) && ESD_BITMAPHANDLE_VALID(additional))
 		{
 			Esd_CoDl_BitmapWidthHeight(additional, width, height);
-			Esd_CoDl_Bitmap_Vertex_DXT1(x, y, handle, additional, cell, bitmapInfo->Cells);
+			Esd_CoDl_Bitmap_Vertex_DXT1(x, y, handle, additional, bitmapInfo->Format, cell, bitmapInfo->Cells);
 		}
 		else
 		{
@@ -317,7 +325,7 @@ ESD_CORE_EXPORT void Esd_Render_Bitmap_Rotate(Esd_BitmapCell bitmapCell, esd_arg
 		EVE_CoDl_begin(phost, BITMAPS);
 
 		Esd_CoDl_PagedCell(handle, cell);
-		eve_scope
+		eve_scope()
 		{
 			int dx, dy;
 			for (dx = (x - radius); dx < (x + radius); dx += TITLE_SIZE)

@@ -55,7 +55,8 @@ typedef char eve_tchar_t;
 
 #ifdef __cplusplus
 
-namespace BT8XXEMU {
+namespace BT8XXEMU
+{
 class Emulator;
 class Flash;
 }

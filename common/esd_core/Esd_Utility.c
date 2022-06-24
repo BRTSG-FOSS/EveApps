@@ -185,11 +185,17 @@ ESD_CORE_EXPORT void Esd_ProcessFree()
 {
 	void *current = Esd_CurrentContext->DeferredFree;
 	Esd_CurrentContext->DeferredFree = NULL;
+	int ret = 0;
 	while (current)
 	{
 		void *next = (*(void **)current);
 		// eve_printf_debug("Free deferred\n");
+#ifdef ESD_MEMORYPOOL_ALLOCATOR
+		ret = Esd_MemoryPool_Free(Esd_MP, current);
+		eve_printf_debug("[Esd MemoryPool] Free deferred, return value %d\n", ret);
+#else
 		free(current);
+#endif
 		current = next;
 	}
 }

@@ -179,7 +179,7 @@ extern "C" {
 
 /* Custom scope keyword (to avoid tripping the auto-formatter on scopes) */
 #ifndef eve_scope
-#define eve_scope if (true)
+#define eve_scope() if (true)
 #endif
 
 #endif /* #ifndef EVE_PLATFORM__H */

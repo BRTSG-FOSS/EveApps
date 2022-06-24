@@ -33,6 +33,7 @@
 #include "Esd_Utility.h"
 
 #include "Esd_GpuAlloc.h"
+#include "Esd_LittleFS.h"
 #include "Esd_Scissor.h"
 #include "Esd_BitmapHandle.h"
 #include "Esd_TouchTag.h"
@@ -48,6 +49,10 @@
 ESD_CORE_EXPORT Esd_Context *Esd_CurrentContext = NULL;
 ESD_CORE_EXPORT EVE_HalContext *Esd_Host = NULL; // Pointer to current s_Host
 ESD_CORE_EXPORT Esd_GpuAlloc *Esd_GAlloc = NULL; // Pointer to current s_GAlloc
+
+#ifdef ESD_MEMORYPOOL_ALLOCATOR
+ESD_CORE_EXPORT Esd_MemoryPool *Esd_MP = NULL;
+#endif
 
 //
 // External definitions
@@ -124,6 +129,10 @@ ESD_CORE_EXPORT void Esd_Defaults(Esd_Parameters *ep)
 	strcpy(ep->FlashFilePaths[ESD_FLASH_BT817], _countof(ep->FlashFilePaths[ESD_FLASH_BT817]), "__Flash.bin");
 #endif
 #endif
+#endif
+#ifdef ESD_MEMORYPOOL_ALLOCATOR
+	ep->MaxPoolMemory = 72456;
+	ep->IdealPoolMemory = 36228;
 #endif
 }
 
@@ -279,6 +288,13 @@ ESD_CORE_EXPORT bool Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 	ec->GpuAlloc.RamGSize = RAM_G_SIZE;
 	Esd_GpuAlloc_Reset(&ec->GpuAlloc);
 
+#ifdef ESD_MEMORYPOOL_ALLOCATOR
+	eve_printf_debug("[Esd MemoryPool] use user config mem allocation, config as max %d, ideal %d\n",
+	    (int)ep->MaxPoolMemory, ep->IdealPoolMemory < ep->MaxPoolMemory ? (int)ep->IdealPoolMemory : (int)ep->MaxPoolMemory);
+	Esd_MP = Esd_MemoryPool_Init(
+	    ep->MaxPoolMemory, ep->IdealPoolMemory < ep->MaxPoolMemory ? ep->IdealPoolMemory : ep->MaxPoolMemory);
+#endif
+
 	Esd_BitmapHandle_Initialize();
 
 	return true;
@@ -287,13 +303,20 @@ ESD_CORE_EXPORT bool Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 ESD_CORE_EXPORT void Esd_Close(Esd_Context *ec)
 {
 	Esd_ProcessFree();
+#ifdef ESD_LITTLEFS_FLASH
+	Esd_LittleFS_Unmount();
+#endif
 	EVE_Hal_close(&ec->HalContext);
-	memset(ec, 0, sizeof(Esd_Context));
 
+#ifdef ESD_MEMORYPOOL_ALLOCATOR
+	Esd_MemoryPool_Destroy(Esd_MP);
+	eve_printf_debug("[Esd MemoryPool] esd close, memory usage is %d\n", Esd_MemoryPool_GetTotalUsed(Esd_MP));
+#endif
+
+	memset(ec, 0, sizeof(Esd_Context));
 #ifdef ESD_SIMULATION
 	Esd_HookClose__ESD(ec);
 #endif
-
 	Esd_CurrentContext = NULL;
 	Esd_Host = NULL;
 	Esd_GAlloc = NULL;
@@ -341,7 +364,9 @@ ESD_CORE_EXPORT void Esd_Start(Esd_Context *ec)
 
 	// Initialize application
 	if (ec->Start)
+	{
 		ec->Start(ec->UserContext);
+	}
 }
 
 ESD_CORE_EXPORT void Esd_Update(Esd_Context *ec)
@@ -383,9 +408,17 @@ ESD_CORE_EXPORT void Esd_Update(Esd_Context *ec)
 	ec->Millis = ms;
 	Esd_GpuAlloc_Update(Esd_GAlloc); // Run GC
 	Esd_TouchTag_Update(NULL); // Update touch
+	if (ec->AnimationChannelsSetup)
+		ec->AnimationChannelsActive = EVE_Hal_rd32(phost, REG_ANIM_ACTIVE);
+	else
+		ec->AnimationChannelsActive = 0;
 	if (ec->Update)
 		ec->Update(ec->UserContext);
-	// Esd_Timer_UpdateGlobal(); // TODO
+		// Esd_Timer_UpdateGlobal(); // TODO
+
+#ifdef ESD_MEMORYPOOL_ALLOCATOR
+	eve_printf_debug_once("[Esd MemoryPool] esd update, memory usage is %d\n", Esd_MemoryPool_GetTotalUsed(Esd_MP));
+#endif
 
 	// Return to idle state inbetween
 	ec->LoopState = ESD_LOOPSTATE_IDLE;
@@ -469,6 +502,7 @@ ESD_CORE_EXPORT bool Esd_WaitSwap(Esd_Context *ec)
 
 	ec->SwapIdled = false;
 	EVE_Cmd_waitFlush(&ec->HalContext);
+	ec->HasReset = false;
 
 	/* Reset the coprocessor in case of fault */
 	if (ec->HalContext.CmdFault)
@@ -481,6 +515,8 @@ ESD_CORE_EXPORT bool Esd_WaitSwap(Esd_Context *ec)
 		/* TODO: Create a utility function that resets the coprocessor and all cached state */
 		EVE_Util_resetCoprocessor(&ec->HalContext);
 		Esd_BitmapHandle_Reset(&ec->HandleState);
+		ec->AnimationChannelsSetup = 0;
+		ec->HasReset = true;
 
 		return false;
 	}

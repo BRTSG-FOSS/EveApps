@@ -203,6 +203,26 @@ typedef const char *cstring;
 #endif
 #endif
 
+#ifdef ESD_MEMORYPOOL_ALLOCATOR
+#ifndef esd_malloc
+#define esd_malloc(size) Esd_MemoryPool_Alloc(Esd_MP, size)
+#endif
+#ifndef esd_free
+#define esd_free(ptr) Esd_MemoryPool_Free(Esd_MP, ptr)
+#endif
+#endif
+
+#ifndef esd_malloc
+#define esd_malloc(size) malloc(size)
+#endif
+#ifndef esd_free
+#define esd_free(ptr) free(ptr)
+#endif
+
+#ifndef esd_scope
+#define esd_scope eve_scope
+#endif
+
 ESD_TYPE(EVE_HalContext *, Native = Pointer, Edit = Library)
 
 ESD_CATEGORY(EsdUtilities, DisplayName = "ESD Utilities")

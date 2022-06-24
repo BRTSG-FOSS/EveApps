@@ -294,8 +294,8 @@ ESD_CORE_EXPORT void Esd_GpuAlloc_Update(Esd_GpuAlloc *ga)
 		for (idx = leftIdx + 1; idx < ga->NbAllocEntries; ++idx)
 		{
 			if (ga->AllocEntries[idx].Id != MAX_NUM_ALLOCATIONS
-				&& ga->AllocEntries[idx].Length <= leftSpace
-				&& (ga->AllocEntries[idx].Flags & GA_FIXED_FLAG) == 0)
+			    && ga->AllocEntries[idx].Length <= leftSpace
+			    && (ga->AllocEntries[idx].Flags & GA_FIXED_FLAG) == 0)
 			{
 				// This entry can potentially be moved
 				uint32_t space = 0;
@@ -311,7 +311,7 @@ ESD_CORE_EXPORT void Esd_GpuAlloc_Update(Esd_GpuAlloc *ga)
 
 				// Count empty space on the right
 				if (idx + 1 < MAX_NUM_ALLOCATIONS
-					&& ga->AllocEntries[idx + 1].Id == MAX_NUM_ALLOCATIONS)
+				    && ga->AllocEntries[idx + 1].Id == MAX_NUM_ALLOCATIONS)
 					space += ga->AllocEntries[idx + 1].Length;
 
 				if (space > largestSpace)
@@ -337,10 +337,9 @@ ESD_CORE_EXPORT void Esd_GpuAlloc_Update(Esd_GpuAlloc *ga)
 			uint32_t newIdx = ga->AllocRefs[newHandle.Id].Idx;
 			uint32_t newAddr = ga->AllocEntries[newIdx].Address;
 
-
 			eve_assert(ga->AllocEntries[idx].Id == handle); // Verify old allocation
-			eve_printf_debug("Defragmenting allocation %i with handle id %i and size %i bytes, leaving a free space of %i bytes. Copy %i to %i\n", 
-				(int)largestIdx, handle, size, (int)largestSpace, (int)addr, (int)newAddr);
+			eve_printf_debug("Defragmenting allocation %i with handle id %i and size %i bytes, leaving a free space of %i bytes. Copy %i to %i\n",
+			    (int)largestIdx, handle, size, (int)largestSpace, (int)addr, (int)newAddr);
 			EVE_CoCmd_memCpy(Esd_GetHost(), newAddr, addr, size);
 			if (!EVE_Cmd_waitFlush(Esd_GetHost()))
 			{

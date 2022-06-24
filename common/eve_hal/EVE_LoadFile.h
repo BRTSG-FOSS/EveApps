@@ -41,27 +41,28 @@ On embedded platforms, filename character set depends on the filesystem library.
 */
 
 #if defined(RP2040_PLATFORM)
-typedef enum {
-	SDHOST_OK = 0,				/* OK */
-	SDHOST_ERROR,				/* general error */
-	SDHOST_CARD_INSERTED,			/* card inserted */
-	SDHOST_CARD_REMOVED,			/* card removed */
-	SDHOST_INVALID_RESPONSE_TYPE,		/* invalid response */
-	SDHOST_CMD_TIMEOUT,				/* command timeout */
-	SDHOST_UNUSABLE_CARD,			/* card is unusable */
-	SDHOST_CMD2_FAILED,				/* command 2 (get CID) failed */
-	SDHOST_CMD3_FAILED,				/* command 3 (get RCA) failed */
-	SDHOST_CMD8_FAILED,				/* command 8 (voltage check) failed */
-	SDHOST_CMD9_FAILED,				/* command 9 (send CSD) failed */
-	SDHOST_CMD55_FAILED,			/* command 55 (app cmd) failed */
-	SDHOST_ACMD41_FAILED,			/* command 41 failed */
-	SDHOST_CANNOT_ENTER_TRANSFER_STATE,		/* cannot enter transfer state */
-	SDHOST_CANNOT_SET_CARD_BUS_WIDTH,		/* cannot set bus width */
-	SDHOST_RESPONSE_ERROR,			/* response error */
-	SDHOST_WRITE_ERROR,				/* read error */
-	SDHOST_READ_ERROR,				/* write error */
-	SDHOST_NOT_INITIALISED,			/* host is not initialised by driver */
-	SDHOST_CARD_NOT_INITIALISED,	/* card is not initialised by driver */
+typedef enum
+{
+	SDHOST_OK = 0, /* OK */
+	SDHOST_ERROR, /* general error */
+	SDHOST_CARD_INSERTED, /* card inserted */
+	SDHOST_CARD_REMOVED, /* card removed */
+	SDHOST_INVALID_RESPONSE_TYPE, /* invalid response */
+	SDHOST_CMD_TIMEOUT, /* command timeout */
+	SDHOST_UNUSABLE_CARD, /* card is unusable */
+	SDHOST_CMD2_FAILED, /* command 2 (get CID) failed */
+	SDHOST_CMD3_FAILED, /* command 3 (get RCA) failed */
+	SDHOST_CMD8_FAILED, /* command 8 (voltage check) failed */
+	SDHOST_CMD9_FAILED, /* command 9 (send CSD) failed */
+	SDHOST_CMD55_FAILED, /* command 55 (app cmd) failed */
+	SDHOST_ACMD41_FAILED, /* command 41 failed */
+	SDHOST_CANNOT_ENTER_TRANSFER_STATE, /* cannot enter transfer state */
+	SDHOST_CANNOT_SET_CARD_BUS_WIDTH, /* cannot set bus width */
+	SDHOST_RESPONSE_ERROR, /* response error */
+	SDHOST_WRITE_ERROR, /* read error */
+	SDHOST_READ_ERROR, /* write error */
+	SDHOST_NOT_INITIALISED, /* host is not initialised by driver */
+	SDHOST_CARD_NOT_INITIALISED, /* card is not initialised by driver */
 } SDHOST_STATUS;
 #endif
 
@@ -78,6 +79,9 @@ EVE_HAL_EXPORT bool EVE_Util_loadImageFile(EVE_HalContext *phost, uint32_t addre
 
 /* Load a file into the coprocessor FIFO */
 EVE_HAL_EXPORT bool EVE_Util_loadCmdFile(EVE_HalContext *phost, const char *filename, uint32_t *transfered);
+
+/* Read a file into a buffer, returns the number of bytes read */
+EVE_HAL_EXPORT size_t EVE_Util_readFile(EVE_HalContext *phost, uint8_t *buffer, size_t size, const char *filename);
 
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 /* Load a file into the media FIFO.
@@ -101,6 +105,9 @@ EVE_HAL_EXPORT bool EVE_Util_loadImageFileW(EVE_HalContext *phost, uint32_t addr
 
 /* Load a file into the coprocessor FIFO */
 EVE_HAL_EXPORT bool EVE_Util_loadCmdFileW(EVE_HalContext *phost, const wchar_t *filename, uint32_t *transfered);
+
+/* Read a file into a buffer, returns the number of bytes read */
+EVE_HAL_EXPORT size_t EVE_Util_readFileW(EVE_HalContext *phost, uint8_t *buffer, size_t size, const wchar_t *filename);
 
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 /* Load a file into the media FIFO.

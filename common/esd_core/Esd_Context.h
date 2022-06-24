@@ -37,6 +37,20 @@
 #include "Esd_Scissor.h"
 #include "Esd_BitmapHandle.h"
 #include "Esd_TouchTag.h"
+#include "Esd_MemoryPool.h"
+
+#ifdef ESD_LITTLEFS_FLASH
+#define ESD_LITTLEFS_READCACHE
+#define ESD_LITTLEFS_READPENDING
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4146) //< Unary minus on unsigned type
+#endif
+#include <lfs.h>
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -58,6 +72,7 @@ typedef struct
 	bool ShowLogo; //< True to pop up logo during next render
 	bool SpinnerPopup;
 
+	bool HasReset; //< True if the coprocessor reset during in the previous frame
 	bool SwapIdled; //< True if idled during swap
 	bool SpinnerPopped; //< Spinner is currently visible
 	bool ShowingLogo; //< Logo is currently showing (animation already finished)
@@ -67,6 +82,10 @@ typedef struct
 
 	Esd_HandleState HandleState;
 
+	uint32_t AnimationChannelsReserved; // Reserved animation channels, bitfield
+	uint32_t AnimationChannelsSetup; // Channels which have been set up, may be reset due to coprocessor fault
+	uint32_t AnimationChannelsActive; // Channels which are active (from register REG_ANIM_ACTIVE)
+
 #ifdef EVE_SUPPORT_VIDEO
 	Esd_BitmapInfo *BgVideoInfo; //< Currently playing background video
 	uint32_t BgVideoTransfered;
@@ -74,6 +93,22 @@ typedef struct
 
 #ifdef EVE_SUPPORT_MEDIAFIFO
 	Esd_GpuHandle MediaFifoHandle; //< Media fifo used for background video playback
+#endif
+
+#ifdef ESD_LITTLEFS_FLASH
+	bool LfsMounted;
+	struct lfs_config LfsConfig;
+	lfs_t Lfs; //< LittleFS Context
+	lfs_block_t LfsEraseBlock;
+	Esd_GpuHandle LfsEraseHandle; //< Handle to 4kB EVE memory for erasing and programming a sector
+#ifdef ESD_LITTLEFS_READCACHE
+	lfs_block_t LfsReadBlock;
+	Esd_GpuHandle LfsReadHandle; //< Handle to 4kB EVE memory for reading a sector, may be dropped by GC
+	uint32_t LfsLastProg;
+#endif
+	uint8_t LfsReadBuffer[EVE_FLASH_WRITE_ALIGN]; //< Size of cache matches write align (not read align)
+	uint8_t LfsProgBuffer[EVE_FLASH_WRITE_ALIGN]; //< Both caches have the same size
+	uint8_t LfsLookaheadBuffer[32]; //< Allocation lookahead
 #endif
 
 	/* Callbacks called by Esd_Loop */
@@ -118,11 +153,20 @@ typedef struct
 	eve_tchar_t FlashFilePaths[ESD_FLASH_NB][260];
 #endif
 
+#ifdef ESD_MEMORYPOOL_ALLOCATOR
+	/* Memory pool settings */
+	size_t MaxPoolMemory;
+	size_t IdealPoolMemory;
+#endif
 } Esd_Parameters;
 
 extern ESD_CORE_EXPORT Esd_Context *Esd_CurrentContext; //< Pointer to current ESD context
 extern ESD_CORE_EXPORT EVE_HalContext *Esd_Host; //< Pointer to current EVE hal context
 extern ESD_CORE_EXPORT Esd_GpuAlloc *Esd_GAlloc; //< Pointer to current allocator
+
+#ifdef ESD_MEMORYPOOL_ALLOCATOR
+extern ESD_CORE_EXPORT Esd_MemoryPool *Esd_MP; //< Pointer to current allocator
+#endif
 
 #define ESD_CO_SCRATCH_HANDLE EVE_CO_SCRATCH_HANDLE
 
@@ -155,6 +199,11 @@ static inline uint32_t Esd_GetDeltaMs() { return Esd_CurrentContext->DeltaMs; }
 /// A function to get the current HAL context data structure
 ESD_FUNCTION(Esd_GetHost, Type = EVE_HalContext *, DisplayName = "Get EVE Host", Category = EsdUtilities, Inline, Include = "Esd_Core.h")
 static inline EVE_HalContext *Esd_GetHost() { return Esd_Host; }
+
+#ifdef ESD_MEMORYPOOL_ALLOCATOR
+// ESD_FUNCTION(Esd_GetMemoryPool, Type = Esd_MemoryPool *, DisplayName = "Get EVE Memory Pool", Category = EsdUtilities, Inline, Include = "Esd_Core.h")
+static inline Esd_MemoryPool *Esd_GetMemoryPool() { return Esd_MP; }
+#endif
 
 #ifdef __cplusplus
 }

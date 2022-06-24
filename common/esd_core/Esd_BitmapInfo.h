@@ -9,6 +9,8 @@ Bitmap info structure
 #include "Esd_GpuAlloc.h"
 #include "Esd_ResourceInfo.h"
 
+// #define ESD_COMPATIBILITY_ADDITIONALFILE
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -21,11 +23,16 @@ typedef struct Esd_BitmapInfo
 	int32_t Stride;
 	uint32_t Format;
 	int32_t Size;
+	
+#ifndef ESD_LITTLEFS_FLASH
 	union
 	{
-		const char *File;
+#endif
 		int32_t FlashAddress;
+		const char *File;
+#ifndef ESD_LITTLEFS_FLASH
 	};
+#endif
 
 	// (Runtime) Handle pointing to the address in RAM_G if it is allocated
 	Esd_GpuHandle GpuHandle;
@@ -33,21 +40,35 @@ typedef struct Esd_BitmapInfo
 	// (Runtime) Bitmap handle that is being used
 	uint32_t BitmapHandle;
 
+	// Used for DXT1 format
+	struct Esd_BitmapInfo *AdditionalInfo;
+
 	// Used for paletted format
+#ifndef ESD_LITTLEFS_FLASH
 	union
 	{
+#endif
 		const char *PaletteFile;
 		int32_t PaletteFlashAddress;
+#ifndef ESD_LITTLEFS_FLASH
 	};
+#endif
 	Esd_GpuHandle PaletteGpuHandle;
-
+	
 	// Used for DXT1 format
+	// AdditionalFile and AdditionalFlashAddress are deprecated
+	// DXT1 is now loaded from a single file per bitmap resource
+#ifdef ESD_COMPATIBILITY_ADDITIONALFILE
+#ifndef ESD_LITTLEFS_FLASH
 	union
 	{
+#endif
 		const char *AdditionalFile;
 		int32_t AdditionalFlashAddress;
+#ifndef ESD_LITTLEFS_FLASH
 	};
-	struct Esd_BitmapInfo *AdditionalInfo;
+#endif
+#endif
 
 	// Number of cells usable by the user. There may be additional internally used cells after this
 	uint16_t Cells;
@@ -70,18 +91,21 @@ typedef struct Esd_BitmapInfo
 	// Use Esd_GpuAlloc_Free(GpuAlloc, GpuHandle) to free the GPU ram manually
 	bool Persistent : 1;
 
-	// Load from flash. Structure has flash addresses set, rather than file names
+	// Load from flash. Structure has flash addresses set, rather than file names, if there is no flash filesystem
 	bool Flash : 1;
 
 	// Prefer loading the bitmap into RAM_G, even if it's an ASTC stored on Flash
 	bool PreferRam : 1;
 
 	// Load image using coprocessor (for JPEG and PNG)
+	// Flagged at runtime whenever Format is JPEG, PNG, or AVI
+	// When set, the Format field may be read out from the coprocessor
 	bool CoLoad : 1;
 
 	// This is a video (for AVI)
+	// Flagged at runtime whenever Format is AVI
 	bool Video : 1;
-
+	
 } Esd_BitmapInfo;
 
 ESD_TYPE(Esd_BitmapInfo *, Native = Pointer, Edit = Library)
@@ -94,6 +118,8 @@ typedef struct
 } Esd_BitmapCell;
 
 ESD_TYPE(Esd_BitmapCell *, Native = Pointer, Edit = Library)
+
+#define ESD_IS_FORMAT_PALETTED(format) (format >= PALETTED565 && format <= PALETTED8)
 
 /// A function to load bitmap data(not including palette data) into RAM_G
 ESD_FUNCTION(Esd_LoadBitmap, Type = uint32_t, Attributes = ESD_CORE_EXPORT, Include = "Esd_BitmapInfo.h", DisplayName = "Load Bitmap to RAM_G", Category = EsdUtilities)
@@ -121,6 +147,7 @@ ESD_IDENTIFIER(PALETTED4444)
 ESD_IDENTIFIER(PALETTED8)
 // Specially loaded bitmap formats
 #define DXT1 0x81
+#define DXT1L2 0x82
 #define JPEG 0x91
 #define PNG 0x92
 #define AVI 0x93
@@ -184,6 +211,16 @@ static inline int32_t Esd_BitmapInfo_GetHeight(Esd_BitmapInfo *bitmapInfo)
 		return 1;
 	return bitmapInfo->Height;
 }
+
+#ifdef EVE_FLASH_AVAILABLE
+#ifdef ESD_LITTLEFS_FLASH
+ESD_CORE_EXPORT int32_t Esd_BitmapInfo_LoadFlashAddress(int32_t *addr, const char *file, uint8_t *metadata);
+#else
+#define Esd_BitmapInfo_LoadFlashAddress(addr, file, metadata) (*(addr))
+#endif
+#else
+#define Esd_BitmapInfo_LoadFlashAddress(addr, file, metadata) (FA_INVALID)
+#endif
 
 #ifdef __cplusplus
 }

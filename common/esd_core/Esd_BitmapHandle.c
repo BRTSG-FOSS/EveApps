@@ -237,7 +237,7 @@ ESD_CORE_EXPORT uint8_t Esd_CoDl_SetupBitmap(Esd_BitmapInfo *bitmapInfo)
 	if (!(ESD_BITMAPHANDLE_VALID(handle)
 	        && (handle != ESD_SCRATCHHANDLE)
 	        && (Esd_CurrentContext->HandleState.Info[handle] == bitmapInfo)
-			&& (Esd_CurrentContext->HandleState.Address[handle] == addr)
+	        && (Esd_CurrentContext->HandleState.Address[handle] == addr)
 	        && (Esd_CurrentContext->HandleState.GpuHandle[handle].Id == bitmapInfo->GpuHandle.Id)
 	        && (Esd_CurrentContext->HandleState.GpuHandle[handle].Seq == bitmapInfo->GpuHandle.Seq)))
 	{
@@ -268,9 +268,18 @@ ESD_CORE_EXPORT uint8_t Esd_CoDl_SetupBitmap(Esd_BitmapInfo *bitmapInfo)
 			}
 		}
 
-		eve_printf_debug("Use handle %i, addr %i, gpu alloc %i, %i, file %s\n",
-		    (int)handle, (int)addr, (int)bitmapInfo->GpuHandle.Id, (int)bitmapInfo->GpuHandle.Seq,
-		    (!bitmapInfo->Flash && bitmapInfo->File) ? bitmapInfo->File : "<no file>");
+#ifdef ESD_LITTLEFS_FLASH
+		eve_printf_debug("Use handle %i, addr %i%s, gpu alloc %i, %i, file %s%s\n",
+		    (int)handle, (int)addr, ESD_DL_IS_FLASH_ADDRESS(addr) ? " (flash)" : "",
+			(int)bitmapInfo->GpuHandle.Id, (int)bitmapInfo->GpuHandle.Seq,
+		    bitmapInfo->File ? bitmapInfo->File : "<no file>",
+			bitmapInfo->Flash ? " (flash)" : "");
+#else
+		eve_printf_debug("Use handle %i, addr %i%s, gpu alloc %i, %i, file %s\n",
+			(int)handle, (int)addr, ESD_DL_IS_FLASH_ADDRESS(addr) ? " (flash)" : "",
+			(int)bitmapInfo->GpuHandle.Id, (int)bitmapInfo->GpuHandle.Seq,
+			(!bitmapInfo->Flash && bitmapInfo->File) ? bitmapInfo->File : "<no file>");
+#endif
 
 		bitmapInfo->BitmapHandle = handle;
 
@@ -279,6 +288,8 @@ ESD_CORE_EXPORT uint8_t Esd_CoDl_SetupBitmap(Esd_BitmapInfo *bitmapInfo)
 		format = bitmapInfo->Format;
 		if (format == DXT1)
 			format = L1;
+		else if (format == DXT1L2)
+			format = L2;
 		else if (format == JPEG)
 			format = RGB565; // TODO: Support for grayscale
 		else if (format == PNG)
@@ -419,7 +430,7 @@ ESD_CORE_EXPORT uint8_t Esd_CoDl_SetupFont(Esd_FontInfo *fontInfo)
 		if (!ESD_BITMAPHANDLE_VALID(handle)
 		    || (handle == ESD_SCRATCHHANDLE)
 		    || (Esd_CurrentContext->HandleState.Info[handle] != fontInfo)
-			|| (Esd_CurrentContext->HandleState.Address[handle] != addr)
+		    || (Esd_CurrentContext->HandleState.Address[handle] != addr)
 		    || (Esd_CurrentContext->HandleState.GpuHandle[handle].Id != fontInfo->FontResource.GpuHandle.Id)
 		    || (Esd_CurrentContext->HandleState.GpuHandle[handle].Seq != fontInfo->FontResource.GpuHandle.Seq))
 		{
@@ -448,6 +459,14 @@ ESD_CORE_EXPORT uint8_t Esd_CoDl_SetupFont(Esd_FontInfo *fontInfo)
 				}
 			}
 
+#ifdef ESD_LITTLEFS_FLASH
+			eve_printf_debug("Use handle %i, addr %i, %i, gpu alloc %i, %i, %i, %i, file %s%s, %s%s\n",
+			    (int)handle, (int)addr, (int)Esd_GpuAlloc_Get(Esd_GAlloc, fontInfo->GlyphResource.GpuHandle),
+			    (int)fontInfo->FontResource.GpuHandle.Id, (int)fontInfo->FontResource.GpuHandle.Seq,
+			    (int)fontInfo->GlyphResource.GpuHandle.Id, (int)fontInfo->GlyphResource.GpuHandle.Seq,
+			    fontInfo->FontResource.File, (ESD_RESOURCE_IS_FLASH(fontInfo->FontResource.Type) ? " (flash)" : ""),
+			    fontInfo->GlyphResource.File, (ESD_RESOURCE_IS_FLASH(fontInfo->GlyphResource.Type) ? " (flash)" : ""));
+#else
 			eve_printf_debug("Use handle %i, addr %i, %i, gpu alloc %i, %i, %i, %i, file %s, %s, flash %i, %i\n",
 			    (int)handle, (int)addr, (int)Esd_GpuAlloc_Get(Esd_GAlloc, fontInfo->GlyphResource.GpuHandle),
 			    (int)fontInfo->FontResource.GpuHandle.Id, (int)fontInfo->FontResource.GpuHandle.Seq,
@@ -456,6 +475,7 @@ ESD_CORE_EXPORT uint8_t Esd_CoDl_SetupFont(Esd_FontInfo *fontInfo)
 			    (fontInfo->GlyphResource.Type == ESD_RESOURCE_FILE) ? fontInfo->GlyphResource.File : "<no file>",
 			    (ESD_RESOURCE_IS_FLASH(fontInfo->FontResource.Type) ? (int)fontInfo->FontResource.FlashAddress : 0),
 			    (ESD_RESOURCE_IS_FLASH(fontInfo->GlyphResource.Type) ? (int)fontInfo->GlyphResource.FlashAddress : 0));
+#endif
 
 			// Set the font
 			fontInfo->BitmapHandle = handle;
