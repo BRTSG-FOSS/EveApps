@@ -1,0 +1,6 @@
+
+ADD_SUBDIRECTORY(eve_hal)
+
+IF (WITH_ESD_CORE)
+  ADD_SUBDIRECTORY(esd_core)
+ENDIF()

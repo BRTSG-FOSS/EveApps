@@ -1,0 +1,3 @@
+*.cpp text=auto
+*.c text=auto
+*.h text=auto

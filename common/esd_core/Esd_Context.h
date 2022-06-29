@@ -37,7 +37,10 @@
 #include "Esd_Scissor.h"
 #include "Esd_BitmapHandle.h"
 #include "Esd_TouchTag.h"
+
+#ifdef ESD_MEMORYPOOL_ALLOCATOR
 #include "Esd_MemoryPool.h"
+#endif
 
 #ifdef ESD_LITTLEFS_FLASH
 #define ESD_LITTLEFS_READCACHE

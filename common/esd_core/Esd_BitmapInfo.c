@@ -233,7 +233,7 @@ ESD_CORE_EXPORT void Esd_UnloadBitmap(Esd_BitmapInfo *bitmapInfo)
 	// Forces to drop any cached address (LFS)
 }
 
-ESD_CORE_EXPORT void Esd_LoadBitmapMetadata(Esd_BitmapInfo *bitmapInfo, uint8_t *metadata)
+ESD_CORE_EXPORT bool Esd_LoadBitmapMetadata(Esd_BitmapInfo *bitmapInfo, uint8_t *metadata)
 {
 	if (metadata && metadata[ESD_METADATA_SIGNATURE])
 	{
@@ -243,7 +243,7 @@ ESD_CORE_EXPORT void Esd_LoadBitmapMetadata(Esd_BitmapInfo *bitmapInfo, uint8_t 
 #ifdef ESD_BITMAPINFO_DEBUG
 			eve_printf_debug("Bitmap has an invalid metadata signature (0x%x)\n", (int)esdSignature);
 #endif
-			return GA_INVALID;
+			return false;
 		}
 
 		// Update compression and extracted size from metadata
@@ -274,6 +274,9 @@ ESD_CORE_EXPORT void Esd_LoadBitmapMetadata(Esd_BitmapInfo *bitmapInfo, uint8_t 
 		// eve_printf_debug("Bitmap info metadata reloaded\n");
 #endif
 	}
+
+	// Okay if not loaded or if signature didn't fail
+	return true;
 }
 
 ESD_CORE_EXPORT uint32_t Esd_LoadBitmapEx(Esd_BitmapInfo *bitmapInfo, uint8_t *metadata)
@@ -301,7 +304,9 @@ ESD_CORE_EXPORT uint32_t Esd_LoadBitmapEx(Esd_BitmapInfo *bitmapInfo, uint8_t *m
 		// Just get the flash address if that's what we want
 
 		flashAddr = Esd_BitmapInfo_LoadFlashAddress(&bitmapInfo->FlashAddress, bitmapInfo->File, metadata);
-		Esd_LoadBitmapMetadata(bitmapInfo, metadata); // Ensure any new metadata still supports direct flash
+		if (!Esd_LoadBitmapMetadata(bitmapInfo, metadata))
+			return GA_INVALID;
+		// Ensure any new metadata still supports direct flash
 		if (!bitmapInfo->Compressed && ESD_IS_FORMAT_ASTC(bitmapInfo->Format))
 		{
 			if (flashAddr != FA_INVALID)

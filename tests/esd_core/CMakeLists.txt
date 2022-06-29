@@ -1,0 +1,8 @@
+
+LINK_LIBRARIES(esd_core)
+
+INCLUDE_DIRECTORIES("../../common/esd_core")
+
+ADD_SUBDIRECTORY(basic)
+ADD_SUBDIRECTORY(video)
+ADD_SUBDIRECTORY(videof)

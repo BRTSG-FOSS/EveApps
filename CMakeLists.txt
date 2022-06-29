@@ -56,6 +56,11 @@ IF (NOT Build_Dir_OK)
 ENDIF ()
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake/") 
 
+# Options ######################################################################
+SET(WITH_EVE_TESTS OFF CACHE BOOL "Build EVE test projects")
+SET(WITH_ESD_CORE OFF CACHE BOOL "Build ESD Core library")
+SET(WITH_ESD_LITTLEFS OFF CACHE BOOL "Build ESD Core library with LittleFS support")
+
 # Valid option input ###########################################################
 set(LIST_GRAPHICS MULTI
                   VM800B35A_BK
@@ -317,6 +322,10 @@ if(NOT EVE_APPS_DISPLAY STREQUAL "MULTI")
   endif()
 endif()
 
+if(WITH_ESD_CORE AND WITH_ESD_LITTLEFS)
+  add_definitions("-DESD_LITTLEFS_FLASH")
+endif()
+
 # Set host platform build flag #################################################
 IF(IS_PLATFORM_FT900)
   ADD_DEFINITIONS("-D__FT900__")
@@ -333,6 +342,10 @@ INCLUDE_DIRECTORIES("common/eve_hal/Hdr")
 IF(NOT EVE_APPS_GRAPHICS STREQUAL "MULTI")
   ADD_SUBDIRECTORY(DemoApps)
   ADD_SUBDIRECTORY(SampleApp)
+ENDIF()
+
+IF (WITH_EVE_TESTS)
+  ADD_SUBDIRECTORY(tests)
 ENDIF()
 
 ################################################################################

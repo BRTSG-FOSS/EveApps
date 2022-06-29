@@ -1,6 +1,11 @@
-build/
+build*
 .vs
-Debug/
-Release/
-__flash.bin
+Debug
+Release
+__Flash.bin
 .settings
+FT900_Debug
+FT900_Release
+FT930_Debug
+FT930_Release
+*.user
