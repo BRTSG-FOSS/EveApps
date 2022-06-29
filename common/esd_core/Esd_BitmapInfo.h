@@ -23,7 +23,7 @@ typedef struct Esd_BitmapInfo
 	int32_t Stride;
 	uint32_t Format;
 	int32_t Size;
-	
+
 #ifndef ESD_LITTLEFS_FLASH
 	union
 	{
@@ -54,7 +54,7 @@ typedef struct Esd_BitmapInfo
 	};
 #endif
 	Esd_GpuHandle PaletteGpuHandle;
-	
+
 	// Used for DXT1 format
 	// AdditionalFile and AdditionalFlashAddress are deprecated
 	// DXT1 is now loaded from a single file per bitmap resource
@@ -105,7 +105,7 @@ typedef struct Esd_BitmapInfo
 	// This is a video (for AVI)
 	// Flagged at runtime whenever Format is AVI
 	bool Video : 1;
-	
+
 } Esd_BitmapInfo;
 
 ESD_TYPE(Esd_BitmapInfo *, Native = Pointer, Edit = Library)
@@ -148,6 +148,7 @@ ESD_IDENTIFIER(PALETTED8)
 // Specially loaded bitmap formats
 #define DXT1 0x81
 #define DXT1L2 0x82
+#define DXT1PALETTED 0x83
 #define JPEG 0x91
 #define PNG 0x92
 #define AVI 0x93

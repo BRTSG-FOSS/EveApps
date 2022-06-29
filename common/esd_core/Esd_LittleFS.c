@@ -97,6 +97,14 @@ static int Esd_LittleFS_Read(const struct lfs_config *c, lfs_block_t block, lfs_
 		if (addr == GA_INVALID)
 			return LFS_ERR_IO;
 
+		if (!ec->LfsEraseFlushed)
+		{
+			// Wait for any pending writes, since we write through the coprocessor
+			if (!EVE_Cmd_waitFlush(phost))
+				return LFS_ERR_IO;
+			ec->LfsEraseFlushed = true;
+		}
+
 		EVE_Hal_rdMem(phost, buffer, addr + off, size);
 		if (phost->Status != EVE_STATUS_ERROR)
 			return LFS_ERR_IO;
@@ -149,10 +157,10 @@ static int Esd_LittleFS_Read(const struct lfs_config *c, lfs_block_t block, lfs_
 				}
 				ec->LfsReadBlock = block;
 			}
-			
+
 			// Read from RAM_G to memory
 			eve_printf_diagnostic("Read from RAM_G cache, addr %i, size %i (flashAddr %i)\n", (int)(addr + off),
-				(int)size, (int)(EVE_FLASH_FIRMWARE_SIZE + (block * EVE_FLASH_BLOCK_SIZE) + off));
+			    (int)size, (int)(EVE_FLASH_FIRMWARE_SIZE + (block * EVE_FLASH_BLOCK_SIZE) + off));
 			EVE_Hal_rdMem(phost, buffer, addr + off, size);
 			if (phost->Status == EVE_STATUS_ERROR)
 				return LFS_ERR_IO;
@@ -214,6 +222,9 @@ static int Esd_LittleFS_Prog(const struct lfs_config *c, lfs_block_t block, lfs_
 		if (addr == GA_INVALID)
 			return LFS_ERR_IO;
 		eve_printf_diagnostic("Prog to erase buffer, addr %i, size %i\n", (int)(addr + off), (int)size);
+#ifdef ESD_LITTLEFS_READPENDING
+		ec->LfsEraseFlushed = false;
+#endif
 		EVE_CoCmd_memWrite(phost, addr + off, size);
 		if (!EVE_Cmd_wrMem(phost, buffer, size))
 			return LFS_ERR_IO;
@@ -266,6 +277,9 @@ static int Esd_LittleFS_Erase(const struct lfs_config *c, lfs_block_t block)
 		if (addr == GA_INVALID)
 			return LFS_ERR_IO;
 		eve_printf_diagnostic("Erase existing buffer, block %i, addr %i\n", (int)block, (int)addr);
+#ifdef ESD_LITTLEFS_READPENDING
+		ec->LfsEraseFlushed = false;
+#endif
 		EVE_CoCmd_memSet(phost, addr, 0xFF, EVE_FLASH_UPDATE_ALIGN);
 		return LFS_ERR_OK;
 	}
@@ -284,6 +298,9 @@ static int Esd_LittleFS_Erase(const struct lfs_config *c, lfs_block_t block)
 	if (addr == GA_INVALID)
 		return LFS_ERR_NOMEM;
 	eve_printf_diagnostic("Create an erase buffer, block %i, addr %i\n", (int)block, (int)addr);
+#ifdef ESD_LITTLEFS_READPENDING
+	ec->LfsEraseFlushed = false;
+#endif
 	EVE_CoCmd_memSet(phost, addr, 0xFF, EVE_FLASH_UPDATE_ALIGN);
 	ec->LfsEraseBlock = block;
 

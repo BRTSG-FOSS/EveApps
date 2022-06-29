@@ -488,7 +488,7 @@ static bool configDefaultsEx(EVE_HalContext *phost, EVE_ConfigParameters *config
 	config->AhHCycleMax = 0;
 	config->PCLK2X = 0;
 #endif
-	
+
 	/* Other options */
 	/* Toggle CSpread if you see red and blue fringing on black and white edges */
 	config->CSpread = 0; /* non-default */
@@ -496,10 +496,10 @@ static bool configDefaultsEx(EVE_HalContext *phost, EVE_ConfigParameters *config
 	config->Swizzle = 0;
 
 	if (EVE_CHIPID == EVE_FT812
-		|| EVE_CHIPID == EVE_FT813
-		|| EVE_CHIPID == EVE_BT882
-		|| EVE_CHIPID == EVE_BT883
-		|| EVE_CHIPID >= EVE_BT815)
+	    || EVE_CHIPID == EVE_FT813
+	    || EVE_CHIPID == EVE_BT882
+	    || EVE_CHIPID == EVE_BT883
+	    || EVE_CHIPID >= EVE_BT815)
 	{
 		config->Dither = 0;
 		config->OutBitsR = 8;
@@ -1618,10 +1618,19 @@ SELECTFLASH:
 		}
 #endif
 		if (*updateFlash
+#if defined(EVE_MULTI_PLATFORM_TARGET) || defined(BT8XXEMU_PLATFORM)
+		    || (
 #if defined(EVE_MULTI_PLATFORM_TARGET)
-		    || params->Host == EVE_HOST_BT8XXEMU
+		           params->Host == EVE_HOST_BT8XXEMU
 #elif defined(BT8XXEMU_PLATFORM)
-		    || true
+		           true
+#endif
+#ifdef _WIN32
+		           && !wcscmp(flashFile, L"__Flash.bin")
+#else
+		           && !strcmp(flashFile, "__Flash.bin")
+#endif
+		               )
 #endif
 		)
 		{
@@ -2074,9 +2083,18 @@ EVE_HAL_EXPORT bool EVE_Util_bootupConfigInteractive(EVE_HalContext *phost, EVE_
 
 void EVE_Util_forceFault(EVE_HalContext *phost, const char *err)
 {
-	/* TODO: Clean this up a bit */
+	/* Check if we're already in fault state */
 	if (!EVE_Cmd_waitSpace(phost, 0))
 		return;
+#if 1
+	/* Go into reset state and mimic a fault */
+	EVE_Hal_wr8(phost, REG_CPURESET, 1);
+	EVE_Hal_flush(phost);
+	EVE_sleep(100);
+	EVE_Hal_wr16(phost, REG_CMD_READ, 0xFFF);
+	EVE_Hal_wr16(phost, REG_CMD_WRITE, 0xFFF);
+#else
+	/* TODO: Clean this up a bit */
 	if (!EVE_Util_resetCoprocessor(phost))
 		return;
 	EVE_CoCmd_dlStart(phost);
@@ -2085,24 +2103,26 @@ void EVE_Util_forceFault(EVE_HalContext *phost, const char *err)
 	EVE_Cmd_waitFlush(phost);
 	EVE_Cmd_wr32(phost, DISPLAY());
 	EVE_Hal_flush(phost);
-#if defined(_DEBUG)
-#if (EVE_SUPPORT_CHIPID >= EVE_BT815)
 	EVE_sleep(100);
+#endif
+#if (EVE_SUPPORT_CHIPID >= EVE_BT815)
 	if (EVE_CHIPID >= EVE_BT815 && (EVE_Cmd_rp(phost) & 0x3))
 	{
+		/* Write our own error to the error report area */
 		uint32_t errLen = (uint32_t)strlen(err);
 		EVE_Hal_wrMem(phost, RAM_ERR_REPORT, (const uint8_t *)err, errLen);
-		if (errLen < sizeof(phost->DebugBackup))
+		if (errLen < RAM_ERR_REPORT_MAX)
 		{
 			EVE_Hal_startTransfer(phost, EVE_TRANSFER_WRITE, RAM_ERR_REPORT + errLen);
-			for (int i = (int)errLen; i < sizeof(phost->DebugBackup); ++i)
+			for (int i = (int)errLen; i < RAM_ERR_REPORT_MAX; ++i)
 				EVE_Hal_transfer8(phost, 0);
 			EVE_Hal_endTransfer(phost);
 		}
 	}
 #endif
-#endif
-	EVE_Cmd_waitFlush(phost); /* Fault state now */
+	/* Fault state now */
+	EVE_Cmd_waitFlush(phost);
+#if 0
 #if defined(_DEBUG)
 #if (EVE_SUPPORT_CHIPID >= EVE_BT815)
 	if (EVE_CHIPID >= EVE_BT815
@@ -2118,6 +2138,7 @@ void EVE_Util_forceFault(EVE_HalContext *phost, const char *err)
 			EVE_Hal_endTransfer(phost);
 		}
 	}
+#endif
 #endif
 #endif
 }

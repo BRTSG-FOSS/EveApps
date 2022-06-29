@@ -23,6 +23,16 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 extern ESD_CORE_EXPORT EVE_HalContext *Esd_Host;
 extern ESD_CORE_EXPORT Esd_GpuAlloc *Esd_GAlloc;
 
+ESD_CORE_EXPORT void Esd_LoadResourceMetadata(Esd_ResourceInfo *resourceInfo, uint8_t *metadata)
+{
+	if (metadata && metadata[ESD_METADATA_SIGNATURE])
+	{
+		// Update compression and extracted size from metadata
+		ESD_METADATA_SET(uint8_t, resourceInfo, Compressed, metadata[ESD_METADATA_COMPRESSION], resourceInfo->File);
+		ESD_METADATA_SET(uint32_t, resourceInfo, RawSize, ESD_RD32_LE(metadata, ESD_METADATA_RAWSIZE), resourceInfo->File);
+	}
+}
+
 ESD_CORE_EXPORT uint32_t Esd_LoadResourceEx(Esd_ResourceInfo *resourceInfo, uint8_t *metadata, uint32_t *imageFormat)
 {
 	EVE_HalContext *phost = Esd_GetHost();
@@ -46,7 +56,8 @@ ESD_CORE_EXPORT uint32_t Esd_LoadResourceEx(Esd_ResourceInfo *resourceInfo, uint
 		// Just get the flash address if that's what we want
 		// Calling function may need to ensure that it's not getting a flash address when it's not supported by the resource
 		flashAddr = Esd_BitmapInfo_LoadFlashAddress(&resourceInfo->FlashAddress, resourceInfo->File, metadata);
-		if (!metadata || !metadata[ESD_METADATA_SIGNATURE] || !metadata[ESD_METADATA_COMPRESSION])
+		Esd_LoadResourceMetadata(resourceInfo, metadata);
+		if (!resourceInfo->Compressed)
 		{
 			// If no metadata, or the metadata still specifies uncompressed data, return as direct flash address
 			if (flashAddr != FA_INVALID)
@@ -106,17 +117,13 @@ ESD_CORE_EXPORT uint32_t Esd_LoadResourceEx(Esd_ResourceInfo *resourceInfo, uint
 		strcpy(metaFile, resourceInfo->File);
 		strcpy(&metaFile[nameLen], ".esdm");
 #pragma warning(pop)
-		
+
 		// Try to load
 		EVE_Util_readFile(phost, metadata, ESD_METADATA_MAX, metaFile);
 	}
 
-	if (metadata && metadata[ESD_METADATA_SIGNATURE])
-	{
-		// Update compression and extracted size from metadata
-		ESD_METADATA_SET(uint8_t, resourceInfo, Compressed, metadata[ESD_METADATA_COMPRESSION], resourceInfo->File);
-		ESD_METADATA_SET(uint32_t, resourceInfo, RawSize, ESD_RD32_LE(metadata, ESD_METADATA_RAWSIZE), resourceInfo->File);
-	}
+	// Load metadata
+	Esd_LoadResourceMetadata(resourceInfo, metadata);
 
 	// Allocate gpu memory
 	resourceInfo->GpuHandle = Esd_GpuAlloc_Alloc(Esd_GAlloc, resourceInfo->RawSize,

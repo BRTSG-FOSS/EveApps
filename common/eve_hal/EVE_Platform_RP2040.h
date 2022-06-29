@@ -52,21 +52,21 @@
 /* RP2040 default platform definitions. Configuration can be changed programatically in initialization parameters */
 /* Pins can be changed, see the GPIO function select table in the datasheet for information on GPIO assignments */
 #define EVE_DEFAULT_SPI0_MISO 4 /* GP0, GP4, GP16 */
-#define EVE_DEFAULT_SPI0_CS   5 /* GP1, GP5, GP17 */
-#define EVE_DEFAULT_SPI0_SCK  2 /* GP2, GP6, GP18 */
+#define EVE_DEFAULT_SPI0_CS 5 /* GP1, GP5, GP17 */
+#define EVE_DEFAULT_SPI0_SCK 2 /* GP2, GP6, GP18 */
 #define EVE_DEFAULT_SPI0_MOSI 3 /* GP3, GP7, GP19 */
-#define EVE_DEFAULT_SPI0_INT  6
-#define EVE_DEFAULT_SPI0_PWD  7
-#define EVE_DEFAULT_SPI0_IO2  14
-#define EVE_DEFAULT_SPI0_IO3  15
+#define EVE_DEFAULT_SPI0_INT 6
+#define EVE_DEFAULT_SPI0_PWD 7
+#define EVE_DEFAULT_SPI0_IO2 14
+#define EVE_DEFAULT_SPI0_IO3 15
 
 #define EVE_DEFAULT_SPI1_MISO 12 /* GP8, GP12 */
-#define EVE_DEFAULT_SPI1_CS1  13 /* GP9, GP13 */
-#define EVE_DEFAULT_SPI1_CS2  22
-#define EVE_DEFAULT_SPI1_SCK  10 /* GP10, GP14 */
+#define EVE_DEFAULT_SPI1_CS1 13 /* GP9, GP13 */
+#define EVE_DEFAULT_SPI1_CS2 22
+#define EVE_DEFAULT_SPI1_SCK 10 /* GP10, GP14 */
 #define EVE_DEFAULT_SPI1_MOSI 11 /* GP11, GP15 */
-#define EVE_DEFAULT_SPI1_INT  16
-#define EVE_DEFAULT_SPI1_PWD  17
+#define EVE_DEFAULT_SPI1_INT 16
+#define EVE_DEFAULT_SPI1_PWD 17
 
 /* Only use SPI0 by default, otherwise EVE_Hal_open will alternate between SPI0 and SPI1 for multiple devices */
 #define EVE_DEFAULT_SPI0_ONLY 1

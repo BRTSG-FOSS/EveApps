@@ -271,14 +271,19 @@ ESD_CORE_EXPORT uint8_t Esd_CoDl_SetupBitmap(Esd_BitmapInfo *bitmapInfo)
 #ifdef ESD_LITTLEFS_FLASH
 		eve_printf_debug("Use handle %i, addr %i%s, gpu alloc %i, %i, file %s%s\n",
 		    (int)handle, (int)addr, ESD_DL_IS_FLASH_ADDRESS(addr) ? " (flash)" : "",
-			(int)bitmapInfo->GpuHandle.Id, (int)bitmapInfo->GpuHandle.Seq,
+		    (int)bitmapInfo->GpuHandle.Id, (int)bitmapInfo->GpuHandle.Seq,
 		    bitmapInfo->File ? bitmapInfo->File : "<no file>",
-			bitmapInfo->Flash ? " (flash)" : "");
+		    bitmapInfo->Flash ? " (flash)" : "");
 #else
 		eve_printf_debug("Use handle %i, addr %i%s, gpu alloc %i, %i, file %s\n",
-			(int)handle, (int)addr, ESD_DL_IS_FLASH_ADDRESS(addr) ? " (flash)" : "",
-			(int)bitmapInfo->GpuHandle.Id, (int)bitmapInfo->GpuHandle.Seq,
-			(!bitmapInfo->Flash && bitmapInfo->File) ? bitmapInfo->File : "<no file>");
+		    (int)handle, (int)addr,
+#ifdef EVE_FLASH_AVAILABLE
+		    ESD_DL_IS_FLASH_ADDRESS(addr) ? " (flash)" : "",
+#else
+		    "",
+#endif
+		    (int)bitmapInfo->GpuHandle.Id, (int)bitmapInfo->GpuHandle.Seq,
+		    (!bitmapInfo->Flash && bitmapInfo->File) ? bitmapInfo->File : "<no file>");
 #endif
 
 		bitmapInfo->BitmapHandle = handle;

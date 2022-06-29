@@ -69,6 +69,7 @@ size must match ESD_METADATA_END
 
 ESD_CORE_EXPORT uint32_t Esd_LoadAnimation(Esd_AnimationInfo *animationInfo)
 {
+#ifdef EVE_FLASH_AVAILABLE
 	EVE_HalContext *phost = Esd_GetHost();
 	Esd_GpuAlloc *ga = Esd_GAlloc;
 	(void)phost;
@@ -155,9 +156,9 @@ ESD_CORE_EXPORT uint32_t Esd_LoadAnimation(Esd_AnimationInfo *animationInfo)
 		ESD_WR16_LE(metadata, ESD_METADATA_RECTWIDTH, animationInfo->Rect.Width);
 		ESD_WR16_LE(metadata, ESD_METADATA_RECTHEIGHT, animationInfo->Rect.Height);
 #else
-	    esd_animationinfo_printf_dev("[DEVELOPMENT] Animation assumed OK!\n");
-	    animationInfo->NumFrames = numFrames;
-	    return objectAddress;
+		esd_animationinfo_printf_dev("[DEVELOPMENT] Animation assumed OK!\n");
+		animationInfo->NumFrames = numFrames;
+		return objectAddress;
 #endif
 	}
 #endif
@@ -248,6 +249,10 @@ ESD_CORE_EXPORT uint32_t Esd_LoadAnimation(Esd_AnimationInfo *animationInfo)
 	esd_animationinfo_printf_dev("[DEVELOPMENT] Animation load OK!\n");
 	animationInfo->NumFrames = numFrames;
 	return objectAddress;
+#else
+	eve_printf("Animation not available on this target platform\n");
+	return GA_INVALID;
+#endif
 }
 
 ESD_CORE_EXPORT void Esd_FreeAnimation(Esd_AnimationInfo *animationInfo)

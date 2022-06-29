@@ -233,6 +233,49 @@ ESD_CORE_EXPORT void Esd_UnloadBitmap(Esd_BitmapInfo *bitmapInfo)
 	// Forces to drop any cached address (LFS)
 }
 
+ESD_CORE_EXPORT void Esd_LoadBitmapMetadata(Esd_BitmapInfo *bitmapInfo, uint8_t *metadata)
+{
+	if (metadata && metadata[ESD_METADATA_SIGNATURE])
+	{
+		uint32_t esdSignature = ESD_RD32_LE(metadata, ESD_METADATA_SIGNATURE);
+		if (esdSignature != ESD_RESOURCE_BMP)
+		{
+#ifdef ESD_BITMAPINFO_DEBUG
+			eve_printf_debug("Bitmap has an invalid metadata signature (0x%x)\n", (int)esdSignature);
+#endif
+			return GA_INVALID;
+		}
+
+		// Update compression and extracted size from metadata
+		uint8_t compression = metadata[ESD_METADATA_COMPRESSION];
+		ESD_METADATA_SET(bool, bitmapInfo, Compressed, compression == ESD_RESOURCE_DEFLATE, bitmapInfo->File);
+		ESD_METADATA_SET(int32_t, bitmapInfo, Size, ESD_RD32I_LE(metadata, ESD_METADATA_RAWSIZE), bitmapInfo->File);
+
+		// Update bitmap specific options from metadata
+		ESD_METADATA_SET(int32_t, bitmapInfo, Width, ESD_RD32I_LE(metadata, ESD_METADATA_WIDTH), bitmapInfo->File);
+		ESD_METADATA_SET(int32_t, bitmapInfo, Height, ESD_RD32I_LE(metadata, ESD_METADATA_HEIGHT), bitmapInfo->File);
+		ESD_METADATA_SET(int32_t, bitmapInfo, Stride, ESD_RD32I_LE(metadata, ESD_METADATA_STRIDE), bitmapInfo->File);
+		ESD_METADATA_SET_EX(uint32_t, bitmapInfo, Format, ESD_RD32_LE(metadata, ESD_METADATA_FORMAT), bitmapInfo->File, bitmapInfo->CoLoad = false; bitmapInfo->Video = false);
+		ESD_METADATA_SET(int16_t, bitmapInfo, Cells, ESD_RD16_LE(metadata, ESD_METADATA_CELLS), bitmapInfo->File);
+#if (EVE_SUPPORT_CHIPID >= EVE_BT815)
+		uint16_t swizzle = ESD_RD16_LE(metadata, ESD_METADATA_SWIZZLE);
+		bool hasSwizzle = swizzle & (1 << 12);
+		if (hasSwizzle)
+		{
+			ESD_METADATA_SET(uint16_t, bitmapInfo, SwizzleB, (swizzle >> 9) & 7, bitmapInfo->File);
+			ESD_METADATA_SET(uint16_t, bitmapInfo, SwizzleG, (swizzle >> 6) & 7, bitmapInfo->File);
+			ESD_METADATA_SET(uint16_t, bitmapInfo, SwizzleR, (swizzle >> 3) & 7, bitmapInfo->File);
+			ESD_METADATA_SET(uint16_t, bitmapInfo, SwizzleA, swizzle & 7, bitmapInfo->File);
+		}
+		ESD_METADATA_SET(bool, bitmapInfo, Swizzle, hasSwizzle, bitmapInfo->File);
+#endif
+
+#ifdef ESD_BITMAPINFO_DEBUG
+		// eve_printf_debug("Bitmap info metadata reloaded\n");
+#endif
+	}
+}
+
 ESD_CORE_EXPORT uint32_t Esd_LoadBitmapEx(Esd_BitmapInfo *bitmapInfo, uint8_t *metadata)
 {
 	EVE_HalContext *phost = Esd_GetHost();
@@ -258,8 +301,8 @@ ESD_CORE_EXPORT uint32_t Esd_LoadBitmapEx(Esd_BitmapInfo *bitmapInfo, uint8_t *m
 		// Just get the flash address if that's what we want
 
 		flashAddr = Esd_BitmapInfo_LoadFlashAddress(&bitmapInfo->FlashAddress, bitmapInfo->File, metadata);
-		if (!metadata || !metadata[ESD_METADATA_SIGNATURE] // Ensure any new metadata still supports direct flash
-			|| (!metadata[ESD_METADATA_COMPRESSION] && ESD_IS_FORMAT_ASTC(ESD_RD32_LE(metadata, ESD_METADATA_FORMAT))))
+		Esd_LoadBitmapMetadata(bitmapInfo, metadata); // Ensure any new metadata still supports direct flash
+		if (!bitmapInfo->Compressed && ESD_IS_FORMAT_ASTC(bitmapInfo->Format))
 		{
 			if (flashAddr != FA_INVALID)
 				return ESD_DL_FLASH_ADDRESS(flashAddr);
@@ -318,44 +361,12 @@ ESD_CORE_EXPORT uint32_t Esd_LoadBitmapEx(Esd_BitmapInfo *bitmapInfo, uint8_t *m
 			EVE_Util_readFile(phost, metadata, ESD_METADATA_MAX, metaFile);
 		}
 
-		if (metadata && metadata[ESD_METADATA_SIGNATURE])
-		{
-			uint32_t esdSignature = ESD_RD32_LE(metadata, ESD_METADATA_SIGNATURE);
-			if (esdSignature != ESD_RESOURCE_BMP)
-			{
 #ifdef ESD_BITMAPINFO_DEBUG
-				eve_printf_debug("Bitmap has an invalid metadata signature (0x%x)\n", (int)esdSignature);
+		eve_printf_debug("[DEVELOPER] Loading '%s'\n", bitmapInfo->File);
 #endif
-				return GA_INVALID;
-			}
-			
-			// Update compression and extracted size from metadata
-			uint8_t compression = metadata[ESD_METADATA_COMPRESSION];
-			ESD_METADATA_SET(bool, bitmapInfo, Compressed, compression == ESD_RESOURCE_DEFLATE, bitmapInfo->File);
-			ESD_METADATA_SET(int32_t, bitmapInfo, Size, ESD_RD32I_LE(metadata, ESD_METADATA_RAWSIZE), bitmapInfo->File);
 
-			// Update bitmap specific options from metadata
-			ESD_METADATA_SET(int32_t, bitmapInfo, Width, ESD_RD32I_LE(metadata, ESD_METADATA_WIDTH), bitmapInfo->File);
-			ESD_METADATA_SET(int32_t, bitmapInfo, Height, ESD_RD32I_LE(metadata, ESD_METADATA_HEIGHT), bitmapInfo->File);
-			ESD_METADATA_SET(int32_t, bitmapInfo, Stride, ESD_RD32I_LE(metadata, ESD_METADATA_STRIDE), bitmapInfo->File);
-			ESD_METADATA_SET_EX(uint32_t, bitmapInfo, Format, ESD_RD32_LE(metadata, ESD_METADATA_FORMAT), bitmapInfo->File, bitmapInfo->CoLoad = false; bitmapInfo->Video = false);
-			ESD_METADATA_SET(int16_t, bitmapInfo, Cells, ESD_RD16_LE(metadata, ESD_METADATA_CELLS), bitmapInfo->File);
-#if (EVE_SUPPORT_CHIPID >= EVE_BT815)
-			uint16_t swizzle = ESD_RD16_LE(metadata, ESD_METADATA_SWIZZLE);
-			bool hasSwizzle = swizzle & (1 << 12);
-			if (hasSwizzle)
-			{
-				ESD_METADATA_SET(uint16_t, bitmapInfo, SwizzleB, (swizzle >> 9) & 7, bitmapInfo->File);
-				ESD_METADATA_SET(uint16_t, bitmapInfo, SwizzleG, (swizzle >> 6) & 7, bitmapInfo->File);
-				ESD_METADATA_SET(uint16_t, bitmapInfo, SwizzleR, (swizzle >> 3) & 7, bitmapInfo->File);
-				ESD_METADATA_SET(uint16_t, bitmapInfo, SwizzleA, swizzle & 7, bitmapInfo->File);
-			}
-			ESD_METADATA_SET(bool, bitmapInfo, Swizzle, hasSwizzle, bitmapInfo->File);
-#endif
-#ifdef ESD_BITMAPINFO_DEBUG
-			eve_printf_debug("[DEVELOPER] Bitmap info metadata reloaded\n");
-#endif
-		}
+		// Load bitmap metadata
+		Esd_LoadBitmapMetadata(bitmapInfo, metadata);
 
 		// Not loaded, load this bitmap
 		bitmapInfo->GpuHandle = Esd_GpuAlloc_Alloc(Esd_GAlloc, bitmapInfo->Size,

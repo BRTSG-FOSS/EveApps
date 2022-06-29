@@ -50,10 +50,10 @@ to be defined. If not, multi target compilation is assumed.
 #endif
 
 #if !defined(EVE_MULTI_GRAPHICS_TARGET) \
-    && !defined(FT_80X_ENABLE) \
-    && !defined(FT_81X_ENABLE) \
-    && !defined(BT_88X_ENABLE) \
-    && !defined(BT_81X_ENABLE) \
+    && !defined(FT_80X_ENABLE)          \
+    && !defined(FT_81X_ENABLE)          \
+    && !defined(BT_88X_ENABLE)          \
+    && !defined(BT_81X_ENABLE)          \
     && !defined(BT_81XA_ENABLE)
 #define EVE_MULTI_GRAPHICS_TARGET
 #endif

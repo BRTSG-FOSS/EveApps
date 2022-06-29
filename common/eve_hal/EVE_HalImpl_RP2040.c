@@ -553,12 +553,12 @@ bool EVE_Hal_powerCycle(EVE_HalContext *phost, bool up)
 		/* Power down */
 		gpio_put(phost->PowerDownPin, 0);
 		EVE_sleep(20);
-		
+
 		/* Reset the core, in case PD pin is not wired */
 		EVE_Hal_hostCommand(phost, EVE_CORE_RESET);
 		setSPI(phost, EVE_SPI_SINGLE_CHANNEL, 1);
 		EVE_sleep(20);
-		
+
 		/* Power up */
 		gpio_put(phost->PowerDownPin, 1);
 		EVE_sleep(20);

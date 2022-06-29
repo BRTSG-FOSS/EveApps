@@ -1205,7 +1205,10 @@ void EVE_Hal_hostCommand(EVE_HalContext *phost, uint8_t cmd)
 		    &sizeTransferred,
 		    true);
 		if (FT4222_OK != status)
+		{
 			eve_printf_debug("SPI write failed = %d\n", status);
+			phost->Status = EVE_STATUS_ERROR;
+		}
 		break;
 	case EVE_SPI_DUAL_CHANNEL:
 	case EVE_SPI_QUAD_CHANNEL:
@@ -1219,7 +1222,10 @@ void EVE_Hal_hostCommand(EVE_HalContext *phost, uint8_t cmd)
 		    0,
 		    &sizeOfRead);
 		if (FT4222_OK != status)
+		{
 			eve_printf_debug("SPI write failed = %d\n", status);
+			phost->Status = EVE_STATUS_ERROR;
+		}
 		break;
 	default:
 		eve_printf_debug("No transfer\n");
@@ -1257,7 +1263,10 @@ void EVE_Hal_hostCommandExt3(EVE_HalContext *phost, uint32_t cmd)
 		    &sizeTransferred,
 		    true);
 		if (FT4222_OK != status)
+		{
 			eve_printf_debug("SPI write failed = %d\n", status);
+			phost->Status = EVE_STATUS_ERROR;
+		}
 		break;
 	case EVE_SPI_DUAL_CHANNEL:
 	case EVE_SPI_QUAD_CHANNEL:
@@ -1272,7 +1281,10 @@ void EVE_Hal_hostCommandExt3(EVE_HalContext *phost, uint32_t cmd)
 		    0,
 		    &sizeOfRead);
 		if (FT4222_OK != status)
+		{
 			eve_printf_debug("SPI write failed = %d\n", status);
+			phost->Status = EVE_STATUS_ERROR;
+		}
 		break;
 	default:
 		eve_printf_debug("No transfer\n");

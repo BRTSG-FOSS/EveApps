@@ -88,6 +88,8 @@ typedef enum EVE_CHIPID_T
 	EVE_CHIPID_BT818 = EVE_BT818,
 } EVE_CHIPID_T;
 
+#define RAM_ERR_REPORT_MAX 128
+
 /************
 ** STRUCTS **
 ************/
@@ -353,7 +355,7 @@ typedef struct EVE_HalContext
 
 #if defined(_DEBUG)
 	bool DebugMessageVisible;
-	uint8_t DebugBackup[128];
+	uint8_t DebugBackup[RAM_ERR_REPORT_MAX];
 #endif
 
 	/* Status flags */
@@ -502,7 +504,7 @@ static inline bool EVE_Hal_supportLargeFont(EVE_HalContext *phost)
 {
 #ifdef EVE_SUPPORT_LARGEFONT
 	return EVE_CHIPID >= EVE_FT810 // FT810 and up, except BT88X range
-		&& !(EVE_CHIPID >= EVE_BT880 && EVE_CHIPID <= EVE_BT883);
+	    && !(EVE_CHIPID >= EVE_BT880 && EVE_CHIPID <= EVE_BT883);
 #else
 	return false;
 #endif

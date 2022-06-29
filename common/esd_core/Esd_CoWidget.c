@@ -293,7 +293,7 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 	uint16_t bkpCmdDl;
 	uint32_t bkpDl[10];
 
-	if (EVE_CHIPID < EVE_BT815)
+	if (EVE_CHIPID < EVE_BT815) // TODO: Verify if this issue still applies to BT880
 	{
 		if (EVE_Cmd_waitFlush(phost))
 		{
@@ -359,7 +359,7 @@ bool Esd_CoWidget_PlayBgVideo(Esd_BitmapCell video)
 		}
 	}
 
-	if (EVE_CHIPID < EVE_BT815)
+	if (EVE_CHIPID < EVE_BT815) // TODO: Verify if this issue still applies to BT880
 	{
 		if (bkpCmdDl && EVE_Cmd_waitFlush(phost))
 		{

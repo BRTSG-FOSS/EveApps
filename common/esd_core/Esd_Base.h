@@ -212,6 +212,12 @@ typedef const char *cstring;
 #endif
 #endif
 
+#ifdef ESD_LITTLEFS_FLASH
+#ifndef EVE_FLASH_AVAILABLE
+#undef ESD_LITTLEFS_FLASH
+#endif
+#endif
+
 #ifndef esd_malloc
 #define esd_malloc(size) malloc(size)
 #endif

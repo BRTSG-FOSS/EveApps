@@ -23,6 +23,32 @@ void Esd_CoDl_Bitmap_Vertex(int16_t x, int16_t y, uint8_t handle, uint16_t cell)
 	}
 }
 
+/*
+// TODO: Can we use an L8 bitmap to render a bayer dithered alpha into the STENCIL buffer, to allow fading out DXT1?
+// TODO: Can we use the same trick with an additional L1 map rendered into the STENCIL buffer to allow DXT1 to have a fake alpha channel?
+void Esd_CoDl_Bitmap_GenerateDither()
+{
+	static const uint8_t offsets[16] = {
+		0, 10, 2, 8, 5, 15, 7, 13, 1, 11, 3, 9, 4, 14, 6, 12
+	};
+	uint8_t matrix256[256];
+	uint8_t v = 0;
+	for (uint8_t i = 0; i < 16; ++i)
+	{
+		for (uint8_t j = 0; j < 16; ++j)
+		{
+			uint8_t o =
+				((j & 0xC) << 4)
+				| ((j & 0x3) << 2)
+				| ((i & 0xC) << 2)
+				| (i & 0x3);
+			matrix256[o] = v;
+			++v;
+		}
+	}
+}
+*/
+
 // NOTE: This function may only be used within a EVE_CoDl_saveContext block, because it does not clean up state, and bypasses some EVE_CoDl optimizations
 // Also EVE_CoCmd_loadIdentity must be called afterwards to fully restore the context
 void Esd_CoDl_Bitmap_Vertex_DXT1(int16_t x, int16_t y, uint8_t handle, uint8_t additional, uint8_t format, uint16_t cell, uint16_t cells)
@@ -32,6 +58,7 @@ void Esd_CoDl_Bitmap_Vertex_DXT1(int16_t x, int16_t y, uint8_t handle, uint8_t a
 	/* ---- */
 
 	EVE_HalContext *phost = Esd_GetHost();
+	EVE_CoCmd_dl(phost, ALPHA_FUNC(ALWAYS, 0));
 	EVE_CoCmd_dl(phost, BLEND_FUNC(ONE, ZERO));
 	if (format == DXT1L2)
 	{

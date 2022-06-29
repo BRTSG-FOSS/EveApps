@@ -212,9 +212,9 @@ uint32_t ILI9488_SPI_ReadRDDST(uint8_t cmd)
 void EVE_ILI9488_bootup()
 {
 #ifdef FT900_PLATFORM
-#define pad_pwd          pad_gpio43
+#define pad_pwd pad_gpio43
 #elif defined(FT93X_PLATFORM)
-#define pad_pwd          pad_gpio15
+#define pad_pwd pad_gpio15
 #endif
 	/* ILI9488 driver - configure pins for bit bang */
 	gpio_function(GPIO_SPIM_CLK, pad_spim_sck);
