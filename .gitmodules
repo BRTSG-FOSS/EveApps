@@ -1,0 +1,4 @@
+[submodule "dependencies/littlefs"]
+	path = dependencies/littlefs
+	url = https://github.com/BRTSG-FOSS/littlefs
+	branch = fork/esd
