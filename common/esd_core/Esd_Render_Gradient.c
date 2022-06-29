@@ -62,7 +62,10 @@ ESD_CORE_EXPORT void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t widt
 
 	// Write gradient palette to RAM_G
 	EVE_CoCmd_memWrite(phost, addr, 8);
-	EVE_Cmd_wrMem(phost, (void *)colors, 8);
+	EVE_Cmd_wr16(phost, colors[0]);
+	EVE_Cmd_wr16(phost, colors[1]);
+	EVE_Cmd_wr16(phost, colors[2]);
+	EVE_Cmd_wr16(phost, colors[3]);
 
 	// Set required state
 	EVE_CoDl_colorArgb_ex(phost, ESD_ARGB_WHITE);
