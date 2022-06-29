@@ -15,6 +15,20 @@ Bitmap info structure
 extern "C" {
 #endif
 
+#ifdef ESD_LITTLEFS_FLASH
+#define ESD_BITMAP_DEFAULTS            \
+	.FlashAddress = FA_INVALID,        \
+	.GpuHandle = GA_HANDLE_INIT,       \
+	.BitmapHandle = ~0,                \
+	.PaletteFlashAddress = FA_INVALID, \
+	.PaletteGpuHandle = GA_HANDLE_INIT
+#else
+#define ESD_BITMAP_DEFAULTS      \
+	.GpuHandle = GA_HANDLE_INIT, \
+	.BitmapHandle = ~0,          \
+	.PaletteGpuHandle = GA_HANDLE_INIT
+#endif
+
 ESD_TYPE(Esd_BitmapInfo, Native = Struct) // TODO: Struct support, expose values
 typedef struct Esd_BitmapInfo
 {

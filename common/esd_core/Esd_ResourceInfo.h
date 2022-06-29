@@ -35,6 +35,15 @@ ESD_END()
 // Both flash and direct flash have the same type bit set on purpose
 #define ESD_RESOURCE_IS_FLASH(resourceType) ((resourceType & ESD_RESOURCE_FLASH) == ESD_RESOURCE_FLASH)
 
+#ifdef ESD_LITTLEFS_FLASH
+#define ESD_RESOURCE_DEFAULTS   \
+	.FlashAddress = FA_INVALID, \
+	.GpuHandle = GA_HANDLE_INIT
+#else
+#define ESD_RESOURCE_DEFAULTS \
+	.GpuHandle = GA_HANDLE_INIT
+#endif
+
 ESD_TYPE(Esd_ResourceInfo, Native = Struct)
 typedef struct Esd_ResourceInfo // (16 bytes) (24 bytes on 64 bit)
 {
