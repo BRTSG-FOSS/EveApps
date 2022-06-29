@@ -322,10 +322,6 @@ if(NOT EVE_APPS_DISPLAY STREQUAL "MULTI")
   endif()
 endif()
 
-if(WITH_ESD_CORE AND WITH_ESD_LITTLEFS)
-  add_definitions("-DESD_LITTLEFS_FLASH")
-endif()
-
 # Set host platform build flag #################################################
 IF(IS_PLATFORM_FT900)
   ADD_DEFINITIONS("-D__FT900__")
@@ -333,7 +329,19 @@ ELSEIF(IS_PLATFORM_FT930)
   ADD_DEFINITIONS("-D__FT930__")
 ENDIF()
 
+if(WITH_ESD_CORE AND WITH_ESD_LITTLEFS)
+  add_definitions("-DESD_LITTLEFS_FLASH")
+endif()
+
+IF(WIN32 AND ((EVE_APPS_PLATFORM STREQUAL "MULTI") OR (EVE_APPS_GRAPHICS STREQUAL "MULTI")))
+  IF(WITH_ESD_CORE AND WITH_ESD_LITTLEFS)
+     ADD_DEFINITIONS(-DLFS_IMPORT)
+     INCLUDE_DIRECTORIES("dependencies/littlefs")
+  ENDIF()
+ENDIF()
+
 # Common setup #################################################################
+ADD_SUBDIRECTORY(dependencies)
 ADD_SUBDIRECTORY(common)
 INCLUDE_DIRECTORIES("common/eve_hal")
 INCLUDE_DIRECTORIES("common/eve_hal/Hdr")

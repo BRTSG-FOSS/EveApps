@@ -22,3 +22,9 @@ ENDIF()
 TARGET_LINK_LIBRARIES(esd_core
   eve_hal
 )
+
+IF(WITH_ESD_LITTLEFS)
+  TARGET_LINK_LIBRARIES(esd_core
+    littlefs
+  )
+ENDIF()
