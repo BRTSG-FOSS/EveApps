@@ -296,9 +296,9 @@ ESD_CORE_EXPORT uint8_t Esd_CoDl_SetupBitmap(Esd_BitmapInfo *bitmapInfo)
 			format = L1;
 		else if (format == DXT1L2)
 			format = L2;
-		else if (format == JPEG)
+		else if (format == JPEG) // This case only occurs if the format wasn't loaded by the coprocessor
 			format = RGB565; // TODO: Support for grayscale
-		else if (format == PNG)
+		else if (format == PNG) // This case only occurs if the format wasn't loaded by the coprocessor
 			format = RGB565; // TODO: Support for other PNG formats
 
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
