@@ -85,9 +85,12 @@ typedef struct
 
 	Esd_HandleState HandleState;
 
-	uint32_t AnimationChannelsReserved; // Reserved animation channels, bitfield
-	uint32_t AnimationChannelsSetup; // Channels which have been set up, may be reset due to coprocessor fault
-	uint32_t AnimationChannelsActive; // Channels which are active (from register REG_ANIM_ACTIVE)
+	Esd_GpuHandle MultiGradientGpuHandle; //< Multi gradient rendering bitmap
+	uint32_t MultiGradientCell; //< Next available cell in the bitmap
+
+	uint32_t AnimationChannelsReserved; //< Reserved animation channels, bitfield
+	uint32_t AnimationChannelsSetup; //< Channels which have been set up, may be reset due to coprocessor fault
+	uint32_t AnimationChannelsActive; //< Channels which are active (from register REG_ANIM_ACTIVE)
 
 #ifdef EVE_SUPPORT_VIDEO
 	Esd_BitmapInfo *BgVideoInfo; //< Currently playing background video

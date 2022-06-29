@@ -7,10 +7,6 @@
 
 #include "math.h"
 
-// Multi gradient rendering state
-Esd_GpuHandle s_MultiGradient_GpuHandle;
-uint32_t s_MultiGradient_Cell;
-
 // Switch to use coprocessor for scaling matrix. Uses more bitmap matrix entries in the display list
 #define ESD_MULTIGRADIENT_CO_SCALE 0
 
@@ -20,6 +16,7 @@ uint32_t s_MultiGradient_Cell;
 ESD_CORE_EXPORT void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t width, int16_t height, esd_argb32_t topLeft, esd_argb32_t topRight, esd_argb32_t bottomLeft, esd_argb32_t bottomRight)
 {
 	EVE_HalContext *phost = Esd_GetHost();
+	Esd_Context *ec = Esd_CurrentContext;
 	uint32_t addr;
 	bool alpha;
 	uint16_t colors[4];
@@ -29,13 +26,13 @@ ESD_CORE_EXPORT void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t widt
 		return;
 
 	// Get address of RAM_G used for gradient palette
-	addr = Esd_GpuAlloc_Get(Esd_GAlloc, s_MultiGradient_GpuHandle);
+	addr = Esd_GpuAlloc_Get(Esd_GAlloc, ec->MultiGradientGpuHandle);
 	if (addr == GA_INVALID)
 	{
 		// Allocate enough memory for 32 gradients.
 		// Two bytes * four pixels * 64 gradients, 32 per frame flip.
-		s_MultiGradient_GpuHandle = Esd_GpuAlloc_Alloc(Esd_GAlloc, 2 * 4 * ESD_MULTIGRADIENT_MAX_NB, GA_GC_FLAG);
-		addr = Esd_GpuAlloc_Get(Esd_GAlloc, s_MultiGradient_GpuHandle);
+		ec->MultiGradientGpuHandle = Esd_GpuAlloc_Alloc(Esd_GAlloc, 2 * 4 * ESD_MULTIGRADIENT_MAX_NB, GA_GC_FLAG);
+		addr = Esd_GpuAlloc_Get(Esd_GAlloc, ec->MultiGradientGpuHandle);
 	}
 	if (addr == GA_INVALID)
 	{
@@ -44,7 +41,7 @@ ESD_CORE_EXPORT void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t widt
 	}
 
 	// Select cell address directly
-	addr += (s_MultiGradient_Cell * 8);
+	addr += (ec->MultiGradientCell * 8);
 
 	// Check if the colors have alpha, if so we'll use ARGB4, otherwise RGB565
 	alpha = topLeft < 0xFF000000 || topRight < 0xFF000000 || bottomLeft < 0xFF000000 || bottomRight < 0xFF000000;
@@ -134,8 +131,8 @@ ESD_CORE_EXPORT void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t widt
 	EVE_CoDl_end(phost);
 
 	// Move to the next cell in the bitmap for next gradient
-	++s_MultiGradient_Cell;
-	s_MultiGradient_Cell &= (ESD_MULTIGRADIENT_MAX_NB - 1);
+	++ec->MultiGradientCell;
+	ec->MultiGradientCell &= (ESD_MULTIGRADIENT_MAX_NB - 1);
 }
 
 ESD_CORE_EXPORT void Esd_Render_MultiGradient_Rounded(int16_t x, int16_t y, int16_t width, int16_t height, esd_int32_f4_t radius, uint8_t alpha, esd_argb32_t topLeft, esd_argb32_t topRight, esd_argb32_t bottomLeft, esd_argb32_t bottomRight)
