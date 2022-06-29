@@ -94,34 +94,9 @@ ESD_CORE_EXPORT void Esd_Defaults(Esd_Parameters *ep)
 	memset(ep, 0, sizeof(Esd_Parameters));
 #ifdef ESD_FLASH_FILES
 #ifdef _WIN32
-	struct stat buffer;
-	//check exe folder first
-	if (stat("__Flash.bin", &buffer) == 0)
-	{
-		wcscpy_s(ep->FlashFilePaths[ESD_FLASH_BT815], _countof(ep->FlashFilePaths[ESD_FLASH_BT815]), L"__Flash.bin");
-	}
-	//check Data folder
-	else if (stat("..\\..\\..\\Data\\__Flash.bin", &buffer) == 0)
-	{
-		wcscpy_s(ep->FlashFilePaths[ESD_FLASH_BT815], _countof(ep->FlashFilePaths[ESD_FLASH_BT815]), L"..\\..\\..\\Data\\__Flash.bin");
-	}
-	else
-	{
-		eve_printf_debug("__Flash.bin not exist\n");
-	}
+	wcscpy_s(ep->FlashFilePaths[ESD_FLASH_BT815], _countof(ep->FlashFilePaths[ESD_FLASH_BT815]), L"__Flash.bin");
 #if (EVE_SUPPORT_CHIPID >= EVE_BT817)
-	if (stat("__Flash.bin", &buffer) == 0)
-	{
-		wcscpy_s(ep->FlashFilePaths[ESD_FLASH_BT817], _countof(ep->FlashFilePaths[ESD_FLASH_BT817]), L"__Flash.bin");
-	}
-	else if (stat("..\\..\\..\\Data\\__Flash.bin", &buffer) == 0)
-	{
-		wcscpy_s(ep->FlashFilePaths[ESD_FLASH_BT817], _countof(ep->FlashFilePaths[ESD_FLASH_BT817]), L"..\\..\\..\\Data\\__Flash.bin");
-	}
-	else
-	{
-		eve_printf_debug("..\\..\\..\\Data\\__Flash.bin not exist\n");
-	}
+	wcscpy_s(ep->FlashFilePaths[ESD_FLASH_BT817], _countof(ep->FlashFilePaths[ESD_FLASH_BT817]), L"__Flash.bin");
 #endif
 #else
 	strcpy(ep->FlashFilePaths[ESD_FLASH_BT815], _countof(ep->FlashFilePaths[ESD_FLASH_BT815]), "__Flash.bin");
