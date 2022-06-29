@@ -1596,7 +1596,7 @@ SELECTFLASH:
 #if defined(EVE_MULTI_PLATFORM_TARGET) || !defined(BT8XXEMU_PLATFORM)
 		uint8_t buffer[4096];
 #if defined(EVE_MULTI_PLATFORM_TARGET)
-		if (params->Host != EVE_HOST_BT8XXEMU)
+		if (params->Host != EVE_HOST_BT8XXEMU && flashFile[0])
 #endif
 		{
 			/* Query user if they want to update the flash file on the device */
@@ -1617,6 +1617,8 @@ SELECTFLASH:
 			}
 		}
 #endif
+		/* When uploading, or under emulator when the default flash is specified,
+		offer to confirm which flash file will be used. */
 		if (*updateFlash
 #if defined(EVE_MULTI_PLATFORM_TARGET) || defined(BT8XXEMU_PLATFORM)
 		    || (
@@ -1670,6 +1672,15 @@ SELECTFLASH:
 			fclose(f);
 			f = NULL;
 			printf("\n");
+		}
+		if (*updateFlash
+#if defined(EVE_MULTI_PLATFORM_TARGET)
+		    || params->Host == EVE_HOST_BT8XXEMU
+#elif defined(BT8XXEMU_PLATFORM)
+		    || true
+#endif
+		)
+		{
 			if (!flashPath[0])
 #pragma warning(push)
 #pragma warning(disable : 4996)
