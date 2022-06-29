@@ -19,7 +19,11 @@ ESD_CORE_EXPORT void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t widt
 	Esd_Context *ec = Esd_CurrentContext;
 	uint32_t addr;
 	bool alpha;
-	uint16_t colors[4];
+	union
+	{
+		uint16_t values[4];
+		uint64_t cache;
+	} color;
 
 	// Don't render empty
 	if (width == 0 || height == 0)
@@ -33,6 +37,12 @@ ESD_CORE_EXPORT void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t widt
 		// Two bytes * four pixels * 64 gradients, 32 per frame flip.
 		ec->MultiGradientGpuHandle = Esd_GpuAlloc_Alloc(Esd_GAlloc, 2 * 4 * ESD_MULTIGRADIENT_MAX_NB, GA_GC_FLAG);
 		addr = Esd_GpuAlloc_Get(Esd_GAlloc, ec->MultiGradientGpuHandle);
+#ifdef ESD_MULTIGRADIENT_CACHE
+		memset(ec->MultiGradientCache, 0, sizeof(ec->MultiGradientCache));
+		EVE_CoCmd_memZero(phost, addr + (ec->MultiGradientCell * 8), 8);
+		++ec->MultiGradientCell;
+		ec->MultiGradientCell &= (ESD_MULTIGRADIENT_MAX_NB - 1);
+#endif
 	}
 	if (addr == GA_INVALID)
 	{
@@ -40,32 +50,64 @@ ESD_CORE_EXPORT void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t widt
 		return;
 	}
 
-	// Select cell address directly
-	addr += (ec->MultiGradientCell * 8);
-
 	// Check if the colors have alpha, if so we'll use ARGB4, otherwise RGB565
 	alpha = topLeft < 0xFF000000 || topRight < 0xFF000000 || bottomLeft < 0xFF000000 || bottomRight < 0xFF000000;
 	if (alpha)
 	{
-		colors[0] = ESD_COLOR_ARGB4(topLeft);
-		colors[1] = ESD_COLOR_ARGB4(topRight);
-		colors[2] = ESD_COLOR_ARGB4(bottomLeft);
-		colors[3] = ESD_COLOR_ARGB4(bottomRight);
+		color.values[0] = ESD_COLOR_ARGB4(topLeft);
+		color.values[1] = ESD_COLOR_ARGB4(topRight);
+		color.values[2] = ESD_COLOR_ARGB4(bottomLeft);
+		color.values[3] = ESD_COLOR_ARGB4(bottomRight);
 	}
 	else
 	{
-		colors[0] = ESD_COLOR_RGB565(topLeft);
-		colors[1] = ESD_COLOR_RGB565(topRight);
-		colors[2] = ESD_COLOR_RGB565(bottomLeft);
-		colors[3] = ESD_COLOR_RGB565(bottomRight);
+		color.values[0] = ESD_COLOR_RGB565(topLeft);
+		color.values[1] = ESD_COLOR_RGB565(topRight);
+		color.values[2] = ESD_COLOR_RGB565(bottomLeft);
+		color.values[3] = ESD_COLOR_RGB565(bottomRight);
 	}
 
-	// Write gradient palette to RAM_G
-	EVE_CoCmd_memWrite(phost, addr, 8);
-	EVE_Cmd_wr16(phost, colors[0]);
-	EVE_Cmd_wr16(phost, colors[1]);
-	EVE_Cmd_wr16(phost, colors[2]);
-	EVE_Cmd_wr16(phost, colors[3]);
+	// Select cell address directly
+	addr += (ec->MultiGradientCell * 8);
+	
+#ifdef ESD_MULTIGRADIENT_CACHE
+	bool cached = false;
+	for (int16_t i = 7; i >= 0; --i)
+	{
+		if (ec->MultiGradientCache[i] == color.cache)
+		{
+			// If i == (ec->MultiGradientCacheIdx - 1), 
+			// then the cell will be (ec->MultiGradientCell - 1).
+			// Adjust addr accordingly.
+			int16_t cellOffset = ec->MultiGradientCacheIdx - i;
+			if (cellOffset <= 0)
+				cellOffset += 8;
+			addr -= ((uint16_t)cellOffset * 8);
+			cached = true;
+			break;
+		}
+	}
+	if (!cached)
+#endif
+	{
+		// Write gradient palette to RAM_G
+		EVE_CoCmd_memWrite(phost, addr, 8);
+		EVE_Cmd_wr16(phost, color.values[0]);
+		EVE_Cmd_wr16(phost, color.values[1]);
+		EVE_Cmd_wr16(phost, color.values[2]);
+		EVE_Cmd_wr16(phost, color.values[3]);
+#ifdef ESD_MULTIGRADIENT_CACHE
+		ec->MultiGradientCache[ec->MultiGradientCacheIdx] = color.cache;
+#endif
+
+		// Move to the next cell in the bitmap for next gradient
+		++ec->MultiGradientCell;
+		ec->MultiGradientCell &= (ESD_MULTIGRADIENT_MAX_NB - 1);
+#ifdef ESD_MULTIGRADIENT_CACHE
+		++ec->MultiGradientCacheIdx;
+		ec->MultiGradientCacheIdx &= 7;
+#endif
+	}
 
 	// Set required state
 	EVE_CoDl_colorArgb_ex(phost, ESD_ARGB_WHITE);
@@ -132,10 +174,6 @@ ESD_CORE_EXPORT void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t widt
 	/* ---- */
 
 	EVE_CoDl_end(phost);
-
-	// Move to the next cell in the bitmap for next gradient
-	++ec->MultiGradientCell;
-	ec->MultiGradientCell &= (ESD_MULTIGRADIENT_MAX_NB - 1);
 }
 
 ESD_CORE_EXPORT void Esd_Render_MultiGradient_Rounded(int16_t x, int16_t y, int16_t width, int16_t height, esd_int32_f4_t radius, uint8_t alpha, esd_argb32_t topLeft, esd_argb32_t topRight, esd_argb32_t bottomLeft, esd_argb32_t bottomRight)

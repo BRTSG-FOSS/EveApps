@@ -55,6 +55,8 @@
 #endif
 #endif
 
+#define ESD_MULTIGRADIENT_CACHE
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -86,7 +88,11 @@ typedef struct
 	Esd_HandleState HandleState;
 
 	Esd_GpuHandle MultiGradientGpuHandle; //< Multi gradient rendering bitmap
-	uint32_t MultiGradientCell; //< Next available cell in the bitmap
+	uint16_t MultiGradientCell; //< Next available cell in the bitmap
+#ifdef ESD_MULTIGRADIENT_CACHE
+	int16_t MultiGradientCacheIdx;
+	uint64_t MultiGradientCache[8];
+#endif
 
 	uint32_t AnimationChannelsReserved; //< Reserved animation channels, bitfield
 	uint32_t AnimationChannelsSetup; //< Channels which have been set up, may be reset due to coprocessor fault
