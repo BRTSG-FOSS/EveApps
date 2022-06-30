@@ -104,7 +104,7 @@ extern "C" {
 #define eve_sprintf(str, fmt, ...) sprintf(str, fmt, ##__VA_ARGS__)
 #endif
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(__clang__)
 #define eve_assume(cond) __assume(cond)
 #else
 #define eve_assume(cond) eve_noop()

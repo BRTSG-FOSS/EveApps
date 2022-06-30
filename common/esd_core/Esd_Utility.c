@@ -169,7 +169,8 @@ ESD_CORE_EXPORT bool Esd_Calibrate()
 	// Print the configured values
 	EVE_Hal_rdMem(phost, (uint8_t *)transMatrix, REG_TOUCH_TRANSFORM_A, 4 * 6); //read all the 6 coefficients
 	eve_printf_debug("Touch screen transform values are A 0x%lx,B 0x%lx,C 0x%lx,D 0x%lx,E 0x%lx, F 0x%lx\n",
-	    transMatrix[0], transMatrix[1], transMatrix[2], transMatrix[3], transMatrix[4], transMatrix[5]);
+	    (unsigned long)transMatrix[0], (unsigned long)transMatrix[1], (unsigned long)transMatrix[2],
+		(unsigned long)transMatrix[3], (unsigned long)transMatrix[4], (unsigned long)transMatrix[5]);
 
 	return result != 0;
 }
@@ -185,17 +186,11 @@ ESD_CORE_EXPORT void Esd_ProcessFree()
 {
 	void *current = Esd_CurrentContext->DeferredFree;
 	Esd_CurrentContext->DeferredFree = NULL;
-	int ret = 0;
 	while (current)
 	{
 		void *next = (*(void **)current);
 		// eve_printf_debug("Free deferred\n");
-#ifdef ESD_MEMORYPOOL_ALLOCATOR
-		ret = Esd_MemoryPool_Free(Esd_MP, current);
-		eve_printf_debug("[Esd MemoryPool] Free deferred, return value %d\n", ret);
-#else
-		free(current);
-#endif
+		esd_free(current);
 		current = next;
 	}
 }

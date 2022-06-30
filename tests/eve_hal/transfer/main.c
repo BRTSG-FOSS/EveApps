@@ -77,7 +77,7 @@ bool loop(EVE_HalContext *phost)
 		uint32_t idx;
 		uint32_t sz;
 		uint32_t cj;
-		uint32_t cur;
+		// uint32_t cur;
 		uint32_t rem;
 
 		/* Random test on RAM_G */
@@ -94,7 +94,7 @@ bool loop(EVE_HalContext *phost)
 			s_BufferWr[j] = wangHash(++hk) & 0xFF;
 		memset(s_BufferRd, 0xBABABABA, sizeof(s_BufferRd));
 		cj = 0;
-		cur = idx;
+		// cur = idx;
 		rem = sz;
 		EVE_Hal_startTransfer(phost, EVE_TRANSFER_WRITE, idx);
 		do
@@ -102,7 +102,7 @@ bool loop(EVE_HalContext *phost)
 			uint32_t w = wangHash(++hk) % (rem + 1);
 			EVE_Hal_transferMem(phost, NULL, &s_BufferWr[cj], w);
 			rem -= w;
-			cur += w;
+			// cur += w;
 			cj += w;
 		} while (rem);
 		EVE_Hal_endTransfer(phost);
@@ -221,8 +221,9 @@ bool loop(EVE_HalContext *phost)
 		wp = EVE_Cmd_wp(phost);
 		for (i = 0; i < 1023; ++i)
 		{
-			s_BufferCmdWr[i] = COLOR_RGB(wangHash(++hk) & 0xFF, wangHash(++hk) & 0xFF, wangHash(++hk) & 0xFF);
+			s_BufferCmdWr[i] = COLOR_RGB(wangHash(hk + 1) & 0xFF, wangHash(hk + 2) & 0xFF, wangHash(hk + 3) & 0xFF);
 			EVE_Hal_wr32(phost, REG_CMDB_WRITE, s_BufferCmdWr[i]);
+			hk += 3;
 		}
 		printf("O");
 

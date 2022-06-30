@@ -143,15 +143,15 @@ bool EVE_HalImpl_defaults(EVE_HalParameters *parameters, size_t deviceIdx)
 		res = EVE_HalImpl_FT4222_defaults(parameters, deviceIdx - s_DeviceCountBT8XXEMU - s_DeviceCountMPSSE);
 		parameters->Host = EVE_HOST_FT4222;
 	}
-	else if (res = EVE_HalImpl_FT4222_defaults(parameters, deviceIdx - s_DeviceCountBT8XXEMU - s_DeviceCountMPSSE))
+	else if ((res = EVE_HalImpl_FT4222_defaults(parameters, deviceIdx - s_DeviceCountBT8XXEMU - s_DeviceCountMPSSE)))
 	{
 		parameters->Host = EVE_HOST_FT4222;
 	}
-	else if (res = EVE_HalImpl_MPSSE_defaults(parameters, deviceIdx - s_DeviceCountBT8XXEMU))
+	else if ((res = EVE_HalImpl_MPSSE_defaults(parameters, deviceIdx - s_DeviceCountBT8XXEMU)))
 	{
 		parameters->Host = EVE_HOST_MPSSE;
 	}
-	else if (res = EVE_HalImpl_BT8XXEMU_defaults(parameters, deviceIdx))
+	else if ((res = EVE_HalImpl_BT8XXEMU_defaults(parameters, deviceIdx)))
 	{
 		parameters->Host = EVE_HOST_BT8XXEMU;
 	}
@@ -201,6 +201,8 @@ void EVE_HalImpl_close(EVE_HalContext *phost)
 	case EVE_HOST_MPSSE:
 		EVE_HalImpl_MPSSE_close(phost);
 		break;
+	default:
+		break;
 	}
 }
 
@@ -220,6 +222,8 @@ void EVE_HalImpl_idle(EVE_HalContext *phost)
 		break;
 	case EVE_HOST_MPSSE:
 		EVE_HalImpl_MPSSE_idle(phost);
+		break;
+	default:
 		break;
 	}
 }
@@ -244,6 +248,8 @@ EVE_HAL_EXPORT void EVE_Hal_startTransfer(EVE_HalContext *phost, EVE_TRANSFER_T 
 	case EVE_HOST_MPSSE:
 		EVE_Hal_MPSSE_startTransfer(phost, rw, addr);
 		break;
+	default:
+		break;
 	}
 }
 
@@ -262,6 +268,8 @@ EVE_HAL_EXPORT void EVE_Hal_endTransfer(EVE_HalContext *phost)
 		break;
 	case EVE_HOST_MPSSE:
 		EVE_Hal_MPSSE_endTransfer(phost);
+		break;
+	default:
 		break;
 	}
 }
@@ -282,6 +290,8 @@ EVE_HAL_EXPORT void EVE_Hal_flush(EVE_HalContext *phost)
 	case EVE_HOST_MPSSE:
 		EVE_Hal_MPSSE_flush(phost);
 		break;
+	default:
+		break;
 	}
 }
 
@@ -298,6 +308,8 @@ EVE_HAL_EXPORT uint8_t EVE_Hal_transfer8(EVE_HalContext *phost, uint8_t value)
 		return EVE_Hal_FT4222_transfer8(phost, value);
 	case EVE_HOST_MPSSE:
 		return EVE_Hal_MPSSE_transfer8(phost, value);
+	default:
+		break;
 	}
 	return 0;
 }
@@ -315,6 +327,8 @@ EVE_HAL_EXPORT uint16_t EVE_Hal_transfer16(EVE_HalContext *phost, uint16_t value
 		return EVE_Hal_FT4222_transfer16(phost, value);
 	case EVE_HOST_MPSSE:
 		return EVE_Hal_MPSSE_transfer16(phost, value);
+	default:
+		break;
 	}
 	return 0;
 }
@@ -332,6 +346,8 @@ EVE_HAL_EXPORT uint32_t EVE_Hal_transfer32(EVE_HalContext *phost, uint32_t value
 		return EVE_Hal_FT4222_transfer32(phost, value);
 	case EVE_HOST_MPSSE:
 		return EVE_Hal_MPSSE_transfer32(phost, value);
+	default:
+		break;
 	}
 	return 0;
 }
@@ -352,6 +368,8 @@ EVE_HAL_EXPORT void EVE_Hal_transferMem(EVE_HalContext *phost, uint8_t *result, 
 	case EVE_HOST_MPSSE:
 		EVE_Hal_MPSSE_transferMem(phost, result, buffer, size);
 		break;
+	default:
+		break;
 	}
 }
 
@@ -371,6 +389,8 @@ EVE_HAL_EXPORT void EVE_Hal_transferProgMem(EVE_HalContext *phost, uint8_t *resu
 	case EVE_HOST_MPSSE:
 		EVE_Hal_MPSSE_transferProgMem(phost, result, buffer, size);
 		break;
+	default:
+		break;
 	}
 }
 
@@ -387,6 +407,8 @@ EVE_HAL_EXPORT uint32_t EVE_Hal_transferString(EVE_HalContext *phost, const char
 		return EVE_Hal_FT4222_transferString(phost, str, index, size, padMask);
 	case EVE_HOST_MPSSE:
 		return EVE_Hal_MPSSE_transferString(phost, str, index, size, padMask);
+	default:
+		break;
 	}
 	return 0;
 }
@@ -411,6 +433,8 @@ EVE_HAL_EXPORT void EVE_Hal_hostCommand(EVE_HalContext *phost, uint8_t cmd)
 	case EVE_HOST_MPSSE:
 		EVE_Hal_MPSSE_hostCommand(phost, cmd);
 		break;
+	default:
+		break;
 	}
 }
 
@@ -430,6 +454,8 @@ EVE_HAL_EXPORT void EVE_Hal_hostCommandExt3(EVE_HalContext *phost, uint32_t cmd)
 		break;
 	case EVE_HOST_MPSSE:
 		EVE_Hal_MPSSE_hostCommandExt3(phost, cmd);
+		break;
+	default:
 		break;
 	}
 }
@@ -451,6 +477,8 @@ EVE_HAL_EXPORT bool EVE_Hal_powerCycle(EVE_HalContext *phost, bool up)
 	case EVE_HOST_MPSSE:
 		return EVE_Hal_MPSSE_powerCycle(phost, up);
 		break;
+	default:
+		break;
 	}
 	return false;
 }
@@ -471,6 +499,8 @@ EVE_HAL_EXPORT void EVE_Hal_setSPI(EVE_HalContext *phost, EVE_SPI_CHANNELS_T num
 	case EVE_HOST_MPSSE:
 		EVE_Hal_MPSSE_setSPI(phost, numchnls, numdummy);
 		break;
+	default:
+		break;
 	}
 }
 
@@ -489,6 +519,8 @@ EVE_HAL_EXPORT void EVE_Hal_restoreSPI(EVE_HalContext *phost)
 		break;
 	case EVE_HOST_MPSSE:
 		EVE_Hal_MPSSE_restoreSPI(phost);
+		break;
+	default:
 		break;
 	}
 }
@@ -510,6 +542,8 @@ bool EVE_UtilImpl_bootupDisplayGpio(EVE_HalContext *phost)
 		return EVE_UtilImpl_FT4222_bootupDisplayGpio(phost);
 	case EVE_HOST_MPSSE:
 		return EVE_UtilImpl_MPSSE_bootupDisplayGpio(phost);
+	default:
+		break;
 	}
 	return false;
 }

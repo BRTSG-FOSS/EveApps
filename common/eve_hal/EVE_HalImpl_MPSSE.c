@@ -70,7 +70,6 @@
 ** INIT **
 *********/
 
-EVE_HalPlatform g_HalPlatform;
 uint32_t s_NumChannels = 0;
 
 /**
@@ -231,7 +230,7 @@ bool EVE_HalImpl_open(EVE_HalContext *phost, const EVE_HalParameters *parameters
 		return false;
 	}
 
-	eve_printf_debug("\nhandle=0x%p status=0x%x\n", phost->SpiHandle, status);
+	eve_printf_debug("\nhandle=0x%p status=0x%x\n", phost->SpiHandle, (unsigned int)status);
 
 	/* Special case, when connecting through UMFTPD2A, use channel D for GPIO */
 	if (phost->PowerDownPin >= 8 && ((phost->PowerDownPin & 0x80) == 0))
@@ -347,7 +346,7 @@ static inline bool rdBuffer(EVE_HalContext *phost, uint8_t *buffer, uint32_t siz
 
 		if (status != FT_OK || !sizeTransferred)
 		{
-			eve_printf_debug("%d SPI_Read failed, sizeTransferred is %d with status %d\n", __LINE__, sizeTransferred, status);
+			eve_printf_debug("%d SPI_Read failed, sizeTransferred is %d with status %d\n", __LINE__, sizeTransferred, (int)status);
 			phost->Status = EVE_STATUS_ERROR;
 			return false;
 		}
@@ -412,7 +411,7 @@ static inline bool wrBuffer(EVE_HalContext *phost, const uint8_t *buffer, uint32
 
 			if ((status != FT_OK) || (sizeTransferred != 3))
 			{
-				eve_printf_debug("%d SPI_Write failed, sizeTransferred is %d with status %d\n", __LINE__, sizeTransferred, status);
+				eve_printf_debug("%d SPI_Write failed, sizeTransferred is %d with status %d\n", __LINE__, sizeTransferred, (int)status);
 				if (sizeTransferred != 3)
 					phost->Status = EVE_STATUS_ERROR;
 				return false;
@@ -429,7 +428,7 @@ static inline bool wrBuffer(EVE_HalContext *phost, const uint8_t *buffer, uint32
 
 				if (status != FT_OK || !sizeTransferred)
 				{
-					eve_printf_debug("%d SPI_Write failed, sizeTransferred is %d with status %d\n", __LINE__, sizeTransferred, status);
+					eve_printf_debug("%d SPI_Write failed, sizeTransferred is %d with status %d\n", __LINE__, sizeTransferred, (int)status);
 					phost->Status = EVE_STATUS_ERROR;
 					return false;
 				}
@@ -472,7 +471,6 @@ static inline bool wrBuffer(EVE_HalContext *phost, const uint8_t *buffer, uint32
  */
 static inline uint8_t transfer8(EVE_HalContext *phost, uint8_t value)
 {
-	uint32_t sizeTransferred = 0;
 	if (phost->Status == EVE_STATUS_WRITING)
 	{
 		wrBuffer(phost, &value, sizeof(value));

@@ -167,7 +167,7 @@ EVE_HAL_EXPORT bool EVE_Util_loadInflateFile(EVE_HalContext *phost, uint32_t add
 		blocklen += 3;
 		blocklen &= ~3U;
 
-		if (!EVE_Cmd_wrMem(phost, (char *)pbuff, blocklen)) /* copy data continuously into command memory */
+		if (!EVE_Cmd_wrMem(phost, pbuff, blocklen)) /* copy data continuously into command memory */
 			break;
 	}
 
@@ -245,7 +245,7 @@ EVE_HAL_EXPORT bool EVE_Util_loadImageFile(EVE_HalContext *phost, uint32_t addre
 		blocklen += 3;
 		blocklen &= ~3U;
 
-		if (!EVE_Cmd_wrMem(phost, (char *)pbuff, blocklen))
+		if (!EVE_Cmd_wrMem(phost, pbuff, blocklen))
 			break;
 	}
 
@@ -308,7 +308,7 @@ EVE_HAL_EXPORT bool EVE_Util_loadCmdFile(EVE_HalContext *phost, const char *file
 		ftsize -= blocklen;
 		blocklen += 3;
 		blocklen &= ~3U;
-		if (!EVE_Cmd_wrMem(phost, (char *)pbuff, blocklen)) /* copy data continuously into command memory */
+		if (!EVE_Cmd_wrMem(phost, pbuff, blocklen)) /* copy data continuously into command memory */
 			break;
 		if (transfered)
 			*transfered += blocklen;

@@ -379,7 +379,7 @@ EVE_HAL_EXPORT void EVE_CoCmd_dwwwwwwz_s(EVE_HalContext *phost, uint32_t cmd,
 #if defined(_DEBUG) && defined(EVE_MULTI_GRAPHICS_TARGET)
 EVE_HAL_EXPORT void EVE_CoCmd_debugUnsupported(const char *cmd, uint32_t chipId)
 {
-	eve_printf_debug("Coprocessor command %s is not supported on target platform %lx\n", cmd, chipId);
+	eve_printf_debug("Coprocessor command %s is not supported on target platform %lx\n", cmd, (unsigned long)chipId);
 }
 #endif
 

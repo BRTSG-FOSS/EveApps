@@ -70,7 +70,6 @@
 void Esd_MainReady__ESD(BT8XXEMU_Emulator *emulator);
 #endif
 
-EVE_HalPlatform g_HalPlatform;
 static int s_EmulatorSerial = 0;
 
 /**

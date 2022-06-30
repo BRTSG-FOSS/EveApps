@@ -69,7 +69,6 @@
 
 #define FT4222_LATENCY_TIME (2)
 
-EVE_HalPlatform g_HalPlatform;
 DWORD s_NumDevsD2XX;
 
 /**
@@ -321,7 +320,6 @@ bool EVE_HalImpl_open(EVE_HalContext *phost, const EVE_HalParameters *parameters
 	FT_STATUS status;
 	FT4222_Version pversion;
 	FT4222_ClockRate ftclk = 0;
-	uint16_t max_size = 0;
 	FT4222_ClockRate selclk = 0;
 	FT4222_SPIClock seldiv = 0;
 	/* GPIO0         , GPIO1      , GPIO2       , GPIO3         } */
@@ -386,7 +384,7 @@ bool EVE_HalImpl_open(EVE_HalContext *phost, const EVE_HalParameters *parameters
 		status = FT_Open(deviceIdxA, &phost->SpiHandle);
 		if (status != FT_OK)
 		{
-			eve_printf_debug("FT_Open FT4222 A failed %d\n", status);
+			eve_printf_debug("FT_Open FT4222 A failed %d\n", (int)status);
 			phost->SpiHandle = NULL;
 			ret = false;
 		}
@@ -397,7 +395,7 @@ bool EVE_HalImpl_open(EVE_HalContext *phost, const EVE_HalParameters *parameters
 		status = FT_Open(deviceIdxB, &phost->GpioHandle);
 		if (status != FT_OK)
 		{
-			eve_printf_debug("FT_Open FT4222 B failed %d\n", status);
+			eve_printf_debug("FT_Open FT4222 B failed %d\n", (int)status);
 			FT_Close(phost->SpiHandle);
 			phost->GpioHandle = NULL;
 			phost->SpiHandle = NULL;
@@ -411,7 +409,7 @@ bool EVE_HalImpl_open(EVE_HalContext *phost, const EVE_HalParameters *parameters
 		if (status != FT4222_OK)
 			eve_printf_debug("FT4222_GetVersion failed\n");
 		else
-			eve_printf_debug("SPI:chipversion = 0x%x\t dllversion = 0x%x\n", pversion.chipVersion, pversion.dllVersion);
+			eve_printf_debug("SPI:chipversion = 0x%x\t dllversion = 0x%x\n", (unsigned int)pversion.chipVersion, (unsigned int)pversion.dllVersion);
 	}
 
 	if (ret)

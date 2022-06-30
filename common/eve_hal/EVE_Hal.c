@@ -40,6 +40,8 @@
 ** INIT **
 *********/
 
+EVE_HalPlatform g_HalPlatform;
+
 /**
  * @brief Eve_Hal framework initialization
  * 

@@ -39,7 +39,6 @@
 
 static int s_SpiOpened[2];
 
-EVE_HalPlatform g_HalPlatform;
 bool EVE_Hal_NoInit = false;
 
 /* Initialize global HAL platform */

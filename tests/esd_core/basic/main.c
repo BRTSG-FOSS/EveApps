@@ -12,6 +12,8 @@ void Main_Update(void *context)
 void Main_Render(void *context)
 {
 	EVE_HalContext *phost = Esd_GetHost();
+	(void)phost;
+	
 	Esd_Render_Line(10, 10, 200, 100, 5, ESD_COMPOSE_ARGB8888(255, 127, 0, 255));
 }
 

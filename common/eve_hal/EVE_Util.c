@@ -800,7 +800,7 @@ EVE_HAL_EXPORT bool EVE_Util_bootup(EVE_HalContext *phost, EVE_BootupParameters 
 		while (EXTRACT_CHIPID(chipId) < EVE_FT800
 		    || EXTRACT_CHIPID(chipId) > EVE_BT818)
 		{
-			eve_printf_debug("EVE ROM_CHIPID after wake up %lx\n", chipId);
+			eve_printf_debug("EVE ROM_CHIPID after wake up %lx\n", (unsigned long)chipId);
 
 			++tries;
 			EVE_sleep(20);
@@ -828,8 +828,8 @@ EVE_HAL_EXPORT bool EVE_Util_bootup(EVE_HalContext *phost, EVE_BootupParameters 
 	/* Validate chip ID to ensure the correct HAL is used */
 	/* ROM_CHIPID is valid across all EVE devices */
 	if (expectedChipId && EXTRACT_CHIPID(chipId) != expectedChipId)
-		eve_printf_debug("Mismatching EVE chip id %lx, expect model %lx\n", ((chipId >> 8) & 0xFF) | ((chipId & 0xFF) << 8), expectedChipId);
-	eve_printf_debug("EVE chip id %lx %lx.%lx (gen %i)\n", EVE_shortChipId(EXTRACT_CHIPID(chipId)), ((chipId >> 16) & 0xFF), ((chipId >> 24) & 0xFF), EVE_gen(EXTRACT_CHIPID(chipId)));
+		eve_printf_debug("Mismatching EVE chip id %lx, expect model %lx\n", (unsigned long)((chipId >> 8) & 0xFF) | ((chipId & 0xFF) << 8), (unsigned long)expectedChipId);
+	eve_printf_debug("EVE chip id %lx %lx.%lx (EVE gen %i)\n", (unsigned long)EVE_shortChipId(EXTRACT_CHIPID(chipId)), (unsigned long)((chipId >> 16) & 0xFF), (unsigned long)((chipId >> 24) & 0xFF), EVE_gen(EXTRACT_CHIPID(chipId)));
 
 	/* Switch to the proper chip ID if applicable */
 #ifdef EVE_MULTI_GRAPHICS_TARGET
@@ -1602,7 +1602,7 @@ SELECTFLASH:
 			/* Query user if they want to update the flash file on the device */
 			printf("Upload flash image (y/n, or press ENTER to skip):\n");
 			buffer[0] = '\0';
-			fgets(buffer, sizeof(buffer), stdin);
+			fgets((char *)buffer, sizeof(buffer), stdin);
 			/* Fast string to bool, reliably defined for strings starting 
 			with 0, 1, t, T, f, F, y, Y, n, N, anything else is undefined. */
 			*updateFlash = (buffer[0] == '1' || (buffer[0] & 0xD2) == 0x50);
@@ -1611,7 +1611,7 @@ SELECTFLASH:
 			{
 				printf("Upload flash firmware (y/n, or press ENTER to skip):\n");
 				buffer[0] = '\0';
-				fgets(buffer, sizeof(buffer), stdin);
+				fgets((char *)buffer, sizeof(buffer), stdin);
 				*updateFlashFirmware = (buffer[0] == '1' || (buffer[0] & 0xD2) == 0x50);
 				printf("\n");
 			}

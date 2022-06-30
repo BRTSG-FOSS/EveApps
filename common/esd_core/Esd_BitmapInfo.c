@@ -71,11 +71,15 @@ static bool Esd_LoadFromFlash(uint32_t *imageFormat, bool deflate, uint32_t dst,
 
 #ifdef ESD_LITTLEFS_FLASH
 
+#if 0
+
 static bool Esd_LoadFromFlashFS(uint32_t *imageFormat, bool deflate, uint32_t dst, const char *file)
 {
 	/* TODO: Load LittleFS file to RAM_G similar to SD */
 	return false;
 }
+
+#endif
 
 int32_t Esd_BitmapInfo_LoadFlashAddress(int32_t *addr, const char *file, uint8_t *metadata)
 {
@@ -513,7 +517,7 @@ ESD_CORE_EXPORT uint32_t Esd_LoadPalette(Esd_BitmapInfo *bitmapInfo)
 		addr = Esd_GpuAlloc_Get(Esd_GAlloc, bitmapInfo->PaletteGpuHandle);
 		if (addr == GA_INVALID)
 		{
-			static const sizes[PALETTED8 - PALETTED565 + 1] = { 256 * 2, 256 * 2, 256 * 4 };
+			static const uint32_t sizes[PALETTED8 - PALETTED565 + 1] = { 256 * 2, 256 * 2, 256 * 4 };
 			uint32_t size = sizes[bitmapInfo->Format - PALETTED565];
 
 			// Verify if there is a file name or flash address specified, or if the flash address can be found in the flash filesystem

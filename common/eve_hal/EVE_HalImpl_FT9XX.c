@@ -47,8 +47,6 @@ static const pad_dir_t s_SpimFuncSS[4] = { pad_spim_ss0, pad_spim_ss1, pad_spim_
 ** INIT **
 *********/
 
-EVE_HalPlatform g_HalPlatform;
-
 /**
  * @brief Initialize HAL platform
  * 

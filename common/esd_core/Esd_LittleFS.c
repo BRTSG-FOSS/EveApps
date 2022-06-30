@@ -407,14 +407,14 @@ bool Esd_LittleFs_ReadMetadataFile(uint8_t *metadata, const char *resourceFile)
 	uint8_t buf[EVE_FLASH_WRITE_ALIGN];
 	struct lfs_file_config fileConfig = { 0 };
 	fileConfig.buffer = buf;
-	if (err = lfs_file_opencfg(lfs, &lfsFile, metaFile, LFS_O_RDONLY, &fileConfig))
+	if ((err = lfs_file_opencfg(lfs, &lfsFile, metaFile, LFS_O_RDONLY, &fileConfig)))
 	{
 		eve_printf_debug("[DIAGNOSTIC] Metadata can't be opened %s (%i, %i) with error %i\n", metaFile, (int)strlen(resourceFile), (int)strlen(metaFile), err);
 		return false; // File doesn't exist
 	}
 	lfs_block_t head;
 	bool res = false;
-	if (err = lfs_file_reserved(lfs, &lfsFile, &head))
+	if ((err = lfs_file_reserved(lfs, &lfsFile, &head)))
 	{
 		// Regular file
 		res = lfs_file_read(lfs, &lfsFile, metadata, min(ESD_METADATA_MAX, lfs_file_size(lfs, &lfsFile))) >= 0;
