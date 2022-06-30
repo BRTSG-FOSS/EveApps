@@ -1,0 +1,94 @@
+19c19
+< import pty
+---
+> # import pty
+23c23,24
+< TEST_PATHS = 'tests'
+---
+> TEST_PATHS = '../../dependencies/littlefs/tests'
+> SRC_PATHS = '../../dependencies/littlefs'
+26c27
+< TESTSRC ?= $(SRC) $(wildcard bd/*.c)
+---
+> TESTSRC ?= $(SRC) $(wildcard ../../dependencies/littlefs/bd/*.c)
+30c31
+<     ./scripts/explode_asserts.py $$< -o $$@
+---
+>     ../../dependencies/littlefs/scripts/explode_asserts.py $$< -o $$@
+522c523
+<                 with open(case.in_) as f:
+---
+>                 with open('../../dependencies/littlefs/' + case.in_) as f:
+556a558,560
+>         # explode asserts
+>         sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", self.path + '.test.c', self.path + '.test.tc'])
+> 
+557a562
+>         """
+586c591
+<                 mk.write('\t./scripts/explode_asserts.py $| -o $@\n')
+---
+>                 mk.write('\t../../dependencies/littlefs/scripts/explode_asserts.py $| -o $@\n')
+590a596,597
+>         """
+>         return self.name + '.toml.test.c', tfs, self.name, self.defines
+657c664
+<             suites.append(TestSuite(path, classes, defines, filter, **args))
+---
+>             suites.append(TestSuite(path.replace("\\", "/"), classes, defines, filter, **args))
+668c675,690
+<     makefiles = []
+---
+>     cmlf = open(TEST_PATHS + '/CMakeLists.txt', 'w')
+>     sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", TEST_PATHS + '/test.lfs.c', SRC_PATHS + '/lfs.c'])
+>     sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", TEST_PATHS + '/test.lfs_util.c', SRC_PATHS + '/lfs_util.c'])
+>     sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", TEST_PATHS + '/test.lfs_filebd.c', SRC_PATHS + '/bd/lfs_filebd.c'])
+>     sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", TEST_PATHS + '/test.lfs_rambd.c', SRC_PATHS + '/bd/lfs_rambd.c'])
+>     sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", TEST_PATHS + '/test.lfs_testbd.c', SRC_PATHS + '/bd/lfs_testbd.c'])
+>     libfs = [ "lfs.c", "lfs_util.c", "lfs_filebd.c", "lfs_rambd.c", "lfs_testbd.c" ]
+>     cmlf.write("INCLUDE_DIRECTORIES(..)\n")
+>     # cmlf.write("ADD_LIBRARY(littlefs\n")
+>     # cmlf.write("  test.lfs.c\n")
+>     # cmlf.write("  test.lfs_util.c\n")
+>     # cmlf.write("  test.lfs_filebd.c\n")
+>     # cmlf.write("  test.lfs_rambd.c\n")
+>     # cmlf.write("  test.lfs_testbd.c\n")
+>     # cmlf.write(")\n")
+>     # cmlf.write("LINK_LIBRARIES(littlefs)\n")
+671,672c693,708
+<         makefile, target = suite.build(**args)
+<         makefiles.append(makefile)
+---
+>         srcfile, tfs, target, defines = suite.build(**args)
+>         for path in tfs:
+>             cmlf.write("# " + str(path) + "\n")
+>         cmlf.write("ADD_EXECUTABLE(" + target + "\n")
+>         cmlf.write("  " + srcfile + "\n")
+>         for path in tfs:
+>             if path:
+>                 sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", TEST_PATHS + '/' + target + ".toml." + path, TEST_PATHS + '/' + target + ".toml." + path.replace('.c', '.tc.tc')])
+>                 cmlf.write("  " + target + ".toml." + path + "\n")
+>         for path in libfs:
+>             if not path in tfs:
+>                 cmlf.write("  test." + path + "\n")
+>         cmlf.write(")\n")
+>         cmlf.write("TARGET_COMPILE_DEFINITIONS(" + target + " PUBLIC\n")
+>         for k, v in sorted(defines.items()):
+>             cmlf.write("  \"" + k + "=" + str(v) + "\"\n")
+673a710,718
+>         cmlf.write(")\n")
+>     cmlf.flush()
+>     cmlf.close()
+> 
+>     cwd = os.getcwd()
+>     os.chdir(TEST_PATHS)
+>     sp.run(["cmake", "-T", "ClangCl", "."])
+>     sp.run(["cmake", "--build", "."])
+>     os.chdir(cwd)
+675c720,721
+<     cmd = (['make', '-f', 'Makefile'] +
+---
+>     """
+>     cmd = (['make', '-f', '../../dependencies/littlefs/Makefile'] +
+719a766
+>     """

@@ -1,0 +1,27 @@
+; Top-most EditorConfig file
+root = true
+
+; 4-column tab indentation
+[*.cpp]
+indent_style = tab
+indent_size = 4
+
+[*.c]
+indent_style = tab
+indent_size = 4
+
+[*.h]
+indent_style = tab
+indent_size = 4
+
+[*.py]
+indent_style = space
+indent_size = 4
+
+[*.txt]
+indent_style = space
+indent_size = 2
+
+[*.cmake]
+indent_style = space
+indent_size = 2
