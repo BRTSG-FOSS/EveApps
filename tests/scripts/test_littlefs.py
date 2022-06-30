@@ -1,5 +1,35 @@
 #!/usr/bin/env python3
 
+# Copyright (c) 2022, The littlefs authors.
+# Copyright (c) 2017, Arm Limited. All rights reserved.
+# 
+# This file has been modified by the following contributers:
+# Copyright (c) 2022, Bridgetek Pte Ltd.
+# 
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+# 
+# -  Redistributions of source code must retain the above copyright notice, this
+#    list of conditions and the following disclaimer.
+# -  Redistributions in binary form must reproduce the above copyright notice, this
+#    list of conditions and the following disclaimer in the documentation and/or
+#    other materials provided with the distribution.
+# -  Neither the name of ARM nor the names of its contributors may be used to
+#    endorse or promote products derived from this software without specific prior
+#    written permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+# ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+# 
+
 # This script manages littlefs tests, which are configured with
 # .toml files stored in the tests directory.
 #
@@ -126,8 +156,8 @@ EPILOGUE = """
     // epilogue
     lfs_testbd_destroy(&cfg) => 0;
 """
-PASS = '\033[32m✓\033[0m'
-FAIL = '\033[31m✗\033[0m'
+PASS = 'p'
+FAIL = 'F'
 
 class TestFailure(Exception):
     def __init__(self, case, returncode=None, stdout=None, assert_=None):
@@ -236,7 +266,7 @@ class TestCase:
     def test(self, exec=[], persist=False, cycles=None,
             gdb=False, failure=None, disk=None, **args):
         # build command
-        cmd = exec + ['./%s.test' % self.suite.path,
+        cmd = exec + ['../../dependencies/littlefs/tests/Debug/%s.exe' % self.suite.name,
             repr(self.caseno), repr(self.permno)]
 
         # persist disk or keep in RAM for speed?
@@ -277,6 +307,47 @@ class TestCase:
             sys.exit(sp.call(ncmd))
 
         # run test case!
+        returncode = 0
+        output = ""
+        try:
+            output = sp.check_output(cmd, text=True)
+        except sp.CalledProcessError as e:
+            errorcode = e.returncode
+            output = e.output
+        except OSError as e:
+            if e.errno != errno.EIO:
+                raise
+        except KeyboardInterrupt as e:
+            raise TestFailure(self, 1, [], None)
+        stdout = output.splitlines()
+        assert_ = None
+        for line_ in stdout:
+            line = line_ + '\n'
+            if args.get('verbose'):
+                sys.stdout.write(line)
+            # intercept asserts
+            m = re.match(
+                '^{0}([^:]+):(\d+):(?:\d+:)?{0}{1}:{0}(.*)$'
+                .format('(?:\033\[[\d;]*.| )*', 'assert'),
+                line)
+            if m and assert_ is None:
+                try:
+                    with open(m.group(1)) as f:
+                        lineno = int(m.group(2))
+                        line = (next(it.islice(f, lineno-1, None))
+                            .strip('\n'))
+                    assert_ = {
+                        'path': m.group(1),
+                        'line': line,
+                        'lineno': lineno,
+                        'message': m.group(3)}
+                except:
+                    pass
+        if returncode != 0 or assert_:
+            raise TestFailure(self, returncode, stdout, assert_)
+        else:
+            return PASS
+        """
         mpty, spty = pty.openpty()
         if args.get('verbose'):
             print(' '.join(shlex.quote(c) for c in cmd))
@@ -325,6 +396,7 @@ class TestCase:
             raise TestFailure(self, proc.returncode, stdout, assert_)
         else:
             return PASS
+        """
 
 class ValgrindTestCase(TestCase):
     def __init__(self, config, **args):
@@ -679,15 +751,9 @@ def main(**args):
     sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", TEST_PATHS + '/test.lfs_rambd.c', SRC_PATHS + '/bd/lfs_rambd.c'])
     sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", TEST_PATHS + '/test.lfs_testbd.c', SRC_PATHS + '/bd/lfs_testbd.c'])
     libfs = [ "lfs.c", "lfs_util.c", "lfs_filebd.c", "lfs_rambd.c", "lfs_testbd.c" ]
+    cmlf.write("PROJECT(Project)\n")
+    cmlf.write("CMAKE_MINIMUM_REQUIRED(VERSION 3.22)\n")
     cmlf.write("INCLUDE_DIRECTORIES(..)\n")
-    # cmlf.write("ADD_LIBRARY(littlefs\n")
-    # cmlf.write("  test.lfs.c\n")
-    # cmlf.write("  test.lfs_util.c\n")
-    # cmlf.write("  test.lfs_filebd.c\n")
-    # cmlf.write("  test.lfs_rambd.c\n")
-    # cmlf.write("  test.lfs_testbd.c\n")
-    # cmlf.write(")\n")
-    # cmlf.write("LINK_LIBRARIES(littlefs)\n")
     targets = []
     for suite in suites:
         srcfile, tfs, target, defines = suite.build(**args)
