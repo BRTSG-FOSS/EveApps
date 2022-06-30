@@ -1596,10 +1596,10 @@ void SAMAPP_Primitives_simpleMap()
     App_WrDl_Buffer(s_pHalContext, CLEAR(1, 1, 1));
     App_WrDl_Buffer(s_pHalContext, COLOR_RGB(170, 157, 136)); //medium gray
     App_WrDl_Buffer(s_pHalContext, LINE_WIDTH(63));
-    App_WrDl_Buffer(s_pHalContext, CALL(11)); //draw the streets
+    App_WrDl_Buffer(s_pHalContext, CALL(19)); //draw the streets
     App_WrDl_Buffer(s_pHalContext, COLOR_RGB(250, 250, 250)); //white
     App_WrDl_Buffer(s_pHalContext, LINE_WIDTH(48));
-    App_WrDl_Buffer(s_pHalContext, CALL(11)); //draw the streets
+    App_WrDl_Buffer(s_pHalContext, CALL(19)); //draw the streets
     App_WrDl_Buffer(s_pHalContext, COLOR_RGB(0, 0, 0));
     App_WrDl_Buffer(s_pHalContext, BEGIN(BITMAPS));
     App_WrDl_Buffer(s_pHalContext, VERTEX2II(240, 91, 27, 77)); //draw "Main st." at (240,91)
