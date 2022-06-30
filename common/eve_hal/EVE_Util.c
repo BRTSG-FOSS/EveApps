@@ -905,21 +905,17 @@ EVE_HAL_EXPORT bool EVE_Util_bootup(EVE_HalContext *phost, EVE_BootupParameters 
 #if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 	if (EVE_CHIPID >= EVE_FT810)
 	{
-		switch (bootup->SpiChannels)
-		{
-		case EVE_SPI_QUAD_CHANNEL:
-			eve_printf_debug("Quad channel SPI\n");
-			break;
-		case EVE_SPI_DUAL_CHANNEL:
-			eve_printf_debug("Dual channel SPI\n");
-			break;
-		case EVE_SPI_SINGLE_CHANNEL:
-			eve_printf_debug("Single channel SPI\n");
-			break;
-		default:
-			break;
-		}
 		EVE_Hal_setSPI(phost, bootup->SpiChannels, bootup->SpiDummyBytes);
+#ifdef _DEBUG
+		const char *spiChannels = (phost->SpiChannels == EVE_SPI_QUAD_CHANNEL)
+			? "Quad" : ((phost->SpiChannels == EVE_SPI_DUAL_CHANNEL) ? "Dual" : "Single");
+		const char *requested = (bootup->SpiChannels == EVE_SPI_QUAD_CHANNEL)
+			? "Quad" : ((bootup->SpiChannels == EVE_SPI_DUAL_CHANNEL) ? "Dual" : "Single");
+		if (bootup->SpiChannels == phost->SpiChannels)
+			eve_printf_debug("%s channel SPI\n", spiChannels);
+		else
+			eve_printf_debug("%s channel SPI (%s unsupported)\n", spiChannels, requested);
+#endif
 	}
 #endif
 
