@@ -7,5 +7,5 @@ ENDIF()
 
 if(WIN32)
   set_target_properties(test_esd_core_video PROPERTIES
-    VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/EveApps/SampleApp/Test")
+    VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/SampleApp/Video/Test")
 endif()
