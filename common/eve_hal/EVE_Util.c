@@ -60,7 +60,7 @@ static const uint16_t s_DisplayResolutions[EVE_DISPLAY_NB][4] = {
 
 };
 
-#if defined(_WIN32) || defined(EVE_MULTI_GRAPHICS_TARGET)
+#if defined(EVE_MULTI_GRAPHICS_TARGET)
 
 /* Interactive display selection */
 static const char *s_DisplayNames[EVE_DISPLAY_NB] = {
@@ -92,6 +92,8 @@ static const char *s_HostDisplayNames[EVE_HOST_NB] = {
 };
 
 #define EVE_SELECT_CHIP_NB 14
+
+#if defined(EVE_MULTI_GRAPHICS_TARGET)
 
 /* Interactive emulator chip selection */
 static const char *s_SelectChipName[EVE_SELECT_CHIP_NB] = {
@@ -127,6 +129,8 @@ static EVE_CHIPID_T s_SelectChipId[EVE_SELECT_CHIP_NB] = {
 	EVE_BT817,
 	EVE_BT818,
 };
+
+#endif
 
 #endif
 
@@ -2026,7 +2030,7 @@ bool EVE_Util_openDeviceInteractive(EVE_HalContext *phost, const wchar_t *flashF
 #endif
 #endif
 	EVE_HalParameters params = { 0 };
-#if defined(_WIN32)
+#if defined(_WIN32) && defined(EVE_FLASH_AVAILABLE)
 	bool updateFlash = false;
 	bool updateFlashFirmware = false;
 	wchar_t flashPath[MAX_PATH];
