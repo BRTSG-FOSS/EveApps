@@ -301,6 +301,11 @@ EVE_HAL_EXPORT void EVE_Util_bootupDefaults(EVE_HalContext *phost, EVE_BootupPar
 		bootup->SpiChannels = EVE_SPI_QUAD_CHANNEL;
 		bootup->SpiDummyBytes = 2;
 	}
+	else
+	{
+		bootup->SpiChannels = EVE_SPI_SINGLE_CHANNEL;
+		bootup->SpiDummyBytes = 1;
+	}
 #elif defined(ENABLE_SPI_QUAD)
 	bootup->SpiChannels = EVE_SPI_QUAD_CHANNEL;
 	bootup->SpiDummyBytes = 2;

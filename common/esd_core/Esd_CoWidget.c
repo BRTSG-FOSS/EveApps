@@ -66,7 +66,7 @@ static void Esd_CoWidget_LoadBgVideoFrame()
 	if (!ec->BgVideoInfo)
 		return;
 
-	if (phost->CmdFault)
+	if (phost->CmdFault || ec->HasReset)
 	{
 		eve_printf_debug("Coprocessor fault, stopping background video\n");
 		Esd_CoWidget_StopBgVideo();
