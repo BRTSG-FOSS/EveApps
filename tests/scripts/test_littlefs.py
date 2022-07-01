@@ -219,7 +219,17 @@ PROLOGUE_EVE = """
         LFS_ASSERT(cfg.block_count >= LFS_BLOCK_COUNT);
         cfg.block_count = LFS_BLOCK_COUNT;
         cfg.block_cycles = LFS_BLOCK_CYCLES;
+        if (sizeof(ec->LfsReadBuffer) < LFS_CACHE_SIZE
+            || sizeof(ec->LfsProgBuffer) < LFS_CACHE_SIZE)
+        {
+            cfg.read_buffer = NULL;
+            cfg.prog_buffer = NULL;
+        }
         cfg.cache_size = LFS_CACHE_SIZE;
+        if (sizeof(ec->LfsLookaheadBuffer) < LFS_LOOKAHEAD_SIZE)
+        {
+            cfg.lookahead_buffer = NULL;
+        }
         cfg.lookahead_size = LFS_LOOKAHEAD_SIZE;
     }
     {
@@ -445,9 +455,11 @@ class TestCase:
         # run test case!
         returncode = 0
         output = ""
+        anyerror = False
         try:
             output = sp.check_output(cmd, text=True)
         except sp.CalledProcessError as e:
+            anyerror = True
             errorcode = e.returncode
             output = e.output
         except OSError as e:
@@ -483,7 +495,7 @@ class TestCase:
                         'message': m.group(3)}
                 except:
                     pass
-        if returncode != 0 or assert_:
+        if returncode != 0 or assert_ or anyerror:
             raise TestFailure(self, returncode, stdout, assert_)
         else:
             return rescode
