@@ -417,7 +417,9 @@ EVE_HAL_EXPORT bool EVE_CoCmd_getMatrix(EVE_HalContext *phost, int32_t *m)
 
 EVE_HAL_EXPORT void EVE_CoCmd_setRotate(EVE_HalContext *phost, uint32_t r)
 {
+#if (EVE_SUPPORT_CHIPID >= EVE_FT810)
 	const bool swapXY = EVE_CHIPID >= EVE_FT810 ? r & 0x2 : false;
+#endif
 
 #if EVE_CMD_HOOKS
 	/* Check hook */
