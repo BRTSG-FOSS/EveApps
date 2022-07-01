@@ -247,7 +247,7 @@ PROLOGUE_EVE = """
         EVE_CoCmd_swap(phost);
         EVE_Hal_flush(phost);
     }
-    if (!lfs_testbd_path)
+    if (!lfs_testbd_path || !strcmp(lfs_testbd_path, "test_littlefs.disk.erase"))
     {
         EVE_CoCmd_memSet(phost, 0, 0xFF, LFS_BLOCK_SIZE * 2);
         EVE_CoCmd_flashUpdate(phost, 4096, 0, LFS_BLOCK_SIZE * 2);
@@ -260,6 +260,12 @@ EPILOGUE = """
 """
 EPILOGUE_EVE = """
     // epilogue
+    if (!lfs_testbd_path)
+    {
+        EVE_CoCmd_memSet(phost, 0, 0xFF, LFS_BLOCK_SIZE * 2);
+        EVE_CoCmd_flashUpdate(phost, 4096, 0, LFS_BLOCK_SIZE * 2);
+        EVE_Cmd_waitFlush(phost) => true;
+    }
     Esd_Stop(ec);
     Esd_Close(ec);
     Esd_Release();
@@ -389,7 +395,11 @@ class TestCase:
                         print('truncate --size=0', disk)
                 except FileNotFoundError:
                     pass
-
+            if args.get('eve_platform') or args.get('eve_graphics'):
+                if persist != 'noerase':
+                    disk = 'test_littlefs.disk.erase'
+                else:
+                    disk = 'test_littlefs.disk.noerase'
             cmd.append(disk)
 
         # simulate power-loss after n cycles?
@@ -877,10 +887,10 @@ def main(**args):
     cmlf.write("set(CMAKE_C_STANDARD 11)\n")
     cmlf.write("set(CMAKE_CXX_STANDARD 17)\n")
     cmlf.write("INCLUDE_DIRECTORIES(..)\n")
-    cmlf.write("INCLUDE_DIRECTORIES(../../../common/eve_hal)\n")
-    cmlf.write("INCLUDE_DIRECTORIES(../../../common/eve_hal/Hdr)\n")
-    cmlf.write("INCLUDE_DIRECTORIES(../../../common/esd_core)\n")
     if args.get('eve_platform') or args.get('eve_graphics'):
+        cmlf.write("INCLUDE_DIRECTORIES(../../../common/eve_hal)\n")
+        cmlf.write("INCLUDE_DIRECTORIES(../../../common/eve_hal/Hdr)\n")
+        cmlf.write("INCLUDE_DIRECTORIES(../../../common/esd_core)\n")
         cmlf.write("IF(CMAKE_SIZEOF_VOID_P EQUAL 8)\n")
         cmlf.write("  LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/../../../common/eve_hal/Bin/Simulation/x64)\n")
         cmlf.write("  LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/../../../common/eve_hal/Bin/MSVC/x64)\n")
