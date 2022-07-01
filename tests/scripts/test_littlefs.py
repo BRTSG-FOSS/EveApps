@@ -780,7 +780,7 @@ class TestSuite:
             tf.close()
 
         # explode asserts
-        sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", self.path + '.test.c', self.path + '.test.tc'])
+        sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", self.path + '.test.c', self.path + '.test.tc'], check=True)
 
         # write makefiles
         """
@@ -910,11 +910,11 @@ def main(**args):
     # build tests in parallel
     print('====== building ======')
     cmlf = open(TEST_PATHS + '/CMakeLists.txt', 'w')
-    sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", TEST_PATHS + '/test.lfs.c', SRC_PATHS + '/lfs.c'])
-    sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", TEST_PATHS + '/test.lfs_util.c', SRC_PATHS + '/lfs_util.c'])
-    sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", TEST_PATHS + '/test.lfs_filebd.c', SRC_PATHS + '/bd/lfs_filebd.c'])
-    sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", TEST_PATHS + '/test.lfs_rambd.c', SRC_PATHS + '/bd/lfs_rambd.c'])
-    sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", TEST_PATHS + '/test.lfs_testbd.c', SRC_PATHS + '/bd/lfs_testbd.c'])
+    sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", TEST_PATHS + '/test.lfs.c', SRC_PATHS + '/lfs.c'], check=True)
+    sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", TEST_PATHS + '/test.lfs_util.c', SRC_PATHS + '/lfs_util.c'], check=True)
+    sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", TEST_PATHS + '/test.lfs_filebd.c', SRC_PATHS + '/bd/lfs_filebd.c'], check=True)
+    sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", TEST_PATHS + '/test.lfs_rambd.c', SRC_PATHS + '/bd/lfs_rambd.c'], check=True)
+    sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", TEST_PATHS + '/test.lfs_testbd.c', SRC_PATHS + '/bd/lfs_testbd.c'], check=True)
     libfs = [ "lfs.c", "lfs_util.c", "lfs_filebd.c", "lfs_rambd.c", "lfs_testbd.c" ]
     cmlf.write("PROJECT(Project C CXX)\n")
     cmlf.write("CMAKE_MINIMUM_REQUIRED(VERSION 3.22)\n")
@@ -966,7 +966,7 @@ def main(**args):
         cmlf.write("  " + srcfile + "\n")
         for path in tfs:
             if path:
-                sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", TEST_PATHS + '/' + target + ".toml." + path, TEST_PATHS + '/' + target + ".toml." + path.replace('.c', '.tc.tc')])
+                sp.run([sys.executable, "../../dependencies/littlefs/scripts/explode_asserts.py", "-o", TEST_PATHS + '/' + target + ".toml." + path, TEST_PATHS + '/' + target + ".toml." + path.replace('.c', '.tc.tc')], check=True)
                 cmlf.write("  " + target + ".toml." + path + "\n")
         for path in libfs:
             if not path in tfs:
@@ -982,8 +982,8 @@ def main(**args):
 
     cwd = os.getcwd()
     os.chdir(TEST_PATHS)
-    sp.run(["cmake", "-T", "ClangCl", "."])
-    sp.run(["cmake", "--build", ".", "-j" + str(os.cpu_count() * 3 // 4)])
+    sp.run(["cmake", "-T", "ClangCl", "."], check=True)
+    sp.run(["cmake", "--build", ".", "-j" + str(os.cpu_count() * 3 // 4)], check=True)
     os.chdir(cwd)
 
     """
