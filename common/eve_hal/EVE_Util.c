@@ -60,7 +60,7 @@ static const uint16_t s_DisplayResolutions[EVE_DISPLAY_NB][4] = {
 
 };
 
-#if defined(EVE_MULTI_GRAPHICS_TARGET)
+#if defined(_WIN32) && defined(EVE_MULTI_GRAPHICS_TARGET)
 
 /* Interactive display selection */
 static const char *s_DisplayNames[EVE_DISPLAY_NB] = {
