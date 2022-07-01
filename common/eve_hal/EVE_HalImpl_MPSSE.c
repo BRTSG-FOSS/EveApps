@@ -33,6 +33,11 @@
 #include "EVE_Platform.h"
 #if defined(MPSSE_PLATFORM)
 
+#ifdef _WIN32
+#include <timeapi.h>
+#pragma comment(lib, "Winmm.lib")
+#endif
+
 #if defined(EVE_MULTI_PLATFORM_TARGET)
 #define EVE_HalImpl_initialize EVE_HalImpl_MPSSE_initialize
 #define EVE_HalImpl_release EVE_HalImpl_MPSSE_release
@@ -71,6 +76,9 @@
 *********/
 
 uint32_t s_NumChannels = 0;
+#ifdef _WIN32
+bool s_SleepMitigated = false;
+#endif
 
 /**
  * @brief Initialize HAL platform
@@ -89,6 +97,13 @@ void EVE_HalImpl_initialize()
 void EVE_HalImpl_release()
 {
 	/* Cleanup the MPSSE Lib */
+#ifdef _WIN32
+	if (s_SleepMitigated)
+	{
+		timeEndPeriod(1);
+		s_SleepMitigated = false;
+	}
+#endif
 	Cleanup_libMPSSE();
 }
 
@@ -270,6 +285,49 @@ bool EVE_HalImpl_open(EVE_HalContext *phost, const EVE_HalParameters *parameters
 	phost->SpiChannels = EVE_SPI_SINGLE_CHANNEL;
 	phost->Status = EVE_STATUS_OPENED;
 	++g_HalPlatform.OpenedDevices;
+
+#ifdef _WIN32
+	/* Performance degradation workaround. Mitigate SPI_ToggleCS sleep, if it's detected. */
+	/* SPI_ToggleCS may be fixed to remove the sleep call in future versions of libMPSSE. */
+	/* This workaround applies only if the affected libMPSSE library is being used. */
+	if (!s_SleepMitigated)
+	{
+		/* This will sleep twice, once on each FALSE */
+		uint32_t ms, delta;
+		ms = EVE_millis();
+		SPI_ToggleCS((FT_HANDLE)phost->SpiHandle, TRUE);
+		SPI_ToggleCS((FT_HANDLE)phost->SpiHandle, FALSE);
+		SPI_ToggleCS((FT_HANDLE)phost->SpiHandle, TRUE);
+		SPI_ToggleCS((FT_HANDLE)phost->SpiHandle, FALSE);
+		delta = EVE_millis() - ms;
+		/* If the sleep time is more than a single full tick (either 15ms or 16ms),
+		we know for sure that it's sleeping a full tick twice. */
+		if (delta > 16)
+		{
+			/* Set thread scheduler for process to 1ms. */
+			timeBeginPeriod(1);
+			s_SleepMitigated = true;
+			/* Verify that it worked. */
+			eve_printf_debug("Mitigating libMPSSE sleep issue (%u ms)\n", (unsigned int)delta);
+			ms = EVE_millis();
+			SPI_ToggleCS((FT_HANDLE)phost->SpiHandle, TRUE);
+			SPI_ToggleCS((FT_HANDLE)phost->SpiHandle, FALSE);
+			SPI_ToggleCS((FT_HANDLE)phost->SpiHandle, TRUE);
+			SPI_ToggleCS((FT_HANDLE)phost->SpiHandle, FALSE);
+			delta = EVE_millis() - ms;
+			/* EVE_millis may jump a whole tick at most */
+			if (delta > 16)
+			{
+				eve_printf_debug("MPSSE sleep issue may still persist (%u ms)\n", (unsigned int)delta);
+			}
+			else
+			{
+				eve_printf_debug("MPSSE sleep issue mitigated\n");
+			}
+		}
+	}
+#endif
+	
 	return true;
 }
 
