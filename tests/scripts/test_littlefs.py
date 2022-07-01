@@ -111,6 +111,8 @@ GLOBALS_EVE = """
 #include "lfs.h"
 #include "bd/lfs_testbd.h"
 #include <stdio.h>
+extern const char *lfs_testbd_path;
+extern uint32_t lfs_testbd_cycles;
 """
 DEFINES = {
     'LFS_READ_SIZE': 16,
@@ -128,7 +130,7 @@ DEFINES_EVE = {
     'LFS_READ_SIZE': 64,
     'LFS_PROG_SIZE': 256,
     'LFS_BLOCK_SIZE': 4096,
-    'LFS_BLOCK_COUNT': 'EVE_FLASH_SIZE * (1024 * 1024 / LFS_BLOCK_SIZE)',
+    'LFS_BLOCK_COUNT': '(EVE_FLASH_SIZE * (1024 * 1024 / 4096) - 1)',
     'LFS_BLOCK_CYCLES': -1,
     'LFS_CACHE_SIZE': 'LFS_PROG_SIZE',
     'LFS_LOOKAHEAD_SIZE': 32,
@@ -144,7 +146,7 @@ PROLOGUE = """
     __attribute__((unused)) lfs_dir_t dir;
     __attribute__((unused)) struct lfs_info info;
     __attribute__((unused)) char path[1024];
-    __attribute__((unused)) uint8_t buffer[1024];
+    __attribute__((unused)) uint8_t buffer[LFS_BLOCK_SIZE * 4];
     __attribute__((unused)) lfs_size_t size;
     __attribute__((unused)) int err;
     
@@ -179,7 +181,7 @@ PROLOGUE_EVE = """
     __attribute__((unused)) lfs_dir_t dir;
     __attribute__((unused)) struct lfs_info info;
     __attribute__((unused)) char path[1024];
-    __attribute__((unused)) uint8_t buffer[1024];
+    __attribute__((unused)) uint8_t buffer[LFS_BLOCK_SIZE * 4];
     __attribute__((unused)) lfs_size_t size;
     __attribute__((unused)) int err;
     __attribute__((unused)) struct lfs_config cfg;
@@ -202,6 +204,54 @@ PROLOGUE_EVE = """
         Esd_LittleFS_Mount(ec);
         Esd_LittleFS_Unmount(ec);
         cfg = ec->LfsConfig;
+    }
+    {
+        int chipId = EVE_CHIPID;
+        char deviceName[64] = "Bridgetek BT8XX";
+        char *chipPrefix = (EVE_GEN >= EVE3 || chipId >= EVE_BT880) ? "BT" : "FT";
+        char *chipBranding = (EVE_GEN >= EVE3 || chipId >= EVE_BT880) ? "Bridgetek" : "FTDI";
+        sprintf(deviceName, "%s %s%lx", chipBranding, chipPrefix, (unsigned long)EVE_shortChipId(chipId));
+        // EVE_Hal_wr32(phost, REG_MACRO_0, BITMAP_TRANSFORM_F(256));
+        EVE_CoCmd_memZero(phost, 0, 4096 * 2);
+        // EVE_CoCmd_memSet(phost, 0, 0xFF, LFS_BLOCK_SIZE * 2);
+        EVE_CoCmd_dlStart(phost);
+        EVE_CoDl_clearColorRgb(phost, 0, 0, 0);
+        EVE_CoDl_clear(phost, 1, 1, 1);
+        EVE_CoDl_blendFunc(phost, SRC_ALPHA, ONE);
+        EVE_CoDl_colorRgb(phost, 64, 192, 64);
+        EVE_CoDl_bitmapHandle(phost, 0);
+        EVE_CoCmd_setBitmap(phost, 0, TEXT8X8, 512, 512);
+        EVE_CoCmd_dl(phost, BITMAP_SIZE_H(2, 4));
+        EVE_CoCmd_dl(phost, BITMAP_SIZE(NEAREST, REPEAT, REPEAT, 0, 0));
+        EVE_CoDl_bitmapHandle(phost, 1);
+        EVE_CoCmd_setBitmap(phost, 4096, TEXT8X8, 512, 512);
+        EVE_CoCmd_dl(phost, BITMAP_SIZE_H(2, 4));
+        EVE_CoCmd_dl(phost, BITMAP_SIZE(NEAREST, REPEAT, REPEAT, 0, 0));
+        EVE_CoDl_begin(phost, BITMAPS);
+        // EVE_CoDl_macro(phost, 0);
+        EVE_CoDl_vertex2ii(phost, 0, 0, 0, 0);
+        EVE_CoDl_vertex2ii(phost, 0, 0, 1, 0);
+        EVE_CoDl_end(phost);
+        EVE_CoDl_blendFunc_default(phost);
+        // EVE_CoCmd_dl(phost, BITMAP_TRANSFORM_F(0));
+        EVE_CoDl_colorRgb(phost, 255, 255, 255);
+        EVE_CoCmd_text(phost, 5, 5, 30, 0, deviceName);
+        EVE_CoCmd_text(phost, 5, 45, 28, 0, "EVE LittleFS Tests");
+        // EVE_CoDl_macro(phost, 0);
+        // EVE_CoDl_begin(phost, POINTS);
+        // EVE_CoDl_pointSize(phost, 180);
+        // EVE_CoDl_vertexFormat(phost, 1);
+        // EVE_CoDl_vertex2f(phost, 45, 45);
+        // EVE_CoDl_end(phost);
+        EVE_CoDl_display(phost);
+        EVE_CoCmd_swap(phost);
+        EVE_Hal_flush(phost);
+    }
+    if (!lfs_testbd_path)
+    {
+        EVE_CoCmd_memSet(phost, 0, 0xFF, LFS_BLOCK_SIZE * 2);
+        EVE_CoCmd_flashUpdate(phost, 4096, 0, LFS_BLOCK_SIZE * 2);
+        EVE_Cmd_waitFlush(phost) => true;
     }
 """
 EPILOGUE = """
@@ -843,6 +893,8 @@ def main(**args):
         cmlf.write("SET(WITH_ESD_LITTLEFS ON)\n")
         cmlf.write("SET(ESD_LITTLFS_NOLINK ON)\n")
         cmlf.write("ADD_DEFINITIONS(-DEVE_DEFINE_FLASH)\n")
+        cmlf.write("ADD_DEFINITIONS(-DEVE_TOUCH_DISABLED)\n")
+        cmlf.write("ADD_DEFINITIONS(-DEVE_LITTLEFS_TESTS)\n")
         if args.get('eve_graphics'):
             cmlf.write("SET(EVE_APPS_GRAPHICS \"" + args.get('eve_graphics') + "\" CACHE STRING \"Graphics Module\")\n")
             cmlf.write("ADD_DEFINITIONS(-D" + args.get('eve_graphics') + ")\n")
@@ -884,7 +936,7 @@ def main(**args):
     cwd = os.getcwd()
     os.chdir(TEST_PATHS)
     sp.run(["cmake", "-T", "ClangCl", "."])
-    sp.run(["cmake", "--build", "."])
+    sp.run(["cmake", "--build", ".", "-j" + str(os.cpu_count() * 3 // 4)])
     os.chdir(cwd)
 
     """

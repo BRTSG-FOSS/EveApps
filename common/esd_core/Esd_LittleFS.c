@@ -55,6 +55,27 @@ LittleFS for EVE Screen Designer
 #define LFS_BLOCK_NULL ((lfs_block_t)-1)
 #define EVE_FLASH_BLOCK_SIZE EVE_FLASH_UPDATE_ALIGN
 
+#ifdef EVE_LITTLEFS_TESTS
+extern const char *lfs_testbd_path;
+extern uint32_t lfs_testbd_cycles;
+uint32_t power_cycles;
+#define EVE_TEST_POWER_CYCLES()                        \
+	do                                                 \
+	{                                                  \
+		if (power_cycles > 0)                          \
+		{                                              \
+			power_cycles -= 1;                         \
+			if (power_cycles == 0)                     \
+			{                                          \
+				LFS_ASSERT(Esd_LittleFS_Sync(c) == 0); \
+				exit(33);                              \
+			}                                          \
+		}                                              \
+	} while (false)
+#else
+#define EVE_TEST_POWER_CYCLES() do {} while (false)
+#endif
+
 // Sync the state of the underlying block device. Negative error codes are propagated to the user.
 static int Esd_LittleFS_Sync(const struct lfs_config *c)
 {
@@ -234,6 +255,7 @@ static int Esd_LittleFS_Prog(const struct lfs_config *c, lfs_block_t block, lfs_
 		EVE_CoCmd_memWrite(phost, addr + off, size);
 		if (!EVE_Cmd_wrMem(phost, buffer, size))
 			return LFS_ERR_IO;
+		EVE_TEST_POWER_CYCLES();
 		return LFS_ERR_OK;
 	}
 
@@ -254,6 +276,7 @@ static int Esd_LittleFS_Prog(const struct lfs_config *c, lfs_block_t block, lfs_
 	if (!EVE_Cmd_wrMem(phost, buffer, size))
 		return LFS_ERR_IO;
 
+	EVE_TEST_POWER_CYCLES();
 	return LFS_ERR_OK;
 }
 
@@ -287,6 +310,7 @@ static int Esd_LittleFS_Erase(const struct lfs_config *c, lfs_block_t block)
 		ec->LfsEraseFlushed = false;
 #endif
 		EVE_CoCmd_memSet(phost, addr, 0xFF, EVE_FLASH_UPDATE_ALIGN);
+		EVE_TEST_POWER_CYCLES();
 		return LFS_ERR_OK;
 	}
 
@@ -313,6 +337,7 @@ static int Esd_LittleFS_Erase(const struct lfs_config *c, lfs_block_t block)
 	EVE_CoCmd_memSet(phost, addr, 0xFF, EVE_FLASH_UPDATE_ALIGN);
 	ec->LfsEraseBlock = block;
 
+	EVE_TEST_POWER_CYCLES();
 	return LFS_ERR_OK;
 }
 
@@ -349,6 +374,11 @@ static bool Esd_LittleFS_Configure()
 
 	// flags
 	config->flags = LFS_M_GROW;
+	
+#ifdef EVE_LITTLEFS_TESTS
+	// tests
+	power_cycles = lfs_testbd_cycles;
+#endif
 
 	return true;
 }

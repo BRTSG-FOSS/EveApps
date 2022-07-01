@@ -255,7 +255,7 @@ ESD_CORE_EXPORT bool Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 			eve_printf_debug("Calibrate failed\n");
 		}
 #else
-		eve_printf_debug("Touch not supported");
+		eve_printf_debug("Touch not supported\n");
 #endif
 	}
 #endif
