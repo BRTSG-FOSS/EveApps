@@ -146,6 +146,7 @@ static int Esd_LittleFS_Read(const struct lfs_config *c, lfs_block_t block, lfs_
 			if (!EVE_Cmd_waitFlush(phost))
 				return LFS_ERR_IO;
 			ec->LfsEraseFlushed = true;
+			ec->LfsUnflushed = false;
 		}
 
 		EVE_Hal_rdMem(phost, buffer, addr + off, size);
@@ -153,16 +154,15 @@ static int Esd_LittleFS_Read(const struct lfs_config *c, lfs_block_t block, lfs_
 			return LFS_ERR_IO;
 		return LFS_ERR_OK;
 	}
-	// Flush any pending erase and writes
-	if (ec->LfsUnflushed)
 #else
-	if (ec->LfsEraseBlock == block || ec->LfsUnflushed)
-#endif
+	// Sync any pending erase and writes
+	if (ec->LfsEraseBlock == block)
 	{
-		int err = Esd_LittleFS_Sync(c);
+		int err = Esd_LittleFS_SyncImpl(c, false);
 		if (err)
 			return err;
 	}
+#endif
 
 #ifdef ESD_LITTLEFS_READCACHE
 	uint32_t lastProg = ec->LfsLastProg;
@@ -172,7 +172,7 @@ static int Esd_LittleFS_Read(const struct lfs_config *c, lfs_block_t block, lfs_
 		ec->LfsLastProg = FA_INVALID;
 		matchesLastProg = (lastProg == (EVE_FLASH_FIRMWARE_SIZE + (block * EVE_FLASH_BLOCK_SIZE) + off));
 	}
-	if ((off && !matchesLastProg) || size > 64 || block == ec->LfsReadBlock)
+	if (((off || size > 64) && !matchesLastProg) || block == ec->LfsReadBlock)
 	{
 		// Find existing cached block, or allocate space
 		uint32_t addr = Esd_GpuAlloc_Get(ga, ec->LfsReadHandle);
@@ -199,6 +199,7 @@ static int Esd_LittleFS_Read(const struct lfs_config *c, lfs_block_t block, lfs_
 					Esd_GpuAlloc_Free(ga, ec->LfsReadHandle);
 					return LFS_ERR_IO;
 				}
+				ec->LfsUnflushed = false;
 				ec->LfsReadBlock = block;
 			}
 
@@ -226,6 +227,7 @@ static int Esd_LittleFS_Read(const struct lfs_config *c, lfs_block_t block, lfs_
 	if (EVE_CoCmd_flashRead_flush(phost, addr, flashAddr, size))
 	{
 		// Read from RAM_G to memory
+		ec->LfsUnflushed = false;
 		EVE_Hal_rdMem(phost, buffer, addr, size);
 		if (phost->Status != EVE_STATUS_ERROR)
 			res = LFS_ERR_OK;
@@ -272,22 +274,13 @@ static int Esd_LittleFS_Prog(const struct lfs_config *c, lfs_block_t block, lfs_
 #ifdef ESD_LITTLEFS_READPENDING
 		ec->LfsEraseFlushed = false;
 #endif
+		ec->LfsUnflushed = true;
 		EVE_CoCmd_memWrite(phost, addr + off, size);
 		if (!EVE_Cmd_wrMem(phost, buffer, size))
 			return LFS_ERR_IO;
 		EVE_TEST_POWER_CYCLES();
 		return LFS_ERR_OK;
 	}
-
-#if 0
-	// Flush any pending erase and writes
-	if (ec->LfsEraseBlock != LFS_BLOCK_NULL)
-	{
-		int err = Esd_LittleFS_Sync(c);
-		if (err)
-			return err;
-	}
-#endif
 
 	// Write to flash
 #ifndef ESD_LITTLEFS_READCACHE
@@ -332,6 +325,7 @@ static int Esd_LittleFS_Erase(const struct lfs_config *c, lfs_block_t block)
 #ifdef ESD_LITTLEFS_READPENDING
 		ec->LfsEraseFlushed = false;
 #endif
+		ec->LfsUnflushed = true;
 		EVE_CoCmd_memSet(phost, addr, 0xFF, EVE_FLASH_UPDATE_ALIGN);
 		EVE_TEST_POWER_CYCLES();
 		return LFS_ERR_OK;
