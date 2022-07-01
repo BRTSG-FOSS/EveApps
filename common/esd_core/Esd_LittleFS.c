@@ -187,7 +187,7 @@ static int Esd_LittleFS_Read(const struct lfs_config *c, lfs_block_t block, lfs_
 		ec->LfsLastProg = FA_INVALID;
 		matchesLastProg = (lastProg == (EVE_FLASH_FIRMWARE_SIZE + (block * EVE_FLASH_BLOCK_SIZE) + off));
 	}
-	if (((off || size > 64) && !matchesLastProg) || block == ec->LfsReadBlock)
+	if (((off || size > 64) && !matchesLastProg && (off + size < EVE_FLASH_BLOCK_SIZE)) || block == ec->LfsReadBlock)
 	{
 		// Find existing cached block, or allocate space
 		uint32_t addr = Esd_GpuAlloc_Get(ga, ec->LfsReadHandle);
