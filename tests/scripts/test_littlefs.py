@@ -942,6 +942,7 @@ def main(**args):
         cmlf.write("ADD_DEFINITIONS(-DEVE_DEFINE_FLASH)\n")
         cmlf.write("ADD_DEFINITIONS(-DEVE_TOUCH_DISABLED)\n")
         cmlf.write("ADD_DEFINITIONS(-DEVE_LITTLEFS_TESTS)\n")
+        cmlf.write("ADD_DEFINITIONS(-DEVE_DEBUG_BREAK_SIGABRT)\n")
         if args.get('eve_graphics'):
             cmlf.write("SET(EVE_APPS_GRAPHICS \"" + args.get('eve_graphics') + "\" CACHE STRING \"Graphics Module\")\n")
             cmlf.write("ADD_DEFINITIONS(-D" + args.get('eve_graphics') + ")\n")

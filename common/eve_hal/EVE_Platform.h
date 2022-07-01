@@ -74,6 +74,11 @@ extern "C" {
 	{              \
 	} while (false)
 
+#ifdef EVE_DEBUG_BREAK_SIGABRT
+/* Used by LittleFS tests */
+#include <signal.h>
+#define eve_debug_break() do { fflush(NULL); raise(SIGABRT); } while (false)
+#else
 #if defined(_DEBUG)
 #if defined(_MSC_VER)
 #define eve_debug_break() __debugbreak()
@@ -84,6 +89,7 @@ extern "C" {
 #endif
 #else
 #define eve_debug_break() eve_noop()
+#endif
 #endif
 
 #if defined(__GNUC__) || defined(__clang__)
