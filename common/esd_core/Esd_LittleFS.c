@@ -59,21 +59,36 @@ LittleFS for EVE Screen Designer
 extern const char *lfs_testbd_path;
 extern uint32_t lfs_testbd_cycles;
 uint32_t power_cycles;
-#define EVE_TEST_POWER_CYCLES()                        \
-	do                                                 \
-	{                                                  \
-		if (power_cycles > 0)                          \
-		{                                              \
-			power_cycles -= 1;                         \
-			if (power_cycles == 0)                     \
-			{                                          \
-				LFS_ASSERT(Esd_LittleFS_Sync(c) == 0); \
-				exit(33);                              \
-			}                                          \
-		}                                              \
+#define EVE_TEST_POWER_CYCLES()                           \
+	do                                                    \
+	{                                                     \
+		if (power_cycles > 0)                             \
+		{                                                 \
+			power_cycles -= 1;                            \
+			if (power_cycles == 0)                        \
+			{                                             \
+				LFS_ASSERT(Esd_LittleFS_Sync(c) == 0);    \
+				if (!lfs_testbd_path)                     \
+				{                                         \
+					EVE_CoCmd_memSet(phost, 0, 0xFF,      \
+					    EVE_FLASH_BLOCK_SIZE * 2);        \
+					EVE_CoCmd_flashUpdate(phost,          \
+					    EVE_FLASH_FIRMWARE_SIZE,          \
+					    0, EVE_FLASH_BLOCK_SIZE * 2);     \
+					LFS_ASSERT(EVE_Cmd_waitFlush(phost)); \
+				}                                         \
+				Esd_Stop(ec);                             \
+				Esd_Close(ec);                            \
+				Esd_Release();                            \
+				exit(33);                                 \
+			}                                             \
+		}                                                 \
 	} while (false)
 #else
-#define EVE_TEST_POWER_CYCLES() do {} while (false)
+#define EVE_TEST_POWER_CYCLES() \
+	do                          \
+	{                           \
+	} while (false)
 #endif
 
 // Sync the state of the underlying block device. Negative error codes are propagated to the user.
