@@ -491,6 +491,11 @@ ESD_CORE_EXPORT bool Esd_WaitSwap(Esd_Context *ec)
 		EVE_Util_resetCoprocessor(&ec->HalContext);
 		Esd_BitmapHandle_Reset(&ec->HandleState);
 		ec->AnimationChannelsSetup = 0;
+		if (ec->LfsUnflushed)
+		{
+			ec->LfsCmdFault = true;
+			Esd_GpuAlloc_Free(Esd_GAlloc, ec->LfsEraseHandle);
+		}
 		ec->HasReset = true;
 
 		return false;

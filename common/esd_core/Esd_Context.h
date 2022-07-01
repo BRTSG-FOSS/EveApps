@@ -113,6 +113,8 @@ typedef struct
 	lfs_t Lfs; //< LittleFS Context
 	lfs_block_t LfsEraseBlock;
 	Esd_GpuHandle LfsEraseHandle; //< Handle to 4kB EVE memory for erasing and programming a sector
+	bool LfsUnflushed;
+	bool LfsCmdFault;
 #ifdef ESD_LITTLEFS_READPENDING
 	bool LfsEraseFlushed;
 #endif
