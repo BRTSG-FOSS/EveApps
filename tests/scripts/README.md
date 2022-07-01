@@ -29,5 +29,5 @@ python test_littlefs.py --eve-platform=EVE_PLATFORM_BT8XXEMU --eve-graphics=EVE_
 ## Hardware test
 
 ```
-python test_littlefs.py --eve-ft4222
+python test_littlefs.py --eve-platform=EVE_PLATFORM_FT4222 --eve-graphics=EVE_GRAPHICS_VM816C
 ```
