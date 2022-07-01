@@ -23,9 +23,11 @@ diff -u ../../dependencies/littlefs/scripts/test.py test_littlefs.py > test_litt
 ## Emulator test
 
 ```
+python test_littlefs.py --eve-platform=EVE_PLATFORM_BT8XXEMU --eve-graphics=EVE_GRAPHICS_VM816C
 ```
 
 ## Hardware test
 
 ```
+python test_littlefs.py --eve-ft4222
 ```

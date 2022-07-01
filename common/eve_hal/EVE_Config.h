@@ -1230,7 +1230,7 @@ It may also set platform, display, and flash values if none are configured.
 ///////////////////////////////////////////////////////////////////////
 
 /* The following are only used in ESD to configure the most appropriate flash emulation */
-#if defined(ESD_SIMULATION)
+#if defined(ESD_SIMULATION) || defined(EVE_DEFINE_FLASH)
 #if defined(EVE_FLASH_W25Q16)
 #define EVE_FLASH_W25Q
 #define EVE_FLASH_SIZE 2
@@ -1270,6 +1270,8 @@ It may also set platform, display, and flash values if none are configured.
 #define EVE_FLASH_MX25L
 #define EVE_FLASH_SIZE 256
 #endif
+#endif
+#if defined(ESD_SIMULATION)
 #if (EVE_SUPPORT_CHIPID >= EVE_BT817)
 #ifdef _WIN32
 #define EVE_FLASH_FIRMWARE L"BT817/unified.blob"

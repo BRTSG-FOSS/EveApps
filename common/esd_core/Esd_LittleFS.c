@@ -66,7 +66,10 @@ static int Esd_LittleFS_Sync(const struct lfs_config *c)
 	{
 		uint32_t addr = Esd_GpuAlloc_Get(ga, ec->LfsEraseHandle);
 		if (addr == GA_INVALID)
+		{
+			eve_printf_diagnostic("Erase and update buffer was lost while syncing\n");
 			return LFS_ERR_IO;
+		}
 
 		int32_t flashAddr = EVE_FLASH_FIRMWARE_SIZE + (ec->LfsEraseBlock * EVE_FLASH_BLOCK_SIZE);
 		eve_printf_diagnostic("Flush an erase buffer, flashAddr %i, addr %i, sz %i\n", flashAddr, (int)addr, (int)EVE_FLASH_BLOCK_SIZE);
@@ -95,7 +98,10 @@ static int Esd_LittleFS_Read(const struct lfs_config *c, lfs_block_t block, lfs_
 	{
 		uint32_t addr = Esd_GpuAlloc_Get(ga, ec->LfsEraseHandle);
 		if (addr == GA_INVALID)
+		{
+			eve_printf_diagnostic("Erase and update buffer was lost while reading\n");
 			return LFS_ERR_IO;
+		}
 
 		if (!ec->LfsEraseFlushed)
 		{
@@ -106,7 +112,7 @@ static int Esd_LittleFS_Read(const struct lfs_config *c, lfs_block_t block, lfs_
 		}
 
 		EVE_Hal_rdMem(phost, buffer, addr + off, size);
-		if (phost->Status != EVE_STATUS_ERROR)
+		if (phost->Status == EVE_STATUS_ERROR)
 			return LFS_ERR_IO;
 		return LFS_ERR_OK;
 	}
@@ -128,7 +134,7 @@ static int Esd_LittleFS_Read(const struct lfs_config *c, lfs_block_t block, lfs_
 		ec->LfsLastProg = FA_INVALID;
 		matchesLastProg = (lastProg == (EVE_FLASH_FIRMWARE_SIZE + (block * EVE_FLASH_BLOCK_SIZE) + off));
 	}
-	else if ((off && !matchesLastProg) || size > 64 || block == ec->LfsReadBlock)
+	if ((off && !matchesLastProg) || size > 64 || block == ec->LfsReadBlock)
 	{
 		// Find existing cached block, or allocate space
 		uint32_t addr = Esd_GpuAlloc_Get(ga, ec->LfsReadHandle);
@@ -296,7 +302,10 @@ static int Esd_LittleFS_Erase(const struct lfs_config *c, lfs_block_t block)
 	ec->LfsEraseHandle = Esd_GpuAlloc_Alloc(ga, EVE_FLASH_UPDATE_ALIGN, GA_FIXED_FLAG);
 	uint32_t addr = Esd_GpuAlloc_Get(ga, ec->LfsEraseHandle);
 	if (addr == GA_INVALID)
+	{
+		eve_printf_diagnostic("No memory for creating erase buffer, block %i, addr %i\n", (int)block, (int)addr);
 		return LFS_ERR_NOMEM;
+	}
 	eve_printf_diagnostic("Create an erase buffer, block %i, addr %i\n", (int)block, (int)addr);
 #ifdef ESD_LITTLEFS_READPENDING
 	ec->LfsEraseFlushed = false;
@@ -356,6 +365,9 @@ bool Esd_LittleFS_Mount()
 
 	// Configure
 	ec->LfsEraseBlock = LFS_BLOCK_NULL;
+#ifdef ESD_LITTLEFS_READCACHE
+	ec->LfsReadBlock = LFS_BLOCK_NULL;
+#endif
 	if (!Esd_LittleFS_Configure())
 		return false;
 

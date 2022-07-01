@@ -547,7 +547,7 @@ static bool handleWait(EVE_HalContext *phost, uint16_t rpOrSpace)
  * @return true True if ok
  * @return false False if error
  */
-bool EVE_Cmd_waitFlush(EVE_HalContext *phost)
+EVE_HAL_EXPORT bool EVE_Cmd_waitFlush(EVE_HalContext *phost)
 {
 	uint16_t rp;
 	uint16_t wp;
