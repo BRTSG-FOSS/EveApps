@@ -788,7 +788,7 @@ EVE_HAL_EXPORT bool EVE_Util_bootup(EVE_HalContext *phost, EVE_BootupParameters 
 		}
 		else
 		{
-			/* Send CLKINT explicitly to play safe for all Eve series chip*/
+			/* Send CLKINT explicitly to play safe for all EVE series chip*/
 			EVE_Hal_hostCommand(phost, EVE_INTERNAL_OSC);
 			EVE_sleep(10);
 		}

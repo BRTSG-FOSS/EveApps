@@ -123,7 +123,7 @@ EVE_HAL_EXPORT uint16_t EVE_Cmd_space(EVE_HalContext *phost)
 }
 
 /**
- * @brief Start transfer data to Eve
+ * @brief Start transfer data to EVE
  * 
  * @param phost Pointer to Hal context
  */
