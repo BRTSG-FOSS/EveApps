@@ -1099,7 +1099,7 @@ void EVE_Hal_transferProgMem(EVE_HalContext *phost, uint8_t *result, eve_progmem
 }
 
 /**
- * @brief Transfer a string to Ever platform
+ * @brief Transfer a string to EVE platform
  * 
  * @param phost Pointer to Hal context
  * @param str String to transfer
