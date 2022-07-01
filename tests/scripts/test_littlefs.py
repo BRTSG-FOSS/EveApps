@@ -188,6 +188,16 @@ PROLOGUE_EVE = """
     __attribute__((unused)) Esd_Context esdcontext;
     __attribute__((unused)) Esd_Context *ec = &esdcontext;
     __attribute__((unused)) EVE_HalContext *phost = &esdcontext.HalContext;
+    if (LFS_ERASE_VALUE != 0xFF)
+    {
+        eve_printf("Erase value not applicable, don't run test\\n");
+        return;
+    }
+    if (LFS_ERASE_CYCLES)
+    {
+        eve_printf("Erase cycle tests are not applicable, don't run test\\n");
+        return;
+    }
     Esd_Initialize();
     {
         Esd_Parameters ep;
@@ -204,6 +214,13 @@ PROLOGUE_EVE = """
         Esd_LittleFS_Mount(ec);
         Esd_LittleFS_Unmount(ec);
         cfg = ec->LfsConfig;
+        LFS_ASSERT(cfg.block_size >= LFS_BLOCK_SIZE);
+        cfg.block_size = LFS_BLOCK_SIZE;
+        LFS_ASSERT(cfg.block_count >= LFS_BLOCK_COUNT);
+        cfg.block_count = LFS_BLOCK_COUNT;
+        cfg.block_cycles = LFS_BLOCK_CYCLES;
+        cfg.cache_size = LFS_CACHE_SIZE;
+        cfg.lookahead_size = LFS_LOOKAHEAD_SIZE;
     }
     {
         int chipId = EVE_CHIPID;
@@ -272,6 +289,7 @@ EPILOGUE_EVE = """
 """
 PASS = 'p'
 FAIL = 'F'
+SKIP = 's'
 
 class TestFailure(Exception):
     def __init__(self, case, returncode=None, stdout=None, assert_=None):
@@ -439,8 +457,12 @@ class TestCase:
             raise TestFailure(self, 1, [], None)
         stdout = output.splitlines()
         assert_ = None
-        for line_ in stdout:
-            line = line_ + '\n'
+        rescode = PASS
+        for idx, line in enumerate(stdout):
+            if "not applicable, don't run test" in line:
+                rescode = SKIP
+            stdout[idx] = line + '\n'
+        for line in stdout:
             if args.get('verbose'):
                 sys.stdout.write(line)
             # intercept asserts
@@ -464,7 +486,7 @@ class TestCase:
         if returncode != 0 or assert_:
             raise TestFailure(self, returncode, stdout, assert_)
         else:
-            return PASS
+            return rescode
         """
         mpty, spty = pty.openpty()
         if args.get('verbose'):
@@ -794,7 +816,7 @@ class TestSuite:
         for perm in self.perms:
             if not perm.shouldtest(**args):
                 continue
-
+            result = FAIL
             try:
                 result = perm.test(**args)
             except TestFailure as failure:
@@ -809,7 +831,10 @@ class TestSuite:
             else:
                 perm.result = PASS
                 if not args.get('verbose', True):
-                    sys.stdout.write(PASS)
+                    if result == SKIP:
+                        sys.stdout.write(SKIP)
+                    else:
+                        sys.stdout.write(PASS)
                     sys.stdout.flush()
 
         if not args.get('verbose', True):
