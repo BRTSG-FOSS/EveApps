@@ -103,7 +103,6 @@ static void Esd_LittleFs_Erred()
 	Esd_Context *ec = Esd_CurrentContext;
 	eve_printf_diagnostic("Marking all dirty files as erred\n");
 	lfs_t *lfs = &ec->Lfs;
-	struct lfs_config *config = &Esd_CurrentContext->LfsConfig;
 	for (lfs_file_t *f = (lfs_file_t*)lfs->mlist; f; f = f->next)
 	{
 		if (f->type != LFS_TYPE_REG)
@@ -494,9 +493,14 @@ bool Esd_LittleFS_Mount()
 		return false;
 
 	// Mount
+#ifdef EVE_LITTLEFS_TESTS
+	(void)lfs, (void)err, (void)config;
+	return false;
+#else
 	err = lfs_mount(lfs, config);
 	ec->LfsMounted = !err;
 	return !err;
+#endif
 }
 
 void Esd_LittleFS_Unmount()
