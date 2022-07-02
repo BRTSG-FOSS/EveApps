@@ -118,6 +118,11 @@ EVE_HAL_EXPORT uint32_t EVE_Cmd_waitSpace(EVE_HalContext *phost, uint32_t size);
 (Waits for both the read and write pointer to go to 0) */
 EVE_HAL_EXPORT bool EVE_Cmd_waitLogo(EVE_HalContext *phost);
 
+/* Wait for a 32-bit value that was set by `EVE_CoCmd_memWrite32(phost, ptr, value)`.
+Returns true when the value is found. Returns false otherwise
+when the coprocessor has flushed, or a coprocessor fault occured. */
+EVE_HAL_EXPORT bool EVE_Cmd_waitRead32(EVE_HalContext *phost, uint32_t ptr, uint32_t value);
+
 /* Restore the internal state of EVE_Cmd.
 Call this after manually writing the the coprocessor buffer */
 EVE_HAL_EXPORT void EVE_Cmd_restore(EVE_HalContext *phost);

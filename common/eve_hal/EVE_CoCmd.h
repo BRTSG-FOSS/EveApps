@@ -393,6 +393,21 @@ static inline void EVE_CoCmd_memWrite(EVE_HalContext *phost, uint32_t ptr, uint3
 	EVE_CoCmd_ddd(phost, CMD_MEMWRITE, ptr, num);
 }
 
+/**
+* @brief Send CMD_MEMWRITE, followed by a single 32-bit value. 
+* 
+* Convenience function to write one 32-bit value through the coprocessor.
+* Useful in combination with EVE_Cmd_waitRead32 to add synchronization points into the command buffer.
+* 
+* @param phost Pointer to Hal context
+* @param ptr Destination on RAM_G
+* @param value Value to write
+*/
+static inline void EVE_CoCmd_memWrite32(EVE_HalContext *phost, uint32_t ptr, uint32_t value)
+{
+	EVE_CoCmd_dddd(phost, CMD_MEMWRITE, ptr, 4, value);
+}
+
 ESD_FUNCTION(EVE_CoCmd_memSet, Type = void, Category = _GroupHidden, Inline, Include = "Esd_Core.h")
 ESD_PARAMETER(phost, Type = EVE_HalContext *, Default = Esd_GetHost, Hidden, Internal, Static) // PHOST
 ESD_PARAMETER(ptr, Type = uint32_t, Default = 0) // MEMORY_ADDRESS

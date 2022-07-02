@@ -637,8 +637,39 @@ EVE_HAL_EXPORT bool EVE_Cmd_waitLogo(EVE_HalContext *phost)
 	return true;
 }
 
+/* Wait for a 32-bit value that was set by `EVE_CoCmd_memWrite32(phost, ptr, value)`.
+Returns true when the value is found. Returns false otherwise
+when the coprocessor has flushed, or a coprocessor fault occured. */
+EVE_HAL_EXPORT bool EVE_Cmd_waitRead32(EVE_HalContext *phost, uint32_t ptr, uint32_t value)
+{
+	uint16_t rp;
+	uint16_t wp;
+
+	eve_assert(!phost->CmdWaiting);
+	phost->CmdWaiting = true;
+	while ((rp = EVE_Cmd_rp(phost)) != (wp = EVE_Cmd_wp(phost)))
+	{
+		if (EVE_Hal_rd32(phost, ptr) == value)
+		{
+			/* Expected value has been read */
+			phost->CmdWaiting = false;
+			return true;
+		}
+		if (!handleWait(phost, rp))
+		{
+			phost->CmdSpace = (rp - wp - 4) & EVE_CMD_FIFO_MASK;
+			return false;
+		}
+	}
+
+	/* Command buffer empty */
+	phost->CmdSpace = EVE_CMD_FIFO_SIZE - 4;
+	phost->CmdWaiting = false;
+	return EVE_Hal_rd32(phost, ptr) == value;
+}
+
 /* Restore the internal state of EVE_Cmd.
-Call this after manually writing the the coprocessor buffer */
+Call this after manually writing to the coprocessor buffer */
 EVE_HAL_EXPORT void EVE_Cmd_restore(EVE_HalContext *phost)
 {
 	EVE_Cmd_rp(phost);
