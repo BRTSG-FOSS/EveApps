@@ -91,6 +91,26 @@ uint32_t power_cycles;
 	} while (false)
 #endif
 
+/** When the coprocessor gets reset, or when any of the flushing functions here fail, and there is unflushed data,
+all open lfs files which have the DIRTY flag set should be flagged as ERRED. */
+static void Esd_LittleFs_Erred()
+{
+	Esd_Context *ec = Esd_CurrentContext;
+	eve_printf_diagnostic("Marking all dirty files as erred\n");
+	lfs_t *lfs = &ec->Lfs;
+	struct lfs_config *config = &Esd_CurrentContext->LfsConfig;
+	for (lfs_file_t *f = (lfs_file_t*)lfs->mlist; f; f = f->next)
+	{
+		if (f->type != LFS_TYPE_REG)
+			continue;
+		if (f->flags & LFS_F_DIRTY)
+			f->flags |= LFS_F_ERRED;
+	}
+	ec->LfsCmdFault = false;
+	ec->LfsUnflushed = false;
+	ec->LfsEraseFlushed = true;
+}
+
 // Sync the state of the underlying block device. Negative error codes are propagated to the user.
 static int Esd_LittleFS_SyncImpl(const struct lfs_config *c, bool flush)
 {
@@ -101,6 +121,7 @@ static int Esd_LittleFS_SyncImpl(const struct lfs_config *c, bool flush)
 	if (ec->LfsCmdFault)
 	{
 		eve_printf_debug("Coprocessor fault occured while writing to flash\n");
+		Esd_LittleFs_Erred();
 		return LFS_ERR_IO;
 	}
 
@@ -116,15 +137,20 @@ static int Esd_LittleFS_SyncImpl(const struct lfs_config *c, bool flush)
 		int32_t flashAddr = EVE_FLASH_FIRMWARE_SIZE + (ec->LfsEraseBlock * EVE_FLASH_BLOCK_SIZE);
 		eve_printf_diagnostic("Flush an erase buffer, flashAddr %i, addr %i, sz %i\n", flashAddr, (int)addr, (int)EVE_FLASH_BLOCK_SIZE);
 		EVE_CoCmd_flashUpdate(phost, flashAddr, addr, EVE_FLASH_UPDATE_ALIGN);
+		ec->LfsUnflushed = true;
 
 		ec->LfsEraseBlock = LFS_BLOCK_NULL;
 		Esd_GpuAlloc_Free(ga, ec->LfsEraseHandle);
 	}
 
-	if (flush)
+	if (ec->LfsUnflushed && flush)
 	{
+		eve_printf_diagnostic("Flushing the coprocessor buffer\n");
 		if (!EVE_Cmd_waitFlush(phost))
+		{
+			Esd_LittleFs_Erred();
 			return LFS_ERR_IO;
+		}
 		ec->LfsUnflushed = false;
 	}
 
@@ -134,6 +160,7 @@ static int Esd_LittleFS_SyncImpl(const struct lfs_config *c, bool flush)
 // Sync the state of the underlying block device. Negative error codes are propagated to the user.
 static int Esd_LittleFS_Sync(const struct lfs_config *c)
 {
+	eve_printf_diagnostic("LittleFS called Sync\n");
 	return Esd_LittleFS_SyncImpl(c, true);
 }
 
@@ -155,11 +182,14 @@ static int Esd_LittleFS_Read(const struct lfs_config *c, lfs_block_t block, lfs_
 			return LFS_ERR_IO;
 		}
 
-		if (!ec->LfsEraseFlushed)
+		if (!ec->LfsEraseFlushed && ec->LfsUnflushed)
 		{
 			// Wait for any pending writes, since we write through the coprocessor
 			if (!EVE_Cmd_waitFlush(phost))
+			{
+				Esd_LittleFs_Erred();
 				return LFS_ERR_IO;
+			}
 			ec->LfsEraseFlushed = true;
 			ec->LfsUnflushed = false;
 		}
@@ -209,7 +239,8 @@ static int Esd_LittleFS_Read(const struct lfs_config *c, lfs_block_t block, lfs_
 				eve_printf_diagnostic("Read a whole block, %i, flashAddr %i, addr %i, sz %i\n", (int)block, (int)flashAddr, (int)addr, (int)EVE_FLASH_BLOCK_SIZE);
 				if (!EVE_CoCmd_flashRead_flush(phost, addr, flashAddr, EVE_FLASH_BLOCK_SIZE))
 				{
-					eve_printf_diagnostic("Reading failed, block %i\n", (int)block);
+					eve_printf_debug("Reading failed, block %i\n", (int)block);
+					ec->LfsCmdFault = true;
 					ec->LfsReadBlock = LFS_BLOCK_NULL;
 					Esd_GpuAlloc_Free(ga, ec->LfsReadHandle);
 					return LFS_ERR_IO;
@@ -247,6 +278,11 @@ static int Esd_LittleFS_Read(const struct lfs_config *c, lfs_block_t block, lfs_
 		if (phost->Status != EVE_STATUS_ERROR)
 			res = LFS_ERR_OK;
 	}
+	else
+	{
+		eve_printf_debug("Reading failed, block %i off %i\n", (int)block, (int)off);
+		ec->LfsCmdFault = true;
+	}
 
 	// Release RAM_G buffer
 	Esd_GpuAlloc_Free(ga, handle);
@@ -260,6 +296,13 @@ static int Esd_LittleFS_Prog(const struct lfs_config *c, lfs_block_t block, lfs_
 	Esd_Context *ec = c->context;
 	EVE_HalContext *phost = &ec->HalContext;
 	Esd_GpuAlloc *ga = &ec->GpuAlloc;
+
+	if (ec->LfsCmdFault)
+	{
+		eve_printf_debug("Coprocessor fault occured while writing to flash\n");
+		Esd_LittleFs_Erred();
+		return LFS_ERR_IO;
+	}
 
 #ifdef ESD_LITTLEFS_READCACHE
 	// Drop cached block being read
@@ -319,6 +362,13 @@ static int Esd_LittleFS_Erase(const struct lfs_config *c, lfs_block_t block)
 	Esd_Context *ec = c->context;
 	EVE_HalContext *phost = &ec->HalContext;
 	Esd_GpuAlloc *ga = &ec->GpuAlloc;
+
+	if (ec->LfsCmdFault)
+	{
+		eve_printf_debug("Coprocessor fault occured while writing to flash\n");
+		Esd_LittleFs_Erred();
+		return LFS_ERR_IO;
+	}
 
 #ifdef ESD_LITTLEFS_READCACHE
 	// Drop cached block being read
@@ -453,7 +503,7 @@ void Esd_LittleFS_Unmount()
 	if (!ec->LfsMounted)
 		return; // Not mounted
 
-	Esd_LittleFS_Sync(config);
+	Esd_LittleFS_SyncImpl(config, true);
 	lfs_unmount(lfs);
 }
 
