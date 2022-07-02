@@ -39,6 +39,11 @@ Author: Jan Boon <jan.boon@kaetemi.be>
 LittleFS for EVE Screen Designer
 */
 
+/*
+TODO:
+- Double buffered update buffer. Needs careful flushing, error handling, and read sync.
+*/
+
 #include "Esd_LittleFS.h"
 #include "Esd_Context.h"
 #include "Esd_GpuAlloc.h"
