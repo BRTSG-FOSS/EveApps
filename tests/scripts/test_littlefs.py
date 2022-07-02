@@ -146,7 +146,7 @@ PROLOGUE = """
     __attribute__((unused)) lfs_dir_t dir;
     __attribute__((unused)) struct lfs_info info;
     __attribute__((unused)) char path[1024];
-    __attribute__((unused)) uint8_t buffer[LFS_BLOCK_SIZE * 4];
+    __attribute__((unused)) uint8_t buffer[(1024 > LFS_BLOCK_SIZE * 4) ? (1024) : (LFS_BLOCK_SIZE * 4)];
     __attribute__((unused)) lfs_size_t size;
     __attribute__((unused)) int err;
     
@@ -181,7 +181,7 @@ PROLOGUE_EVE = """
     __attribute__((unused)) lfs_dir_t dir;
     __attribute__((unused)) struct lfs_info info;
     __attribute__((unused)) char path[1024];
-    __attribute__((unused)) uint8_t buffer[LFS_BLOCK_SIZE * 4];
+    __attribute__((unused)) uint8_t buffer[(1024 > LFS_BLOCK_SIZE * 4) ? (1024) : (LFS_BLOCK_SIZE * 4)];
     __attribute__((unused)) lfs_size_t size;
     __attribute__((unused)) int err;
     __attribute__((unused)) struct lfs_config cfg;
@@ -240,7 +240,7 @@ PROLOGUE_EVE = """
         sprintf(deviceName, "%s %s%lx", chipBranding, chipPrefix, (unsigned long)EVE_shortChipId(chipId));
         // EVE_Hal_wr32(phost, REG_MACRO_0, BITMAP_TRANSFORM_F(256));
         EVE_CoCmd_memZero(phost, 0, 4096 * 2);
-        // EVE_CoCmd_memSet(phost, 0, 0xFF, LFS_BLOCK_SIZE * 2);
+        // EVE_CoCmd_memSet(phost, 0, 0xFF, 4096 * 2);
         EVE_CoCmd_dlStart(phost);
         EVE_CoDl_clearColorRgb(phost, 0, 0, 0);
         EVE_CoDl_clear(phost, 1, 1, 1);
@@ -276,8 +276,8 @@ PROLOGUE_EVE = """
     }
     if (!lfs_testbd_path || !strcmp(lfs_testbd_path, "test_littlefs.disk.erase"))
     {
-        EVE_CoCmd_memSet(phost, 0, 0xFF, LFS_BLOCK_SIZE * 2);
-        EVE_CoCmd_flashUpdate(phost, 4096, 0, LFS_BLOCK_SIZE * 2);
+        EVE_CoCmd_memSet(phost, 0, 0xFF, 4096 * 2);
+        EVE_CoCmd_flashUpdate(phost, 4096, 0, 4096 * 2);
         EVE_Cmd_waitFlush(phost) => true;
     }
 """
@@ -289,8 +289,8 @@ EPILOGUE_EVE = """
     // epilogue
     if (!lfs_testbd_path)
     {
-        EVE_CoCmd_memSet(phost, 0, 0xFF, LFS_BLOCK_SIZE * 2);
-        EVE_CoCmd_flashUpdate(phost, 4096, 0, LFS_BLOCK_SIZE * 2);
+        EVE_CoCmd_memSet(phost, 0, 0xFF, 4096 * 2);
+        EVE_CoCmd_flashUpdate(phost, 4096, 0, 4096 * 2);
         EVE_Cmd_waitFlush(phost) => true;
     }
     Esd_Stop(ec);
