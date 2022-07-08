@@ -112,11 +112,8 @@ ESD_CORE_EXPORT uint32_t Esd_LoadResourceEx(Esd_ResourceInfo *resourceInfo, uint
 		if (nameLen + 6 > 128) // ".esdm" NUL
 			return GA_INVALID;
 		char metaFile[128];
-#pragma warning(push)
-#pragma warning(disable : 4996)
-		strcpy(metaFile, resourceInfo->File);
-		strcpy(&metaFile[nameLen], ".esdm");
-#pragma warning(pop)
+		strcpy_s(metaFile, sizeof(metaFile), resourceInfo->File);
+		strcpy_s(&metaFile[nameLen], sizeof(metaFile) - nameLen, ".esdm");
 
 		// Try to load
 		EVE_Util_readFile(phost, metadata, ESD_METADATA_MAX, metaFile);

@@ -1587,7 +1587,7 @@ SelectDisplay:
 #endif
 
 #if defined(_WIN32) && defined(EVE_FLASH_AVAILABLE)
-void EVE_Util_selectFlashFileInteractive(eve_tchar_t *flashPath, bool *updateFlash, bool *updateFlashFirmware, const EVE_HalParameters *params, const eve_tchar_t *flashFile)
+void EVE_Util_selectFlashFileInteractive(eve_tchar_t *flashPath, size_t flashPathSize, bool *updateFlash, bool *updateFlashFirmware, const EVE_HalParameters *params, const eve_tchar_t *flashFile)
 {
 	size_t flashPathSz;
 	errno_t ferr;
@@ -1687,10 +1687,7 @@ SELECTFLASH:
 		)
 		{
 			if (!flashPath[0])
-#pragma warning(push)
-#pragma warning(disable : 4996)
-				wcscpy(flashPath, flashFile);
-#pragma warning(pop)
+				wcscpy_s(flashPath, flashPathSize, flashFile);
 		}
 	}
 }
@@ -1779,6 +1776,7 @@ EVE_HAL_EXPORT void EVE_Util_uploadFlashFileInteractive(EVE_HalContext *phost, c
 	FILE *f = NULL;
 	uint8_t buffer[64 * 4096];
 	uint8_t rbuffer[64 * 4096];
+	errno_t err = 0;
 
 	/* Upload flash */
 
@@ -1787,15 +1785,12 @@ EVE_HAL_EXPORT void EVE_Util_uploadFlashFileInteractive(EVE_HalContext *phost, c
 
 	/* Open flash file and get size */
 #ifdef _WIN32
-#pragma warning(push)
-#pragma warning(disable : 4996)
-	f = _wfopen(flashPath, L"rb");
-#pragma warning(pop)
+	err = _wfopen_s(&f, flashPath, L"rb");
 #else
-	f = fopen(flashPath, "rb");
+	err = fopen_s(&f, flashPath, "rb");
 #endif
 
-	if (!f)
+	if (err || !f)
 	{
 		printf("Flash file cannot be opened\n");
 	}
@@ -2046,7 +2041,7 @@ bool EVE_Util_openDeviceInteractive(EVE_HalContext *phost, const wchar_t *flashF
 
 #if defined(_WIN32) && defined(EVE_FLASH_AVAILABLE)
 	if (chipId >= EVE_BT815 || (chipId <= 0 && flashFile && flashFile[0]))
-		EVE_Util_selectFlashFileInteractive(flashPath, &updateFlash, &updateFlashFirmware, &params, flashFile);
+		EVE_Util_selectFlashFileInteractive(flashPath, sizeof(flashPath) / sizeof(flashPath[0]), &updateFlash, &updateFlashFirmware, &params, flashFile);
 #endif
 
 #if defined(BT8XXEMU_PLATFORM)

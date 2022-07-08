@@ -360,11 +360,8 @@ ESD_CORE_EXPORT uint32_t Esd_LoadBitmapEx(Esd_BitmapInfo *bitmapInfo, uint8_t *m
 			if (nameLen + 6 > 128) // ".esdm" NUL
 				return GA_INVALID;
 			char metaFile[128];
-#pragma warning(push)
-#pragma warning(disable : 4996)
-			strcpy(metaFile, bitmapInfo->File);
-			strcpy(&metaFile[nameLen], ".esdm");
-#pragma warning(pop)
+			strcpy_s(metaFile, sizeof(metaFile), bitmapInfo->File);
+			strcpy_s(&metaFile[nameLen], sizeof(metaFile) - nameLen, ".esdm");
 
 			// Try to load
 			EVE_Util_readFile(phost, metadata, ESD_METADATA_MAX, metaFile);

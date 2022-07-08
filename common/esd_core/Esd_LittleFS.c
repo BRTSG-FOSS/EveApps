@@ -534,11 +534,8 @@ bool Esd_LittleFs_ReadMetadataFile(uint8_t *metadata, const char *resourceFile)
 	if (nameLen + 6 > 128) // ".esdm" NUL
 		return false;
 	char metaFile[128];
-#pragma warning(push)
-#pragma warning(disable : 4996)
-	strcpy(metaFile, resourceFile);
-	strcpy(&metaFile[nameLen], ".esdm");
-#pragma warning(pop)
+	strcpy_s(metaFile, sizeof(metaFile), resourceFile);
+	strcpy_s(&metaFile[nameLen], sizeof(metaFile) - nameLen, ".esdm");
 
 	// Read file
 	lfs_file_t lfsFile;
@@ -554,6 +551,8 @@ bool Esd_LittleFs_ReadMetadataFile(uint8_t *metadata, const char *resourceFile)
 	bool res = false;
 	if ((err = lfs_file_reserved(lfs, &lfsFile, &head)))
 	{
+		(void)err;
+		
 		// Regular file
 		res = lfs_file_read(lfs, &lfsFile, metadata, min(ESD_METADATA_MAX, lfs_file_size(lfs, &lfsFile))) >= 0;
 	}

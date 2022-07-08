@@ -181,9 +181,9 @@ static inline void EVE_Util_selectDisplayInteractive(EVE_DISPLAY_T *display)
 #endif
 
 #if defined(_WIN32) && defined(EVE_FLASH_AVAILABLE)
-EVE_HAL_EXPORT void EVE_Util_selectFlashFileInteractive(eve_tchar_t *flashPath, bool *updateFlash, bool *updateFlashFirmware, const EVE_HalParameters *params, const eve_tchar_t *flashFile);
+EVE_HAL_EXPORT void EVE_Util_selectFlashFileInteractive(eve_tchar_t *flashPath, size_t flashPathSize, bool *updateFlash, bool *updateFlashFirmware, const EVE_HalParameters *params, const eve_tchar_t *flashFile);
 #else
-static inline void EVE_Util_selectFlashFileInteractive(eve_tchar_t *flashPath, bool *updateFlash, bool *updateFlashFirmware, const EVE_HalParameters *params, const eve_tchar_t *flashFile)
+static inline void EVE_Util_selectFlashFileInteractive(eve_tchar_t *flashPath, size_t flashPathSize, bool *updateFlash, bool *updateFlashFirmware, const EVE_HalParameters *params, const eve_tchar_t *flashFile)
 {
 	flashPath[0] = '\0';
 	*updateFlash = false;
