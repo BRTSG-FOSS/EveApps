@@ -12,7 +12,7 @@ python -m pip install toml
 python test_littlefs.py
 ```
 
-Cleanup the generated files from *"X:\source\eve_apps\dependencies\littlefs\tests"* afterwards
+Cleanup the generated files from *"X:\source\eve_apps\dependencies\littlefs\tests"* afterwards.
 
 ## Prepare diff for re-merge
 
@@ -30,4 +30,10 @@ python test_littlefs.py --eve-platform=EVE_PLATFORM_BT8XXEMU --eve-graphics=EVE_
 
 ```
 python test_littlefs.py --eve-platform=EVE_PLATFORM_FT4222 --eve-graphics=EVE_GRAPHICS_VM816C
+```
+
+Run one specific test.
+
+```
+python test_littlefs.py --eve-platform=EVE_PLATFORM_FT4222 --eve-graphics=EVE_GRAPHICS_VM816C ../../dependencies/littlefs/tests/test_alloc.toml#9#1
 ```

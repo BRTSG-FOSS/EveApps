@@ -231,6 +231,7 @@ PROLOGUE_EVE = """
             cfg.lookahead_buffer = NULL;
         }
         cfg.lookahead_size = LFS_LOOKAHEAD_SIZE;
+        cfg.flags = 0;
     }
     {
         int chipId = EVE_CHIPID;
