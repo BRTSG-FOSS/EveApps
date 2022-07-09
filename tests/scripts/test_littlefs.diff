@@ -1,5 +1,5 @@
---- ../../dependencies/littlefs/scripts/test.py	2022-06-29 13:23:45.007848100 +0800
-+++ test_littlefs.py	2022-07-02 02:56:20.938594200 +0800
+--- ../../dependencies/littlefs/scripts/test.py	2022-07-09 17:30:49.954927800 +0800
++++ test_littlefs.py	2022-07-05 04:11:33.644093500 +0800
 @@ -1,5 +1,35 @@
  #!/usr/bin/env python3
  
@@ -96,16 +96,7 @@
  PROLOGUE = """
      // prologue
      __attribute__((unused)) lfs_t lfs;
-@@ -93,7 +146,7 @@
-     __attribute__((unused)) lfs_dir_t dir;
-     __attribute__((unused)) struct lfs_info info;
-     __attribute__((unused)) char path[1024];
--    __attribute__((unused)) uint8_t buffer[1024];
-+    __attribute__((unused)) uint8_t buffer[LFS_BLOCK_SIZE * 4];
-     __attribute__((unused)) lfs_size_t size;
-     __attribute__((unused)) int err;
-     
-@@ -121,12 +174,132 @@
+@@ -121,12 +174,133 @@
  
      lfs_testbd_createcfg(&cfg, lfs_testbd_path, &bdcfg) => 0;
  """
@@ -116,7 +107,7 @@
 +    __attribute__((unused)) lfs_dir_t dir;
 +    __attribute__((unused)) struct lfs_info info;
 +    __attribute__((unused)) char path[1024];
-+    __attribute__((unused)) uint8_t buffer[LFS_BLOCK_SIZE * 4];
++    __attribute__((unused)) uint8_t buffer[(1024 > LFS_BLOCK_SIZE * 4) ? (1024) : (LFS_BLOCK_SIZE * 4)];
 +    __attribute__((unused)) lfs_size_t size;
 +    __attribute__((unused)) int err;
 +    __attribute__((unused)) struct lfs_config cfg;
@@ -166,6 +157,7 @@
 +            cfg.lookahead_buffer = NULL;
 +        }
 +        cfg.lookahead_size = LFS_LOOKAHEAD_SIZE;
++        cfg.flags = 0;
 +    }
 +    {
 +        int chipId = EVE_CHIPID;
@@ -175,7 +167,7 @@
 +        sprintf(deviceName, "%s %s%lx", chipBranding, chipPrefix, (unsigned long)EVE_shortChipId(chipId));
 +        // EVE_Hal_wr32(phost, REG_MACRO_0, BITMAP_TRANSFORM_F(256));
 +        EVE_CoCmd_memZero(phost, 0, 4096 * 2);
-+        // EVE_CoCmd_memSet(phost, 0, 0xFF, LFS_BLOCK_SIZE * 2);
++        // EVE_CoCmd_memSet(phost, 0, 0xFF, 4096 * 2);
 +        EVE_CoCmd_dlStart(phost);
 +        EVE_CoDl_clearColorRgb(phost, 0, 0, 0);
 +        EVE_CoDl_clear(phost, 1, 1, 1);
@@ -211,8 +203,8 @@
 +    }
 +    if (!lfs_testbd_path || !strcmp(lfs_testbd_path, "test_littlefs.disk.erase"))
 +    {
-+        EVE_CoCmd_memSet(phost, 0, 0xFF, LFS_BLOCK_SIZE * 2);
-+        EVE_CoCmd_flashUpdate(phost, 4096, 0, LFS_BLOCK_SIZE * 2);
++        EVE_CoCmd_memSet(phost, 0, 0xFF, 4096 * 2);
++        EVE_CoCmd_flashUpdate(phost, 4096, 0, 4096 * 2);
 +        EVE_Cmd_waitFlush(phost) => true;
 +    }
 +"""
@@ -226,8 +218,8 @@
 +    // epilogue
 +    if (!lfs_testbd_path)
 +    {
-+        EVE_CoCmd_memSet(phost, 0, 0xFF, LFS_BLOCK_SIZE * 2);
-+        EVE_CoCmd_flashUpdate(phost, 4096, 0, LFS_BLOCK_SIZE * 2);
++        EVE_CoCmd_memSet(phost, 0, 0xFF, 4096 * 2);
++        EVE_CoCmd_flashUpdate(phost, 4096, 0, 4096 * 2);
 +        EVE_Cmd_waitFlush(phost) => true;
 +    }
 +    Esd_Stop(ec);
@@ -240,7 +232,7 @@
  
  class TestFailure(Exception):
      def __init__(self, case, returncode=None, stdout=None, assert_=None):
-@@ -235,7 +408,7 @@
+@@ -235,7 +409,7 @@
      def test(self, exec=[], persist=False, cycles=None,
              gdb=False, failure=None, disk=None, **args):
          # build command
@@ -249,7 +241,7 @@
              repr(self.caseno), repr(self.permno)]
  
          # persist disk or keep in RAM for speed?
-@@ -250,7 +423,11 @@
+@@ -250,7 +424,11 @@
                          print('truncate --size=0', disk)
                  except FileNotFoundError:
                      pass
@@ -262,7 +254,7 @@
              cmd.append(disk)
  
          # simulate power-loss after n cycles?
-@@ -276,6 +453,53 @@
+@@ -276,6 +454,53 @@
              sys.exit(sp.call(ncmd))
  
          # run test case!
@@ -316,7 +308,7 @@
          mpty, spty = pty.openpty()
          if args.get('verbose'):
              print(' '.join(shlex.quote(c) for c in cmd))
-@@ -324,6 +548,7 @@
+@@ -324,6 +549,7 @@
              raise TestFailure(self, proc.returncode, stdout, assert_)
          else:
              return PASS
@@ -324,7 +316,7 @@
  
  class ValgrindTestCase(TestCase):
      def __init__(self, config, **args):
-@@ -519,7 +744,7 @@
+@@ -519,7 +745,7 @@
                  tfs[case.in_] = open(self.path+'.'+
                      re.sub('(\.c)?$', '.tc', case.in_.replace('/', '.')), 'w')
                  tfs[case.in_].write('#line 1 "%s"\n' % case.in_)
@@ -333,7 +325,7 @@
                      for line in f:
                          tfs[case.in_].write(line)
                  tfs[case.in_].write('\n')
-@@ -554,7 +779,11 @@
+@@ -554,7 +780,11 @@
          for tf in tfs.values():
              tf.close()
  
@@ -345,7 +337,7 @@
          with open(self.path + '.mk', 'w') as mk:
              mk.write(RULES.replace(4*' ', '\t') % dict(path=self.path))
              mk.write('\n')
-@@ -583,11 +812,13 @@
+@@ -583,11 +813,13 @@
                          path,
                          self.path+'.'+re.sub('(\.c)?$', '.tc',
                              path.replace('/', '.'))))
@@ -360,7 +352,7 @@
  
      def test(self, **args):
          # run test suite!
-@@ -597,7 +828,7 @@
+@@ -597,7 +829,7 @@
          for perm in self.perms:
              if not perm.shouldtest(**args):
                  continue
@@ -369,7 +361,7 @@
              try:
                  result = perm.test(**args)
              except TestFailure as failure:
-@@ -612,13 +843,26 @@
+@@ -612,13 +844,26 @@
              else:
                  perm.result = PASS
                  if not args.get('verbose', True):
@@ -397,7 +389,7 @@
      # figure out explicit defines
      defines = {}
      for define in args['D']:
-@@ -654,7 +898,7 @@
+@@ -654,7 +899,7 @@
  
          # find tests
          for path in glob.glob(testpath):
@@ -406,7 +398,7 @@
  
      # sort for reproducibility
      suites = sorted(suites)
-@@ -665,14 +909,86 @@
+@@ -665,14 +910,86 @@
  
      # build tests in parallel
      print('====== building ======')
@@ -497,7 +489,7 @@
          list(it.chain.from_iterable(['-f', m] for m in makefiles)) +
          [target for target in targets])
      mpty, spty = pty.openpty()
-@@ -717,6 +1033,7 @@
+@@ -717,6 +1034,7 @@
              for line in stdout:
                  sys.stdout.write(line)
          sys.exit(-1)
@@ -505,7 +497,7 @@
  
      print('built %d test suites, %d test cases, %d permutations' % (
          len(suites),
-@@ -856,5 +1173,9 @@
+@@ -856,5 +1174,9 @@
      parser.add_argument('--build-dir',
          help="Build relative to the specified directory instead of the \
              current directory.")
