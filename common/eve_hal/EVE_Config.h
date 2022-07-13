@@ -798,7 +798,6 @@ It may also set platform, display, and flash values if none are configured.
 
 #define BT817_ENABLE
 #define ENABLE_SPI_QUAD
-#define EVE_USE_INTERNAL_OSC
 
 #ifndef EVE_DISPLAY_AVAILABLE
 #define EVE_DISPLAY_AVAILABLE
@@ -1222,6 +1221,10 @@ It may also set platform, display, and flash values if none are configured.
 #elif defined(EVE_DISPLAY_KD2401_HVGA_PORTRAIT)
 #define DISPLAY_RESOLUTION_HVGA_PORTRAIT
 #define ENABLE_KD2401_HVGA_PORTRAIT
+#endif
+
+#ifndef EVE_DISPLAY_REFRESH
+#define EVE_DISPLAY_REFRESH 0
 #endif
 
 ///////////////////////////////////////////////////////////////////////

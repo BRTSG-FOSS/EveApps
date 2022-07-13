@@ -50,17 +50,23 @@ static const uint16_t s_DisplayResolutions[EVE_DISPLAY_NB][4] = {
 	/* Landscape */
 	{ 320, 240, 56, 0 }, /* EVE_DISPLAY_QVGA_320x240_56Hz */
 	{ 480, 272, 60, 0 }, /* EVE_DISPLAY_WQVGA_480x272_60Hz */
-#if defined(EVE_GRAPHICS_IDM2040)
-	{ 860, 480, 90, 800 }, /* EVE_DISPLAY_WVGA_800x480_74Hz */
-#else
 	{ 800, 480, 74, 0 }, /* EVE_DISPLAY_WVGA_800x480_74Hz */
-#endif
 	{ 1024, 600, 59, 0 }, /* EVE_DISPLAY_WSVGA_1024x600_59Hz */
 	{ 1280, 720, 58, 0 }, /* EVE_DISPLAY_HDTV_1280x720_58Hz */
 	{ 1280, 800, 57, 0 }, /* EVE_DISPLAY_WXGA_1280x800_57Hz */
 
 	/* Portrait */
 	{ 320, 480, 60, 0 }, /* EVE_DISPLAY_HVGA_320x480_60Hz */
+	
+	/* IDM2040-7A, AT‐T070SWH‐51CP, HX8264-E */
+	{ 860, 480, 60, 800 }, /* EVE_DISPLAY_WVGA_800x480_W860_60Hz */
+	
+	/* Riverdi */
+	{ 320, 240, 62, 0 }, /* EVE_DISPLAY_RIVERDI_IPS35_62Hz */
+	{ 480, 272, 58, 0 }, /* EVE_DISPLAY_RIVERDI_IPS43_58Hz */
+	{ 800, 480, 63, 0 }, /* EVE_DISPLAY_RIVERDI_IPS50_63Hz */
+	{ 1024, 600, 59, 0 }, /* EVE_DISPLAY_RIVERDI_IPS70_59Hz */
+	{ 1280, 800, 59, 0 }, /* EVE_DISPLAY_RIVERDI_IPS101_59Hz */
 
 };
 
@@ -78,6 +84,14 @@ static const char *s_DisplayNames[EVE_DISPLAY_NB] = {
 	"WXGA 1280x800 57Hz",
 
 	"HVGA 320x480 60Hz",
+
+	"IDM2040-7A WVGA 60Hz",
+
+	"Riverdi IPS 3.5\" 62Hz",
+	"Riverdi IPS 4.3\" 58Hz",
+	"Riverdi IPS 5.0\" 63Hz",
+	"Riverdi IPS 7.0\" 59Hz",
+	"Riverdi IPS 10.1\" 59Hz",
 
 };
 
@@ -331,6 +345,72 @@ EVE_HAL_EXPORT void EVE_Util_bootupDefaults(EVE_HalContext *phost, EVE_BootupPar
 #define EVE_HARDCODED_DISPLAY_TIMINGS 1
 #endif
 
+#if (EVE_SUPPORT_CHIPID >= EVE_BT817)
+
+static uint16_t getPClkFreq(uint32_t freq)
+{
+	// uint32_t resFreq;
+	uint32_t res;
+	// eve_printf_debug("Want frequency %i\n", (int)wantFreq);
+	int32_t nearestFreq = 0x7FFFFFFFL;
+	int32_t nearestDiv = 0;
+	int32_t nearestMul = 0;
+	for (uint32_t div = 1; div < 15; ++div)
+	{
+		uint32_t mul = (freq * div) / 6000000;
+		if (mul > 19)
+			break;
+		// eve_printf_debug("Div %i Mul %i\n", (int)div, (int)mul);
+		if (mul > 1)
+		{
+			int32_t resFreq = 6000000 * mul / div;
+			// eve_printf_debug("Res frequency %i\n", (int)resFreq);
+			int32_t diffFreq = resFreq - (int32_t)freq;
+			if (diffFreq >= 0 && diffFreq < (nearestFreq - (int32_t)freq))
+			{
+				nearestFreq = resFreq;
+				nearestDiv = div;
+				nearestMul = mul;
+			}
+		}
+		if (mul && mul <= 18)
+		{
+			int32_t resFreq = 6000000 * (mul + 1) / div;
+			// eve_printf_debug("Res frequency (mul + 1) %i\n", (int)resFreq);
+			int32_t diffFreq = resFreq - (int32_t)freq;
+			if (diffFreq >= 0 && diffFreq < (nearestFreq - (int32_t)freq))
+			{
+				nearestFreq = resFreq;
+				nearestDiv = div;
+				nearestMul = mul + 1;
+			}
+		}
+	}
+	if (nearestFreq != 0x7FFFFFFFL)
+	{
+		// resFreq = nearestFreq;
+		// maxRate = resFreq / minCycles;
+		uint32_t pllFreq = 12 * nearestMul;
+		uint32_t range = pllFreq >= 160 ? 3 : (pllFreq >= 80 ? 2 : (pllFreq >= 40 ? 1 : 0));
+		res = (nearestDiv & 0xF) | ((nearestMul & 0x3F) << 4) | (range << 10);
+		// eve_printf_debug("Set PCLK Freq to %X (freq %i, mul %i, div %i)\n", (int)config->PClkFreq, (int)nearestFreq, (int)nearestMul, (int)nearestDiv);
+		return res;
+	}
+	return 0;
+}
+
+static inline uint32_t getFreqFromPClkFreq(uint16_t pclkFreq)
+{
+	if (!pclkFreq)
+		return 0;
+	uint32_t mul = (pclkFreq >> 4) & 0x3F;
+	uint32_t div = pclkFreq & 0xF;
+	uint32_t res = mul * (12 * 1000 * 1000) / div / 2;
+	return res;
+}
+
+#endif
+
 static bool configDefaultsEx(EVE_HalContext *phost, EVE_ConfigParameters *config, uint32_t width, uint32_t height, uint32_t refreshRate, uint32_t hsfWidth, uint32_t freq)
 {
 	/* Only false if the output resolution will be wrong.
@@ -352,6 +432,8 @@ static bool configDefaultsEx(EVE_HalContext *phost, EVE_ConfigParameters *config
 	uint32_t vsync1;
 
 #ifdef EVE_SUPPORT_HSF
+	uint32_t maxFreq;
+	uint32_t maxRatePass;
 	uint32_t pclkFreq = 0;
 #endif
 
@@ -451,60 +533,48 @@ static bool configDefaultsEx(EVE_HalContext *phost, EVE_ConfigParameters *config
 
 	screenWidth = hsfWidth ? hsfWidth : width; /* Use screen width for calculation */
 	pixels = screenWidth * height;
-	minCycles = pixels + (pixels >> 3); /* pixels * 1.125 */
+	
+	/* Calculate maximum refresh rate */
+	minCycles = pixels + (pixels >> 2); /* pixels * 1.25 */
+#ifdef EVE_SUPPORT_HSF
+	maxRatePass = (freq - 1) / minCycles;
+	maxFreq = (freq << 1) < 96000000 ? (freq << 1) : 96000000;
+	if (hsfWidth)
+		maxRate = maxRatePass; // No 2X
+	else
+		maxRate = maxFreq / minCycles; // Support 2X
+#else
 	maxRate = freq / minCycles;
+#endif
+	
+	/* If the refresh rate is too low, try with tighter settings */
+	if (refreshRate > maxRate)
+	{
+		minCycles = pixels + (pixels >> 3); /* pixels * 1.125 */
+#ifdef EVE_SUPPORT_HSF
+		maxRatePass = (freq - 1) / minCycles;
+		if (hsfWidth)
+			maxRate = maxRatePass; // No 2X
+		else
+			maxRate = maxFreq / minCycles; // Support 2X
+#else
+		maxRate = freq / minCycles;
+#endif
+	}
 
 #ifdef EVE_SUPPORT_HSF
-	if (EVE_Hal_supportHsf(phost) && hsfWidth)
+	if (EVE_Hal_supportHsf(phost) && (hsfWidth || refreshRate > maxRatePass))
 	{
-		/* Setup EXTSYNC with freq lower (not equal) than system frequency */
+		/* Setup EXTSYNC with freq lower (not equal) than system frequency for HSF, up to 2X otherwise */
 		/* LL2 frequency = 12MHz * REG_PCLK_FREQ[8:4] */
 		/* PCLK frequency = PLL2 frequency / REG_PCLK_FREQ[3:0] / 2 */
 		/* PCLK frequency = 6MHz * REG_PCLK_FREQ[8:4] / REG_PCLK_FREQ[3:0] */
 		/* PCLK frequency = 6MHz * mul / div */
 		int32_t wantFreq = minCycles * (refreshRate > maxRate ? maxRate : refreshRate); // 25.92m for 800x480
-		// eve_printf_debug("Want frequency %i\n", (int)wantFreq);
-		int32_t nearestFreq = 0x7FFFFFFFL;
-		int32_t nearestDiv = 0;
-		int32_t nearestMul = 0;
-		for (uint32_t div = 1; div < 15; ++div)
-		{
-			uint32_t mul = (wantFreq * div) / 6000000;
-			// eve_printf_debug("Div %i Mul %i\n", (int)div, (int)mul);
-			if (mul <= 19 && mul > 0)
-			{
-				int32_t resFreq = 6000000 * mul / div;
-				// eve_printf_debug("Res frequency %i\n", (int)resFreq);
-				int32_t diffFreq = resFreq - wantFreq;
-				if (diffFreq >= 0 && diffFreq < (nearestFreq - wantFreq))
-				{
-					nearestFreq = resFreq;
-					nearestDiv = div;
-					nearestMul = mul;
-				}
-			}
-			if (mul <= 18)
-			{
-				int32_t resFreq = 6000000 * (mul + 1) / div;
-				// eve_printf_debug("Res frequency (mul + 1) %i\n", (int)resFreq);
-				int32_t diffFreq = resFreq - wantFreq;
-				if (diffFreq >= 0 && diffFreq < (nearestFreq - wantFreq))
-				{
-					nearestFreq = resFreq;
-					nearestDiv = div;
-					nearestMul = mul + 1;
-				}
-			}
-		}
-		if (nearestFreq)
-		{
-			pclkFreq = nearestFreq;
+		config->PClkFreq = getPClkFreq(wantFreq);
+		pclkFreq = getFreqFromPClkFreq(config->PClkFreq);
+		if (pclkFreq)
 			maxRate = pclkFreq / minCycles;
-			uint32_t pllFreq = 12 * nearestMul;
-			uint32_t range = pllFreq >= 160 ? 3 : (pllFreq >= 80 ? 2 : (pllFreq >= 40 ? 1 : 0));
-			config->PCLKFreq = (nearestDiv & 0xF) | ((nearestMul & 0x1F) << 4) | (range << 10);
-			// eve_printf_debug("Set PCLK Freq to %X (freq %i, mul %i, div %i)\n", (int)config->PCLKFreq, (int)nearestFreq, (int)nearestMul, (int)nearestDiv);
-		}
 	}
 #endif
 
@@ -524,7 +594,11 @@ static bool configDefaultsEx(EVE_HalContext *phost, EVE_ConfigParameters *config
 	}
 	else
 	{
+#ifdef EVE_SUPPORT_HSF
+		pclk = maxRatePass / refreshRate;
+#else
 		pclk = maxRate / refreshRate;
+#endif
 	}
 	config->PCLK = (uint8_t)pclk;
 
@@ -539,15 +613,23 @@ static bool configDefaultsEx(EVE_HalContext *phost, EVE_ConfigParameters *config
 #else
 	cycles = freq / (refreshRate * pclk);
 #endif
-	vcycle = height * cycles / pixels;
-	vcycle = (vcycle + ((vcycle + height) >> 1) + height + height) >> 2;
-	hcycle = cycles / vcycle;
+	vcycle = height * cycles / pixels; /* max vcycle without blanking, on average 1.125x height, or 1.25x */
+	vcycle = (vcycle + ((vcycle + height) >> 1) + height + height) >> 2; /* vcycle is 1.5 max vcycle + 2.5 height / 4, so on average 1.046875x height, or 1.09375x */
+	hcycle = cycles / vcycle; /* cycles div by vcycle, on average 1.07375x, or 1.1425x */
 	hoffset = (hcycle - screenWidth) >> 1;
 	voffset = (vcycle - height) >> 1;
 	hsync1 = hoffset >> 1;
 	vsync1 = voffset >> 1;
 	hoffset += hsync1;
 	voffset += vsync1;
+#if (EVE_SUPPORT_CHIPID >= EVE_BT817)
+	if (pclkFreq && pclkFreq >= freq)
+	{
+		hcycle &= ~1UL;
+		hoffset &= ~1UL;
+		hsync1 &= ~1UL;
+	}
+#endif
 	config->HCycle = (int16_t)hcycle;
 	config->HSync0 = 0;
 	config->HSync1 = (int16_t)hsync1;
@@ -618,12 +700,10 @@ EVE_HAL_EXPORT bool EVE_Util_configDefaultsEx(EVE_HalContext *phost, EVE_ConfigP
 	bool res = configDefaultsEx(phost, config, width, height, refreshRate, hsfWidth, freq);
 #ifdef _DEBUG
 #if (EVE_SUPPORT_CHIPID >= EVE_BT817)
-	if (config->PCLKFreq)
+	if (config->PClkFreq)
 	{
-		uint32_t mul = (config->PCLKFreq >> 4) & 0x1F;
-		uint32_t div = config->PCLKFreq & 0xF;
-		uint32_t pclkFrequency = mul * (12 * 1000 * 1000) / div / 2;
-		eve_printf_debug("Display refresh rate set to %f Hz using pclk %X freq %f MHz\n", (float)((double)pclkFrequency / ((double)config->HCycle * (double)config->VCycle)), (int)config->PCLKFreq, (float)((double)pclkFrequency * 0.000001));
+		uint32_t pclkFrequency = getFreqFromPClkFreq(config->PClkFreq);
+		eve_printf_debug("Display refresh rate set to %f Hz using pclk %X freq %f MHz\n", (float)((double)pclkFrequency / ((double)config->HCycle * (double)config->VCycle)), (int)config->PClkFreq, (float)((double)pclkFrequency * 0.000001));
 	}
 	else
 #endif
@@ -650,7 +730,11 @@ EVE_HAL_EXPORT void EVE_Util_configDefaults(EVE_HalContext *phost, EVE_ConfigPar
 #elif defined(DISPLAY_RESOLUTION_WQVGA)
 		display = EVE_DISPLAY_WQVGA_480x272_60Hz;
 #elif defined(DISPLAY_RESOLUTION_WVGA)
+#if defined(EVE_GRAPHICS_IDM2040)
+		display = EVE_DISPLAY_WVGA_800x480_W860_60Hz;
+#else
 		display = EVE_DISPLAY_WVGA_800x480_74Hz;
+#endif
 #elif defined(DISPLAY_RESOLUTION_WSVGA)
 		display = EVE_DISPLAY_WSVGA_1024x600_59Hz;
 #elif defined(DISPLAY_RESOLUTION_HDTV)
@@ -673,12 +757,23 @@ EVE_HAL_EXPORT void EVE_Util_configDefaults(EVE_HalContext *phost, EVE_ConfigPar
 
 	width = s_DisplayResolutions[display][0];
 	height = s_DisplayResolutions[display][1];
+#if EVE_DISPLAY_REFRESH
+	refreshRate = EVE_DISPLAY_REFRESH;
+#else
 	refreshRate = s_DisplayResolutions[display][2];
+#endif
 	hsfWidth = s_DisplayResolutions[display][3];
 	supportedResolution = configDefaultsEx(phost, config, width, height, refreshRate, hsfWidth, freq);
 
 	/* Known values for specific display models */
-	if (display == EVE_DISPLAY_QVGA_320x240_56Hz && freq == 48000000)
+#if EVE_DISPLAY_REFRESH
+	if (EVE_DISPLAY_REFRESH != s_DisplayResolutions[display][2])
+	{
+		/* Don't use known preset values if the requested refresh rate differs from the default */
+	}
+	else
+#endif
+		if (display == EVE_DISPLAY_QVGA_320x240_56Hz && freq == 48000000)
 	{
 		/*
 		FT800 known values:
@@ -700,7 +795,7 @@ EVE_HAL_EXPORT void EVE_Util_configDefaults(EVE_HalContext *phost, EVE_ConfigPar
 			config->VSync1 = 2;
 			config->PCLK = 8;
 #if (EVE_SUPPORT_CHIPID >= EVE_BT817)
-			config->PCLKFreq = 0;
+			config->PClkFreq = 0;
 #endif
 #ifdef EVE_SUPPORT_HSF
 			config->HsfWidth = 0;
@@ -739,7 +834,7 @@ EVE_HAL_EXPORT void EVE_Util_configDefaults(EVE_HalContext *phost, EVE_ConfigPar
 			config->VSync1 = 10;
 			config->PCLK = 5;
 #if (EVE_SUPPORT_CHIPID >= EVE_BT817)
-			config->PCLKFreq = 0;
+			config->PClkFreq = 0;
 #endif
 #ifdef EVE_SUPPORT_HSF
 			config->HsfWidth = 0;
@@ -750,7 +845,7 @@ EVE_HAL_EXPORT void EVE_Util_configDefaults(EVE_HalContext *phost, EVE_ConfigPar
 #if (EVE_SUPPORT_CHIPID >= EVE_BT817)
 	else if (display == EVE_DISPLAY_WQVGA_480x272_60Hz && EVE_CHIPID >= EVE_BT817)
 	{
-		/* Same as above, but using PCLKFreq */
+		/* Same as above, but using PClkFreq */
 #if EVE_HARDCODED_DISPLAY_TIMINGS
 		if (supportedResolution)
 		{
@@ -765,7 +860,7 @@ EVE_HAL_EXPORT void EVE_Util_configDefaults(EVE_HalContext *phost, EVE_ConfigPar
 			config->VSync0 = 0;
 			config->VSync1 = 10;
 			config->PCLK = 1;
-			config->PCLKFreq = 0x885; // 9.6MHz
+			config->PClkFreq = 0x885; // 9.6MHz
 			config->HsfWidth = 0;
 		}
 #endif
@@ -781,7 +876,6 @@ EVE_HAL_EXPORT void EVE_Util_configDefaults(EVE_HalContext *phost, EVE_ConfigPar
 		Refresh rate: 73.892Hz
 		*/
 #if EVE_HARDCODED_DISPLAY_TIMINGS
-#ifndef EVE_GRAPHICS_IDM2040 /* IDM2040 uses another HSF based configuration */
 		if (supportedResolution)
 		{
 			config->Width = 800;
@@ -796,13 +890,12 @@ EVE_HAL_EXPORT void EVE_Util_configDefaults(EVE_HalContext *phost, EVE_ConfigPar
 			config->VSync1 = 3;
 			config->PCLK = 2;
 #if (EVE_SUPPORT_CHIPID >= EVE_BT817)
-			config->PCLKFreq = 0;
+			config->PClkFreq = 0;
 #endif
 #ifdef EVE_SUPPORT_HSF
 			config->HsfWidth = 0;
 #endif
 		}
-#endif
 #endif
 	}
 	else if (display == EVE_DISPLAY_HDTV_1280x720_58Hz && freq == 72000000)
@@ -828,7 +921,7 @@ EVE_HAL_EXPORT void EVE_Util_configDefaults(EVE_HalContext *phost, EVE_ConfigPar
 			config->VSync1 = 5;
 			config->PCLK = 1;
 #if (EVE_SUPPORT_CHIPID >= EVE_BT817)
-			config->PCLKFreq = 0;
+			config->PClkFreq = 0;
 #endif
 #ifdef EVE_SUPPORT_HSF
 			config->HsfWidth = 0;
@@ -864,7 +957,7 @@ EVE_HAL_EXPORT void EVE_Util_configDefaults(EVE_HalContext *phost, EVE_ConfigPar
 			config->VSync0 = 0;
 			config->VSync1 = 10;
 			config->PCLK = 1;
-			config->PCLKFreq = 0x8B1; // 66MHz
+			config->PClkFreq = 0x8B1; // 66MHz
 #ifdef EVE_SUPPORT_HSF
 			config->HsfWidth = 0;
 #endif
@@ -900,7 +993,7 @@ EVE_HAL_EXPORT void EVE_Util_configDefaults(EVE_HalContext *phost, EVE_ConfigPar
 			config->VSync0 = 0;
 			config->VSync1 = 10;
 			config->PCLK = 1;
-			config->PCLKFreq = 0xD12; // 51Mhz
+			config->PClkFreq = 0xD12; // 51Mhz
 #ifdef EVE_SUPPORT_HSF
 			config->HsfWidth = 0;
 #endif
@@ -929,12 +1022,10 @@ EVE_HAL_EXPORT void EVE_Util_configDefaults(EVE_HalContext *phost, EVE_ConfigPar
 
 #ifdef _DEBUG
 #if (EVE_SUPPORT_CHIPID >= EVE_BT817)
-	if (config->PCLKFreq)
+	if (config->PClkFreq)
 	{
-		uint32_t mul = (config->PCLKFreq >> 4) & 0x1F;
-		uint32_t div = config->PCLKFreq & 0xF;
-		uint32_t pclkFrequency = mul * (12 * 1000 * 1000) / div / 2;
-		eve_printf_debug("Display refresh rate set to %f Hz using pclk %X freq %f MHz\n", (float)((double)pclkFrequency / ((double)config->HCycle * (double)config->VCycle)), (int)config->PCLKFreq, (float)((double)pclkFrequency * 0.000001));
+		uint32_t pclkFrequency = getFreqFromPClkFreq(config->PClkFreq);
+		eve_printf_debug("Display refresh rate set to %f Hz using pclk %X freq %f MHz\n", (float)((double)pclkFrequency / ((double)config->HCycle * (double)config->VCycle)), (int)config->PClkFreq, (float)((double)pclkFrequency * 0.000001));
 	}
 	else
 #endif
@@ -964,7 +1055,7 @@ EVE_HAL_EXPORT void EVE_Util_configDefaults(EVE_HalContext *phost, EVE_ConfigPar
 	eve_printf_debug("AdaptiveFramerate: %i\n", (int)config->AdaptiveFramerate);
 #endif
 #if (EVE_SUPPORT_CHIPID >= EVE_BT817)
-	eve_printf_debug("PCLKFreq: %X\n", (int)config->PCLKFreq);
+	eve_printf_debug("PClkFreq: %X\n", (int)config->PClkFreq);
 	eve_printf_debug("AhHCycleMax: %i\n", (int)config->AhHCycleMax);
 #endif
 #ifdef EVE_SUPPORT_HSF
@@ -1299,23 +1390,30 @@ EVE_HAL_EXPORT bool EVE_Util_config(EVE_HalContext *phost, EVE_ConfigParameters 
 	if (EVE_CHIPID >= EVE_BT817)
 	{
 		uint32_t freq = EVE_Hal_rd32(phost, REG_FREQUENCY);
-		uint16_t pclkFreq = config->PCLKFreq;
+		uint16_t pclkFreq = config->PClkFreq;
 		if (!pclkFreq)
 		{
 			uint32_t refMul = freq / 6000000;
 			uint32_t pllFreq = 12 * refMul;
 			uint32_t range = pllFreq >= 160 ? 3 : (pllFreq >= 80 ? 2 : (pllFreq >= 40 ? 1 : 0));
-			pclkFreq = 1 | ((refMul & 0x1F) << 4) | (range << 10);
+			pclkFreq = 1 | ((refMul & 0x3F) << 4) | (range << 10);
 		}
-		EVE_Hal_wr16(phost, REG_PCLK_FREQ, pclkFreq);
-		if (config->PCLKFreq)
+		EVE_Hal_wr32(phost, REG_PCLK_FREQ, pclkFreq);
+		if (config->PClk2X)
 		{
-			// Send two pixels per system clock to the EXTSYNC block if PCLK_frequency > SystemClock
-			uint32_t mul = (pclkFreq >> 4) & 0x1F;
-			uint32_t div = pclkFreq & 0xF;
-			uint32_t pclkFreqRes = mul * (12 * 1000 * 1000) / div / 2;
-			pclk2X = pclkFreqRes > freq;
+			/* User forces 2X */
+			EVE_Hal_wr8(phost, REG_PCLK_2X, 1);
+		}
+		else if (config->PClkFreq)
+		{
+			/* Send two pixels per system clock to the EXTSYNC block if PCLK_frequency > SystemClock */
+			uint32_t pclkFrequency = getFreqFromPClkFreq(pclkFreq);
+			pclk2X = pclkFrequency > freq;
 			EVE_Hal_wr8(phost, REG_PCLK_2X, pclk2X);
+		}
+		else
+		{
+			EVE_Hal_wr8(phost, REG_PCLK_2X, 0);
 		}
 	}
 #endif
@@ -1456,6 +1554,33 @@ EVE_HAL_EXPORT bool EVE_Util_config(EVE_HalContext *phost, EVE_ConfigParameters 
 	EVE_ILI9488_bootup();
 	eve_printf_debug("after ILI9488 bootup\n");
 	EVE_Hal_restoreSPI(phost);
+#endif
+#endif
+
+#if 0
+	eve_printf_debug("REG_HSIZE: %i\n", (int)EVE_Hal_rd16(phost, REG_HSIZE));
+	eve_printf_debug("REG_VSIZE: %i\n", (int)EVE_Hal_rd16(phost, REG_VSIZE));
+	eve_printf_debug("REG_HCYCLE: %i\n", (int)EVE_Hal_rd16(phost, REG_HCYCLE));
+	eve_printf_debug("REG_HOFFSET: %i\n", (int)EVE_Hal_rd16(phost, REG_HOFFSET));
+	eve_printf_debug("REG_HSYNC0: %i\n", (int)EVE_Hal_rd16(phost, REG_HSYNC0));
+	eve_printf_debug("REG_HSYNC1: %i\n", (int)EVE_Hal_rd16(phost, REG_HSYNC1));
+	eve_printf_debug("REG_VCYCLE: %i\n", (int)EVE_Hal_rd16(phost, REG_VCYCLE));
+	eve_printf_debug("REG_VOFFSET: %i\n", (int)EVE_Hal_rd16(phost, REG_VOFFSET));
+	eve_printf_debug("REG_VSYNC0: %i\n", (int)EVE_Hal_rd16(phost, REG_VSYNC0));
+	eve_printf_debug("REG_VSYNC1: %i\n", (int)EVE_Hal_rd16(phost, REG_VSYNC1));
+	eve_printf_debug("REG_PCLK: %i\n", (int)EVE_Hal_rd16(phost, REG_PCLK));
+	eve_printf_debug("REG_SWIZZLE: %i\n", (int)EVE_Hal_rd16(phost, REG_SWIZZLE));
+	eve_printf_debug("REG_PCLK_POL: %i\n", (int)EVE_Hal_rd16(phost, REG_PCLK_POL));
+	eve_printf_debug("REG_CSPREAD: %i\n", (int)EVE_Hal_rd16(phost, REG_CSPREAD));
+	eve_printf_debug("REG_OUTBITS: %i\n", (int)EVE_Hal_rd16(phost, REG_OUTBITS));
+	eve_printf_debug("REG_DITHER: %i\n", (int)EVE_Hal_rd16(phost, REG_DITHER));
+#if (EVE_SUPPORT_CHIPID >= EVE_BT815)
+	eve_printf_debug("REG_ADAPTIVE_FRAMERATE: %i\n", (int)EVE_Hal_rd16(phost, REG_ADAPTIVE_FRAMERATE));
+#endif
+#if (EVE_SUPPORT_CHIPID >= EVE_BT817)
+	eve_printf_debug("REG_PCLK_FREQ: %X\n", (int)EVE_Hal_rd16(phost, REG_PCLK_FREQ));
+	eve_printf_debug("REG_AH_HCYCLE_MAX: %i\n", (int)EVE_Hal_rd16(phost, REG_AH_HCYCLE_MAX));
+	eve_printf_debug("REG_HSF_HSIZE: %i\n", (int)EVE_Hal_rd16(phost, REG_HSF_HSIZE));
 #endif
 #endif
 
