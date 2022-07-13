@@ -276,10 +276,10 @@ ESD_CORE_EXPORT uint8_t Esd_CoDl_SetupBitmap(Esd_BitmapInfo *bitmapInfo)
 		    bitmapInfo->Flash ? " (flash)" : "");
 #elif defined(EVE_FLASH_AVAILABLE)
 		eve_printf_debug("Use handle %i, addr %i%s, gpu alloc %i, %i, file %s\n",
-			(int)handle, (int)addr,
-			ESD_DL_IS_FLASH_ADDRESS(addr) ? " (flash)" : "",
-			(int)bitmapInfo->GpuHandle.Id, (int)bitmapInfo->GpuHandle.Seq,
-			(!bitmapInfo->Flash && bitmapInfo->File) ? bitmapInfo->File : "<no file>");
+		    (int)handle, (int)addr,
+		    ESD_DL_IS_FLASH_ADDRESS(addr) ? " (flash)" : "",
+		    (int)bitmapInfo->GpuHandle.Id, (int)bitmapInfo->GpuHandle.Seq,
+		    (!bitmapInfo->Flash && bitmapInfo->File) ? bitmapInfo->File : "<no file>");
 #else
 		eve_printf_debug("Use handle %i, addr %i, gpu alloc %i, %i, file %s\n",
 		    (int)handle, (int)addr,

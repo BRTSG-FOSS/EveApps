@@ -73,16 +73,15 @@ typedef struct EVE_ConfigParameters
 	uint8_t OutBitsR;
 	uint8_t OutBitsG;
 	uint8_t OutBitsB;
-	uint16_t PCLKFreq;
 	bool Dither;
 
-#if (EVE_SUPPORT_CHIPID > EVE_BT815)
-	uint8_t AdaptiveFrameRate;
+#if (EVE_SUPPORT_CHIPID >= EVE_BT815)
+	bool AdaptiveFramerate;
 #endif
 
-#if (EVE_SUPPORT_CHIPID > EVE_BT817)
+#if (EVE_SUPPORT_CHIPID >= EVE_BT817)
+	uint16_t PCLKFreq;
 	int16_t AhHCycleMax;
-	uint8_t PCLK2X;
 #endif
 
 #ifdef EVE_SUPPORT_HSF
@@ -100,12 +99,12 @@ typedef enum EVE_DISPLAY_T
 	EVE_DISPLAY_DEFAULT = 0,
 
 	/* Landscape */
-	EVE_DISPLAY_QVGA_320x240_50Hz,
+	EVE_DISPLAY_QVGA_320x240_56Hz,
 	EVE_DISPLAY_WQVGA_480x272_60Hz,
-	EVE_DISPLAY_WVGA_800x480_60Hz,
-	EVE_DISPLAY_WSVGA_1024x600_83Hz,
+	EVE_DISPLAY_WVGA_800x480_74Hz,
+	EVE_DISPLAY_WSVGA_1024x600_59Hz,
 	EVE_DISPLAY_HDTV_1280x720_58Hz,
-	EVE_DISPLAY_WXGA_1280x800_65Hz,
+	EVE_DISPLAY_WXGA_1280x800_57Hz,
 
 	/* Portrait */
 	EVE_DISPLAY_HVGA_320x480_60Hz,

@@ -861,8 +861,8 @@ void EVE_Hal_endTransfer(EVE_HalContext *phost)
 	/* Transfers to FIFO and DL are kept open */
 	addr = phost->SpiRamGAddr;
 	if (addr != (EVE_Hal_supportCmdB(phost) ? REG_CMDB_WRITE : REG_CMD_WRITE)
-		&& !((addr >= RAM_CMD) && (addr < (RAM_CMD + EVE_CMD_FIFO_SIZE)))
-		&& !((addr >= RAM_DL) && (addr < (RAM_CMD + EVE_DL_SIZE))))
+	    && !((addr >= RAM_CMD) && (addr < (RAM_CMD + EVE_CMD_FIFO_SIZE)))
+	    && !((addr >= RAM_DL) && (addr < (RAM_CMD + EVE_DL_SIZE))))
 	{
 		flush(phost);
 	}

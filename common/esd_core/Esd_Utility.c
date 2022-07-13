@@ -170,7 +170,7 @@ ESD_CORE_EXPORT bool Esd_Calibrate()
 	EVE_Hal_rdMem(phost, (uint8_t *)transMatrix, REG_TOUCH_TRANSFORM_A, 4 * 6); //read all the 6 coefficients
 	eve_printf_debug("Touch screen transform values are A 0x%lx,B 0x%lx,C 0x%lx,D 0x%lx,E 0x%lx, F 0x%lx\n",
 	    (unsigned long)transMatrix[0], (unsigned long)transMatrix[1], (unsigned long)transMatrix[2],
-		(unsigned long)transMatrix[3], (unsigned long)transMatrix[4], (unsigned long)transMatrix[5]);
+	    (unsigned long)transMatrix[3], (unsigned long)transMatrix[4], (unsigned long)transMatrix[5]);
 
 	return result != 0;
 }

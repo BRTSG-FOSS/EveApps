@@ -69,14 +69,14 @@ ESD_CORE_EXPORT void Esd_Render_MultiGradient(int16_t x, int16_t y, int16_t widt
 
 	// Select cell address directly
 	addr += (ec->MultiGradientCell * 8);
-	
+
 #ifdef ESD_MULTIGRADIENT_CACHE
 	bool cached = false;
 	for (int16_t i = 7; i >= 0; --i)
 	{
 		if (ec->MultiGradientCache[i] == color.cache)
 		{
-			// If i == (ec->MultiGradientCacheIdx - 1), 
+			// If i == (ec->MultiGradientCacheIdx - 1),
 			// then the cell will be (ec->MultiGradientCell - 1).
 			// Adjust addr accordingly.
 			int16_t cellOffset = ec->MultiGradientCacheIdx - i;

@@ -103,7 +103,7 @@ static void Esd_LittleFs_Erred()
 	Esd_Context *ec = Esd_CurrentContext;
 	eve_printf_diagnostic("Marking all dirty files as erred\n");
 	lfs_t *lfs = &ec->Lfs;
-	for (lfs_file_t *f = (lfs_file_t*)lfs->mlist; f; f = f->next)
+	for (lfs_file_t *f = (lfs_file_t *)lfs->mlist; f; f = f->next)
 	{
 		if (f->type != LFS_TYPE_REG)
 			continue;
@@ -465,7 +465,7 @@ static bool Esd_LittleFS_Configure()
 	// reset
 	ec->LfsUnflushed = false;
 	ec->LfsCmdFault = false;
-	
+
 #ifdef EVE_LITTLEFS_TESTS
 	// tests
 	power_cycles = lfs_testbd_cycles;
@@ -492,7 +492,7 @@ bool Esd_LittleFS_Mount()
 	if (!Esd_LittleFS_Configure())
 		return false;
 
-	// Mount
+		// Mount
 #ifdef EVE_LITTLEFS_TESTS
 	(void)lfs, (void)err, (void)config;
 	return false;
@@ -552,7 +552,7 @@ bool Esd_LittleFs_ReadMetadataFile(uint8_t *metadata, const char *resourceFile)
 	if ((err = lfs_file_reserved(lfs, &lfsFile, &head)))
 	{
 		(void)err;
-		
+
 		// Regular file
 		res = lfs_file_read(lfs, &lfsFile, metadata, min(ESD_METADATA_MAX, lfs_file_size(lfs, &lfsFile))) >= 0;
 	}

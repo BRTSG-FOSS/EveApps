@@ -210,7 +210,7 @@ ESD_CORE_EXPORT bool Esd_Open(Esd_Context *ec, Esd_Parameters *ep)
 #ifdef ESD_FLASH_FILES
 		if (chipId >= EVE_BT815 || (chipId <= 0 && ep->FlashFilePaths[EVE_gen(chipId) - EVE3][0]))
 		{
-			EVE_Util_selectFlashFileInteractive(flashPath, &updateFlash, &updateFlashFirmware, &params, ep->FlashFilePaths[(chipId > 0) ? (EVE_gen(chipId) - EVE3) : 0]); /* FIXME: EVE_Util_selectFlashFileInteractive needs to take all the options, as it detects chipId as well */
+			EVE_Util_selectFlashFileInteractive(flashPath, sizeof(flashPath) / sizeof(flashPath[0]), &updateFlash, &updateFlashFirmware, &params, ep->FlashFilePaths[(chipId > 0) ? (EVE_gen(chipId) - EVE3) : 0]); /* FIXME: EVE_Util_selectFlashFileInteractive needs to take all the options, as it detects chipId as well */
 		}
 #endif
 
@@ -491,11 +491,13 @@ ESD_CORE_EXPORT bool Esd_WaitSwap(Esd_Context *ec)
 		EVE_Util_resetCoprocessor(&ec->HalContext);
 		Esd_BitmapHandle_Reset(&ec->HandleState);
 		ec->AnimationChannelsSetup = 0;
+#ifdef ESD_LITTLEFS_FLASH
 		if (ec->LfsUnflushed)
 		{
 			ec->LfsCmdFault = true;
 			Esd_GpuAlloc_Free(Esd_GAlloc, ec->LfsEraseHandle);
 		}
+#endif
 		ec->HasReset = true;
 
 		return false;

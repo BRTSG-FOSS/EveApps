@@ -327,7 +327,7 @@ bool EVE_HalImpl_open(EVE_HalContext *phost, const EVE_HalParameters *parameters
 		}
 	}
 #endif
-	
+
 	return true;
 }
 

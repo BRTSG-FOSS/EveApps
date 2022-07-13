@@ -154,7 +154,7 @@ ESD_TARGET_PLATFORM(MM900EV_LITE, DisplayName = "MM900EV-Lite", SupportedArchite
 ESD_TARGET_PLATFORM(EVE_PLATFORM_FT4222, DisplayName = "FT4222", Icon = ":/icons/terminal.png", SupportedArchitectures = "\bFT4222\b")
 ESD_TARGET_PLATFORM(EVE_PLATFORM_MPSSE, DisplayName = "MPSSE", Icon = ":/icons/terminal.png", SupportedArchitectures = "\bMPSSE\b")
 ESD_TARGET_PLATFORM(EVE_PLATFORM_RP2040, DisplayName = "Rapberry Pi Pico", SupportedArchitectures = "\bPICO\b")
-ESD_TARGET_PLATFORM(MM2040EV, DisplayName = "MM2040EV", SupportedArchitectures = "\bPICO\b")
+ESD_TARGET_PLATFORM(EVE_PLATFORM_MM2040EV, DisplayName = "MM2040EV", SupportedArchitectures = "\bPICO\b")
 
 ESD_TARGET_FLASH(EVE_FLASH_W25Q16, DisplayName = "W25Q16")
 ESD_TARGET_FLASH(EVE_FLASH_W25Q32, DisplayName = "W25Q32")
@@ -329,8 +329,7 @@ Validate the configured options.
     || defined(MM900EV_LITE) || defined(MM930MINI)                 \
     || defined(MM930LITE) || defined(MM932LC)                      \
     || defined(EVE_PLATFORM_FT4222) || defined(EVE_PLATFORM_MPSSE) \
-    || defined(EVE_PLATFORM_RP2040)                                \
-    || defined(MM2040EV)
+    || defined(EVE_PLATFORM_RP2040) || defined(EVE_PLATFORM_MM2040EV)
 #define EVE_PLATFORM_AVAILABLE
 #endif
 
@@ -1319,7 +1318,7 @@ These may only be set by one of the platform target definitions, and should not 
 #elif defined(EVE_PLATFORM_MPSSE)
 #define MPSSE_PLATFORM
 
-#elif defined(EVE_PLATFORM_RP2040) || defined(MM2040EV)
+#elif defined(EVE_PLATFORM_RP2040) || defined(EVE_PLATFORM_MM2040EV)
 #define RP2040_PLATFORM
 
 #endif
