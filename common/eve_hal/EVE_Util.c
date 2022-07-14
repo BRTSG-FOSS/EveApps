@@ -57,10 +57,10 @@ static const uint16_t s_DisplayResolutions[EVE_DISPLAY_NB][4] = {
 
 	/* Portrait */
 	{ 320, 480, 60, 0 }, /* EVE_DISPLAY_HVGA_320x480_60Hz */
-	
-	/* IDM2040-7A, AT‐T070SWH‐51CP, HX8264-E */
+
+	/* IDM2040-7A, AT‐T070SWH‐51CP, HX8264-E, 60 to 90Hz capable */
 	{ 860, 480, 60, 800 }, /* EVE_DISPLAY_WVGA_800x480_W860_60Hz */
-	
+
 	/* Riverdi */
 	{ 320, 240, 62, 0 }, /* EVE_DISPLAY_RIVERDI_IPS35_62Hz */
 	{ 480, 272, 58, 0 }, /* EVE_DISPLAY_RIVERDI_IPS43_58Hz */
@@ -533,7 +533,7 @@ static bool configDefaultsEx(EVE_HalContext *phost, EVE_ConfigParameters *config
 
 	screenWidth = hsfWidth ? hsfWidth : width; /* Use screen width for calculation */
 	pixels = screenWidth * height;
-	
+
 	/* Calculate maximum refresh rate */
 	minCycles = pixels + (pixels >> 2); /* pixels * 1.25 */
 #ifdef EVE_SUPPORT_HSF
@@ -546,7 +546,7 @@ static bool configDefaultsEx(EVE_HalContext *phost, EVE_ConfigParameters *config
 #else
 	maxRate = freq / minCycles;
 #endif
-	
+
 	/* If the refresh rate is too low, try with tighter settings */
 	if (refreshRate > maxRate)
 	{
@@ -773,7 +773,7 @@ EVE_HAL_EXPORT void EVE_Util_configDefaults(EVE_HalContext *phost, EVE_ConfigPar
 	}
 	else
 #endif
-		if (display == EVE_DISPLAY_QVGA_320x240_56Hz && freq == 48000000)
+	    if (display == EVE_DISPLAY_QVGA_320x240_56Hz && freq == 48000000)
 	{
 		/*
 		FT800 known values:
@@ -1393,6 +1393,8 @@ EVE_HAL_EXPORT bool EVE_Util_config(EVE_HalContext *phost, EVE_ConfigParameters 
 		uint16_t pclkFreq = config->PClkFreq;
 		if (!pclkFreq)
 		{
+			/* If not configured, match system frequency, in case a legacy configuration with PClk 1 is specified */
+			/* PClk Freq is 60MHz by default, but we raise the system frequency to 72MHz during bootup */
 			uint32_t refMul = freq / 6000000;
 			uint32_t pllFreq = 12 * refMul;
 			uint32_t range = pllFreq >= 160 ? 3 : (pllFreq >= 80 ? 2 : (pllFreq >= 40 ? 1 : 0));
@@ -1404,7 +1406,7 @@ EVE_HAL_EXPORT bool EVE_Util_config(EVE_HalContext *phost, EVE_ConfigParameters 
 			/* User forces 2X */
 			EVE_Hal_wr8(phost, REG_PCLK_2X, 1);
 		}
-		else if (config->PClkFreq)
+		else if (config->PCLK == 1)
 		{
 			/* Send two pixels per system clock to the EXTSYNC block if PCLK_frequency > SystemClock */
 			uint32_t pclkFrequency = getFreqFromPClkFreq(pclkFreq);
